@@ -1,0 +1,45 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader mtoer_sphereUV
+global	vector	I	 %read{1,1} %write{2147483647,-1}
+global	float	u	 %read{2147483647,-1} %write{9,9}
+global	float	v	 %read{2147483647,-1} %write{14,14}
+local	vector	ray_dir	 %read{3,10} %write{2,2}
+temp	vector	$tmp1	 %read{2,2} %write{1,1}
+const	string	$const1	"world"		 %read{1,1} %write{2147483647,-1}
+const	string	$const2	"transform"		 %read{0,0} %write{2147483647,-1}
+const	string	$const3	"common"		 %read{1,1} %write{2147483647,-1}
+const	float	$const4	0.5		 %read{9,14} %write{2147483647,-1}
+temp	float	$tmp2	 %read{8,8} %write{5,5}
+const	int	$const5	0		 %read{3,3} %write{2147483647,-1}
+temp	float	$tmp3	 %read{5,5} %write{3,3}
+const	int	$const6	2		 %read{4,4} %write{2147483647,-1}
+temp	float	$tmp4	 %read{5,5} %write{4,4}
+const	float	$const7	1		 %read{7,12} %write{2147483647,-1}
+const	float	$const8	2		 %read{6,6} %write{2147483647,-1}
+const	float	$const9	3.1415927		 %read{6,12} %write{2147483647,-1}
+temp	float	$tmp5	 %read{7,7} %write{6,6}
+temp	float	$tmp6	 %read{8,8} %write{7,7}
+temp	float	$tmp7	 %read{9,9} %write{8,8}
+temp	float	$tmp8	 %read{13,13} %write{11,11}
+const	int	$const10	1		 %read{10,10} %write{2147483647,-1}
+temp	float	$tmp9	 %read{11,11} %write{10,10}
+temp	float	$tmp10	 %read{13,13} %write{12,12}
+temp	float	$tmp11	 %read{14,14} %write{13,13}
+code ___main___
+	functioncall	$const2 2 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\mtoer_sphereUV.osl"} %line{22} %argrw{"r"}
+	transformv	$tmp1 $const3 $const1 I 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{239} %argrw{"wrrr"}
+	normalize	ray_dir $tmp1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\mtoer_sphereUV.osl"} %line{22} %argrw{"wr"}
+	compref		$tmp3 ray_dir $const5 	%line{24} %argrw{"wrr"}
+	compref		$tmp4 ray_dir $const6 	%argrw{"wrr"}
+	atan2		$tmp2 $tmp3 $tmp4 	%argrw{"wrr"}
+	mul		$tmp5 $const8 $const9 	%argrw{"wrr"}
+	div		$tmp6 $const7 $tmp5 	%argrw{"wrr"}
+	mul		$tmp7 $tmp2 $tmp6 	%argrw{"wrr"}
+	add		u $const4 $tmp7 	%argrw{"wrr"}
+	compref		$tmp9 ray_dir $const10 	%line{25} %argrw{"wrr"}
+	asin		$tmp8 $tmp9 	%argrw{"wr"}
+	div		$tmp10 $const7 $const9 	%argrw{"wrr"}
+	mul		$tmp11 $tmp8 $tmp10 	%argrw{"wrr"}
+	add		v $const4 $tmp11 	%argrw{"wrr"}
+	end

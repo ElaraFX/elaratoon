@@ -1,0 +1,9 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader osl_volume_proxy
+global	closure color	Ci	%read{2147483647,-1} %write{0,0}
+const	string	$const1	"transparent"		%read{0,0} %write{2147483647,-1}
+code ___main___
+	closure		Ci $const1 	%filename{"E:/github/elaramax/Shaders/osl_volume_proxy.osl"} %line{22} %argrw{"wr"}
+	end

@@ -1,0 +1,250 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+surface maya_lambert
+param	color	i_ambientColor	0 0 0 		 %read{53,53} %write{2147483647,-1}
+param	color	i_color	0.5 0.5 0.5 		 %read{20,20} %write{2147483647,-1}
+param	float	i_diffuse	0.80000001 		 %read{40,40} %write{2147483647,-1}
+param	color	i_incandescence	0 0 0 		 %read{47,47} %write{2147483647,-1}
+param	int	i_matteOpacityMode	2 		%meta{string,help,"0-Back Hole, 1-Solid Matte, 2-Opacity Gain"}  %read{9,12} %write{2147483647,-1}
+param	float	i_matteOpacity	1 		 %read{14,16} %write{2147483647,-1}
+param	int	i_refractions	0 		 %read{26,26} %write{2147483647,-1}
+param	float	i_refractiveIndex	1 		 %read{92,92} %write{2147483647,-1}
+param	int	i_refractionLimit	6 		 %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_lightAbsorbance	0 		 %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_shadowAttenuation	0.5 		 %read{2147483647,-1} %write{2147483647,-1}
+param	normal	i_normalCamera	0 0 1 		 %read{2,2} %write{2147483647,-1}
+param	color	i_transparency	0 0 0 		 %read{15,15} %write{2147483647,-1}
+param	float	i_translucence	0 		 %read{5,5} %write{2147483647,-1}
+param	float	i_translucenceDepth	0.5 		 %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_translucenceFocus	0.5 		 %read{2147483647,-1} %write{2147483647,-1}
+param	int	i_mtoer_hasBump	0 		%meta{string,help,"0:false, 1:true"}  %read{0,0} %write{2147483647,-1}
+oparam	color	o_outColor	0 0 0 		 %read{2147483647,-1} %write{60,60}
+oparam	color	o_outTransparency	0 0 0 		 %read{19,115} %write{18,18}
+oparam	closure color	o_outClosure			 %read{72,118} %write{61,116}
+oparam	closure color	result			 %read{2147483647,-1} %write{118,118}
+oparam	float	result_alpha	0 		 %read{2147483647,-1} %write{119,119}
+global	normal	N	 %read{3,3} %write{2147483647,-1}
+global	closure color	Ci	 %read{2147483647,-1} %write{117,117}
+local	color	___312_res	 %read{17,18} %write{11,17}
+local	color	___316_outcolor	 %read{24,24} %write{20,20}
+local	float	___346_tir	 %read{37,37} %write{28,28}
+local	color	___348_refractionColor	 %read{34,34} %write{33,33}
+local	normal	Nf	 %read{70,92} %write{2,3}
+local	color	cTransl	 %read{43,43} %write{5,5}
+local	color	surfaceColor	 %read{39,50} %write{6,25}
+local	color	cRefraction	 %read{45,45} %write{34,36}
+local	color	diffuse_weight	 %read{56,71} %write{40,40}
+local	color	translucent_weight	 %read{57,82} %write{43,43}
+local	color	refraction_weight	 %read{58,93} %write{45,45}
+local	color	emission_weight	 %read{59,104} %write{47,47}
+local	color	transparent_weight	 %read{60,110} %write{48,48}
+const	int	$const1	1		 %read{0,108} %write{2147483647,-1}
+temp	int	$tmp1	 %read{1,1} %write{0,0}
+const	string	$const2	"getTranslucence_de"		 %read{4,4} %write{2147483647,-1}
+const	color	$const3	0 0 0		 %read{6,29} %write{2147483647,-1}
+const	string	$const4	"computeSurface"		 %read{7,7} %write{2147483647,-1}
+const	string	$const5	"computeSurfaceTransparency"		 %read{8,8} %write{2147483647,-1}
+const	int	$const6	0		 %read{9,107} %write{2147483647,-1}
+temp	int	$tmp2	 %read{10,10} %write{9,9}
+const	color	$const7	1 1 1		 %read{11,11} %write{2147483647,-1}
+temp	int	$tmp3	 %read{13,13} %write{12,12}
+temp	color	$tmp4	 %read{16,16} %write{15,15}
+const	float	$const8	1		 %read{15,119} %write{2147483647,-1}
+temp	color	$tmp5	 %read{20,20} %write{19,19}
+const	float	$const9	0		 %read{21,112} %write{2147483647,-1}
+temp	color	$tmp6	 %read{25,25} %write{21,21}
+const	float	$const10	1e+030		 %read{22,22} %write{2147483647,-1}
+temp	color	$tmp7	 %read{24,24} %write{22,22}
+const	string	$const11	"clamp"		 %read{23,23} %write{2147483647,-1}
+temp	color	$tmp8	 %read{25,25} %write{24,24}
+temp	float	$tmp9	 %read{2147483647,-1} %write{37,37}
+temp	float	$tmp10	 %read{31,31} %write{26,26}
+const	string	$const12	"doRefraction_de"		 %read{27,27} %write{2147483647,-1}
+temp	int	$tmp12	 %read{30,30} %write{29,29}
+temp	int	$tmp13	 %read{32,32} %write{31,31}
+temp	color	$tmp14	 %read{39,39} %write{38,38}
+temp	color	$tmp15	 %read{40,40} %write{39,39}
+temp	color	$tmp16	 %read{42,42} %write{41,41}
+temp	color	$tmp17	 %read{43,43} %write{42,42}
+temp	color	$tmp18	 %read{45,45} %write{44,44}
+temp	color	$tmp19	 %read{47,47} %write{46,46}
+temp	color	$tmp20	 %read{50,50} %write{49,49}
+temp	color	$tmp21	 %read{54,54} %write{50,50}
+temp	color	$tmp22	 %read{53,53} %write{52,52}
+const	string	$const13	"getAmbient"		 %read{51,51} %write{2147483647,-1}
+temp	color	$tmp23	 %read{54,54} %write{53,53}
+temp	color	$tmp24	 %read{55,55} %write{54,54}
+temp	color	$tmp25	 %read{56,56} %write{55,55}
+temp	color	$tmp26	 %read{57,57} %write{56,56}
+temp	color	$tmp27	 %read{58,58} %write{57,57}
+temp	color	$tmp28	 %read{59,59} %write{58,58}
+temp	color	$tmp29	 %read{60,60} %write{59,59}
+temp	float	$tmp30	 %read{68,68} %write{67,67}
+const	string	$const14	"reduce_add"		 %read{62,106} %write{2147483647,-1}
+temp	float	$tmp31	 %read{65,65} %write{63,63}
+temp	float	$tmp32	 %read{65,65} %write{64,64}
+temp	float	$tmp33	 %read{67,67} %write{65,65}
+const	int	$const15	2		 %read{66,110} %write{2147483647,-1}
+temp	float	$tmp34	 %read{67,67} %write{66,66}
+temp	int	$tmp35	 %read{69,69} %write{68,68}
+temp	closure color	$tmp36	 %read{71,71} %write{70,70}
+const	string	$const16	"diffuse"		 %read{70,70} %write{2147483647,-1}
+temp	closure color	$tmp37	 %read{72,72} %write{71,71}
+temp	float	$tmp38	 %read{79,79} %write{78,78}
+temp	float	$tmp39	 %read{76,76} %write{74,74}
+temp	float	$tmp40	 %read{76,76} %write{75,75}
+temp	float	$tmp41	 %read{78,78} %write{76,76}
+temp	float	$tmp42	 %read{78,78} %write{77,77}
+temp	int	$tmp43	 %read{80,80} %write{79,79}
+temp	closure color	$tmp44	 %read{82,82} %write{81,81}
+const	string	$const17	"translucent"		 %read{81,81} %write{2147483647,-1}
+temp	closure color	$tmp45	 %read{83,83} %write{82,82}
+temp	float	$tmp46	 %read{90,90} %write{89,89}
+temp	float	$tmp47	 %read{87,87} %write{85,85}
+temp	float	$tmp48	 %read{87,87} %write{86,86}
+temp	float	$tmp49	 %read{89,89} %write{87,87}
+temp	float	$tmp50	 %read{89,89} %write{88,88}
+temp	int	$tmp51	 %read{91,91} %write{90,90}
+temp	closure color	$tmp52	 %read{93,93} %write{92,92}
+const	string	$const18	"refraction"		 %read{92,92} %write{2147483647,-1}
+temp	closure color	$tmp53	 %read{94,94} %write{93,93}
+temp	float	$tmp54	 %read{101,101} %write{100,100}
+temp	float	$tmp55	 %read{98,98} %write{96,96}
+temp	float	$tmp56	 %read{98,98} %write{97,97}
+temp	float	$tmp57	 %read{100,100} %write{98,98}
+temp	float	$tmp58	 %read{100,100} %write{99,99}
+temp	int	$tmp59	 %read{102,102} %write{101,101}
+temp	closure color	$tmp60	 %read{104,104} %write{103,103}
+const	string	$const19	"emission"		 %read{103,103} %write{2147483647,-1}
+temp	closure color	$tmp61	 %read{105,105} %write{104,104}
+temp	float	$tmp62	 %read{112,112} %write{111,111}
+temp	float	$tmp63	 %read{109,109} %write{107,107}
+temp	float	$tmp64	 %read{109,109} %write{108,108}
+temp	float	$tmp65	 %read{111,111} %write{109,109}
+temp	float	$tmp66	 %read{111,111} %write{110,110}
+temp	int	$tmp67	 %read{113,113} %write{112,112}
+temp	closure color	$tmp68	 %read{115,115} %write{114,114}
+const	string	$const20	"transparent"		 %read{114,114} %write{2147483647,-1}
+temp	closure color	$tmp69	 %read{116,116} %write{115,115}
+code ___main___
+	eq		$tmp1 i_mtoer_hasBump $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_lambert.osl"} %line{116} %argrw{"wrr"}
+	if		$tmp1 3 4 	%argrw{"r"}
+	assign		Nf i_normalCamera 	%line{118} %argrw{"wr"}
+	assign		Nf N 	%line{122} %argrw{"wr"}
+	functioncall	$const2 6 	%line{126} %argrw{"r"}
+	assign		cTransl i_translucence 	%line{77} %argrw{"wr"}
+	assign		surfaceColor $const3 	%line{128} %argrw{"wr"}
+	functioncall	$const4 26 	%line{135} %argrw{"r"}
+	functioncall	$const5 19 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{82} %argrw{"r"}
+	eq		$tmp2 i_matteOpacityMode $const6 	%line{52} %argrw{"wrr"}
+	if		$tmp2 12 17 	%argrw{"r"}
+	assign		___312_res $const7 	%line{56} %argrw{"wr"}
+	eq		$tmp3 i_matteOpacityMode $const1 	%line{58} %argrw{"wrr"}
+	if		$tmp3 15 17 	%argrw{"r"}
+	color		___312_res i_matteOpacity i_matteOpacity i_matteOpacity 	%line{61} %argrw{"wrrr"}
+	sub		$tmp4 $const8 i_transparency 	%line{66} %argrw{"wrr"}
+	mul		___312_res $tmp4 i_matteOpacity 	%argrw{"wrr"}
+	sub		___312_res $const8 ___312_res 	%line{68} %argrw{"wrr"}
+	assign		o_outTransparency ___312_res 	%line{69} %argrw{"wr"}
+	sub		$tmp5 $const8 o_outTransparency 	%line{83} %argrw{"wrr"}
+	mul		___316_outcolor i_color $tmp5 	%argrw{"wrr"}
+	assign		$tmp6 $const9 	%line{84} %argrw{"wr"}
+	assign		$tmp7 $const10 	%argrw{"wr"}
+	functioncall	$const11 26 	%argrw{"r"}
+	min		$tmp8 ___316_outcolor $tmp7 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{141} %argrw{"wrr"}
+	max		surfaceColor $tmp8 $tmp6 	%argrw{"wrr"}
+	assign		$tmp10 i_refractions 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_lambert.osl"} %line{148} %argrw{"wr"}
+	functioncall	$const12 38 	%argrw{"r"}
+	assign		___346_tir $const6 	%line{50} %argrw{"wr"}
+	neq		$tmp12 o_outTransparency $const3 	%line{51} %argrw{"wrr"}
+	if		$tmp12 36 37 	%argrw{"r"}
+	neq		$tmp13 $tmp10 $const6 	%line{53} %argrw{"wrr"}
+	if		$tmp13 35 36 	%argrw{"r"}
+	assign		___348_refractionColor $const6 	%line{55} %argrw{"wr"}
+	mul		cRefraction o_outTransparency ___348_refractionColor 	%line{57} %argrw{"wrr"}
+	assign		cRefraction $const6 	%line{60} %argrw{"wr"}
+	assign		cRefraction $const6 	%line{64} %argrw{"wr"}
+	assign		$tmp9 ___346_tir 	%line{67} %argrw{"wr"}
+	sub		$tmp14 $const8 o_outTransparency 	%line{151} %argrw{"wrr"}
+	mul		$tmp15 $tmp14 surfaceColor 	%argrw{"wrr"}
+	mul		diffuse_weight $tmp15 i_diffuse 	%argrw{"wrr"}
+	sub		$tmp16 $const8 o_outTransparency 	%line{152} %argrw{"wrr"}
+	mul		$tmp17 $tmp16 surfaceColor 	%argrw{"wrr"}
+	mul		translucent_weight $tmp17 cTransl 	%argrw{"wrr"}
+	sub		$tmp18 $const8 o_outTransparency 	%line{153} %argrw{"wrr"}
+	mul		refraction_weight $tmp18 cRefraction 	%argrw{"wrr"}
+	sub		$tmp19 $const8 o_outTransparency 	%line{154} %argrw{"wrr"}
+	mul		emission_weight $tmp19 i_incandescence 	%argrw{"wrr"}
+	assign		transparent_weight o_outTransparency 	%line{155} %argrw{"wr"}
+	sub		$tmp20 $const8 o_outTransparency 	%line{158} %argrw{"wrr"}
+	mul		$tmp21 $tmp20 surfaceColor 	%argrw{"wrr"}
+	functioncall	$const13 53 	%argrw{"r"}
+	assign		$tmp22 $const6 	%line{24} %argrw{"wr"}
+	add		$tmp23 i_ambientColor $tmp22 	%line{158} %argrw{"wrr"}
+	mul		$tmp24 $tmp21 $tmp23 	%argrw{"wrr"}
+	add		$tmp25 $const9 $tmp24 	%line{159} %argrw{"wrr"}
+	add		$tmp26 $tmp25 diffuse_weight 	%line{160} %argrw{"wrr"}
+	add		$tmp27 $tmp26 translucent_weight 	%line{161} %argrw{"wrr"}
+	add		$tmp28 $tmp27 refraction_weight 	%line{162} %argrw{"wrr"}
+	add		$tmp29 $tmp28 emission_weight 	%line{163} %argrw{"wrr"}
+	add		o_outColor $tmp29 transparent_weight 	%line{164} %argrw{"wrr"}
+	assign		o_outClosure $const6 	%line{166} %argrw{"wr"}
+	functioncall	$const14 68 	%line{167} %argrw{"r"}
+	compref		$tmp31 diffuse_weight $const6 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{37} %argrw{"wrr"}
+	compref		$tmp32 diffuse_weight $const1 	%argrw{"wrr"}
+	add		$tmp33 $tmp31 $tmp32 	%argrw{"wrr"}
+	compref		$tmp34 diffuse_weight $const15 	%argrw{"wrr"}
+	add		$tmp30 $tmp33 $tmp34 	%argrw{"wrr"}
+	gt		$tmp35 $tmp30 $const9 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_lambert.osl"} %line{167} %argrw{"wrr"}
+	if		$tmp35 73 73 	%argrw{"r"}
+	closure		$tmp36 $const16 Nf 	%argrw{"wrr"}
+	mul		$tmp37 $tmp36 diffuse_weight 	%argrw{"wrr"}
+	add		o_outClosure o_outClosure $tmp37 	%argrw{"wrr"}
+	functioncall	$const14 79 	%line{168} %argrw{"r"}
+	compref		$tmp39 translucent_weight $const6 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{37} %argrw{"wrr"}
+	compref		$tmp40 translucent_weight $const1 	%argrw{"wrr"}
+	add		$tmp41 $tmp39 $tmp40 	%argrw{"wrr"}
+	compref		$tmp42 translucent_weight $const15 	%argrw{"wrr"}
+	add		$tmp38 $tmp41 $tmp42 	%argrw{"wrr"}
+	gt		$tmp43 $tmp38 $const9 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_lambert.osl"} %line{168} %argrw{"wrr"}
+	if		$tmp43 84 84 	%argrw{"r"}
+	closure		$tmp44 $const17 Nf 	%argrw{"wrr"}
+	mul		$tmp45 $tmp44 translucent_weight 	%argrw{"wrr"}
+	add		o_outClosure o_outClosure $tmp45 	%argrw{"wrr"}
+	functioncall	$const14 90 	%line{169} %argrw{"r"}
+	compref		$tmp47 refraction_weight $const6 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{37} %argrw{"wrr"}
+	compref		$tmp48 refraction_weight $const1 	%argrw{"wrr"}
+	add		$tmp49 $tmp47 $tmp48 	%argrw{"wrr"}
+	compref		$tmp50 refraction_weight $const15 	%argrw{"wrr"}
+	add		$tmp46 $tmp49 $tmp50 	%argrw{"wrr"}
+	gt		$tmp51 $tmp46 $const9 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_lambert.osl"} %line{169} %argrw{"wrr"}
+	if		$tmp51 95 95 	%argrw{"r"}
+	closure		$tmp52 $const18 Nf i_refractiveIndex 	%argrw{"wrrr"}
+	mul		$tmp53 $tmp52 refraction_weight 	%argrw{"wrr"}
+	add		o_outClosure o_outClosure $tmp53 	%argrw{"wrr"}
+	functioncall	$const14 101 	%line{170} %argrw{"r"}
+	compref		$tmp55 emission_weight $const6 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{37} %argrw{"wrr"}
+	compref		$tmp56 emission_weight $const1 	%argrw{"wrr"}
+	add		$tmp57 $tmp55 $tmp56 	%argrw{"wrr"}
+	compref		$tmp58 emission_weight $const15 	%argrw{"wrr"}
+	add		$tmp54 $tmp57 $tmp58 	%argrw{"wrr"}
+	gt		$tmp59 $tmp54 $const9 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_lambert.osl"} %line{170} %argrw{"wrr"}
+	if		$tmp59 106 106 	%argrw{"r"}
+	closure		$tmp60 $const19 	%argrw{"wr"}
+	mul		$tmp61 $tmp60 emission_weight 	%argrw{"wrr"}
+	add		o_outClosure o_outClosure $tmp61 	%argrw{"wrr"}
+	functioncall	$const14 112 	%line{171} %argrw{"r"}
+	compref		$tmp63 transparent_weight $const6 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{37} %argrw{"wrr"}
+	compref		$tmp64 transparent_weight $const1 	%argrw{"wrr"}
+	add		$tmp65 $tmp63 $tmp64 	%argrw{"wrr"}
+	compref		$tmp66 transparent_weight $const15 	%argrw{"wrr"}
+	add		$tmp62 $tmp65 $tmp66 	%argrw{"wrr"}
+	gt		$tmp67 $tmp62 $const9 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_lambert.osl"} %line{171} %argrw{"wrr"}
+	if		$tmp67 117 117 	%argrw{"r"}
+	closure		$tmp68 $const20 	%argrw{"wr"}
+	mul		$tmp69 $tmp68 o_outTransparency 	%argrw{"wrr"}
+	add		o_outClosure o_outClosure $tmp69 	%argrw{"wrr"}
+	assign		Ci o_outClosure 	%line{173} %argrw{"wr"}
+	assign		result o_outClosure 	%line{175} %argrw{"wr"}
+	assign		result_alpha $const8 	%line{176} %argrw{"wr"}
+	end

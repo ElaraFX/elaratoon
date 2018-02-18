@@ -1,0 +1,60 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_bump3d
+param	float	i_bumpValue	1 		 %read{6,6} %write{2147483647,-1} %derivs
+param	float	i_bumpDepth	0.5 		 %read{5,6} %write{2147483647,-1} %derivs
+param	float	i_bumpFilter	1 		 %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_bumpFilterOffset	0 		 %read{2147483647,-1} %write{2147483647,-1}
+param	normal	i_normalCamera	0 0 1 		 %read{2,2} %write{2147483647,-1}
+param	color	i_mtoer_bumpNormal	1 1 1 		 %read{2147483647,-1} %write{2147483647,-1}
+param	int	i_mtoer_hasBump	0 		%meta{string,help,"0:false, 1:true"}  %read{0,0} %write{2147483647,-1}
+oparam	normal	o_outNormal	0 0 1 		 %read{2147483647,-1} %write{23,23}
+global	point	P	 %read{17,17} %write{2147483647,-1} %derivs
+global	normal	N	 %read{3,12} %write{2147483647,-1} %derivs
+local	float	___344_depth	 %read{7,9} %write{5,5} %derivs
+local	float	___344_offset	 %read{15,15} %write{10,10} %derivs
+local	normal	___344_Nn	 %read{13,21} %write{11,20}
+local	normal	___344_Ngn	 %read{13,15} %write{12,12} %derivs
+local	normal	___344_Noffset	 %read{21,21} %write{13,13}
+local	float	___344_scale	 %read{16,16} %write{14,14} %derivs
+local	point	___344_Pp	 %read{18,18} %write{17,17} %derivs
+local	normal	Nshading	 %read{11,11} %write{2,3}
+const	int	$const1	1		 %read{0,0} %write{2147483647,-1}
+temp	int	$tmp1	 %read{1,1} %write{0,0}
+const	string	$const2	"do_bump_map"		 %read{4,4} %write{2147483647,-1}
+temp	float	$tmp2	 %read{9,9} %write{6,6} %derivs
+temp	float	$tmp3	 %read{10,10} %write{7,7} %derivs
+const	string	$const3	"clamp"		 %read{8,8} %write{2147483647,-1}
+temp	float	$tmp4	 %read{10,10} %write{9,9} %derivs
+const	float	$const4	0.25		 %read{14,14} %write{2147483647,-1}
+temp	normal	$tmp5	 %read{16,16} %write{15,15} %derivs
+temp	normal	$tmp6	 %read{17,17} %write{16,16} %derivs
+temp	vector	$tmp7	 %read{19,19} %write{18,18}
+temp	normal	$tmp8	 %read{23,23} %write{22,22}
+temp	normal	$tmp9	 %read{22,22} %write{21,21}
+code ___main___
+	eq		$tmp1 i_mtoer_hasBump $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_bump3d.osl"} %line{65} %argrw{"wrr"}
+	if		$tmp1 3 4 	%argrw{"r"}
+	assign		Nshading i_normalCamera 	%line{67} %argrw{"wr"}
+	assign		Nshading N 	%line{71} %argrw{"wr"}
+	functioncall	$const2 24 	%line{78} %argrw{"r"}
+	abs		___344_depth i_bumpDepth 	%line{31} %argrw{"wr"}
+	mul		$tmp2 i_bumpValue i_bumpDepth 	%line{32} %argrw{"wrr"}
+	neg		$tmp3 ___344_depth 	%argrw{"wr"}
+	functioncall	$const3 11 	%argrw{"r"}
+	min		$tmp4 $tmp2 ___344_depth 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{142} %argrw{"wrr"}
+	max		___344_offset $tmp4 $tmp3 	%argrw{"wrr"}
+	normalize	___344_Nn Nshading 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_bump3d.osl"} %line{34} %argrw{"wr"}
+	normalize	___344_Ngn N 	%line{35} %argrw{"wr"}
+	sub		___344_Noffset ___344_Nn ___344_Ngn 	%line{36} %argrw{"wrr"}
+	assign		___344_scale $const4 	%line{38} %argrw{"wr"}
+	mul		$tmp5 ___344_Ngn ___344_offset 	%line{40} %argrw{"wrr"}
+	mul		$tmp6 $tmp5 ___344_scale 	%argrw{"wrr"}
+	add		___344_Pp P $tmp6 	%argrw{"wrr"}
+	calculatenormal	$tmp7 ___344_Pp 	%line{42} %argrw{"wr"} %argderivs{1}
+	neg		___344_Nn $tmp7 	%argrw{"wr"}
+	normalize	___344_Nn ___344_Nn 	%line{43} %argrw{"wr"}
+	add		$tmp9 ___344_Nn ___344_Noffset 	%line{44} %argrw{"wrr"}
+	normalize	$tmp8 $tmp9 	%argrw{"wr"}
+	neg		o_outNormal $tmp8 	%argrw{"wr"}
+	end

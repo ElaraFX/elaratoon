@@ -1,0 +1,8 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_place3dTexture
+param	matrix	i_worldInverseMatrix	1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1 		 %read{0,0} %write{2147483647,-1}
+oparam	matrix	o_worldInverseMatrix	1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1 		 %read{2147483647,-1} %write{0,0}
+code ___main___
+	assign		o_worldInverseMatrix i_worldInverseMatrix 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_place3dTexture.osl"} %line{30} %argrw{"wr"}
+	end

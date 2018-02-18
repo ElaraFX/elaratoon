@@ -1,0 +1,9 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_vray_mtl_wrapper
+param	closure color	baseMtl			%read{0,0} %write{2147483647,-1}
+oparam	closure color	result			%read{2147483647,-1} %write{0,0}
+code ___main___
+	assign		result baseMtl 	%filename{"E:/github/elaramax/Shaders/max_vray_mtl_wrapper.osl"} %line{26} %argrw{"wr"}
+	end

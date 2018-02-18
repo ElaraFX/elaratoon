@@ -1,0 +1,160 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_rgb_multi
+param	color	tex_color1	0 0 0		%read{8,8} %write{2147483647,-1}
+param	color	tex_color2	0 0 0		%read{17,17} %write{2147483647,-1}
+param	int	tex_map1_isnull	0		%read{3,70} %write{2147483647,-1}
+param	int	tex_map2_isnull	0		%read{12,78} %write{2147483647,-1}
+param	float	tex_map1_alpha	1		%read{21,27} %write{2147483647,-1}
+param	float	tex_map2_alpha	1		%read{24,27} %write{2147483647,-1}
+param	vector	tex_map1_bump	0 0 0		%read{56,74} %write{2147483647,-1}
+param	vector	tex_map2_bump	0 0 0		%read{65,82} %write{2147483647,-1}
+param	color	tex_map1	0 0 0		%read{7,52} %write{2147483647,-1}
+param	color	tex_map2	0 0 0		%read{16,61} %write{2147483647,-1}
+param	int	tex_map1Enabled	1		%read{0,67} %write{2147483647,-1}
+param	int	tex_map2Enabled	1		%read{9,75} %write{2147483647,-1}
+param	int	tex_alphaFrom	0		%read{19,25} %write{2147483647,-1}
+oparam	color	result	0 0 0		%read{2147483647,-1} %write{18,18}
+oparam	vector	result_bump	0 0 0		%read{28,28} %write{66,83}
+oparam	float	result_alpha	1		%read{2147483647,-1} %write{21,27}
+local	float	___306_f	%read{55,64} %write{54,63}
+local	color	col1	%read{18,18} %write{7,8}
+local	color	col2	%read{18,18} %write{16,17}
+const	int	$const1	1		%read{0,75} %write{2147483647,-1}
+temp	int	$tmp1	%read{1,1} %write{0,0}
+temp	int	$tmp2	%read{2,6} %write{1,5}
+const	int	$const2	0		%read{1,79} %write{2147483647,-1}
+temp	int	$tmp3	%read{4,4} %write{3,3}
+temp	int	$tmp4	%read{5,5} %write{4,4}
+temp	int	$tmp5	%read{10,10} %write{9,9}
+temp	int	$tmp6	%read{11,15} %write{10,14}
+temp	int	$tmp7	%read{13,13} %write{12,12}
+temp	int	$tmp8	%read{14,14} %write{13,13}
+temp	int	$tmp9	%read{20,20} %write{19,19}
+temp	int	$tmp10	%read{23,23} %write{22,22}
+const	int	$const3	2		%read{25,61} %write{2147483647,-1}
+temp	int	$tmp11	%read{26,26} %write{25,25}
+temp	int	$tmp12	%read{29,29} %write{28,28}
+temp	int	$tmp13	%read{30,30} %write{29,29}
+temp	int	$tmp14	%read{32,32} %write{31,31}
+temp	int	$tmp15	%read{33,37} %write{32,36}
+temp	int	$tmp16	%read{35,35} %write{34,34}
+temp	int	$tmp17	%read{36,36} %write{35,35}
+temp	int	$tmp18	%read{38,42} %write{37,41}
+temp	int	$tmp19	%read{40,40} %write{39,39}
+temp	int	$tmp20	%read{41,41} %write{40,40}
+temp	int	$tmp21	%read{43,47} %write{42,46}
+temp	int	$tmp22	%read{45,45} %write{44,44}
+temp	int	$tmp23	%read{46,46} %write{45,45}
+temp	float	$tmp24	%read{56,56} %write{55,55}
+const	string	$const4	"intensity"		%read{48,57} %write{2147483647,-1}
+temp	float	$tmp25	%read{51,51} %write{49,49}
+temp	float	$tmp26	%read{51,51} %write{50,50}
+temp	float	$tmp27	%read{53,53} %write{51,51}
+temp	float	$tmp28	%read{53,53} %write{52,52}
+temp	float	$tmp29	%read{54,54} %write{53,53}
+const	float	$const5	0.33333334		%read{54,63} %write{2147483647,-1}
+temp	vector	$tmp30	%read{66,66} %write{56,56}
+temp	float	$tmp31	%read{65,65} %write{64,64}
+temp	float	$tmp32	%read{60,60} %write{58,58}
+temp	float	$tmp33	%read{60,60} %write{59,59}
+temp	float	$tmp34	%read{62,62} %write{60,60}
+temp	float	$tmp35	%read{62,62} %write{61,61}
+temp	float	$tmp36	%read{63,63} %write{62,62}
+temp	vector	$tmp37	%read{66,66} %write{65,65}
+temp	int	$tmp38	%read{68,68} %write{67,67}
+temp	int	$tmp39	%read{69,73} %write{68,72}
+temp	int	$tmp40	%read{71,71} %write{70,70}
+temp	int	$tmp41	%read{72,72} %write{71,71}
+temp	int	$tmp42	%read{76,76} %write{75,75}
+temp	int	$tmp43	%read{77,81} %write{76,80}
+temp	int	$tmp44	%read{79,79} %write{78,78}
+temp	int	$tmp45	%read{80,80} %write{79,79}
+const	vector	$const6	0 0 0		%read{83,83} %write{2147483647,-1}
+code ___main___
+	eq		$tmp1 tex_map1Enabled $const1 	%filename{"E:/github/elaramax/Shaders/max_rgb_multi.osl"} %line{43} %argrw{"wrr"}
+	neq		$tmp2 $tmp1 $const2 	%argrw{"wrr"}
+	if		$tmp2 6 6 	%argrw{"r"}
+	eq		$tmp3 tex_map1_isnull $const2 	%argrw{"wrr"}
+	neq		$tmp4 $tmp3 $const2 	%argrw{"wrr"}
+	assign		$tmp2 $tmp4 	%argrw{"wr"}
+	if		$tmp2 8 9 	%argrw{"r"}
+	assign		col1 tex_map1 	%line{45} %argrw{"wr"}
+	assign		col1 tex_color1 	%line{48} %argrw{"wr"}
+	eq		$tmp5 tex_map2Enabled $const1 	%line{50} %argrw{"wrr"}
+	neq		$tmp6 $tmp5 $const2 	%argrw{"wrr"}
+	if		$tmp6 15 15 	%argrw{"r"}
+	eq		$tmp7 tex_map2_isnull $const2 	%argrw{"wrr"}
+	neq		$tmp8 $tmp7 $const2 	%argrw{"wrr"}
+	assign		$tmp6 $tmp8 	%argrw{"wr"}
+	if		$tmp6 17 18 	%argrw{"r"}
+	assign		col2 tex_map2 	%line{52} %argrw{"wr"}
+	assign		col2 tex_color2 	%line{55} %argrw{"wr"}
+	mul		result col1 col2 	%line{57} %argrw{"wrr"}
+	eq		$tmp9 tex_alphaFrom $const2 	%line{58} %argrw{"wrr"}
+	if		$tmp9 22 28 	%argrw{"r"}
+	assign		result_alpha tex_map1_alpha 	%line{60} %argrw{"wr"}
+	eq		$tmp10 tex_alphaFrom $const1 	%line{61} %argrw{"wrr"}
+	if		$tmp10 25 28 	%argrw{"r"}
+	assign		result_alpha tex_map2_alpha 	%line{63} %argrw{"wr"}
+	eq		$tmp11 tex_alphaFrom $const3 	%line{64} %argrw{"wrr"}
+	if		$tmp11 28 28 	%argrw{"r"}
+	mul		result_alpha tex_map1_alpha tex_map2_alpha 	%line{66} %argrw{"wrr"}
+	isconnected	$tmp12 result_bump 	%line{72} %argrw{"wr"}
+	bitand		$tmp13 $tmp12 $const3 	%argrw{"wrr"}
+	if		$tmp13 84 84 	%argrw{"r"}
+	eq		$tmp14 tex_map1Enabled $const1 	%line{74} %argrw{"wrr"}
+	neq		$tmp15 $tmp14 $const2 	%argrw{"wrr"}
+	if		$tmp15 37 37 	%argrw{"r"}
+	eq		$tmp16 tex_map1_isnull $const2 	%argrw{"wrr"}
+	neq		$tmp17 $tmp16 $const2 	%argrw{"wrr"}
+	assign		$tmp15 $tmp17 	%argrw{"wr"}
+	neq		$tmp18 $tmp15 $const2 	%argrw{"wrr"}
+	if		$tmp18 42 42 	%argrw{"r"}
+	eq		$tmp19 tex_map2Enabled $const1 	%argrw{"wrr"}
+	neq		$tmp20 $tmp19 $const2 	%argrw{"wrr"}
+	assign		$tmp18 $tmp20 	%argrw{"wr"}
+	neq		$tmp21 $tmp18 $const2 	%argrw{"wrr"}
+	if		$tmp21 47 47 	%argrw{"r"}
+	eq		$tmp22 tex_map2_isnull $const2 	%argrw{"wrr"}
+	neq		$tmp23 $tmp22 $const2 	%argrw{"wrr"}
+	assign		$tmp21 $tmp23 	%argrw{"wr"}
+	if		$tmp21 67 84 	%argrw{"r"}
+	functioncall	$const4 56 	%line{76} %argrw{"r"}
+	compref		$tmp25 tex_map1 $const2 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{28} %argrw{"wrr"}
+	compref		$tmp26 tex_map1 $const1 	%argrw{"wrr"}
+	add		$tmp27 $tmp25 $tmp26 	%argrw{"wrr"}
+	compref		$tmp28 tex_map1 $const3 	%argrw{"wrr"}
+	add		$tmp29 $tmp27 $tmp28 	%argrw{"wrr"}
+	mul		___306_f $tmp29 $const5 	%argrw{"wrr"}
+	assign		$tmp24 ___306_f 	%line{29} %argrw{"wr"}
+	mul		$tmp30 $tmp24 tex_map1_bump 	%filename{"E:/github/elaramax/Shaders/max_rgb_multi.osl"} %line{76} %argrw{"wrr"}
+	functioncall	$const4 65 	%argrw{"r"}
+	compref		$tmp32 tex_map2 $const2 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{28} %argrw{"wrr"}
+	compref		$tmp33 tex_map2 $const1 	%argrw{"wrr"}
+	add		$tmp34 $tmp32 $tmp33 	%argrw{"wrr"}
+	compref		$tmp35 tex_map2 $const3 	%argrw{"wrr"}
+	add		$tmp36 $tmp34 $tmp35 	%argrw{"wrr"}
+	mul		___306_f $tmp36 $const5 	%argrw{"wrr"}
+	assign		$tmp31 ___306_f 	%line{29} %argrw{"wr"}
+	mul		$tmp37 $tmp31 tex_map2_bump 	%filename{"E:/github/elaramax/Shaders/max_rgb_multi.osl"} %line{76} %argrw{"wrr"}
+	add		result_bump $tmp30 $tmp37 	%argrw{"wrr"}
+	eq		$tmp38 tex_map1Enabled $const1 	%line{80} %argrw{"wrr"}
+	neq		$tmp39 $tmp38 $const2 	%argrw{"wrr"}
+	if		$tmp39 73 73 	%argrw{"r"}
+	eq		$tmp40 tex_map1_isnull $const2 	%argrw{"wrr"}
+	neq		$tmp41 $tmp40 $const2 	%argrw{"wrr"}
+	assign		$tmp39 $tmp41 	%argrw{"wr"}
+	if		$tmp39 75 84 	%argrw{"r"}
+	assign		result_bump tex_map1_bump 	%line{82} %argrw{"wr"}
+	eq		$tmp42 tex_map2Enabled $const1 	%line{84} %argrw{"wrr"}
+	neq		$tmp43 $tmp42 $const2 	%argrw{"wrr"}
+	if		$tmp43 81 81 	%argrw{"r"}
+	eq		$tmp44 tex_map2_isnull $const2 	%argrw{"wrr"}
+	neq		$tmp45 $tmp44 $const2 	%argrw{"wrr"}
+	assign		$tmp43 $tmp45 	%argrw{"wr"}
+	if		$tmp43 83 84 	%argrw{"r"}
+	assign		result_bump tex_map2_bump 	%line{86} %argrw{"wr"}
+	assign		result_bump $const6 	%line{90} %argrw{"wr"}
+	end

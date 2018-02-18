@@ -1,0 +1,266 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_ei_skin
+param	color	diffuse_color	1 1 1		%read{65,86} %write{2147483647,-1}
+param	float	diffuse_weight	0.30000001		%read{43,44} %write{2147483647,-1}
+param	float	diffuse_roughness	0		%read{64,64} %write{2147483647,-1}
+param	float	sss_weight	1		%read{46,46} %write{2147483647,-1}
+param	float	sss_scale	10		%read{67,79} %write{2147483647,-1}
+param	color	sss_shallow_color	1 0.90899998 0.76899999		%read{70,87} %write{2147483647,-1}
+param	float	sss_shallow_weight	0.5		%read{50,51} %write{2147483647,-1}
+param	float	sss_shallow_scale	0.15000001		%read{67,67} %write{2147483647,-1}
+param	color	sss_mid_color	0.949 0.71399999 0.56		%read{76,89} %write{2147483647,-1}
+param	float	sss_mid_weight	0.25		%read{47,53} %write{2147483647,-1}
+param	float	sss_mid_scale	0.25		%read{73,73} %write{2147483647,-1}
+param	color	sss_deep_color	0.69999999 0.1 0.1		%read{82,91} %write{2147483647,-1}
+param	float	sss_deep_weight	1		%read{55,55} %write{2147483647,-1}
+param	float	sss_deep_scale	0.60000002		%read{79,79} %write{2147483647,-1}
+param	color	specular_color	0.75 0.89999998 1		%read{104,104} %write{2147483647,-1}
+param	float	specular_weight	0.80000001		%read{39,104} %write{2147483647,-1}
+param	float	specular_glossiness	0.55000001		%read{101,101} %write{2147483647,-1}
+param	float	specular_fresnel_ior	3		%read{103,103} %write{2147483647,-1}
+param	color	specular2_color	0.75 0.89999998 1		%read{109,109} %write{2147483647,-1}
+param	float	specular2_weight	0		%read{39,109} %write{2147483647,-1}
+param	float	specular2_glossiness	0.75		%read{106,106} %write{2147483647,-1}
+param	float	specular2_fresnel_ior	3		%read{108,108} %write{2147483647,-1}
+param	vector	bump_map_bump	0 0 0		%read{25,25} %write{2147483647,-1}
+param	float	bump_weight	0		%read{21,23} %write{2147483647,-1}
+param	color	normal_map	0 0 0		%read{3,3} %write{2147483647,-1}
+param	float	normal_weight	0		%read{1,18} %write{2147483647,-1}
+oparam	closure color	result			%read{112,112} %write{84,112}
+global	vector	I	%read{29,29} %write{2147483647,-1}
+global	normal	N	%read{0,81} %write{2147483647,-1}
+global	vector	dPdu	%read{6,6} %write{2147483647,-1}
+global	vector	dPdv	%read{9,9} %write{2147483647,-1}
+local	normal	___319_Nbumped	%read{28,28} %write{27,27}
+local	normal	Nshading	%read{20,108} %write{0,28}
+local	color	___417_final_normal_map	%read{4,4} %write{3,3}
+local	color	___417_Nlocal	%read{7,13} %write{5,5}
+local	normal	___417_Nglob	%read{18,18} %write{15,15}
+local	float	costheta	%read{34,36} %write{33,33}
+local	float	costheta2	%read{35,35} %write{34,34}
+local	float	costheta5	%read{37,37} %write{36,36}
+local	float	Fr	%read{40,40} %write{38,38}
+local	float	Fd	%read{43,45} %write{42,42}
+local	float	the_diffuse_weight	%read{65,86} %write{43,43}
+local	float	the_sss_weight	%read{47,52} %write{46,46}
+local	float	the_sss_mid_weight	%read{76,89} %write{47,47}
+local	float	the_sss_shallow_weight	%read{70,87} %write{50,50}
+local	float	the_sss_deep_weight	%read{82,91} %write{55,55}
+const	int	$const1	0		%read{1,98} %write{2147483647,-1}
+temp	int	$tmp1	%read{2,2} %write{1,1}
+const	int	$const2	2		%read{13,13} %write{2147483647,-1}
+temp	color	$tmp2	%read{5,5} %write{4,4}
+const	float	$const3	2		%read{4,4} %write{2147483647,-1}
+const	int	$const4	1		%read{10,10} %write{2147483647,-1}
+const	float	$const5	1		%read{5,106} %write{2147483647,-1}
+temp	vector	$tmp3	%read{8,8} %write{6,6}
+temp	float	$tmp4	%read{8,8} %write{7,7}
+temp	vector	$tmp5	%read{12,12} %write{8,8}
+temp	vector	$tmp6	%read{11,11} %write{9,9}
+temp	float	$tmp7	%read{11,11} %write{10,10}
+temp	vector	$tmp8	%read{12,12} %write{11,11}
+temp	vector	$tmp9	%read{15,15} %write{12,12}
+temp	float	$tmp10	%read{14,14} %write{13,13}
+temp	normal	$tmp11	%read{15,15} %write{14,14}
+temp	float	$tmp12	%read{17,17} %write{16,16}
+temp	normal	$tmp13	%read{19,19} %write{17,17}
+temp	normal	$tmp14	%read{19,19} %write{18,18}
+temp	int	$tmp15	%read{22,22} %write{21,21}
+const	float	$const6	0.0099999998		%read{23,107} %write{2147483647,-1}
+temp	float	$tmp16	%read{25,25} %write{23,23}
+const	string	$const7	"max_calculatenormal"		%read{24,24} %write{2147483647,-1}
+temp	vector	$tmp17	%read{26,26} %write{25,25}
+temp	vector	$tmp18	%read{27,27} %write{26,26}
+temp	float	$tmp19	%read{30,30} %write{29,29}
+temp	float	$tmp20	%read{32,32} %write{30,30}
+const	float	$const8	0		%read{33,33} %write{2147483647,-1}
+const	string	$const9	"clamp"		%read{31,31} %write{2147483647,-1}
+temp	float	$tmp21	%read{33,33} %write{32,32}
+temp	float	$tmp22	%read{36,36} %write{35,35}
+const	float	$const10	0.1		%read{38,38} %write{2147483647,-1}
+const	float	$const11	0.89999998		%read{37,37} %write{2147483647,-1}
+temp	float	$tmp23	%read{38,38} %write{37,37}
+const	float	$const12	0.44999999		%read{42,42} %write{2147483647,-1}
+temp	float	$tmp24	%read{40,40} %write{39,39}
+temp	float	$tmp25	%read{41,41} %write{40,40}
+temp	float	$tmp26	%read{42,42} %write{41,41}
+temp	float	$tmp27	%read{45,45} %write{44,44}
+temp	float	$tmp28	%read{46,46} %write{45,45}
+temp	float	$tmp29	%read{49,49} %write{48,48}
+temp	float	$tmp30	%read{50,50} %write{49,49}
+temp	float	$tmp31	%read{52,52} %write{51,51}
+temp	float	$tmp32	%read{54,54} %write{52,52}
+temp	float	$tmp33	%read{54,54} %write{53,53}
+temp	float	$tmp34	%read{55,55} %write{54,54}
+temp	int	$tmp35	%read{57,57} %write{56,56}
+const	string	$const13	"glossy"		%read{56,56} %write{2147483647,-1}
+temp	int	$tmp36	%read{58,63} %write{57,62}
+temp	int	$tmp37	%read{60,60} %write{59,59}
+const	string	$const14	"diffuse"		%read{59,85} %write{2147483647,-1}
+temp	int	$tmp38	%read{61,61} %write{60,60}
+temp	int	$tmp39	%read{62,62} %write{61,61}
+temp	closure color	$tmp40	%read{66,66} %write{64,64}
+const	string	$const15	"oren_nayar"		%read{64,64} %write{2147483647,-1}
+temp	color	$tmp41	%read{66,66} %write{65,65}
+temp	closure color	$tmp42	%read{72,72} %write{66,66}
+temp	closure color	$tmp43	%read{71,71} %write{69,69}
+temp	float	$tmp44	%read{68,68} %write{67,67}
+temp	color	$tmp45	%read{69,69} %write{68,68}
+const	string	$const16	"bssrdf_gaussian"		%read{69,81} %write{2147483647,-1}
+temp	color	$tmp46	%read{71,71} %write{70,70}
+temp	closure color	$tmp47	%read{72,72} %write{71,71}
+temp	closure color	$tmp48	%read{78,78} %write{72,72}
+temp	closure color	$tmp49	%read{77,77} %write{75,75}
+temp	float	$tmp50	%read{74,74} %write{73,73}
+temp	color	$tmp51	%read{75,75} %write{74,74}
+temp	color	$tmp52	%read{77,77} %write{76,76}
+temp	closure color	$tmp53	%read{78,78} %write{77,77}
+temp	closure color	$tmp54	%read{84,84} %write{78,78}
+temp	closure color	$tmp55	%read{83,83} %write{81,81}
+temp	float	$tmp56	%read{80,80} %write{79,79}
+temp	color	$tmp57	%read{81,81} %write{80,80}
+temp	color	$tmp58	%read{83,83} %write{82,82}
+temp	closure color	$tmp59	%read{84,84} %write{83,83}
+temp	closure color	$tmp60	%read{93,93} %write{85,85}
+temp	color	$tmp61	%read{88,88} %write{86,86}
+temp	color	$tmp62	%read{88,88} %write{87,87}
+temp	color	$tmp63	%read{90,90} %write{88,88}
+temp	color	$tmp64	%read{90,90} %write{89,89}
+temp	color	$tmp65	%read{92,92} %write{90,90}
+temp	color	$tmp66	%read{92,92} %write{91,91}
+temp	color	$tmp67	%read{93,93} %write{92,92}
+temp	int	$tmp68	%read{95,95} %write{94,94}
+const	string	$const17	"eye"		%read{94,94} %write{2147483647,-1}
+temp	int	$tmp69	%read{96,100} %write{95,99}
+temp	int	$tmp70	%read{98,98} %write{97,97}
+const	string	$const18	"transparent"		%read{97,97} %write{2147483647,-1}
+temp	int	$tmp71	%read{99,99} %write{98,98}
+temp	closure color	$tmp72	%read{105,105} %write{103,103}
+temp	float	$tmp73	%read{103,103} %write{102,102}
+temp	float	$tmp74	%read{102,102} %write{101,101}
+const	string	$const19	"microfacet_beckmann"		%read{103,108} %write{2147483647,-1}
+temp	color	$tmp75	%read{105,105} %write{104,104}
+temp	closure color	$tmp76	%read{111,111} %write{105,105}
+temp	closure color	$tmp77	%read{110,110} %write{108,108}
+temp	float	$tmp78	%read{108,108} %write{107,107}
+temp	float	$tmp79	%read{107,107} %write{106,106}
+temp	color	$tmp80	%read{110,110} %write{109,109}
+temp	closure color	$tmp81	%read{111,111} %write{110,110}
+temp	closure color	$tmp82	%read{112,112} %write{111,111}
+code ___main___
+	assign		Nshading N 	%filename{"E:/github/elaramax/Shaders/max_ei_skin.osl"} %line{70} %argrw{"wr"}
+	gt		$tmp1 normal_weight $const1 	%line{72} %argrw{"wrr"}
+	if		$tmp1 21 21 	%argrw{"r"}
+	assign		___417_final_normal_map normal_map 	%line{74} %argrw{"wr"}
+	mul		$tmp2 ___417_final_normal_map $const3 	%line{75} %argrw{"wrr"}
+	sub		___417_Nlocal $tmp2 $const5 	%argrw{"wrr"}
+	normalize	$tmp3 dPdu 	%line{77} %argrw{"wr"}
+	compref		$tmp4 ___417_Nlocal $const1 	%argrw{"wrr"}
+	mul		$tmp5 $tmp3 $tmp4 	%argrw{"wrr"}
+	normalize	$tmp6 dPdv 	%argrw{"wr"}
+	compref		$tmp7 ___417_Nlocal $const4 	%argrw{"wrr"}
+	mul		$tmp8 $tmp6 $tmp7 	%argrw{"wrr"}
+	add		$tmp9 $tmp5 $tmp8 	%argrw{"wrr"}
+	compref		$tmp10 ___417_Nlocal $const2 	%argrw{"wrr"}
+	mul		$tmp11 N $tmp10 	%argrw{"wrr"}
+	add		___417_Nglob $tmp9 $tmp11 	%argrw{"wrr"}
+	sub		$tmp12 $const5 normal_weight 	%line{79} %argrw{"wrr"}
+	mul		$tmp13 $tmp12 N 	%argrw{"wrr"}
+	mul		$tmp14 normal_weight ___417_Nglob 	%argrw{"wrr"}
+	add		Nshading $tmp13 $tmp14 	%argrw{"wrr"}
+	normalize	Nshading Nshading 	%line{80} %argrw{"wr"}
+	neq		$tmp15 bump_weight $const1 	%line{83} %argrw{"wrr"}
+	if		$tmp15 29 29 	%argrw{"r"}
+	mul		$tmp16 bump_weight $const6 	%line{85} %argrw{"wrr"}
+	functioncall	$const7 29 	%argrw{"r"}
+	mul		$tmp17 bump_map_bump $tmp16 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{132} %argrw{"wrr"}
+	add		$tmp18 $tmp17 Nshading 	%argrw{"wrr"}
+	normalize	___319_Nbumped $tmp18 	%argrw{"wr"}
+	assign		Nshading ___319_Nbumped 	%line{133} %argrw{"wr"}
+	dot		$tmp19 N I 	%filename{"E:/github/elaramax/Shaders/max_ei_skin.osl"} %line{88} %argrw{"wrr"}
+	add		$tmp20 $const5 $tmp19 	%argrw{"wrr"}
+	functioncall	$const9 34 	%argrw{"r"}
+	min		$tmp21 $tmp20 $const5 	%filename{"E:/OSL_install\\shaders\\stdosl.h"} %line{144} %argrw{"wrr"}
+	max		costheta $tmp21 $const8 	%argrw{"wrr"}
+	mul		costheta2 costheta costheta 	%filename{"E:/github/elaramax/Shaders/max_ei_skin.osl"} %line{89} %argrw{"wrr"}
+	mul		$tmp22 costheta2 costheta2 	%line{90} %argrw{"wrr"}
+	mul		costheta5 $tmp22 costheta 	%argrw{"wrr"}
+	mul		$tmp23 $const11 costheta5 	%line{91} %argrw{"wrr"}
+	add		Fr $const10 $tmp23 	%argrw{"wrr"}
+	max		$tmp24 specular_weight specular2_weight 	%line{92} %argrw{"wrr"}
+	mul		$tmp25 Fr $tmp24 	%argrw{"wrr"}
+	sub		$tmp26 $const5 $tmp25 	%argrw{"wrr"}
+	max		Fd $const12 $tmp26 	%argrw{"wrr"}
+	mul		the_diffuse_weight Fd diffuse_weight 	%line{94} %argrw{"wrr"}
+	sub		$tmp27 $const5 diffuse_weight 	%line{95} %argrw{"wrr"}
+	mul		$tmp28 Fd $tmp27 	%argrw{"wrr"}
+	mul		the_sss_weight $tmp28 sss_weight 	%argrw{"wrr"}
+	mul		the_sss_mid_weight the_sss_weight sss_mid_weight 	%line{96} %argrw{"wrr"}
+	sub		$tmp29 $const5 sss_mid_weight 	%line{97} %argrw{"wrr"}
+	mul		$tmp30 the_sss_weight $tmp29 	%argrw{"wrr"}
+	mul		the_sss_shallow_weight $tmp30 sss_shallow_weight 	%argrw{"wrr"}
+	sub		$tmp31 $const5 sss_shallow_weight 	%line{98} %argrw{"wrr"}
+	mul		$tmp32 the_sss_weight $tmp31 	%argrw{"wrr"}
+	sub		$tmp33 $const5 sss_mid_weight 	%argrw{"wrr"}
+	mul		$tmp34 $tmp32 $tmp33 	%argrw{"wrr"}
+	mul		the_sss_deep_weight $tmp34 sss_deep_weight 	%argrw{"wrr"}
+	raytype		$tmp35 $const13 	%line{100} %argrw{"wr"}
+	neq		$tmp36 $tmp35 $const1 	%argrw{"wrr"}
+	if		$tmp36 59 63 	%argrw{"r"}
+	raytype		$tmp37 $const14 	%argrw{"wr"}
+	eq		$tmp38 $tmp37 $const1 	%argrw{"wrr"}
+	neq		$tmp39 $tmp38 $const1 	%argrw{"wrr"}
+	assign		$tmp36 $tmp39 	%argrw{"wr"}
+	if		$tmp36 85 94 	%argrw{"r"}
+	closure		$tmp40 $const15 Nshading diffuse_roughness 	%line{102} %argrw{"wrrr"}
+	mul		$tmp41 the_diffuse_weight diffuse_color 	%argrw{"wrr"}
+	mul		$tmp42 $tmp40 $tmp41 	%argrw{"wrr"}
+	mul		$tmp44 sss_scale sss_shallow_scale 	%line{103} %argrw{"wrr"}
+	assign		$tmp45 $tmp44 	%argrw{"wr"}
+	closure		$tmp43 $const16 N $tmp45 	%argrw{"wrrr"}
+	mul		$tmp46 the_sss_shallow_weight sss_shallow_color 	%argrw{"wrr"}
+	mul		$tmp47 $tmp43 $tmp46 	%argrw{"wrr"}
+	add		$tmp48 $tmp42 $tmp47 	%argrw{"wrr"}
+	mul		$tmp50 sss_scale sss_mid_scale 	%line{104} %argrw{"wrr"}
+	assign		$tmp51 $tmp50 	%argrw{"wr"}
+	closure		$tmp49 $const16 N $tmp51 	%argrw{"wrrr"}
+	mul		$tmp52 the_sss_mid_weight sss_mid_color 	%argrw{"wrr"}
+	mul		$tmp53 $tmp49 $tmp52 	%argrw{"wrr"}
+	add		$tmp54 $tmp48 $tmp53 	%argrw{"wrr"}
+	mul		$tmp56 sss_scale sss_deep_scale 	%line{105} %argrw{"wrr"}
+	assign		$tmp57 $tmp56 	%argrw{"wr"}
+	closure		$tmp55 $const16 N $tmp57 	%argrw{"wrrr"}
+	mul		$tmp58 the_sss_deep_weight sss_deep_color 	%argrw{"wrr"}
+	mul		$tmp59 $tmp55 $tmp58 	%argrw{"wrr"}
+	add		result $tmp54 $tmp59 	%argrw{"wrr"}
+	closure		$tmp60 $const14 Nshading 	%line{114} %argrw{"wrr"}
+	mul		$tmp61 the_diffuse_weight diffuse_color 	%line{111} %argrw{"wrr"}
+	mul		$tmp62 the_sss_shallow_weight sss_shallow_color 	%line{112} %argrw{"wrr"}
+	add		$tmp63 $tmp61 $tmp62 	%argrw{"wrr"}
+	mul		$tmp64 the_sss_mid_weight sss_mid_color 	%line{113} %argrw{"wrr"}
+	add		$tmp65 $tmp63 $tmp64 	%argrw{"wrr"}
+	mul		$tmp66 the_sss_deep_weight sss_deep_color 	%line{114} %argrw{"wrr"}
+	add		$tmp67 $tmp65 $tmp66 	%argrw{"wrr"}
+	mul		result $tmp60 $tmp67 	%argrw{"wrr"}
+	raytype		$tmp68 $const17 	%line{117} %argrw{"wr"}
+	neq		$tmp69 $tmp68 $const1 	%argrw{"wrr"}
+	if		$tmp69 97 100 	%argrw{"r"}
+	raytype		$tmp70 $const18 	%argrw{"wr"}
+	neq		$tmp71 $tmp70 $const1 	%argrw{"wrr"}
+	assign		$tmp69 $tmp71 	%argrw{"wr"}
+	if		$tmp69 113 113 	%argrw{"r"}
+	sub		$tmp74 $const5 specular_glossiness 	%line{120} %argrw{"wrr"}
+	max		$tmp73 $const6 $tmp74 	%argrw{"wrr"}
+	closure		$tmp72 $const19 Nshading $tmp73 specular_fresnel_ior 	%argrw{"wrrrr"}
+	mul		$tmp75 specular_weight specular_color 	%argrw{"wrr"}
+	mul		$tmp76 $tmp72 $tmp75 	%argrw{"wrr"}
+	sub		$tmp79 $const5 specular2_glossiness 	%line{121} %argrw{"wrr"}
+	max		$tmp78 $const6 $tmp79 	%argrw{"wrr"}
+	closure		$tmp77 $const19 Nshading $tmp78 specular2_fresnel_ior 	%argrw{"wrrrr"}
+	mul		$tmp80 specular2_weight specular2_color 	%argrw{"wrr"}
+	mul		$tmp81 $tmp77 $tmp80 	%argrw{"wrr"}
+	add		$tmp82 $tmp76 $tmp81 	%line{122} %argrw{"wrr"}
+	add		result result $tmp82 	%argrw{"wrr"}
+	end

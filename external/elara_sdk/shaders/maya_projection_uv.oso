@@ -1,0 +1,954 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_projection_uv
+param	int	i_alphaIsLuminance	0 		 %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_amplitudeX	0 		 %read{101,172} %write{2147483647,-1} %derivs
+param	float	i_amplitudeY	0 		 %read{104,176} %write{2147483647,-1} %derivs
+param	float	i_blend	0 		 %read{64,64} %write{2147483647,-1}
+param	vector	i_depth	0 10 0 		 %read{124,151} %write{2147483647,-1}
+param	string	i_linkedCamera	"" 		 %read{407,418} %write{2147483647,-1}
+param	int	i_fitType	1 		 %read{428,438} %write{2147483647,-1}
+param	int	i_fitFill	0 		 %read{430,435} %write{2147483647,-1}
+param	matrix	i_placementMatrix	1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1		 %read{22,22} %write{2147483647,-1} %derivs
+param	int	i_projType	1 		 %read{181,405} %write{2147483647,-1}
+param	float	i_ratio	0.30000001 		 %read{145,145} %write{2147483647,-1} %derivs
+param	vector	i_ripples	1 1 1 		 %read{113,115} %write{2147483647,-1} %derivs
+param	float	i_uAngle	180 		 %read{198,215} %write{2147483647,-1}
+param	float	i_vAngle	90 		 %read{205,205} %write{2147483647,-1}
+param	vector	i_uvCoord	0 0 0 		 %read{2147483647,-1} %write{2147483647,-1}
+param	int	i_local	0 		 %read{2,2} %write{2147483647,-1}
+param	int	i_wrap	0 		 %read{3,470} %write{2147483647,-1}
+param	float	cameraNearPlane	0 		 %read{422,422} %write{2147483647,-1}
+param	float	cameraHorizontalFOV	0 		 %read{423,423} %write{2147483647,-1}
+param	float	cameraAspectRation	0 		 %read{2147483647,-1} %write{2147483647,-1}
+oparam	float	o_outside	0 		 %read{2147483647,-1} %write{98,98}
+oparam	float	o_prev_ss	1 		 %read{2147483647,-1} %write{0,0}
+oparam	float	o_prev_tt	1 		 %read{2147483647,-1} %write{1,1}
+global	point	P	 %read{13,408} %write{2147483647,-1} %derivs
+global	normal	N	 %read{322,322} %write{2147483647,-1}
+global	float	u	 %read{0,0} %write{513,513}
+global	float	v	 %read{1,1} %write{514,514}
+local	float	___344_i	 %read{123,152} %write{109,147}
+local	float	___344_lacunarity	 %read{123,165} %write{110,147} %derivs
+local	float	___344_mix	 %read{123,169} %write{111,168} %derivs
+local	float	___344_amp	 %read{123,161} %write{112,147} %derivs
+local	point	___344_pp	 %read{119,162} %write{118,118} %derivs
+local	float	___344_M_PIxel_size	 %read{121,156} %write{120,120} %derivs
+local	float	___344_nyquist	 %read{128,128} %write{121,121}
+local	float	___344_M_PIxel	 %read{123,156} %write{122,147} %derivs
+local	float	___346_weight	 %read{161,161} %write{160,160} %derivs
+local	point	___398_Pref	 %read{10,21} %write{5,5} %derivs
+local	point	___398_pp	 %read{22,22} %write{6,21} %derivs
+local	point	___398_pq	 %read{23,97} %write{22,22} %derivs
+local	float	ss	 %read{206,513} %write{185,511}
+local	float	tt	 %read{207,514} %write{188,512}
+local	float	edgeDist	 %read{2147483647,-1} %write{7,96}
+local	float	outside	 %read{98,99} %write{58,60}
+local	point	pp	 %read{117,401} %write{97,180} %derivs
+local	color	___409_mixValue	 %read{173,175} %write{171,171} %derivs
+local	vector	___411_v	 %read{193,195} %write{192,192}
+local	float	___411_vx	 %read{196,199} %write{193,193}
+local	float	___411_vy	 %read{203,203} %write{194,194}
+local	float	___411_vz	 %read{196,200} %write{195,195}
+local	vector	___412_v	 %read{212,213} %write{211,211}
+local	vector	___413_v	 %read{224,230} %write{223,223}
+local	float	___413_l	 %read{228,231} %write{226,226}
+local	vector	___414_v	 %read{2147483647,-1} %write{236,236}
+local	normal	___421_NN	 %read{324,350} %write{323,323}
+local	vector	___425_dp	 %read{376,379} %write{375,375}
+local	float	___425_dx	 %read{390,390} %write{376,376}
+local	float	___425_dy	 %read{392,392} %write{377,377}
+local	float	___425_dz	 %read{395,395} %write{378,378}
+local	float	___425_t2	 %read{382,382} %write{380,380}
+local	float	___425_power	 %read{391,398} %write{389,389}
+local	float	___425_t3	 %read{403,403} %write{400,400}
+local	string	___426_cameraSpace	 %read{408,408} %write{407,407}
+local	point	___426_ps	 %read{409,505} %write{408,408}
+local	float	___426_px	 %read{2147483647,-1} %write{409,409}
+local	float	___426_py	 %read{2147483647,-1} %write{410,410}
+local	float	___426_imgAR	 %read{437,442} %write{411,411}
+local	float	___426_uScale	 %read{447,447} %write{412,442}
+local	float	___426_vScale	 %read{457,457} %write{413,440}
+local	float	___426_camAR	 %read{427,442} %write{414,415}
+local	float	___426_resAR	 %read{434,441} %write{416,421}
+local	int	___426_rez_x	 %read{419,419} %write{417,417}
+local	int	___426_rez_y	 %read{420,420} %write{418,418}
+local	float	___426_nearp	 %read{426,456} %write{422,422}
+local	float	___426_hfov	 %read{424,424} %write{423,423}
+local	float	___426_maxw	 %read{427,451} %write{426,426}
+local	float	___426_maxh	 %read{461,461} %write{427,427}
+temp	float	$tmp1	 %read{8,8} %write{2,2}
+temp	float	$tmp2	 %read{56,61} %write{3,3}
+const	string	$const1	"transformP"		 %read{4,4} %write{2147483647,-1}
+const	point	$const2	0 0 0		 %read{5,16} %write{2147483647,-1}
+const	float	$const3	0		 %read{7,467} %write{2147483647,-1}
+temp	int	$tmp3	 %read{9,9} %write{8,8}
+temp	int	$tmp5	 %read{11,11} %write{10,10}
+const	string	$const4	"object"		 %read{13,15} %write{2147483647,-1}
+const	string	$const5	"transform"		 %read{12,321} %write{2147483647,-1}
+const	string	$const6	"common"		 %read{13,322} %write{2147483647,-1}
+temp	int	$tmp7	 %read{17,17} %write{16,16}
+const	string	$const7	"world"		 %read{19,408} %write{2147483647,-1}
+const	int	$const8	0		 %read{23,497} %write{2147483647,-1}
+temp	float	$tmp8	 %read{24,24} %write{23,23}
+const	int	$const9	1		 %read{24,504} %write{2147483647,-1}
+temp	int	$tmp9	 %read{25,25} %write{24,24}
+temp	int	$tmp10	 %read{26,31} %write{25,30}
+temp	float	$tmp11	 %read{28,28} %write{27,27}
+const	int	$const10	-1		 %read{28,52} %write{2147483647,-1}
+temp	int	$tmp12	 %read{29,29} %write{28,28}
+temp	int	$tmp13	 %read{30,30} %write{29,29}
+temp	int	$tmp14	 %read{32,37} %write{31,36}
+temp	float	$tmp15	 %read{34,34} %write{33,33}
+temp	int	$tmp16	 %read{35,35} %write{34,34}
+temp	int	$tmp17	 %read{36,36} %write{35,35}
+temp	int	$tmp18	 %read{38,43} %write{37,42}
+temp	float	$tmp19	 %read{40,40} %write{39,39}
+temp	int	$tmp20	 %read{41,41} %write{40,40}
+temp	int	$tmp21	 %read{42,42} %write{41,41}
+temp	int	$tmp22	 %read{44,49} %write{43,48}
+const	int	$const11	2		 %read{45,505} %write{2147483647,-1}
+temp	float	$tmp23	 %read{46,46} %write{45,45}
+temp	int	$tmp24	 %read{47,47} %write{46,46}
+temp	int	$tmp25	 %read{48,48} %write{47,47}
+temp	int	$tmp26	 %read{50,55} %write{49,54}
+temp	float	$tmp27	 %read{52,52} %write{51,51}
+temp	int	$tmp28	 %read{53,53} %write{52,52}
+temp	int	$tmp29	 %read{54,54} %write{53,53}
+temp	int	$tmp30	 %read{57,57} %write{56,56}
+const	float	$const12	1		 %read{59,509} %write{2147483647,-1}
+temp	int	$tmp31	 %read{62,62} %write{61,61}
+temp	int	$tmp32	 %read{63,67} %write{62,66}
+temp	int	$tmp33	 %read{65,65} %write{64,64}
+temp	int	$tmp34	 %read{66,66} %write{65,65}
+temp	float	$tmp35	 %read{96,96} %write{86,86}
+temp	float	$tmp36	 %read{86,86} %write{76,76}
+temp	float	$tmp37	 %read{71,71} %write{70,70}
+temp	float	$tmp38	 %read{69,69} %write{68,68}
+temp	float	$tmp39	 %read{70,70} %write{69,69}
+temp	float	$tmp40	 %read{76,76} %write{71,71}
+const	float	$const13	2		 %read{71,400} %write{2147483647,-1}
+temp	float	$tmp41	 %read{75,75} %write{74,74}
+temp	float	$tmp42	 %read{73,73} %write{72,72}
+temp	float	$tmp43	 %read{74,74} %write{73,73}
+temp	float	$tmp44	 %read{76,76} %write{75,75}
+temp	float	$tmp45	 %read{86,86} %write{85,85}
+temp	float	$tmp46	 %read{80,80} %write{79,79}
+temp	float	$tmp47	 %read{78,78} %write{77,77}
+temp	float	$tmp48	 %read{79,79} %write{78,78}
+temp	float	$tmp49	 %read{85,85} %write{80,80}
+temp	float	$tmp50	 %read{84,84} %write{83,83}
+temp	float	$tmp51	 %read{82,82} %write{81,81}
+temp	float	$tmp52	 %read{83,83} %write{82,82}
+temp	float	$tmp53	 %read{85,85} %write{84,84}
+temp	float	$tmp54	 %read{96,96} %write{95,95}
+temp	float	$tmp55	 %read{90,90} %write{89,89}
+temp	float	$tmp56	 %read{88,88} %write{87,87}
+temp	float	$tmp57	 %read{89,89} %write{88,88}
+temp	float	$tmp58	 %read{95,95} %write{90,90}
+temp	float	$tmp59	 %read{94,94} %write{93,93}
+temp	float	$tmp60	 %read{92,92} %write{91,91}
+temp	float	$tmp61	 %read{93,93} %write{92,92}
+temp	float	$tmp62	 %read{95,95} %write{94,94}
+temp	int	$tmp63	 %read{100,100} %write{99,99}
+temp	int	$tmp64	 %read{102,102} %write{101,101}
+temp	int	$tmp65	 %read{103,107} %write{102,106}
+temp	int	$tmp66	 %read{105,105} %write{104,104}
+temp	int	$tmp67	 %read{106,106} %write{105,105}
+temp	float	$tmp68	 %read{171,171} %write{170,170} %derivs
+const	string	$const14	"fBrownianNoise"		 %read{108,108} %write{2147483647,-1}
+temp	point	$tmp69	 %read{117,117} %write{116,116} %derivs
+temp	float	$tmp70	 %read{116,116} %write{113,113} %derivs
+temp	float	$tmp71	 %read{116,116} %write{114,114} %derivs
+temp	float	$tmp72	 %read{116,116} %write{115,115} %derivs
+temp	point	$tmp73	 %read{118,118} %write{117,117} %derivs
+temp	float	$tmp74	 %read{120,120} %write{119,119} %derivs
+temp	float	$tmp75	 %read{125,125} %write{124,124}
+temp	int	$tmp76	 %read{126,126} %write{125,125}
+temp	int	$tmp77	 %read{127,131} %write{126,130}
+temp	int	$tmp78	 %read{129,129} %write{128,128}
+temp	int	$tmp79	 %read{130,130} %write{129,129}
+temp	int	$tmp80	 %read{123,147} %write{123,147}
+temp	float	$tmp81	 %read{134,134} %write{133,133}
+temp	int	$tmp82	 %read{135,135} %write{134,134}
+temp	int	$tmp83	 %read{136,136} %write{135,135}
+temp	float	$tmp84	 %read{142,142} %write{141,141} %derivs
+temp	vector	$tmp85	 %read{139,139} %write{137,137} %derivs
+temp	float	$tmp86	 %read{139,139} %write{138,138} %derivs
+const	string	$const15	"uperlin"		 %read{138,163} %write{2147483647,-1}
+temp	vector	$tmp87	 %read{140,140} %write{139,139} %derivs
+temp	vector	$tmp88	 %read{141,141} %write{140,140} %derivs
+temp	float	$tmp89	 %read{143,143} %write{142,142} %derivs
+temp	int	$tmp90	 %read{149,149} %write{148,148}
+temp	int	$tmp91	 %read{150,155} %write{149,154}
+temp	float	$tmp92	 %read{152,152} %write{151,151}
+temp	int	$tmp93	 %read{153,153} %write{152,152}
+temp	int	$tmp94	 %read{154,154} %write{153,153}
+temp	float	$tmp95	 %read{157,157} %write{156,156} %derivs
+temp	float	$tmp96	 %read{159,159} %write{157,157} %derivs
+const	string	$const16	"clamp"		 %read{158,158} %write{2147483647,-1}
+temp	float	$tmp97	 %read{160,160} %write{159,159} %derivs
+temp	float	$tmp98	 %read{167,167} %write{161,161} %derivs
+temp	float	$tmp99	 %read{167,167} %write{166,166} %derivs
+temp	vector	$tmp100	 %read{164,164} %write{162,162} %derivs
+temp	float	$tmp101	 %read{164,164} %write{163,163} %derivs
+temp	vector	$tmp102	 %read{165,165} %write{164,164} %derivs
+temp	vector	$tmp103	 %read{166,166} %write{165,165} %derivs
+temp	float	$tmp104	 %read{168,168} %write{167,167} %derivs
+const	float	$const17	0.5		 %read{169,510} %write{2147483647,-1}
+temp	float	$tmp105	 %read{170,170} %write{169,169} %derivs
+temp	vector	$tmp106	 %read{179,179} %write{177,177} %derivs
+temp	float	$tmp107	 %read{174,174} %write{172,172} %derivs
+temp	float	$tmp108	 %read{174,174} %write{173,173} %derivs
+temp	float	$tmp109	 %read{177,177} %write{174,174} %derivs
+temp	float	$tmp110	 %read{176,176} %write{175,175} %derivs
+temp	float	$tmp111	 %read{177,177} %write{176,176} %derivs
+temp	vector	$tmp112	 %read{179,179} %write{178,178} %derivs
+temp	vector	$tmp113	 %read{180,180} %write{179,179} %derivs
+temp	int	$tmp114	 %read{182,182} %write{181,181}
+temp	float	$tmp115	 %read{184,184} %write{183,183}
+temp	float	$tmp116	 %read{185,185} %write{184,184}
+temp	float	$tmp117	 %read{187,187} %write{186,186}
+temp	float	$tmp118	 %read{188,188} %write{187,187}
+temp	int	$tmp119	 %read{190,190} %write{189,189}
+temp	vector	$tmp120	 %read{192,192} %write{191,191}
+temp	float	$tmp121	 %read{197,197} %write{196,196}
+temp	float	$tmp122	 %read{198,198} %write{197,197}
+temp	float	$tmp123	 %read{204,204} %write{203,203}
+temp	float	$tmp124	 %read{203,203} %write{202,202}
+temp	float	$tmp125	 %read{201,201} %write{199,199}
+temp	float	$tmp126	 %read{201,201} %write{200,200}
+temp	float	$tmp127	 %read{202,202} %write{201,201}
+temp	float	$tmp128	 %read{205,205} %write{204,204}
+const	int	$const18	3		 %read{208,208} %write{2147483647,-1}
+temp	int	$tmp129	 %read{209,209} %write{208,208}
+temp	vector	$tmp130	 %read{211,211} %write{210,210}
+temp	float	$tmp131	 %read{215,215} %write{214,214}
+temp	float	$tmp132	 %read{214,214} %write{212,212}
+temp	float	$tmp133	 %read{214,214} %write{213,213}
+temp	float	$tmp134	 %read{216,216} %write{215,215}
+temp	float	$tmp135	 %read{218,218} %write{217,217}
+temp	float	$tmp136	 %read{219,219} %write{218,218}
+const	int	$const19	4		 %read{220,220} %write{2147483647,-1}
+temp	int	$tmp137	 %read{221,221} %write{220,220}
+temp	vector	$tmp138	 %read{223,223} %write{222,222}
+temp	float	$tmp139	 %read{226,226} %write{225,225}
+const	vector	$const20	0 0 1		 %read{224,224} %write{2147483647,-1}
+temp	vector	$tmp141	 %read{225,225} %write{224,224}
+temp	float	$tmp142	 %read{228,228} %write{227,227}
+temp	float	$tmp143	 %read{229,229} %write{228,228}
+temp	float	$tmp144	 %read{231,231} %write{230,230}
+temp	float	$tmp145	 %read{232,232} %write{231,231}
+const	int	$const21	5		 %read{233,233} %write{2147483647,-1}
+temp	int	$tmp146	 %read{234,234} %write{233,233}
+temp	vector	$tmp147	 %read{236,236} %write{235,235}
+temp	float	$tmp148	 %read{241,241} %write{238,238}
+temp	float	$tmp149	 %read{238,238} %write{237,237}
+temp	float	$tmp150	 %read{241,241} %write{240,240}
+temp	float	$tmp151	 %read{240,240} %write{239,239}
+temp	int	$tmp152	 %read{242,242} %write{241,241}
+temp	int	$tmp153	 %read{243,251} %write{242,250}
+temp	float	$tmp154	 %read{248,248} %write{245,245}
+temp	float	$tmp155	 %read{245,245} %write{244,244}
+temp	float	$tmp156	 %read{248,248} %write{247,247}
+temp	float	$tmp157	 %read{247,247} %write{246,246}
+temp	int	$tmp158	 %read{249,249} %write{248,248}
+temp	int	$tmp159	 %read{250,250} %write{249,249}
+temp	float	$tmp160	 %read{254,254} %write{252,252}
+temp	float	$tmp161	 %read{254,254} %write{253,253}
+temp	float	$tmp162	 %read{257,257} %write{255,255}
+temp	float	$tmp163	 %read{257,257} %write{256,256}
+temp	float	$tmp164	 %read{259,259} %write{258,258}
+temp	int	$tmp165	 %read{260,260} %write{259,259}
+temp	float	$tmp166	 %read{267,267} %write{264,264}
+temp	float	$tmp167	 %read{264,264} %write{263,263}
+temp	float	$tmp168	 %read{267,267} %write{266,266}
+temp	float	$tmp169	 %read{266,266} %write{265,265}
+temp	int	$tmp170	 %read{268,268} %write{267,267}
+temp	int	$tmp171	 %read{269,277} %write{268,276}
+temp	float	$tmp172	 %read{274,274} %write{271,271}
+temp	float	$tmp173	 %read{271,271} %write{270,270}
+temp	float	$tmp174	 %read{274,274} %write{273,273}
+temp	float	$tmp175	 %read{273,273} %write{272,272}
+temp	int	$tmp176	 %read{275,275} %write{274,274}
+temp	int	$tmp177	 %read{276,276} %write{275,275}
+temp	float	$tmp178	 %read{280,280} %write{278,278}
+temp	float	$tmp179	 %read{280,280} %write{279,279}
+temp	float	$tmp180	 %read{283,283} %write{281,281}
+temp	float	$tmp181	 %read{283,283} %write{282,282}
+temp	float	$tmp182	 %read{285,285} %write{284,284}
+temp	int	$tmp183	 %read{286,286} %write{285,285}
+temp	float	$tmp184	 %read{293,293} %write{290,290}
+temp	float	$tmp185	 %read{290,290} %write{289,289}
+temp	float	$tmp186	 %read{293,293} %write{292,292}
+temp	float	$tmp187	 %read{292,292} %write{291,291}
+temp	int	$tmp188	 %read{294,294} %write{293,293}
+temp	int	$tmp189	 %read{295,303} %write{294,302}
+temp	float	$tmp190	 %read{300,300} %write{297,297}
+temp	float	$tmp191	 %read{297,297} %write{296,296}
+temp	float	$tmp192	 %read{300,300} %write{299,299}
+temp	float	$tmp193	 %read{299,299} %write{298,298}
+temp	int	$tmp194	 %read{301,301} %write{300,300}
+temp	int	$tmp195	 %read{302,302} %write{301,301}
+temp	float	$tmp196	 %read{306,306} %write{304,304}
+temp	float	$tmp197	 %read{306,306} %write{305,305}
+temp	float	$tmp198	 %read{309,309} %write{307,307}
+temp	float	$tmp199	 %read{309,309} %write{308,308}
+temp	float	$tmp200	 %read{311,311} %write{310,310}
+temp	int	$tmp201	 %read{312,312} %write{311,311}
+temp	float	$tmp202	 %read{316,316} %write{315,315}
+temp	float	$tmp203	 %read{318,318} %write{317,317}
+const	int	$const22	6		 %read{319,319} %write{2147483647,-1}
+temp	int	$tmp204	 %read{320,320} %write{319,319}
+temp	normal	$tmp205	 %read{323,323} %write{322,322}
+const	string	$const23	"shader"		 %read{322,322} %write{2147483647,-1}
+temp	float	$tmp206	 %read{328,328} %write{325,325}
+temp	float	$tmp207	 %read{325,325} %write{324,324}
+temp	float	$tmp208	 %read{328,328} %write{327,327}
+temp	float	$tmp209	 %read{327,327} %write{326,326}
+temp	int	$tmp210	 %read{329,329} %write{328,328}
+temp	int	$tmp211	 %read{330,338} %write{329,337}
+temp	float	$tmp212	 %read{335,335} %write{332,332}
+temp	float	$tmp213	 %read{332,332} %write{331,331}
+temp	float	$tmp214	 %read{335,335} %write{334,334}
+temp	float	$tmp215	 %read{334,334} %write{333,333}
+temp	int	$tmp216	 %read{336,336} %write{335,335}
+temp	int	$tmp217	 %read{337,337} %write{336,336}
+temp	float	$tmp218	 %read{345,345} %write{342,342}
+temp	float	$tmp219	 %read{342,342} %write{341,341}
+temp	float	$tmp220	 %read{345,345} %write{344,344}
+temp	float	$tmp221	 %read{344,344} %write{343,343}
+temp	int	$tmp222	 %read{346,346} %write{345,345}
+temp	int	$tmp223	 %read{347,355} %write{346,354}
+temp	float	$tmp224	 %read{352,352} %write{349,349}
+temp	float	$tmp225	 %read{349,349} %write{348,348}
+temp	float	$tmp226	 %read{352,352} %write{351,351}
+temp	float	$tmp227	 %read{351,351} %write{350,350}
+temp	int	$tmp228	 %read{353,353} %write{352,352}
+temp	int	$tmp229	 %read{354,354} %write{353,353}
+temp	float	$tmp230	 %read{361,361} %write{360,360}
+temp	float	$tmp231	 %read{363,363} %write{362,362}
+const	int	$const24	7		 %read{364,364} %write{2147483647,-1}
+temp	int	$tmp232	 %read{365,365} %write{364,364}
+const	string	$const25	"cell"		 %read{366,402} %write{2147483647,-1}
+temp	point	$tmp233	 %read{374,374} %write{373,373}
+temp	float	$tmp234	 %read{373,373} %write{368,368}
+temp	float	$tmp235	 %read{368,368} %write{367,367}
+temp	float	$tmp236	 %read{373,373} %write{370,370}
+temp	float	$tmp237	 %read{370,370} %write{369,369}
+temp	float	$tmp238	 %read{373,373} %write{372,372}
+temp	float	$tmp239	 %read{372,372} %write{371,371}
+temp	vector	$tmp240	 %read{375,375} %write{374,374}
+temp	float	$tmp241	 %read{380,380} %write{379,379}
+temp	float	$tmp242	 %read{387,387} %write{386,386}
+temp	float	$tmp243	 %read{382,382} %write{381,381}
+const	float	$const27	3		 %read{381,381} %write{2147483647,-1}
+temp	float	$tmp244	 %read{383,383} %write{382,382}
+temp	float	$tmp245	 %read{386,386} %write{383,383}
+const	int	$const28	32		 %read{384,384} %write{2147483647,-1}
+temp	int	$tmp246	 %read{385,385} %write{384,384}
+temp	float	$tmp247	 %read{386,386} %write{385,385}
+temp	float	$tmp248	 %read{388,388} %write{387,387}
+temp	float	$tmp249	 %read{389,389} %write{388,388}
+const	float	$const29	64		 %read{388,388} %write{2147483647,-1}
+temp	float	$tmp250	 %read{400,400} %write{399,399}
+temp	float	$tmp251	 %read{394,394} %write{391,391}
+temp	float	$tmp252	 %read{391,391} %write{390,390}
+temp	float	$tmp253	 %read{394,394} %write{393,393}
+temp	float	$tmp254	 %read{393,393} %write{392,392}
+temp	float	$tmp255	 %read{397,397} %write{394,394}
+temp	float	$tmp256	 %read{397,397} %write{396,396}
+temp	float	$tmp257	 %read{396,396} %write{395,395}
+temp	float	$tmp258	 %read{399,399} %write{397,397}
+temp	float	$tmp259	 %read{399,399} %write{398,398}
+temp	float	$tmp260	 %read{403,403} %write{402,402}
+const	vector	$const30	42 25 99		 %read{401,401} %write{2147483647,-1}
+temp	point	$tmp262	 %read{402,402} %write{401,401}
+const	int	$const31	8		 %read{405,405} %write{2147483647,-1}
+temp	int	$tmp263	 %read{406,406} %write{405,405}
+const	string	$const32	"mayaCamera:"		 %read{407,407} %write{2147483647,-1}
+temp	int	$tmp264	 %read{2147483647,-1} %write{415,415}
+const	string	$const33	"aspect"		 %read{415,415} %write{2147483647,-1}
+temp	int	$tmp265	 %read{2147483647,-1} %write{417,417}
+const	string	$const34	"res_x"		 %read{417,417} %write{2147483647,-1}
+temp	int	$tmp266	 %read{2147483647,-1} %write{418,418}
+const	string	$const35	"res_y"		 %read{418,418} %write{2147483647,-1}
+temp	float	$tmp267	 %read{421,421} %write{419,419}
+temp	float	$tmp268	 %read{421,421} %write{420,420}
+temp	float	$tmp269	 %read{426,426} %write{425,425}
+temp	float	$tmp270	 %read{425,425} %write{424,424}
+temp	int	$tmp271	 %read{429,429} %write{428,428}
+temp	int	$tmp272	 %read{431,431} %write{430,430}
+temp	int	$tmp273	 %read{433,433} %write{432,432}
+temp	int	$tmp274	 %read{436,436} %write{435,435}
+temp	int	$tmp275	 %read{439,439} %write{438,438}
+temp	float	$tmp276	 %read{444,444} %write{443,443}
+temp	int	$tmp277	 %read{445,445} %write{444,444}
+temp	float	$tmp278	 %read{447,447} %write{446,446}
+temp	float	$tmp279	 %read{449,449} %write{447,447}
+temp	float	$tmp280	 %read{449,449} %write{448,448}
+temp	float	$tmp281	 %read{452,452} %write{449,449}
+temp	float	$tmp282	 %read{451,451} %write{450,450}
+temp	float	$tmp283	 %read{452,452} %write{451,451}
+temp	float	$tmp284	 %read{454,454} %write{452,452}
+const	string	$const36	"adjust"		 %read{453,508} %write{2147483647,-1}
+temp	float	$tmp285	 %read{455,455} %write{454,454}
+temp	float	$tmp286	 %read{457,457} %write{456,456}
+temp	float	$tmp287	 %read{459,459} %write{457,457}
+temp	float	$tmp288	 %read{459,459} %write{458,458}
+temp	float	$tmp289	 %read{462,462} %write{459,459}
+temp	float	$tmp290	 %read{461,461} %write{460,460}
+temp	float	$tmp291	 %read{462,462} %write{461,461}
+temp	float	$tmp292	 %read{464,464} %write{462,462}
+temp	float	$tmp293	 %read{465,465} %write{464,464}
+temp	float	$tmp294	 %read{467,467} %write{466,466}
+temp	int	$tmp295	 %read{468,468} %write{467,467}
+temp	int	$tmp296	 %read{469,496} %write{468,495}
+temp	int	$tmp297	 %read{471,494} %write{470,493}
+temp	float	$tmp298	 %read{473,473} %write{472,472}
+const	float	$const37	-1		 %read{473,473} %write{2147483647,-1}
+temp	int	$tmp299	 %read{474,474} %write{473,473}
+temp	int	$tmp300	 %read{475,483} %write{474,482}
+temp	float	$tmp301	 %read{480,480} %write{477,477}
+temp	float	$tmp302	 %read{477,477} %write{476,476}
+temp	float	$tmp303	 %read{479,479} %write{478,478}
+temp	float	$tmp304	 %read{480,480} %write{479,479}
+temp	int	$tmp305	 %read{481,481} %write{480,480}
+temp	int	$tmp306	 %read{482,482} %write{481,481}
+temp	int	$tmp307	 %read{484,492} %write{483,491}
+temp	float	$tmp308	 %read{489,489} %write{486,486}
+temp	float	$tmp309	 %read{486,486} %write{485,485}
+temp	float	$tmp310	 %read{488,488} %write{487,487}
+temp	float	$tmp311	 %read{489,489} %write{488,488}
+temp	int	$tmp312	 %read{490,490} %write{489,489}
+temp	int	$tmp313	 %read{491,491} %write{490,490}
+temp	int	$tmp314	 %read{493,493} %write{492,492}
+temp	int	$tmp315	 %read{495,495} %write{494,494}
+temp	float	$tmp316	 %read{500,500} %write{497,497}
+temp	float	$tmp317	 %read{499,499} %write{498,498}
+temp	float	$tmp318	 %read{500,500} %write{499,499}
+temp	float	$tmp319	 %read{502,502} %write{500,500}
+temp	float	$tmp320	 %read{503,503} %write{502,502}
+temp	float	$tmp321	 %read{507,507} %write{504,504}
+temp	float	$tmp322	 %read{506,506} %write{505,505}
+temp	float	$tmp323	 %read{507,507} %write{506,506}
+temp	float	$tmp324	 %read{509,509} %write{507,507}
+temp	float	$tmp325	 %read{510,510} %write{509,509}
+const	int	$const38	-1000000		 %read{511,512} %write{2147483647,-1}
+code ___main___
+	assign		o_prev_ss u 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_projection_uv.osl"} %line{54} %argrw{"wr"}
+	assign		o_prev_tt v 	%line{55} %argrw{"wr"}
+	assign		$tmp1 i_local 	%line{63} %argrw{"wr"}
+	assign		$tmp2 i_wrap 	%argrw{"wr"}
+	functioncall	$const1 98 	%argrw{"r"}
+	assign		___398_Pref $const2 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{32} %argrw{"wr"}
+	assign		___398_pp $const2 	%line{33} %argrw{"wr"}
+	assign		edgeDist $const3 	%line{35} %argrw{"wr"}
+	neq		$tmp3 $tmp1 $const3 	%line{37} %argrw{"wrr"}
+	if		$tmp3 16 22 	%argrw{"r"}
+	eq		$tmp5 ___398_Pref $const2 	%line{39} %argrw{"wrr"}
+	if		$tmp5 14 16 	%argrw{"r"}
+	functioncall	$const5 14 	%line{40} %argrw{"r"}
+	transform	___398_pp $const6 $const4 P 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{240} %argrw{"wrrr"}
+	functioncall	$const5 16 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{42} %argrw{"r"}
+	transform	___398_pp $const6 $const4 ___398_Pref 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{240} %argrw{"wrrr"}
+	eq		$tmp7 ___398_Pref $const2 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{46} %argrw{"wrr"}
+	if		$tmp7 20 22 	%argrw{"r"}
+	functioncall	$const5 20 	%line{47} %argrw{"r"}
+	transform	___398_pp $const6 $const7 P 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{240} %argrw{"wrrr"}
+	functioncall	$const5 22 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{49} %argrw{"r"}
+	transform	___398_pp $const6 $const7 ___398_Pref 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{240} %argrw{"wrrr"}
+	transform	___398_pq i_placementMatrix ___398_pp 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{52} %argrw{"wrr"}
+	compref		$tmp8 ___398_pq $const8 	%line{54} %argrw{"wrr"}
+	gt		$tmp9 $tmp8 $const9 	%argrw{"wrr"}
+	neq		$tmp10 $tmp9 $const8 	%argrw{"wrr"}
+	if		$tmp10 27 31 	%line{55} %argrw{"r"}
+	compref		$tmp11 ___398_pq $const8 	%argrw{"wrr"}
+	lt		$tmp12 $tmp11 $const10 	%argrw{"wrr"}
+	neq		$tmp13 $tmp12 $const8 	%argrw{"wrr"}
+	assign		$tmp10 $tmp13 	%argrw{"wr"}
+	neq		$tmp14 $tmp10 $const8 	%argrw{"wrr"}
+	if		$tmp14 33 37 	%line{56} %argrw{"r"}
+	compref		$tmp15 ___398_pq $const9 	%argrw{"wrr"}
+	gt		$tmp16 $tmp15 $const9 	%argrw{"wrr"}
+	neq		$tmp17 $tmp16 $const8 	%argrw{"wrr"}
+	assign		$tmp14 $tmp17 	%argrw{"wr"}
+	neq		$tmp18 $tmp14 $const8 	%argrw{"wrr"}
+	if		$tmp18 39 43 	%line{57} %argrw{"r"}
+	compref		$tmp19 ___398_pq $const9 	%argrw{"wrr"}
+	lt		$tmp20 $tmp19 $const10 	%argrw{"wrr"}
+	neq		$tmp21 $tmp20 $const8 	%argrw{"wrr"}
+	assign		$tmp18 $tmp21 	%argrw{"wr"}
+	neq		$tmp22 $tmp18 $const8 	%argrw{"wrr"}
+	if		$tmp22 45 49 	%line{58} %argrw{"r"}
+	compref		$tmp23 ___398_pq $const11 	%argrw{"wrr"}
+	gt		$tmp24 $tmp23 $const9 	%argrw{"wrr"}
+	neq		$tmp25 $tmp24 $const8 	%argrw{"wrr"}
+	assign		$tmp22 $tmp25 	%argrw{"wr"}
+	neq		$tmp26 $tmp22 $const8 	%argrw{"wrr"}
+	if		$tmp26 51 55 	%line{59} %argrw{"r"}
+	compref		$tmp27 ___398_pq $const11 	%argrw{"wrr"}
+	lt		$tmp28 $tmp27 $const10 	%argrw{"wrr"}
+	neq		$tmp29 $tmp28 $const8 	%argrw{"wrr"}
+	assign		$tmp26 $tmp29 	%argrw{"wr"}
+	if		$tmp26 60 97 	%line{54} %argrw{"r"}
+	neq		$tmp30 $tmp2 $const3 	%line{61} %argrw{"wrr"}
+	if		$tmp30 59 60 	%argrw{"r"}
+	assign		outside $const3 	%line{63} %argrw{"wr"}
+	assign		outside $const12 	%line{67} %argrw{"wr"}
+	assign		outside $const3 	%line{72} %argrw{"wr"}
+	eq		$tmp31 $tmp2 $const3 	%line{74} %argrw{"wrr"}
+	neq		$tmp32 $tmp31 $const8 	%argrw{"wrr"}
+	if		$tmp32 67 67 	%argrw{"r"}
+	gt		$tmp33 i_blend $const3 	%argrw{"wrr"}
+	neq		$tmp34 $tmp33 $const8 	%argrw{"wrr"}
+	assign		$tmp32 $tmp34 	%argrw{"wr"}
+	if		$tmp32 97 97 	%argrw{"r"}
+	compref		$tmp38 ___398_pq $const8 	%line{78} %argrw{"wrr"}
+	add		$tmp39 $tmp38 $const12 	%argrw{"wrr"}
+	abs		$tmp37 $tmp39 	%argrw{"wr"}
+	div		$tmp40 $tmp37 $const13 	%argrw{"wrr"}
+	compref		$tmp42 ___398_pq $const8 	%argrw{"wrr"}
+	sub		$tmp43 $tmp42 $const12 	%argrw{"wrr"}
+	abs		$tmp41 $tmp43 	%argrw{"wr"}
+	div		$tmp44 $tmp41 $const13 	%argrw{"wrr"}
+	min		$tmp36 $tmp40 $tmp44 	%argrw{"wrr"}
+	compref		$tmp47 ___398_pq $const9 	%line{79} %argrw{"wrr"}
+	add		$tmp48 $tmp47 $const12 	%argrw{"wrr"}
+	abs		$tmp46 $tmp48 	%argrw{"wr"}
+	div		$tmp49 $tmp46 $const13 	%argrw{"wrr"}
+	compref		$tmp51 ___398_pq $const9 	%argrw{"wrr"}
+	sub		$tmp52 $tmp51 $const12 	%argrw{"wrr"}
+	abs		$tmp50 $tmp52 	%argrw{"wr"}
+	div		$tmp53 $tmp50 $const13 	%argrw{"wrr"}
+	min		$tmp45 $tmp49 $tmp53 	%argrw{"wrr"}
+	min		$tmp35 $tmp36 $tmp45 	%argrw{"wrr"}
+	compref		$tmp56 ___398_pq $const11 	%line{80} %argrw{"wrr"}
+	add		$tmp57 $tmp56 $const12 	%argrw{"wrr"}
+	abs		$tmp55 $tmp57 	%argrw{"wr"}
+	div		$tmp58 $tmp55 $const13 	%argrw{"wrr"}
+	compref		$tmp60 ___398_pq $const11 	%argrw{"wrr"}
+	sub		$tmp61 $tmp60 $const12 	%argrw{"wrr"}
+	abs		$tmp59 $tmp61 	%argrw{"wr"}
+	div		$tmp62 $tmp59 $const13 	%argrw{"wrr"}
+	min		$tmp54 $tmp58 $tmp62 	%argrw{"wrr"}
+	min		edgeDist $tmp35 $tmp54 	%argrw{"wrr"}
+	assign		pp ___398_pq 	%line{84} %argrw{"wr"}
+	assign		o_outside outside 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_projection_uv.osl"} %line{65} %argrw{"wr"}
+	lt		$tmp63 outside $const9 	%line{67} %argrw{"wrr"}
+	if		$tmp63 511 513 	%argrw{"r"}
+	gt		$tmp64 i_amplitudeX $const3 	%line{69} %argrw{"wrr"}
+	neq		$tmp65 $tmp64 $const8 	%argrw{"wrr"}
+	if		$tmp65 104 107 	%argrw{"r"}
+	gt		$tmp66 i_amplitudeY $const3 	%argrw{"wrr"}
+	neq		$tmp67 $tmp66 $const8 	%argrw{"wrr"}
+	assign		$tmp65 $tmp67 	%argrw{"wr"}
+	if		$tmp65 181 181 	%argrw{"r"}
+	functioncall	$const14 171 	%line{71} %argrw{"r"}
+	assign		___344_i $const8 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\noise_utils.h"} %line{44} %argrw{"wr"}
+	assign		___344_lacunarity $const12 	%line{45} %argrw{"wr"}
+	assign		___344_mix $const8 	%line{46} %argrw{"wr"}
+	assign		___344_amp $const12 	%line{47} %argrw{"wr"}
+	compref		$tmp70 i_ripples $const8 	%line{48} %argrw{"wrr"}
+	compref		$tmp71 i_ripples $const9 	%argrw{"wrr"}
+	compref		$tmp72 i_ripples $const11 	%argrw{"wrr"}
+	point		$tmp69 $tmp70 $tmp71 $tmp72 	%argrw{"wrrr"}
+	mul		$tmp73 pp $tmp69 	%argrw{"wrr"}
+	div		___344_pp $tmp73 $const13 	%argrw{"wrr"}
+	area		$tmp74 ___344_pp 	%line{50} %argrw{"wr"} %argderivs{1}
+	sqrt		___344_M_PIxel_size $tmp74 	%argrw{"wr"}
+	mul		___344_nyquist $const13 ___344_M_PIxel_size 	%line{51} %argrw{"wrr"}
+	assign		___344_M_PIxel $const12 	%line{52} %argrw{"wr"}
+	while		$tmp80 124 137 148 148 	%line{54} %argrw{"r"}
+	compref		$tmp75 i_depth $const9 	%argrw{"wrr"}
+	lt		$tmp76 ___344_i $tmp75 	%argrw{"wrr"}
+	neq		$tmp77 $tmp76 $const8 	%argrw{"wrr"}
+	if		$tmp77 131 131 	%argrw{"r"}
+	gt		$tmp78 ___344_M_PIxel ___344_nyquist 	%argrw{"wrr"}
+	neq		$tmp79 $tmp78 $const8 	%argrw{"wrr"}
+	assign		$tmp77 $tmp79 	%argrw{"wr"}
+	neq		$tmp80 $tmp77 $const8 	%argrw{"wrr"}
+	if		$tmp80 133 137 	%argrw{"r"}
+	compref		$tmp81 i_depth $const8 	%argrw{"wrr"}
+	lt		$tmp82 ___344_i $tmp81 	%argrw{"wrr"}
+	neq		$tmp83 $tmp82 $const8 	%argrw{"wrr"}
+	assign		$tmp80 $tmp83 	%argrw{"wr"}
+	assign		$tmp85 ___344_pp 	%line{56} %argrw{"wr"}
+	noise		$tmp86 $const15 ___344_lacunarity 	%argrw{"wrr"}
+	add		$tmp87 $tmp85 $tmp86 	%argrw{"wrr"}
+	mul		$tmp88 $tmp87 ___344_lacunarity 	%argrw{"wrr"}
+	snoise		$tmp84 $tmp88 $const3 	%argrw{"wrr"}
+	mul		$tmp89 ___344_amp $tmp84 	%argrw{"wrr"}
+	add		___344_mix ___344_mix $tmp89 	%argrw{"wrr"}
+	mul		___344_lacunarity ___344_lacunarity $const13 	%line{57} %argrw{"wrr"}
+	mul		___344_amp ___344_amp i_ratio 	%line{58} %argrw{"wrr"}
+	div		___344_M_PIxel ___344_M_PIxel $const13 	%line{59} %argrw{"wrr"}
+	add		___344_i ___344_i $const12 	%line{61} %argrw{"wrr"}
+	gt		$tmp90 ___344_M_PIxel ___344_M_PIxel_size 	%line{64} %argrw{"wrr"}
+	neq		$tmp91 $tmp90 $const8 	%argrw{"wrr"}
+	if		$tmp91 155 155 	%argrw{"r"}
+	compref		$tmp92 i_depth $const9 	%argrw{"wrr"}
+	le		$tmp93 ___344_i $tmp92 	%argrw{"wrr"}
+	neq		$tmp94 $tmp93 $const8 	%argrw{"wrr"}
+	assign		$tmp91 $tmp94 	%argrw{"wr"}
+	if		$tmp91 169 169 	%argrw{"r"}
+	div		$tmp95 ___344_M_PIxel ___344_M_PIxel_size 	%line{66} %argrw{"wrr"}
+	sub		$tmp96 $tmp95 $const12 	%argrw{"wrr"}
+	functioncall	$const16 161 	%argrw{"r"}
+	min		$tmp97 $tmp96 $const12 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{142} %argrw{"wrr"}
+	max		___346_weight $tmp97 $const3 	%argrw{"wrr"}
+	mul		$tmp98 ___346_weight ___344_amp 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\noise_utils.h"} %line{67} %argrw{"wrr"}
+	assign		$tmp100 ___344_pp 	%line{68} %argrw{"wr"}
+	noise		$tmp101 $const15 ___344_lacunarity 	%argrw{"wrr"}
+	add		$tmp102 $tmp100 $tmp101 	%argrw{"wrr"}
+	mul		$tmp103 $tmp102 ___344_lacunarity 	%argrw{"wrr"}
+	snoise		$tmp99 $tmp103 $const3 	%argrw{"wrr"}
+	mul		$tmp104 $tmp98 $tmp99 	%argrw{"wrr"}
+	add		___344_mix ___344_mix $tmp104 	%argrw{"wrr"}
+	mul		$tmp105 ___344_mix $const17 	%line{71} %argrw{"wrr"}
+	add		$tmp68 $tmp105 $const17 	%argrw{"wrr"}
+	assign		___409_mixValue $tmp68 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_projection_uv.osl"} %argrw{"wr"}
+	neg		$tmp107 i_amplitudeX 	%line{72} %argrw{"wr"}
+	compref		$tmp108 ___409_mixValue $const8 	%argrw{"wrr"}
+	mul		$tmp109 $tmp107 $tmp108 	%argrw{"wrr"}
+	compref		$tmp110 ___409_mixValue $const9 	%argrw{"wrr"}
+	mul		$tmp111 i_amplitudeY $tmp110 	%argrw{"wrr"}
+	vector		$tmp106 $tmp109 $tmp111 $const3 	%argrw{"wrrr"}
+	assign		$tmp112 pp 	%argrw{"wr"}
+	add		$tmp113 $tmp106 $tmp112 	%argrw{"wrr"}
+	assign		pp $tmp113 	%argrw{"wr"}
+	eq		$tmp114 i_projType $const9 	%line{75} %argrw{"wrr"}
+	if		$tmp114 189 511 	%argrw{"r"}
+	compref		$tmp115 pp $const8 	%line{78} %argrw{"wrr"}
+	div		$tmp116 $tmp115 $const13 	%argrw{"wrr"}
+	add		ss $tmp116 $const17 	%argrw{"wrr"}
+	compref		$tmp117 pp $const9 	%line{79} %argrw{"wrr"}
+	div		$tmp118 $tmp117 $const13 	%argrw{"wrr"}
+	add		tt $tmp118 $const17 	%argrw{"wrr"}
+	eq		$tmp119 i_projType $const11 	%line{81} %argrw{"wrr"}
+	if		$tmp119 208 511 	%argrw{"r"}
+	assign		$tmp120 pp 	%line{84} %argrw{"wr"}
+	normalize	___411_v $tmp120 	%argrw{"wr"}
+	compref		___411_vx ___411_v $const8 	%line{85} %argrw{"wrr"}
+	compref		___411_vy ___411_v $const9 	%line{86} %argrw{"wrr"}
+	compref		___411_vz ___411_v $const11 	%line{87} %argrw{"wrr"}
+	atan2		$tmp121 ___411_vx ___411_vz 	%line{88} %argrw{"wrr"}
+	mul		$tmp122 $const17 $tmp121 	%argrw{"wrr"}
+	div		ss $tmp122 i_uAngle 	%argrw{"wrr"}
+	mul		$tmp125 ___411_vx ___411_vx 	%line{89} %argrw{"wrr"}
+	mul		$tmp126 ___411_vz ___411_vz 	%argrw{"wrr"}
+	add		$tmp127 $tmp125 $tmp126 	%argrw{"wrr"}
+	sqrt		$tmp124 $tmp127 	%argrw{"wr"}
+	atan2		$tmp123 ___411_vy $tmp124 	%argrw{"wrr"}
+	mul		$tmp128 $const17 $tmp123 	%argrw{"wrr"}
+	div		tt $tmp128 i_vAngle 	%argrw{"wrr"}
+	add		ss ss $const17 	%line{90} %argrw{"wrr"}
+	add		tt tt $const17 	%line{91} %argrw{"wrr"}
+	eq		$tmp129 i_projType $const18 	%line{93} %argrw{"wrr"}
+	if		$tmp129 220 511 	%argrw{"r"}
+	assign		$tmp130 pp 	%line{96} %argrw{"wr"}
+	normalize	___412_v $tmp130 	%argrw{"wr"}
+	compref		$tmp132 ___412_v $const8 	%line{97} %argrw{"wrr"}
+	compref		$tmp133 ___412_v $const11 	%argrw{"wrr"}
+	atan2		$tmp131 $tmp132 $tmp133 	%argrw{"wrr"}
+	div		$tmp134 $tmp131 i_uAngle 	%argrw{"wrr"}
+	add		ss $tmp134 $const17 	%argrw{"wrr"}
+	compref		$tmp135 pp $const9 	%line{98} %argrw{"wrr"}
+	div		$tmp136 $tmp135 $const13 	%argrw{"wrr"}
+	add		tt $tmp136 $const17 	%argrw{"wrr"}
+	eq		$tmp137 i_projType $const19 	%line{100} %argrw{"wrr"}
+	if		$tmp137 233 511 	%argrw{"r"}
+	assign		$tmp138 pp 	%line{103} %argrw{"wr"}
+	normalize	___413_v $tmp138 	%argrw{"wr"}
+	add		$tmp141 ___413_v $const20 	%line{105} %argrw{"wrr"}
+	length		$tmp139 $tmp141 	%argrw{"wr"}
+	div		___413_l $const17 $tmp139 	%argrw{"wrr"}
+	compref		$tmp142 ___413_v $const8 	%line{106} %argrw{"wrr"}
+	mul		$tmp143 $tmp142 ___413_l 	%argrw{"wrr"}
+	add		ss $tmp143 $const17 	%argrw{"wrr"}
+	compref		$tmp144 ___413_v $const9 	%line{107} %argrw{"wrr"}
+	mul		$tmp145 $tmp144 ___413_l 	%argrw{"wrr"}
+	add		tt $tmp145 $const17 	%argrw{"wrr"}
+	eq		$tmp146 i_projType $const21 	%line{109} %argrw{"wrr"}
+	if		$tmp146 319 511 	%argrw{"r"}
+	assign		$tmp147 pp 	%line{112} %argrw{"wr"}
+	normalize	___414_v $tmp147 	%argrw{"wr"}
+	compref		$tmp149 pp $const8 	%line{113} %argrw{"wrr"}
+	abs		$tmp148 $tmp149 	%argrw{"wr"}
+	compref		$tmp151 pp $const9 	%argrw{"wrr"}
+	abs		$tmp150 $tmp151 	%argrw{"wr"}
+	gt		$tmp152 $tmp148 $tmp150 	%argrw{"wrr"}
+	neq		$tmp153 $tmp152 $const8 	%argrw{"wrr"}
+	if		$tmp153 251 251 	%line{114} %argrw{"r"}
+	compref		$tmp155 pp $const8 	%argrw{"wrr"}
+	abs		$tmp154 $tmp155 	%argrw{"wr"}
+	compref		$tmp157 pp $const11 	%argrw{"wrr"}
+	abs		$tmp156 $tmp157 	%argrw{"wr"}
+	gt		$tmp158 $tmp154 $tmp156 	%argrw{"wrr"}
+	neq		$tmp159 $tmp158 $const8 	%argrw{"wrr"}
+	assign		$tmp153 $tmp159 	%argrw{"wr"}
+	if		$tmp153 263 315 	%line{113} %argrw{"r"}
+	compref		$tmp160 pp $const11 	%line{116} %argrw{"wrr"}
+	compref		$tmp161 pp $const8 	%argrw{"wrr"}
+	div		ss $tmp160 $tmp161 	%argrw{"wrr"}
+	compref		$tmp162 pp $const9 	%line{117} %argrw{"wrr"}
+	compref		$tmp163 pp $const8 	%argrw{"wrr"}
+	div		tt $tmp162 $tmp163 	%argrw{"wrr"}
+	compref		$tmp164 pp $const8 	%line{119} %argrw{"wrr"}
+	lt		$tmp165 $tmp164 $const3 	%argrw{"wrr"}
+	if		$tmp165 263 263 	%argrw{"r"}
+	neg		ss ss 	%line{121} %argrw{"wr"}
+	neg		tt tt 	%line{122} %argrw{"wr"}
+	compref		$tmp167 pp $const9 	%line{125} %argrw{"wrr"}
+	abs		$tmp166 $tmp167 	%argrw{"wr"}
+	compref		$tmp169 pp $const8 	%argrw{"wrr"}
+	abs		$tmp168 $tmp169 	%argrw{"wr"}
+	gt		$tmp170 $tmp166 $tmp168 	%argrw{"wrr"}
+	neq		$tmp171 $tmp170 $const8 	%argrw{"wrr"}
+	if		$tmp171 277 277 	%line{126} %argrw{"r"}
+	compref		$tmp173 pp $const9 	%argrw{"wrr"}
+	abs		$tmp172 $tmp173 	%argrw{"wr"}
+	compref		$tmp175 pp $const11 	%argrw{"wrr"}
+	abs		$tmp174 $tmp175 	%argrw{"wr"}
+	gt		$tmp176 $tmp172 $tmp174 	%argrw{"wrr"}
+	neq		$tmp177 $tmp176 $const8 	%argrw{"wrr"}
+	assign		$tmp171 $tmp177 	%argrw{"wr"}
+	if		$tmp171 289 315 	%line{125} %argrw{"r"}
+	compref		$tmp178 pp $const8 	%line{128} %argrw{"wrr"}
+	compref		$tmp179 pp $const9 	%argrw{"wrr"}
+	div		ss $tmp178 $tmp179 	%argrw{"wrr"}
+	compref		$tmp180 pp $const11 	%line{129} %argrw{"wrr"}
+	compref		$tmp181 pp $const9 	%argrw{"wrr"}
+	div		tt $tmp180 $tmp181 	%argrw{"wrr"}
+	compref		$tmp182 pp $const9 	%line{131} %argrw{"wrr"}
+	lt		$tmp183 $tmp182 $const3 	%argrw{"wrr"}
+	if		$tmp183 289 289 	%argrw{"r"}
+	neg		ss ss 	%line{133} %argrw{"wr"}
+	neg		tt tt 	%line{134} %argrw{"wr"}
+	compref		$tmp185 pp $const11 	%line{137} %argrw{"wrr"}
+	abs		$tmp184 $tmp185 	%argrw{"wr"}
+	compref		$tmp187 pp $const9 	%argrw{"wrr"}
+	abs		$tmp186 $tmp187 	%argrw{"wr"}
+	gt		$tmp188 $tmp184 $tmp186 	%argrw{"wrr"}
+	neq		$tmp189 $tmp188 $const8 	%argrw{"wrr"}
+	if		$tmp189 303 303 	%line{138} %argrw{"r"}
+	compref		$tmp191 pp $const11 	%argrw{"wrr"}
+	abs		$tmp190 $tmp191 	%argrw{"wr"}
+	compref		$tmp193 pp $const8 	%argrw{"wrr"}
+	abs		$tmp192 $tmp193 	%argrw{"wr"}
+	gt		$tmp194 $tmp190 $tmp192 	%argrw{"wrr"}
+	neq		$tmp195 $tmp194 $const8 	%argrw{"wrr"}
+	assign		$tmp189 $tmp195 	%argrw{"wr"}
+	if		$tmp189 315 315 	%line{137} %argrw{"r"}
+	compref		$tmp196 pp $const8 	%line{140} %argrw{"wrr"}
+	compref		$tmp197 pp $const11 	%argrw{"wrr"}
+	div		ss $tmp196 $tmp197 	%argrw{"wrr"}
+	compref		$tmp198 pp $const9 	%line{141} %argrw{"wrr"}
+	compref		$tmp199 pp $const11 	%argrw{"wrr"}
+	div		tt $tmp198 $tmp199 	%argrw{"wrr"}
+	compref		$tmp200 pp $const11 	%line{143} %argrw{"wrr"}
+	lt		$tmp201 $tmp200 $const3 	%argrw{"wrr"}
+	if		$tmp201 315 315 	%argrw{"r"}
+	neg		ss ss 	%line{145} %argrw{"wr"}
+	neg		tt tt 	%line{146} %argrw{"wr"}
+	add		$tmp202 ss $const12 	%line{150} %argrw{"wrr"}
+	div		ss $tmp202 $const13 	%argrw{"wrr"}
+	add		$tmp203 tt $const12 	%line{151} %argrw{"wrr"}
+	div		tt $tmp203 $const13 	%argrw{"wrr"}
+	eq		$tmp204 i_projType $const22 	%line{153} %argrw{"wrr"}
+	if		$tmp204 364 511 	%argrw{"r"}
+	functioncall	$const5 323 	%line{157} %argrw{"r"}
+	transformn	$tmp205 $const6 $const23 N 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{238} %argrw{"wrrr"}
+	normalize	___421_NN $tmp205 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_projection_uv.osl"} %line{157} %argrw{"wr"}
+	compref		$tmp207 ___421_NN $const8 	%line{159} %argrw{"wrr"}
+	abs		$tmp206 $tmp207 	%argrw{"wr"}
+	compref		$tmp209 ___421_NN $const9 	%argrw{"wrr"}
+	abs		$tmp208 $tmp209 	%argrw{"wr"}
+	ge		$tmp210 $tmp206 $tmp208 	%argrw{"wrr"}
+	neq		$tmp211 $tmp210 $const8 	%argrw{"wrr"}
+	if		$tmp211 338 338 	%line{160} %argrw{"r"}
+	compref		$tmp213 ___421_NN $const8 	%argrw{"wrr"}
+	abs		$tmp212 $tmp213 	%argrw{"wr"}
+	compref		$tmp215 ___421_NN $const11 	%argrw{"wrr"}
+	abs		$tmp214 $tmp215 	%argrw{"wr"}
+	ge		$tmp216 $tmp212 $tmp214 	%argrw{"wrr"}
+	neq		$tmp217 $tmp216 $const8 	%argrw{"wrr"}
+	assign		$tmp211 $tmp217 	%argrw{"wr"}
+	if		$tmp211 341 360 	%line{159} %argrw{"r"}
+	compref		ss pp $const11 	%line{162} %argrw{"wrr"}
+	compref		tt pp $const9 	%line{163} %argrw{"wrr"}
+	compref		$tmp219 ___421_NN $const9 	%line{165} %argrw{"wrr"}
+	abs		$tmp218 $tmp219 	%argrw{"wr"}
+	compref		$tmp221 ___421_NN $const8 	%argrw{"wrr"}
+	abs		$tmp220 $tmp221 	%argrw{"wr"}
+	ge		$tmp222 $tmp218 $tmp220 	%argrw{"wrr"}
+	neq		$tmp223 $tmp222 $const8 	%argrw{"wrr"}
+	if		$tmp223 355 355 	%line{166} %argrw{"r"}
+	compref		$tmp225 ___421_NN $const9 	%argrw{"wrr"}
+	abs		$tmp224 $tmp225 	%argrw{"wr"}
+	compref		$tmp227 ___421_NN $const11 	%argrw{"wrr"}
+	abs		$tmp226 $tmp227 	%argrw{"wr"}
+	ge		$tmp228 $tmp224 $tmp226 	%argrw{"wrr"}
+	neq		$tmp229 $tmp228 $const8 	%argrw{"wrr"}
+	assign		$tmp223 $tmp229 	%argrw{"wr"}
+	if		$tmp223 358 360 	%line{165} %argrw{"r"}
+	compref		ss pp $const8 	%line{168} %argrw{"wrr"}
+	compref		tt pp $const11 	%line{169} %argrw{"wrr"}
+	compref		ss pp $const8 	%line{173} %argrw{"wrr"}
+	compref		tt pp $const9 	%line{174} %argrw{"wrr"}
+	mul		$tmp230 $const17 ss 	%line{177} %argrw{"wrr"}
+	add		ss $tmp230 $const17 	%argrw{"wrr"}
+	mul		$tmp231 $const17 tt 	%line{178} %argrw{"wrr"}
+	add		tt $tmp231 $const17 	%argrw{"wrr"}
+	eq		$tmp232 i_projType $const24 	%line{180} %argrw{"wrr"}
+	if		$tmp232 405 511 	%argrw{"r"}
+	noise		ss $const25 pp 	%line{184} %argrw{"wrr"}
+	compref		$tmp235 pp $const8 	%line{185} %argrw{"wrr"}
+	floor		$tmp234 $tmp235 	%argrw{"wr"}
+	compref		$tmp237 pp $const9 	%argrw{"wrr"}
+	floor		$tmp236 $tmp237 	%argrw{"wr"}
+	compref		$tmp239 pp $const11 	%argrw{"wrr"}
+	floor		$tmp238 $tmp239 	%argrw{"wr"}
+	point		$tmp233 $tmp234 $tmp236 $tmp238 	%argrw{"wrrr"}
+	sub		$tmp240 pp $tmp233 	%argrw{"wrr"}
+	sub		___425_dp $tmp240 $const17 	%argrw{"wrr"}
+	compref		___425_dx ___425_dp $const8 	%line{186} %argrw{"wrr"}
+	compref		___425_dy ___425_dp $const9 	%line{187} %argrw{"wrr"}
+	compref		___425_dz ___425_dp $const11 	%line{188} %argrw{"wrr"}
+	length		$tmp241 ___425_dp 	%line{189} %argrw{"wr"}
+	mul		___425_t2 $const13 $tmp241 	%argrw{"wrr"}
+	sqrt		$tmp243 $const27 	%line{190} %argrw{"wr"}
+	div		$tmp244 ___425_t2 $tmp243 	%argrw{"wrr"}
+	sub		$tmp245 $const12 $tmp244 	%argrw{"wrr"}
+	div		$tmp246 $const9 $const28 	%argrw{"wrr"}
+	assign		$tmp247 $tmp246 	%argrw{"wr"}
+	pow		$tmp242 $tmp245 $tmp247 	%argrw{"wrr"}
+	sub		$tmp248 $const12 $tmp242 	%argrw{"wrr"}
+	mul		$tmp249 $const29 $tmp248 	%argrw{"wrr"}
+	add		___425_power $const13 $tmp249 	%argrw{"wrr"}
+	abs		$tmp252 ___425_dx 	%line{191} %argrw{"wr"}
+	pow		$tmp251 $tmp252 ___425_power 	%argrw{"wrr"}
+	abs		$tmp254 ___425_dy 	%argrw{"wr"}
+	pow		$tmp253 $tmp254 ___425_power 	%argrw{"wrr"}
+	add		$tmp255 $tmp251 $tmp253 	%argrw{"wrr"}
+	abs		$tmp257 ___425_dz 	%argrw{"wr"}
+	pow		$tmp256 $tmp257 ___425_power 	%argrw{"wrr"}
+	add		$tmp258 $tmp255 $tmp256 	%argrw{"wrr"}
+	div		$tmp259 $const12 ___425_power 	%argrw{"wrr"}
+	pow		$tmp250 $tmp258 $tmp259 	%argrw{"wrr"}
+	mul		___425_t3 $const13 $tmp250 	%argrw{"wrr"}
+	add		$tmp262 pp $const30 	%line{193} %argrw{"wrr"}
+	noise		$tmp260 $const25 $tmp262 	%argrw{"wrr"}
+	add		tt ___425_t3 $tmp260 	%argrw{"wrr"}
+	sub		tt $const12 tt 	%line{194} %argrw{"wrr"}
+	eq		$tmp263 i_projType $const31 	%line{196} %argrw{"wrr"}
+	if		$tmp263 511 511 	%argrw{"r"}
+	concat		___426_cameraSpace $const32 i_linkedCamera 	%line{199} %argrw{"wrr"}
+	transform	___426_ps $const7 ___426_cameraSpace P 	%line{200} %argrw{"wrrr"}
+	compref		___426_px ___426_ps $const8 	%line{202} %argrw{"wrr"}
+	compref		___426_py ___426_ps $const9 	%line{203} %argrw{"wrr"}
+	assign		___426_imgAR $const9 	%line{205} %argrw{"wr"}
+	assign		___426_uScale $const12 	%line{207} %argrw{"wr"}
+	assign		___426_vScale $const12 	%line{208} %argrw{"wr"}
+	assign		___426_camAR $const12 	%line{210} %argrw{"wr"}
+	getattribute	$tmp264 i_linkedCamera $const33 ___426_camAR 	%line{211} %argrw{"wrrw"}
+	assign		___426_resAR $const12 	%line{212} %argrw{"wr"}
+	getattribute	$tmp265 i_linkedCamera $const34 ___426_rez_x 	%line{215} %argrw{"wrrw"}
+	getattribute	$tmp266 i_linkedCamera $const35 ___426_rez_y 	%line{216} %argrw{"wrrw"}
+	assign		$tmp267 ___426_rez_x 	%line{217} %argrw{"wr"}
+	assign		$tmp268 ___426_rez_y 	%argrw{"wr"}
+	div		___426_resAR $tmp267 $tmp268 	%argrw{"wrr"}
+	assign		___426_nearp cameraNearPlane 	%line{218} %argrw{"wr"}
+	assign		___426_hfov cameraHorizontalFOV 	%line{219} %argrw{"wr"}
+	mul		$tmp270 $const17 ___426_hfov 	%line{220} %argrw{"wrr"}
+	tan		$tmp269 $tmp270 	%argrw{"wr"}
+	mul		___426_maxw ___426_nearp $tmp269 	%argrw{"wrr"}
+	div		___426_maxh ___426_maxw ___426_camAR 	%line{221} %argrw{"wrr"}
+	gt		$tmp271 i_fitType $const8 	%line{222} %argrw{"wrr"}
+	if		$tmp271 466 511 	%argrw{"r"}
+	eq		$tmp272 i_fitFill $const8 	%line{224} %argrw{"wrr"}
+	if		$tmp272 435 443 	%argrw{"r"}
+	eq		$tmp273 i_fitType $const11 	%line{226} %argrw{"wrr"}
+	if		$tmp273 435 435 	%argrw{"r"}
+	div		___426_vScale ___426_resAR ___426_camAR 	%line{228} %argrw{"wrr"}
+	eq		$tmp274 i_fitFill $const9 	%line{231} %argrw{"wrr"}
+	if		$tmp274 438 443 	%argrw{"r"}
+	div		___426_vScale ___426_imgAR ___426_camAR 	%line{233} %argrw{"wrr"}
+	eq		$tmp275 i_fitType $const11 	%line{238} %argrw{"wrr"}
+	if		$tmp275 442 443 	%argrw{"r"}
+	div		___426_vScale ___426_resAR ___426_camAR 	%line{240} %argrw{"wrr"}
+	div		___426_uScale ___426_resAR ___426_imgAR 	%line{241} %argrw{"wrr"}
+	div		___426_uScale ___426_camAR ___426_imgAR 	%line{245} %argrw{"wrr"}
+	compref		$tmp276 ___426_ps $const11 	%line{248} %argrw{"wrr"}
+	lt		$tmp277 $tmp276 $const8 	%argrw{"wrr"}
+	if		$tmp277 466 466 	%argrw{"r"}
+	neg		$tmp278 ___426_nearp 	%line{250} %argrw{"wr"}
+	mul		$tmp279 $tmp278 ___426_uScale 	%argrw{"wrr"}
+	compref		$tmp280 ___426_ps $const8 	%argrw{"wrr"}
+	mul		$tmp281 $tmp279 $tmp280 	%argrw{"wrr"}
+	compref		$tmp282 ___426_ps $const11 	%argrw{"wrr"}
+	mul		$tmp283 $tmp282 ___426_maxw 	%argrw{"wrr"}
+	div		$tmp284 $tmp281 $tmp283 	%argrw{"wrr"}
+	functioncall	$const36 456 	%argrw{"r"}
+	add		$tmp285 $const12 $tmp284 	%line{12} %argrw{"wrr"}
+	mul		ss $const17 $tmp285 	%argrw{"wrr"}
+	neg		$tmp286 ___426_nearp 	%line{251} %argrw{"wr"}
+	mul		$tmp287 $tmp286 ___426_vScale 	%argrw{"wrr"}
+	compref		$tmp288 ___426_ps $const9 	%argrw{"wrr"}
+	mul		$tmp289 $tmp287 $tmp288 	%argrw{"wrr"}
+	compref		$tmp290 ___426_ps $const11 	%argrw{"wrr"}
+	mul		$tmp291 $tmp290 ___426_maxh 	%argrw{"wrr"}
+	div		$tmp292 $tmp289 $tmp291 	%argrw{"wrr"}
+	functioncall	$const36 466 	%argrw{"r"}
+	add		$tmp293 $const12 $tmp292 	%line{12} %argrw{"wrr"}
+	mul		tt $const17 $tmp293 	%argrw{"wrr"}
+	compref		$tmp294 ___426_ps $const11 	%line{257} %argrw{"wrr"}
+	lt		$tmp295 $tmp294 $const3 	%argrw{"wrr"}
+	neq		$tmp296 $tmp295 $const8 	%argrw{"wrr"}
+	if		$tmp296 496 496 	%argrw{"r"}
+	neq		$tmp297 i_wrap $const8 	%argrw{"wrr"}
+	if		$tmp297 472 494 	%argrw{"r"}
+	compref		$tmp298 ___426_ps $const11 	%argrw{"wrr"}
+	ge		$tmp299 $tmp298 $const37 	%argrw{"wrr"}
+	neq		$tmp300 $tmp299 $const8 	%argrw{"wrr"}
+	if		$tmp300 483 483 	%argrw{"r"}
+	compref		$tmp302 ___426_ps $const8 	%argrw{"wrr"}
+	abs		$tmp301 $tmp302 	%argrw{"wr"}
+	compref		$tmp303 ___426_ps $const11 	%argrw{"wrr"}
+	neg		$tmp304 $tmp303 	%argrw{"wr"}
+	le		$tmp305 $tmp301 $tmp304 	%argrw{"wrr"}
+	neq		$tmp306 $tmp305 $const8 	%argrw{"wrr"}
+	assign		$tmp300 $tmp306 	%argrw{"wr"}
+	neq		$tmp307 $tmp300 $const8 	%argrw{"wrr"}
+	if		$tmp307 492 492 	%argrw{"r"}
+	compref		$tmp309 ___426_ps $const9 	%argrw{"wrr"}
+	abs		$tmp308 $tmp309 	%argrw{"wr"}
+	compref		$tmp310 ___426_ps $const11 	%argrw{"wrr"}
+	neg		$tmp311 $tmp310 	%argrw{"wr"}
+	le		$tmp312 $tmp308 $tmp311 	%argrw{"wrr"}
+	neq		$tmp313 $tmp312 $const8 	%argrw{"wrr"}
+	assign		$tmp307 $tmp313 	%argrw{"wr"}
+	neq		$tmp314 $tmp307 $const8 	%argrw{"wrr"}
+	assign		$tmp297 $tmp314 	%argrw{"wr"}
+	neq		$tmp315 $tmp297 $const8 	%argrw{"wrr"}
+	assign		$tmp296 $tmp315 	%argrw{"wr"}
+	if		$tmp296 511 511 	%argrw{"r"}
+	compref		$tmp316 ___426_ps $const8 	%line{260} %argrw{"wrr"}
+	compref		$tmp317 ___426_ps $const11 	%argrw{"wrr"}
+	neg		$tmp318 $tmp317 	%argrw{"wr"}
+	div		$tmp319 $tmp316 $tmp318 	%argrw{"wrr"}
+	functioncall	$const36 504 	%argrw{"r"}
+	add		$tmp320 $const12 $tmp319 	%line{12} %argrw{"wrr"}
+	mul		ss $const17 $tmp320 	%argrw{"wrr"}
+	compref		$tmp321 ___426_ps $const9 	%line{261} %argrw{"wrr"}
+	compref		$tmp322 ___426_ps $const11 	%argrw{"wrr"}
+	neg		$tmp323 $tmp322 	%argrw{"wr"}
+	div		$tmp324 $tmp321 $tmp323 	%argrw{"wrr"}
+	functioncall	$const36 511 	%argrw{"r"}
+	add		$tmp325 $const12 $tmp324 	%line{12} %argrw{"wrr"}
+	mul		tt $const17 $tmp325 	%argrw{"wrr"}
+	assign		ss $const38 	%line{268} %argrw{"wr"}
+	assign		tt $const38 	%line{269} %argrw{"wr"}
+	assign		u ss 	%line{271} %argrw{"wr"}
+	assign		v tt 	%line{272} %argrw{"wr"}
+	end

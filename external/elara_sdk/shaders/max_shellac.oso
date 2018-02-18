@@ -1,0 +1,44 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_shellac
+param	int	shellacMtl1_isnull	0		%read{3,12} %write{2147483647,-1}
+param	int	shellacMtl2_isnull	0		%read{8,15} %write{2147483647,-1}
+param	closure color	shellacMtl1			%read{14,19} %write{2147483647,-1}
+param	closure color	shellacMtl2			%read{17,18} %write{2147483647,-1}
+param	float	shellacColorBlend	0		%read{0,18} %write{2147483647,-1}
+oparam	closure color	result			%read{2147483647,-1} %write{14,19}
+const	int	$const1	0		%read{0,9} %write{2147483647,-1}
+temp	int	$tmp1	%read{1,1} %write{0,0}
+temp	int	$tmp2	%read{2,6} %write{1,5}
+const	int	$const2	1		%read{3,15} %write{2147483647,-1}
+temp	int	$tmp3	%read{4,4} %write{3,3}
+temp	int	$tmp4	%read{5,5} %write{4,4}
+temp	int	$tmp5	%read{7,11} %write{6,10}
+temp	int	$tmp6	%read{9,9} %write{8,8}
+temp	int	$tmp7	%read{10,10} %write{9,9}
+temp	int	$tmp8	%read{13,13} %write{12,12}
+temp	int	$tmp9	%read{16,16} %write{15,15}
+temp	closure color	$tmp10	%read{19,19} %write{18,18}
+code ___main___
+	eq		$tmp1 shellacColorBlend $const1 	%filename{"E:/github/elaramax/Shaders/max_shellac.osl"} %line{28} %argrw{"wrr"}
+	neq		$tmp2 $tmp1 $const1 	%argrw{"wrr"}
+	if		$tmp2 3 6 	%argrw{"r"}
+	eq		$tmp3 shellacMtl1_isnull $const2 	%argrw{"wrr"}
+	neq		$tmp4 $tmp3 $const1 	%argrw{"wrr"}
+	assign		$tmp2 $tmp4 	%argrw{"wr"}
+	neq		$tmp5 $tmp2 $const1 	%argrw{"wrr"}
+	if		$tmp5 8 11 	%argrw{"r"}
+	eq		$tmp6 shellacMtl2_isnull $const2 	%argrw{"wrr"}
+	neq		$tmp7 $tmp6 $const1 	%argrw{"wrr"}
+	assign		$tmp5 $tmp7 	%argrw{"wr"}
+	if		$tmp5 18 20 	%argrw{"r"}
+	neq		$tmp8 shellacMtl1_isnull $const2 	%line{30} %argrw{"wrr"}
+	if		$tmp8 15 18 	%argrw{"r"}
+	assign		result shellacMtl1 	%line{32} %argrw{"wr"}
+	neq		$tmp9 shellacMtl2_isnull $const2 	%line{34} %argrw{"wrr"}
+	if		$tmp9 18 18 	%argrw{"r"}
+	assign		result shellacMtl2 	%line{36} %argrw{"wr"}
+	mul		$tmp10 shellacMtl2 shellacColorBlend 	%line{41} %argrw{"wrr"}
+	add		result shellacMtl1 $tmp10 	%argrw{"wrr"}
+	end

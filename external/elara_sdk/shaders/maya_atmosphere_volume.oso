@@ -1,0 +1,18 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_atmosphere_volume
+param	color	i_color	1 1 1 		 %read{2,2} %write{2147483647,-1}
+param	float	i_density	0.0099999998 		 %read{3,3} %write{2147483647,-1}
+global	closure color	Ci	 %read{2147483647,-1} %write{3,3}
+const	float	$const2	0		 %read{0,3} %write{2147483647,-1}
+temp	color	$tmp1	 %read{3,3} %write{0,0}
+const	float	$const4	1		 %read{1,2} %write{2147483647,-1}
+temp	color	$tmp2	 %read{3,3} %write{1,1}
+temp	color	$tmp3	 %read{3,3} %write{2,2}
+const	string	$const5	"volume_hg"		 %read{3,3} %write{2147483647,-1}
+code ___main___
+	assign		$tmp1 $const2 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_atmosphere_volume.osl"} %line{34} %argrw{"wr"}
+	assign		$tmp2 $const4 	%argrw{"wr"}
+	sub		$tmp3 $const4 i_color 	%line{32} %argrw{"wrr"}
+	closure		Ci $const5 $tmp1 $tmp2 $tmp3 i_density $const2 	%line{34} %argrw{"wrrrrrr"}
+	end

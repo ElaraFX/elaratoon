@@ -1,0 +1,409 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_remapColor
+param	color	i_color	0.5 0.5 0.5 		 %read{0,0} %write{2147483647,-1}
+param	float[16]	i_rPositions	0 1 0 		 %read{9,60} %write{2147483647,-1}
+param	float[16]	i_rValues	0 1 0 		 %read{10,79} %write{2147483647,-1}
+param	int[16]	i_rInterpolations	1 		 %read{63,68} %write{2147483647,-1}
+param	float[16]	i_gPositions	0 1 0 		 %read{87,138} %write{2147483647,-1}
+param	float[16]	i_gValues	0 1 0 		 %read{88,157} %write{2147483647,-1}
+param	int[16]	i_gInterpolations	1 		 %read{141,146} %write{2147483647,-1}
+param	float[16]	i_bPositions	0 1 0 		 %read{165,216} %write{2147483647,-1}
+param	float[16]	i_bValues	0 1 0 		 %read{166,235} %write{2147483647,-1}
+param	int[16]	i_bInterpolations	1 		 %read{219,224} %write{2147483647,-1}
+param	float	i_inputMin	0 		 %read{0,3} %write{2147483647,-1}
+param	float	i_inputMax	1 		 %read{1,3} %write{2147483647,-1}
+param	float	i_outputMin	0 		 %read{240,242} %write{2147483647,-1}
+param	float	i_outputMax	1 		 %read{240,240} %write{2147483647,-1}
+oparam	color	o_outColor	0 0 0 		 %read{2147483647,-1} %write{242,242}
+local	float	___328_result	 %read{24,238} %write{8,237}
+local	float	___329_min	 %read{24,206} %write{19,206}
+local	float	___329_max	 %read{24,206} %write{20,206}
+local	int	___329_i	 %read{24,206} %write{21,206}
+local	int	___329_pre_i	 %read{24,234} %write{22,206}
+local	int	___329_post_i	 %read{24,235} %write{23,206}
+local	float	___336_diff	 %read{77,236} %write{62,218}
+local	float	___336_interp	 %read{70,229} %write{64,225}
+local	color	c	 %read{6,241} %write{2,239}
+local	float	red	 %read{83,83} %write{82,82}
+local	float	green	 %read{161,161} %write{160,160}
+local	float	blue	 %read{239,239} %write{238,238}
+temp	color	$tmp1	 %read{2,2} %write{0,0}
+temp	float	$tmp2	 %read{2,2} %write{1,1}
+temp	int	$tmp3	 %read{4,4} %write{3,3}
+const	int	$const1	0		 %read{5,226} %write{2147483647,-1}
+temp	float	$tmp4	 %read{24,58} %write{6,50}
+const	string	$const2	"floatRamp"		 %read{7,163} %write{2147483647,-1}
+temp	int	$tmp5	 %read{11,11} %write{9,9}
+temp	int	$tmp6	 %read{11,11} %write{10,10}
+temp	int	$tmp7	 %read{12,12} %write{11,11}
+temp	int	$tmp8	 %read{13,18} %write{12,17}
+temp	int	$tmp9	 %read{15,15} %write{14,14}
+temp	int	$tmp10	 %read{16,16} %write{15,15}
+temp	int	$tmp11	 %read{17,17} %write{16,16}
+const	float	$const3	-1e+010		 %read{19,175} %write{2147483647,-1}
+const	float	$const4	1e+010		 %read{20,176} %write{2147483647,-1}
+const	int	$const5	-1		 %read{22,179} %write{2147483647,-1}
+temp	int	$tmp12	 %read{27,27} %write{26,26}
+temp	int	$tmp13	 %read{24,50} %write{24,50}
+temp	float	$tmp14	 %read{29,29} %write{28,28}
+temp	int	$tmp15	 %read{30,30} %write{29,29}
+temp	int	$tmp16	 %read{31,36} %write{30,35}
+temp	float	$tmp17	 %read{33,33} %write{32,32}
+temp	int	$tmp18	 %read{34,34} %write{33,33}
+temp	int	$tmp19	 %read{35,35} %write{34,34}
+temp	float	$tmp20	 %read{40,40} %write{39,39}
+temp	int	$tmp21	 %read{41,41} %write{40,40}
+temp	int	$tmp22	 %read{42,47} %write{41,46}
+temp	float	$tmp23	 %read{44,44} %write{43,43}
+temp	int	$tmp24	 %read{45,45} %write{44,44}
+temp	int	$tmp25	 %read{46,46} %write{45,45}
+const	int	$const6	1		 %read{50,229} %write{2147483647,-1}
+temp	int	$tmp26	 %read{52,52} %write{51,51}
+temp	int	$tmp27	 %read{55,55} %write{54,54}
+temp	float	$tmp28	 %read{58,58} %write{57,57}
+temp	float	$tmp29	 %read{62,62} %write{58,58}
+temp	float	$tmp30	 %read{61,61} %write{59,59}
+temp	float	$tmp31	 %read{61,61} %write{60,60}
+temp	float	$tmp32	 %read{62,62} %write{61,61}
+temp	int	$tmp33	 %read{64,64} %write{63,63}
+temp	int	$tmp34	 %read{66,66} %write{65,65}
+temp	int	$tmp35	 %read{67,67} %write{66,66}
+temp	int	$tmp36	 %read{69,69} %write{68,68}
+temp	int	$tmp37	 %read{71,71} %write{70,70}
+temp	int	$tmp38	 %read{74,74} %write{73,73}
+temp	float	$tmp39	 %read{77,77} %write{75,75}
+temp	float	$tmp40	 %read{77,77} %write{76,76}
+temp	float	$tmp41	 %read{81,81} %write{78,78}
+temp	float	$tmp42	 %read{81,81} %write{79,79}
+temp	float	$tmp43	 %read{81,81} %write{80,80}
+const	float	$const7	0		 %read{80,236} %write{2147483647,-1}
+const	float	$const8	1		 %read{80,236} %write{2147483647,-1}
+temp	float	$tmp44	 %read{102,136} %write{84,128}
+temp	int	$tmp45	 %read{89,89} %write{87,87}
+temp	int	$tmp46	 %read{89,89} %write{88,88}
+temp	int	$tmp47	 %read{90,90} %write{89,89}
+temp	int	$tmp48	 %read{91,96} %write{90,95}
+temp	int	$tmp49	 %read{93,93} %write{92,92}
+temp	int	$tmp50	 %read{94,94} %write{93,93}
+temp	int	$tmp51	 %read{95,95} %write{94,94}
+temp	int	$tmp52	 %read{105,105} %write{104,104}
+temp	int	$tmp53	 %read{102,128} %write{102,128}
+temp	float	$tmp54	 %read{107,107} %write{106,106}
+temp	int	$tmp55	 %read{108,108} %write{107,107}
+temp	int	$tmp56	 %read{109,114} %write{108,113}
+temp	float	$tmp57	 %read{111,111} %write{110,110}
+temp	int	$tmp58	 %read{112,112} %write{111,111}
+temp	int	$tmp59	 %read{113,113} %write{112,112}
+temp	float	$tmp60	 %read{118,118} %write{117,117}
+temp	int	$tmp61	 %read{119,119} %write{118,118}
+temp	int	$tmp62	 %read{120,125} %write{119,124}
+temp	float	$tmp63	 %read{122,122} %write{121,121}
+temp	int	$tmp64	 %read{123,123} %write{122,122}
+temp	int	$tmp65	 %read{124,124} %write{123,123}
+temp	int	$tmp66	 %read{130,130} %write{129,129}
+temp	int	$tmp67	 %read{133,133} %write{132,132}
+temp	float	$tmp68	 %read{136,136} %write{135,135}
+temp	float	$tmp69	 %read{140,140} %write{136,136}
+temp	float	$tmp70	 %read{139,139} %write{137,137}
+temp	float	$tmp71	 %read{139,139} %write{138,138}
+temp	float	$tmp72	 %read{140,140} %write{139,139}
+temp	int	$tmp73	 %read{142,142} %write{141,141}
+temp	int	$tmp74	 %read{144,144} %write{143,143}
+temp	int	$tmp75	 %read{145,145} %write{144,144}
+temp	int	$tmp76	 %read{147,147} %write{146,146}
+temp	int	$tmp77	 %read{149,149} %write{148,148}
+temp	int	$tmp78	 %read{152,152} %write{151,151}
+temp	float	$tmp79	 %read{155,155} %write{153,153}
+temp	float	$tmp80	 %read{155,155} %write{154,154}
+temp	float	$tmp81	 %read{159,159} %write{156,156}
+temp	float	$tmp82	 %read{159,159} %write{157,157}
+temp	float	$tmp83	 %read{159,159} %write{158,158}
+const	int	$const9	2		 %read{162,239} %write{2147483647,-1}
+temp	float	$tmp84	 %read{180,214} %write{162,206}
+temp	int	$tmp85	 %read{167,167} %write{165,165}
+temp	int	$tmp86	 %read{167,167} %write{166,166}
+temp	int	$tmp87	 %read{168,168} %write{167,167}
+temp	int	$tmp88	 %read{169,174} %write{168,173}
+temp	int	$tmp89	 %read{171,171} %write{170,170}
+temp	int	$tmp90	 %read{172,172} %write{171,171}
+temp	int	$tmp91	 %read{173,173} %write{172,172}
+temp	int	$tmp92	 %read{183,183} %write{182,182}
+temp	int	$tmp93	 %read{180,206} %write{180,206}
+temp	float	$tmp94	 %read{185,185} %write{184,184}
+temp	int	$tmp95	 %read{186,186} %write{185,185}
+temp	int	$tmp96	 %read{187,192} %write{186,191}
+temp	float	$tmp97	 %read{189,189} %write{188,188}
+temp	int	$tmp98	 %read{190,190} %write{189,189}
+temp	int	$tmp99	 %read{191,191} %write{190,190}
+temp	float	$tmp100	 %read{196,196} %write{195,195}
+temp	int	$tmp101	 %read{197,197} %write{196,196}
+temp	int	$tmp102	 %read{198,203} %write{197,202}
+temp	float	$tmp103	 %read{200,200} %write{199,199}
+temp	int	$tmp104	 %read{201,201} %write{200,200}
+temp	int	$tmp105	 %read{202,202} %write{201,201}
+temp	int	$tmp106	 %read{208,208} %write{207,207}
+temp	int	$tmp107	 %read{211,211} %write{210,210}
+temp	float	$tmp108	 %read{214,214} %write{213,213}
+temp	float	$tmp109	 %read{218,218} %write{214,214}
+temp	float	$tmp110	 %read{217,217} %write{215,215}
+temp	float	$tmp111	 %read{217,217} %write{216,216}
+temp	float	$tmp112	 %read{218,218} %write{217,217}
+temp	int	$tmp113	 %read{220,220} %write{219,219}
+temp	int	$tmp114	 %read{222,222} %write{221,221}
+temp	int	$tmp115	 %read{223,223} %write{222,222}
+temp	int	$tmp116	 %read{225,225} %write{224,224}
+temp	int	$tmp117	 %read{227,227} %write{226,226}
+temp	int	$tmp118	 %read{230,230} %write{229,229}
+temp	float	$tmp119	 %read{233,233} %write{231,231}
+temp	float	$tmp120	 %read{233,233} %write{232,232}
+temp	float	$tmp121	 %read{237,237} %write{234,234}
+temp	float	$tmp122	 %read{237,237} %write{235,235}
+temp	float	$tmp123	 %read{237,237} %write{236,236}
+temp	float	$tmp124	 %read{241,241} %write{240,240}
+temp	color	$tmp125	 %read{242,242} %write{241,241}
+code ___main___
+	sub		$tmp1 i_color i_inputMin 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_remapColor.osl"} %line{47} %argrw{"wrr"}
+	sub		$tmp2 i_inputMax i_inputMin 	%argrw{"wrr"}
+	div		c $tmp1 $tmp2 	%argrw{"wrr"}
+	eq		$tmp3 i_inputMin i_inputMax 	%line{50} %argrw{"wrr"}
+	if		$tmp3 6 6 	%argrw{"r"}
+	assign		c $const1 	%line{51} %argrw{"wr"}
+	compref		$tmp4 c $const1 	%line{56} %argrw{"wrr"}
+	functioncall	$const2 83 	%line{59} %argrw{"r"}
+	assign		___328_result $const1 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\ramp_utils.h"} %line{123} %argrw{"wr"}
+	arraylength	$tmp5 i_rPositions 	%line{125} %argrw{"wr"}
+	arraylength	$tmp6 i_rValues 	%argrw{"wr"}
+	eq		$tmp7 $tmp5 $tmp6 	%argrw{"wrr"}
+	neq		$tmp8 $tmp7 $const1 	%argrw{"wrr"}
+	if		$tmp8 18 18 	%line{126} %argrw{"r"}
+	arraylength	$tmp9 i_rPositions 	%argrw{"wr"}
+	gt		$tmp10 $tmp9 $const1 	%argrw{"wrr"}
+	neq		$tmp11 $tmp10 $const1 	%argrw{"wrr"}
+	assign		$tmp8 $tmp11 	%argrw{"wr"}
+	if		$tmp8 82 82 	%line{125} %argrw{"r"}
+	assign		___329_min $const3 	%line{128} %argrw{"wr"}
+	assign		___329_max $const4 	%line{129} %argrw{"wr"}
+	assign		___329_i $const1 	%line{130} %argrw{"wr"}
+	assign		___329_pre_i $const5 	%line{131} %argrw{"wr"}
+	assign		___329_post_i $const5 	%line{132} %argrw{"wr"}
+	for		$tmp13 26 28 50 51 	%line{134} %argrw{"r"}
+	assign		___329_i $const1 	%argrw{"wr"}
+	arraylength	$tmp12 i_rPositions 	%argrw{"wr"}
+	lt		$tmp13 ___329_i $tmp12 	%argrw{"wrr"}
+	aref		$tmp14 i_rPositions ___329_i 	%line{136} %argrw{"wrr"}
+	le		$tmp15 $tmp14 $tmp4 	%argrw{"wrr"}
+	neq		$tmp16 $tmp15 $const1 	%argrw{"wrr"}
+	if		$tmp16 36 36 	%argrw{"r"}
+	aref		$tmp17 i_rPositions ___329_i 	%argrw{"wrr"}
+	gt		$tmp18 $tmp17 ___329_min 	%argrw{"wrr"}
+	neq		$tmp19 $tmp18 $const1 	%argrw{"wrr"}
+	assign		$tmp16 $tmp19 	%argrw{"wr"}
+	if		$tmp16 39 50 	%argrw{"r"}
+	aref		___329_min i_rPositions ___329_i 	%line{138} %argrw{"wrr"}
+	assign		___329_pre_i ___329_i 	%line{139} %argrw{"wr"}
+	aref		$tmp20 i_rPositions ___329_i 	%line{141} %argrw{"wrr"}
+	ge		$tmp21 $tmp20 $tmp4 	%argrw{"wrr"}
+	neq		$tmp22 $tmp21 $const1 	%argrw{"wrr"}
+	if		$tmp22 47 47 	%argrw{"r"}
+	aref		$tmp23 i_rPositions ___329_i 	%argrw{"wrr"}
+	lt		$tmp24 $tmp23 ___329_max 	%argrw{"wrr"}
+	neq		$tmp25 $tmp24 $const1 	%argrw{"wrr"}
+	assign		$tmp22 $tmp25 	%argrw{"wr"}
+	if		$tmp22 50 50 	%argrw{"r"}
+	aref		___329_max i_rPositions ___329_i 	%line{143} %argrw{"wrr"}
+	assign		___329_post_i ___329_i 	%line{144} %argrw{"wr"}
+	add		___329_i ___329_i $const6 	%line{134} %argrw{"wrr"}
+	lt		$tmp26 ___329_pre_i $const1 	%line{148} %argrw{"wrr"}
+	if		$tmp26 54 82 	%argrw{"r"}
+	aref		___328_result i_rValues ___329_post_i 	%line{150} %argrw{"wrr"}
+	lt		$tmp27 ___329_post_i $const1 	%line{152} %argrw{"wrr"}
+	if		$tmp27 57 82 	%argrw{"r"}
+	aref		___328_result i_rValues ___329_pre_i 	%line{154} %argrw{"wrr"}
+	aref		$tmp28 i_rPositions ___329_pre_i 	%line{158} %argrw{"wrr"}
+	sub		$tmp29 $tmp4 $tmp28 	%argrw{"wrr"}
+	aref		$tmp30 i_rPositions ___329_post_i 	%line{159} %argrw{"wrr"}
+	aref		$tmp31 i_rPositions ___329_pre_i 	%argrw{"wrr"}
+	sub		$tmp32 $tmp30 $tmp31 	%argrw{"wrr"}
+	div		___336_diff $tmp29 $tmp32 	%argrw{"wrr"}
+	aref		$tmp33 i_rInterpolations $const1 	%line{161} %argrw{"wrr"}
+	assign		___336_interp $tmp33 	%argrw{"wr"}
+	arraylength	$tmp34 i_rInterpolations 	%line{162} %argrw{"wr"}
+	gt		$tmp35 $tmp34 $const6 	%argrw{"wrr"}
+	if		$tmp35 70 70 	%argrw{"r"}
+	aref		$tmp36 i_rInterpolations ___329_pre_i 	%line{164} %argrw{"wrr"}
+	assign		___336_interp $tmp36 	%argrw{"wr"}
+	eq		$tmp37 ___336_interp $const1 	%line{167} %argrw{"wrr"}
+	if		$tmp37 73 82 	%argrw{"r"}
+	aref		___328_result i_rValues ___329_pre_i 	%line{170} %argrw{"wrr"}
+	eq		$tmp38 ___336_interp $const6 	%line{172} %argrw{"wrr"}
+	if		$tmp38 78 82 	%argrw{"r"}
+	aref		$tmp39 i_rValues ___329_pre_i 	%line{175} %argrw{"wrr"}
+	aref		$tmp40 i_rValues ___329_post_i 	%argrw{"wrr"}
+	mix		___328_result $tmp39 $tmp40 ___336_diff 	%argrw{"wrrr"}
+	aref		$tmp41 i_rValues ___329_pre_i 	%line{181} %argrw{"wrr"}
+	aref		$tmp42 i_rValues ___329_post_i 	%line{182} %argrw{"wrr"}
+	smoothstep	$tmp43 $const7 $const8 ___336_diff 	%line{183} %argrw{"wrrr"}
+	mix		___328_result $tmp41 $tmp42 $tmp43 	%argrw{"wrrr"}
+	assign		red ___328_result 	%line{188} %argrw{"wr"}
+	compassign	c $const1 red 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_remapColor.osl"} %line{61} %argrw{"wrr"}
+	compref		$tmp44 c $const6 	%line{65} %argrw{"wrr"}
+	functioncall	$const2 161 	%line{68} %argrw{"r"}
+	assign		___328_result $const1 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\ramp_utils.h"} %line{123} %argrw{"wr"}
+	arraylength	$tmp45 i_gPositions 	%line{125} %argrw{"wr"}
+	arraylength	$tmp46 i_gValues 	%argrw{"wr"}
+	eq		$tmp47 $tmp45 $tmp46 	%argrw{"wrr"}
+	neq		$tmp48 $tmp47 $const1 	%argrw{"wrr"}
+	if		$tmp48 96 96 	%line{126} %argrw{"r"}
+	arraylength	$tmp49 i_gPositions 	%argrw{"wr"}
+	gt		$tmp50 $tmp49 $const1 	%argrw{"wrr"}
+	neq		$tmp51 $tmp50 $const1 	%argrw{"wrr"}
+	assign		$tmp48 $tmp51 	%argrw{"wr"}
+	if		$tmp48 160 160 	%line{125} %argrw{"r"}
+	assign		___329_min $const3 	%line{128} %argrw{"wr"}
+	assign		___329_max $const4 	%line{129} %argrw{"wr"}
+	assign		___329_i $const1 	%line{130} %argrw{"wr"}
+	assign		___329_pre_i $const5 	%line{131} %argrw{"wr"}
+	assign		___329_post_i $const5 	%line{132} %argrw{"wr"}
+	for		$tmp53 104 106 128 129 	%line{134} %argrw{"r"}
+	assign		___329_i $const1 	%argrw{"wr"}
+	arraylength	$tmp52 i_gPositions 	%argrw{"wr"}
+	lt		$tmp53 ___329_i $tmp52 	%argrw{"wrr"}
+	aref		$tmp54 i_gPositions ___329_i 	%line{136} %argrw{"wrr"}
+	le		$tmp55 $tmp54 $tmp44 	%argrw{"wrr"}
+	neq		$tmp56 $tmp55 $const1 	%argrw{"wrr"}
+	if		$tmp56 114 114 	%argrw{"r"}
+	aref		$tmp57 i_gPositions ___329_i 	%argrw{"wrr"}
+	gt		$tmp58 $tmp57 ___329_min 	%argrw{"wrr"}
+	neq		$tmp59 $tmp58 $const1 	%argrw{"wrr"}
+	assign		$tmp56 $tmp59 	%argrw{"wr"}
+	if		$tmp56 117 128 	%argrw{"r"}
+	aref		___329_min i_gPositions ___329_i 	%line{138} %argrw{"wrr"}
+	assign		___329_pre_i ___329_i 	%line{139} %argrw{"wr"}
+	aref		$tmp60 i_gPositions ___329_i 	%line{141} %argrw{"wrr"}
+	ge		$tmp61 $tmp60 $tmp44 	%argrw{"wrr"}
+	neq		$tmp62 $tmp61 $const1 	%argrw{"wrr"}
+	if		$tmp62 125 125 	%argrw{"r"}
+	aref		$tmp63 i_gPositions ___329_i 	%argrw{"wrr"}
+	lt		$tmp64 $tmp63 ___329_max 	%argrw{"wrr"}
+	neq		$tmp65 $tmp64 $const1 	%argrw{"wrr"}
+	assign		$tmp62 $tmp65 	%argrw{"wr"}
+	if		$tmp62 128 128 	%argrw{"r"}
+	aref		___329_max i_gPositions ___329_i 	%line{143} %argrw{"wrr"}
+	assign		___329_post_i ___329_i 	%line{144} %argrw{"wr"}
+	add		___329_i ___329_i $const6 	%line{134} %argrw{"wrr"}
+	lt		$tmp66 ___329_pre_i $const1 	%line{148} %argrw{"wrr"}
+	if		$tmp66 132 160 	%argrw{"r"}
+	aref		___328_result i_gValues ___329_post_i 	%line{150} %argrw{"wrr"}
+	lt		$tmp67 ___329_post_i $const1 	%line{152} %argrw{"wrr"}
+	if		$tmp67 135 160 	%argrw{"r"}
+	aref		___328_result i_gValues ___329_pre_i 	%line{154} %argrw{"wrr"}
+	aref		$tmp68 i_gPositions ___329_pre_i 	%line{158} %argrw{"wrr"}
+	sub		$tmp69 $tmp44 $tmp68 	%argrw{"wrr"}
+	aref		$tmp70 i_gPositions ___329_post_i 	%line{159} %argrw{"wrr"}
+	aref		$tmp71 i_gPositions ___329_pre_i 	%argrw{"wrr"}
+	sub		$tmp72 $tmp70 $tmp71 	%argrw{"wrr"}
+	div		___336_diff $tmp69 $tmp72 	%argrw{"wrr"}
+	aref		$tmp73 i_gInterpolations $const1 	%line{161} %argrw{"wrr"}
+	assign		___336_interp $tmp73 	%argrw{"wr"}
+	arraylength	$tmp74 i_gInterpolations 	%line{162} %argrw{"wr"}
+	gt		$tmp75 $tmp74 $const6 	%argrw{"wrr"}
+	if		$tmp75 148 148 	%argrw{"r"}
+	aref		$tmp76 i_gInterpolations ___329_pre_i 	%line{164} %argrw{"wrr"}
+	assign		___336_interp $tmp76 	%argrw{"wr"}
+	eq		$tmp77 ___336_interp $const1 	%line{167} %argrw{"wrr"}
+	if		$tmp77 151 160 	%argrw{"r"}
+	aref		___328_result i_gValues ___329_pre_i 	%line{170} %argrw{"wrr"}
+	eq		$tmp78 ___336_interp $const6 	%line{172} %argrw{"wrr"}
+	if		$tmp78 156 160 	%argrw{"r"}
+	aref		$tmp79 i_gValues ___329_pre_i 	%line{175} %argrw{"wrr"}
+	aref		$tmp80 i_gValues ___329_post_i 	%argrw{"wrr"}
+	mix		___328_result $tmp79 $tmp80 ___336_diff 	%argrw{"wrrr"}
+	aref		$tmp81 i_gValues ___329_pre_i 	%line{181} %argrw{"wrr"}
+	aref		$tmp82 i_gValues ___329_post_i 	%line{182} %argrw{"wrr"}
+	smoothstep	$tmp83 $const7 $const8 ___336_diff 	%line{183} %argrw{"wrrr"}
+	mix		___328_result $tmp81 $tmp82 $tmp83 	%argrw{"wrrr"}
+	assign		green ___328_result 	%line{188} %argrw{"wr"}
+	compassign	c $const6 green 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_remapColor.osl"} %line{70} %argrw{"wrr"}
+	compref		$tmp84 c $const9 	%line{74} %argrw{"wrr"}
+	functioncall	$const2 239 	%line{77} %argrw{"r"}
+	assign		___328_result $const1 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\ramp_utils.h"} %line{123} %argrw{"wr"}
+	arraylength	$tmp85 i_bPositions 	%line{125} %argrw{"wr"}
+	arraylength	$tmp86 i_bValues 	%argrw{"wr"}
+	eq		$tmp87 $tmp85 $tmp86 	%argrw{"wrr"}
+	neq		$tmp88 $tmp87 $const1 	%argrw{"wrr"}
+	if		$tmp88 174 174 	%line{126} %argrw{"r"}
+	arraylength	$tmp89 i_bPositions 	%argrw{"wr"}
+	gt		$tmp90 $tmp89 $const1 	%argrw{"wrr"}
+	neq		$tmp91 $tmp90 $const1 	%argrw{"wrr"}
+	assign		$tmp88 $tmp91 	%argrw{"wr"}
+	if		$tmp88 238 238 	%line{125} %argrw{"r"}
+	assign		___329_min $const3 	%line{128} %argrw{"wr"}
+	assign		___329_max $const4 	%line{129} %argrw{"wr"}
+	assign		___329_i $const1 	%line{130} %argrw{"wr"}
+	assign		___329_pre_i $const5 	%line{131} %argrw{"wr"}
+	assign		___329_post_i $const5 	%line{132} %argrw{"wr"}
+	for		$tmp93 182 184 206 207 	%line{134} %argrw{"r"}
+	assign		___329_i $const1 	%argrw{"wr"}
+	arraylength	$tmp92 i_bPositions 	%argrw{"wr"}
+	lt		$tmp93 ___329_i $tmp92 	%argrw{"wrr"}
+	aref		$tmp94 i_bPositions ___329_i 	%line{136} %argrw{"wrr"}
+	le		$tmp95 $tmp94 $tmp84 	%argrw{"wrr"}
+	neq		$tmp96 $tmp95 $const1 	%argrw{"wrr"}
+	if		$tmp96 192 192 	%argrw{"r"}
+	aref		$tmp97 i_bPositions ___329_i 	%argrw{"wrr"}
+	gt		$tmp98 $tmp97 ___329_min 	%argrw{"wrr"}
+	neq		$tmp99 $tmp98 $const1 	%argrw{"wrr"}
+	assign		$tmp96 $tmp99 	%argrw{"wr"}
+	if		$tmp96 195 206 	%argrw{"r"}
+	aref		___329_min i_bPositions ___329_i 	%line{138} %argrw{"wrr"}
+	assign		___329_pre_i ___329_i 	%line{139} %argrw{"wr"}
+	aref		$tmp100 i_bPositions ___329_i 	%line{141} %argrw{"wrr"}
+	ge		$tmp101 $tmp100 $tmp84 	%argrw{"wrr"}
+	neq		$tmp102 $tmp101 $const1 	%argrw{"wrr"}
+	if		$tmp102 203 203 	%argrw{"r"}
+	aref		$tmp103 i_bPositions ___329_i 	%argrw{"wrr"}
+	lt		$tmp104 $tmp103 ___329_max 	%argrw{"wrr"}
+	neq		$tmp105 $tmp104 $const1 	%argrw{"wrr"}
+	assign		$tmp102 $tmp105 	%argrw{"wr"}
+	if		$tmp102 206 206 	%argrw{"r"}
+	aref		___329_max i_bPositions ___329_i 	%line{143} %argrw{"wrr"}
+	assign		___329_post_i ___329_i 	%line{144} %argrw{"wr"}
+	add		___329_i ___329_i $const6 	%line{134} %argrw{"wrr"}
+	lt		$tmp106 ___329_pre_i $const1 	%line{148} %argrw{"wrr"}
+	if		$tmp106 210 238 	%argrw{"r"}
+	aref		___328_result i_bValues ___329_post_i 	%line{150} %argrw{"wrr"}
+	lt		$tmp107 ___329_post_i $const1 	%line{152} %argrw{"wrr"}
+	if		$tmp107 213 238 	%argrw{"r"}
+	aref		___328_result i_bValues ___329_pre_i 	%line{154} %argrw{"wrr"}
+	aref		$tmp108 i_bPositions ___329_pre_i 	%line{158} %argrw{"wrr"}
+	sub		$tmp109 $tmp84 $tmp108 	%argrw{"wrr"}
+	aref		$tmp110 i_bPositions ___329_post_i 	%line{159} %argrw{"wrr"}
+	aref		$tmp111 i_bPositions ___329_pre_i 	%argrw{"wrr"}
+	sub		$tmp112 $tmp110 $tmp111 	%argrw{"wrr"}
+	div		___336_diff $tmp109 $tmp112 	%argrw{"wrr"}
+	aref		$tmp113 i_bInterpolations $const1 	%line{161} %argrw{"wrr"}
+	assign		___336_interp $tmp113 	%argrw{"wr"}
+	arraylength	$tmp114 i_bInterpolations 	%line{162} %argrw{"wr"}
+	gt		$tmp115 $tmp114 $const6 	%argrw{"wrr"}
+	if		$tmp115 226 226 	%argrw{"r"}
+	aref		$tmp116 i_bInterpolations ___329_pre_i 	%line{164} %argrw{"wrr"}
+	assign		___336_interp $tmp116 	%argrw{"wr"}
+	eq		$tmp117 ___336_interp $const1 	%line{167} %argrw{"wrr"}
+	if		$tmp117 229 238 	%argrw{"r"}
+	aref		___328_result i_bValues ___329_pre_i 	%line{170} %argrw{"wrr"}
+	eq		$tmp118 ___336_interp $const6 	%line{172} %argrw{"wrr"}
+	if		$tmp118 234 238 	%argrw{"r"}
+	aref		$tmp119 i_bValues ___329_pre_i 	%line{175} %argrw{"wrr"}
+	aref		$tmp120 i_bValues ___329_post_i 	%argrw{"wrr"}
+	mix		___328_result $tmp119 $tmp120 ___336_diff 	%argrw{"wrrr"}
+	aref		$tmp121 i_bValues ___329_pre_i 	%line{181} %argrw{"wrr"}
+	aref		$tmp122 i_bValues ___329_post_i 	%line{182} %argrw{"wrr"}
+	smoothstep	$tmp123 $const7 $const8 ___336_diff 	%line{183} %argrw{"wrrr"}
+	mix		___328_result $tmp121 $tmp122 $tmp123 	%argrw{"wrrr"}
+	assign		blue ___328_result 	%line{188} %argrw{"wr"}
+	compassign	c $const9 blue 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_remapColor.osl"} %line{79} %argrw{"wrr"}
+	sub		$tmp124 i_outputMax i_outputMin 	%line{82} %argrw{"wrr"}
+	mul		$tmp125 c $tmp124 	%argrw{"wrr"}
+	add		o_outColor i_outputMin $tmp125 	%argrw{"wrr"}
+	end

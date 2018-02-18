@@ -1,0 +1,1227 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_ei_matte
+param	color	i_matte_color	1 1 1 		 %read{0,0} %write{2147483647,-1}
+param	float	i_matte_opacity	1 		 %read{860,867} %write{2147483647,-1}
+param	int	i_matte_mode	0 		 %read{1,575} %write{2147483647,-1}
+oparam	color	o_outColor	0 0 0 		 %read{2147483647,-1} %write{870,870}
+oparam	color	o_outTransparency	0 0 0 		 %read{2147483647,-1} %write{6,868}
+oparam	closure color	result			 %read{869,869} %write{4,865}
+oparam	float	result_alpha	0 		 %read{2147483647,-1} %write{5,866}
+global	closure color	Ci	 %read{2147483647,-1} %write{869,869}
+local	int	___332_H	 %read{277,845} %write{16,584}
+local	int	___332_S	 %read{280,848} %write{18,586}
+local	int	___332_V	 %read{285,853} %write{20,588}
+local	int[256]	___332_shuffle_1_255	 %read{277,853} %write{21,844}
+local	color	matte_color	 %read{4,870} %write{0,858}
+local	int	___346_tri_id	 %read{12,19} %write{9,10}
+local	int	___347_prim_id	 %read{296,303} %write{293,294}
+local	int	___348_tessel_id	 %read{580,587} %write{577,578}
+const	int	$const1	1		 %read{1,822} %write{2147483647,-1}
+temp	int	$tmp1	 %read{2,2} %write{1,1}
+temp	closure color	$tmp2	 %read{4,4} %write{3,3}
+const	string	$const2	"holdout_background"		 %read{3,3} %write{2147483647,-1}
+const	float	$const3	0		 %read{5,5} %write{2147483647,-1}
+const	float	$const4	1		 %read{6,867} %write{2147483647,-1}
+const	int	$const5	2		 %read{7,769} %write{2147483647,-1}
+temp	int	$tmp3	 %read{8,8} %write{7,7}
+const	int	$const6	0		 %read{9,844} %write{2147483647,-1}
+temp	int	$tmp4	 %read{2147483647,-1} %write{10,10}
+const	string	$const7	"sample"		 %read{10,578} %write{2147483647,-1}
+const	string	$const8	"tri_id"		 %read{10,10} %write{2147483647,-1}
+const	string	$const9	"IntToColor"		 %read{11,579} %write{2147483647,-1}
+temp	int	$tmp5	 %read{13,13} %write{12,12}
+const	color	$const10	0 0 0		 %read{14,582} %write{2147483647,-1}
+const	int	$const11	255		 %read{16,844} %write{2147483647,-1}
+const	int	$const12	65280		 %read{17,585} %write{2147483647,-1}
+temp	int	$tmp6	 %read{18,18} %write{17,17}
+const	int	$const13	8		 %read{18,597} %write{2147483647,-1}
+const	int	$const14	16711680		 %read{19,587} %write{2147483647,-1}
+temp	int	$tmp7	 %read{20,20} %write{19,19}
+const	int	$const15	16		 %read{20,623} %write{2147483647,-1}
+const	int	$const16	68		 %read{21,657} %write{2147483647,-1}
+const	int	$const17	98		 %read{22,687} %write{2147483647,-1}
+const	int	$const18	166		 %read{23,755} %write{2147483647,-1}
+const	int	$const19	238		 %read{24,827} %write{2147483647,-1}
+const	int	$const20	3		 %read{24,813} %write{2147483647,-1}
+const	int	$const21	165		 %read{25,754} %write{2147483647,-1}
+const	int	$const22	4		 %read{25,594} %write{2147483647,-1}
+const	int	$const23	5		 %read{26,818} %write{2147483647,-1}
+const	int	$const24	184		 %read{27,773} %write{2147483647,-1}
+const	int	$const25	6		 %read{27,714} %write{2147483647,-1}
+const	int	$const26	89		 %read{28,678} %write{2147483647,-1}
+const	int	$const27	7		 %read{28,810} %write{2147483647,-1}
+const	int	$const28	32		 %read{30,621} %write{2147483647,-1}
+const	int	$const29	9		 %read{30,797} %write{2147483647,-1}
+const	int	$const30	247		 %read{31,836} %write{2147483647,-1}
+const	int	$const31	10		 %read{31,704} %write{2147483647,-1}
+const	int	$const32	239		 %read{32,828} %write{2147483647,-1}
+const	int	$const33	11		 %read{32,827} %write{2147483647,-1}
+const	int	$const34	65		 %read{33,654} %write{2147483647,-1}
+const	int	$const35	12		 %read{33,606} %write{2147483647,-1}
+const	int	$const36	35		 %read{34,624} %write{2147483647,-1}
+const	int	$const37	13		 %read{34,826} %write{2147483647,-1}
+const	int	$const38	105		 %read{35,694} %write{2147483647,-1}
+const	int	$const39	14		 %read{35,640} %write{2147483647,-1}
+const	int	$const40	243		 %read{36,832} %write{2147483647,-1}
+const	int	$const41	15		 %read{36,768} %write{2147483647,-1}
+const	int	$const42	132		 %read{37,721} %write{2147483647,-1}
+const	int	$const43	17		 %read{38,743} %write{2147483647,-1}
+const	int	$const44	167		 %read{39,756} %write{2147483647,-1}
+const	int	$const45	18		 %read{39,699} %write{2147483647,-1}
+const	int	$const46	124		 %read{40,713} %write{2147483647,-1}
+const	int	$const47	19		 %read{40,737} %write{2147483647,-1}
+const	int	$const48	34		 %read{41,623} %write{2147483647,-1}
+const	int	$const49	20		 %read{41,756} %write{2147483647,-1}
+const	int	$const50	204		 %read{42,793} %write{2147483647,-1}
+const	int	$const51	21		 %read{42,778} %write{2147483647,-1}
+const	int	$const52	128		 %read{43,717} %write{2147483647,-1}
+const	int	$const53	22		 %read{43,767} %write{2147483647,-1}
+const	int	$const54	211		 %read{44,800} %write{2147483647,-1}
+const	int	$const55	23		 %read{44,621} %write{2147483647,-1}
+const	int	$const56	232		 %read{45,821} %write{2147483647,-1}
+const	int	$const57	24		 %read{45,805} %write{2147483647,-1}
+const	int	$const58	104		 %read{46,693} %write{2147483647,-1}
+const	int	$const59	25		 %read{46,765} %write{2147483647,-1}
+const	int	$const60	233		 %read{47,822} %write{2147483647,-1}
+const	int	$const61	26		 %read{47,779} %write{2147483647,-1}
+const	int	$const62	188		 %read{48,777} %write{2147483647,-1}
+const	int	$const63	27		 %read{48,820} %write{2147483647,-1}
+const	int	$const64	235		 %read{49,824} %write{2147483647,-1}
+const	int	$const65	28		 %read{49,771} %write{2147483647,-1}
+const	int	$const66	244		 %read{50,833} %write{2147483647,-1}
+const	int	$const67	29		 %read{50,757} %write{2147483647,-1}
+const	int	$const68	94		 %read{51,683} %write{2147483647,-1}
+const	int	$const69	30		 %read{51,669} %write{2147483647,-1}
+const	int	$const70	103		 %read{52,692} %write{2147483647,-1}
+const	int	$const71	31		 %read{52,633} %write{2147483647,-1}
+const	int	$const72	66		 %read{54,655} %write{2147483647,-1}
+const	int	$const73	33		 %read{54,725} %write{2147483647,-1}
+const	int	$const74	113		 %read{56,702} %write{2147483647,-1}
+const	int	$const75	181		 %read{57,770} %write{2147483647,-1}
+const	int	$const76	36		 %read{57,843} %write{2147483647,-1}
+const	int	$const77	199		 %read{58,788} %write{2147483647,-1}
+const	int	$const78	37		 %read{58,787} %write{2147483647,-1}
+const	int	$const79	64		 %read{59,653} %write{2147483647,-1}
+const	int	$const80	38		 %read{59,712} %write{2147483647,-1}
+const	int	$const81	198		 %read{60,787} %write{2147483647,-1}
+const	int	$const82	39		 %read{60,766} %write{2147483647,-1}
+const	int	$const83	55		 %read{61,644} %write{2147483647,-1}
+const	int	$const84	40		 %read{61,707} %write{2147483647,-1}
+const	int	$const85	77		 %read{62,666} %write{2147483647,-1}
+const	int	$const86	41		 %read{62,673} %write{2147483647,-1}
+const	int	$const87	136		 %read{63,725} %write{2147483647,-1}
+const	int	$const88	42		 %read{63,715} %write{2147483647,-1}
+const	int	$const89	252		 %read{64,841} %write{2147483647,-1}
+const	int	$const90	43		 %read{64,676} %write{2147483647,-1}
+const	int	$const91	44		 %read{65,798} %write{2147483647,-1}
+const	int	$const92	112		 %read{66,701} %write{2147483647,-1}
+const	int	$const93	45		 %read{66,740} %write{2147483647,-1}
+const	int	$const94	53		 %read{67,642} %write{2147483647,-1}
+const	int	$const95	46		 %read{67,636} %write{2147483647,-1}
+const	int	$const96	47		 %read{68,755} %write{2147483647,-1}
+const	int	$const97	237		 %read{69,826} %write{2147483647,-1}
+const	int	$const98	48		 %read{69,807} %write{2147483647,-1}
+const	int	$const99	60		 %read{70,649} %write{2147483647,-1}
+const	int	$const100	49		 %read{70,773} %write{2147483647,-1}
+const	int	$const101	50		 %read{71,739} %write{2147483647,-1}
+const	int	$const102	51		 %read{72,649} %write{2147483647,-1}
+const	int	$const103	182		 %read{73,771} %write{2147483647,-1}
+const	int	$const104	52		 %read{73,802} %write{2147483647,-1}
+const	int	$const105	202		 %read{74,791} %write{2147483647,-1}
+const	int	$const106	201		 %read{75,790} %write{2147483647,-1}
+const	int	$const107	54		 %read{75,777} %write{2147483647,-1}
+const	int	$const108	185		 %read{76,774} %write{2147483647,-1}
+const	int	$const109	163		 %read{77,752} %write{2147483647,-1}
+const	int	$const110	56		 %read{77,716} %write{2147483647,-1}
+const	int	$const111	130		 %read{78,719} %write{2147483647,-1}
+const	int	$const112	57		 %read{78,711} %write{2147483647,-1}
+const	int	$const113	241		 %read{79,830} %write{2147483647,-1}
+const	int	$const114	58		 %read{79,795} %write{2147483647,-1}
+const	int	$const115	85		 %read{80,674} %write{2147483647,-1}
+const	int	$const116	59		 %read{80,718} %write{2147483647,-1}
+const	int	$const117	86		 %read{82,675} %write{2147483647,-1}
+const	int	$const118	61		 %read{82,754} %write{2147483647,-1}
+const	int	$const119	187		 %read{83,776} %write{2147483647,-1}
+const	int	$const120	62		 %read{83,710} %write{2147483647,-1}
+const	int	$const121	153		 %read{84,742} %write{2147483647,-1}
+const	int	$const122	63		 %read{84,742} %write{2147483647,-1}
+const	int	$const123	246		 %read{85,835} %write{2147483647,-1}
+const	int	$const124	131		 %read{86,720} %write{2147483647,-1}
+const	int	$const125	125		 %read{87,714} %write{2147483647,-1}
+const	int	$const126	97		 %read{88,686} %write{2147483647,-1}
+const	int	$const127	67		 %read{88,785} %write{2147483647,-1}
+const	int	$const128	80		 %read{89,669} %write{2147483647,-1}
+const	int	$const129	79		 %read{90,668} %write{2147483647,-1}
+const	int	$const130	69		 %read{90,736} %write{2147483647,-1}
+const	int	$const131	178		 %read{91,767} %write{2147483647,-1}
+const	int	$const132	70		 %read{91,670} %write{2147483647,-1}
+const	int	$const133	190		 %read{92,779} %write{2147483647,-1}
+const	int	$const134	71		 %read{92,794} %write{2147483647,-1}
+const	int	$const135	173		 %read{93,762} %write{2147483647,-1}
+const	int	$const136	72		 %read{93,759} %write{2147483647,-1}
+const	int	$const137	200		 %read{94,789} %write{2147483647,-1}
+const	int	$const138	73		 %read{94,791} %write{2147483647,-1}
+const	int	$const139	205		 %read{95,794} %write{2147483647,-1}
+const	int	$const140	74		 %read{95,783} %write{2147483647,-1}
+const	int	$const141	160		 %read{96,749} %write{2147483647,-1}
+const	int	$const142	75		 %read{96,705} %write{2147483647,-1}
+const	int	$const143	110		 %read{97,699} %write{2147483647,-1}
+const	int	$const144	76		 %read{97,774} %write{2147483647,-1}
+const	int	$const145	99		 %read{98,688} %write{2147483647,-1}
+const	int	$const146	208		 %read{99,797} %write{2147483647,-1}
+const	int	$const147	78		 %read{99,734} %write{2147483647,-1}
+const	int	$const148	152		 %read{100,741} %write{2147483647,-1}
+const	int	$const149	81		 %read{102,683} %write{2147483647,-1}
+const	int	$const150	196		 %read{103,785} %write{2147483647,-1}
+const	int	$const151	82		 %read{103,732} %write{2147483647,-1}
+const	int	$const152	245		 %read{104,834} %write{2147483647,-1}
+const	int	$const153	83		 %read{104,764} %write{2147483647,-1}
+const	int	$const154	84		 %read{105,693} %write{2147483647,-1}
+const	int	$const155	177		 %read{106,766} %write{2147483647,-1}
+const	int	$const156	92		 %read{107,681} %write{2147483647,-1}
+const	int	$const157	87		 %read{108,801} %write{2147483647,-1}
+const	int	$const158	156		 %read{109,745} %write{2147483647,-1}
+const	int	$const159	88		 %read{109,746} %write{2147483647,-1}
+const	int	$const160	230		 %read{110,819} %write{2147483647,-1}
+const	int	$const161	162		 %read{111,751} %write{2147483647,-1}
+const	int	$const162	90		 %read{111,789} %write{2147483647,-1}
+const	int	$const163	203		 %read{112,792} %write{2147483647,-1}
+const	int	$const164	91		 %read{112,686} %write{2147483647,-1}
+const	int	$const165	116		 %read{113,705} %write{2147483647,-1}
+const	int	$const166	109		 %read{114,698} %write{2147483647,-1}
+const	int	$const167	93		 %read{114,804} %write{2147483647,-1}
+const	int	$const168	121		 %read{116,710} %write{2147483647,-1}
+const	int	$const169	95		 %read{116,713} %write{2147483647,-1}
+const	int	$const170	106		 %read{117,695} %write{2147483647,-1}
+const	int	$const171	96		 %read{117,708} %write{2147483647,-1}
+const	int	$const172	159		 %read{119,748} %write{2147483647,-1}
+const	int	$const173	140		 %read{120,729} %write{2147483647,-1}
+const	int	$const174	186		 %read{121,775} %write{2147483647,-1}
+const	int	$const175	100		 %read{121,815} %write{2147483647,-1}
+const	int	$const176	151		 %read{122,740} %write{2147483647,-1}
+const	int	$const177	101		 %read{122,741} %write{2147483647,-1}
+const	int	$const178	139		 %read{123,728} %write{2147483647,-1}
+const	int	$const179	102		 %read{123,784} %write{2147483647,-1}
+const	int	$const180	117		 %read{124,706} %write{2147483647,-1}
+const	int	$const181	217		 %read{126,806} %write{2147483647,-1}
+const	int	$const182	229		 %read{127,818} %write{2147483647,-1}
+const	int	$const183	123		 %read{128,712} %write{2147483647,-1}
+const	int	$const184	107		 %read{128,770} %write{2147483647,-1}
+const	int	$const185	209		 %read{129,798} %write{2147483647,-1}
+const	int	$const186	108		 %read{129,825} %write{2147483647,-1}
+const	int	$const187	172		 %read{130,761} %write{2147483647,-1}
+const	int	$const188	150		 %read{132,739} %write{2147483647,-1}
+const	int	$const189	111		 %read{132,775} %write{2147483647,-1}
+const	int	$const190	215		 %read{133,804} %write{2147483647,-1}
+const	int	$const191	179		 %read{134,768} %write{2147483647,-1}
+const	int	$const192	220		 %read{135,809} %write{2147483647,-1}
+const	int	$const193	114		 %read{135,834} %write{2147483647,-1}
+const	int	$const194	115		 %read{136,745} %write{2147483647,-1}
+const	int	$const195	147		 %read{138,736} %write{2147483647,-1}
+const	int	$const196	118		 %read{139,782} %write{2147483647,-1}
+const	int	$const197	119		 %read{140,823} %write{2147483647,-1}
+const	int	$const198	170		 %read{141,759} %write{2147483647,-1}
+const	int	$const199	120		 %read{141,722} %write{2147483647,-1}
+const	int	$const200	122		 %read{143,758} %write{2147483647,-1}
+const	int	$const201	126		 %read{147,821} %write{2147483647,-1}
+const	int	$const202	127		 %read{148,744} %write{2147483647,-1}
+const	int	$const203	227		 %read{149,816} %write{2147483647,-1}
+const	int	$const204	129		 %read{150,719} %write{2147483647,-1}
+const	int	$const205	145		 %read{152,734} %write{2147483647,-1}
+const	int	$const206	212		 %read{153,801} %write{2147483647,-1}
+const	int	$const207	133		 %read{154,763} %write{2147483647,-1}
+const	int	$const208	195		 %read{155,784} %write{2147483647,-1}
+const	int	$const209	134		 %read{155,838} %write{2147483647,-1}
+const	int	$const210	194		 %read{156,783} %write{2147483647,-1}
+const	int	$const211	135		 %read{156,780} %write{2147483647,-1}
+const	int	$const212	142		 %read{158,731} %write{2147483647,-1}
+const	int	$const213	137		 %read{158,803} %write{2147483647,-1}
+const	int	$const214	197		 %read{159,786} %write{2147483647,-1}
+const	int	$const215	138		 %read{159,811} %write{2147483647,-1}
+const	int	$const216	249		 %read{160,838} %write{2147483647,-1}
+const	int	$const217	254		 %read{161,843} %write{2147483647,-1}
+const	int	$const218	221		 %read{162,810} %write{2147483647,-1}
+const	int	$const219	141		 %read{162,800} %write{2147483647,-1}
+const	int	$const220	169		 %read{163,758} %write{2147483647,-1}
+const	int	$const221	143		 %read{164,738} %write{2147483647,-1}
+const	int	$const222	251		 %read{165,840} %write{2147483647,-1}
+const	int	$const223	144		 %read{165,841} %write{2147483647,-1}
+const	int	$const224	236		 %read{167,825} %write{2147483647,-1}
+const	int	$const225	146		 %read{167,796} %write{2147483647,-1}
+const	int	$const226	148		 %read{169,786} %write{2147483647,-1}
+const	int	$const227	149		 %read{170,814} %write{2147483647,-1}
+const	int	$const228	154		 %read{175,829} %write{2147483647,-1}
+const	int	$const229	155		 %read{176,761} %write{2147483647,-1}
+const	int	$const230	157		 %read{178,752} %write{2147483647,-1}
+const	int	$const231	248		 %read{179,837} %write{2147483647,-1}
+const	int	$const232	158		 %read{179,831} %write{2147483647,-1}
+const	int	$const233	240		 %read{180,829} %write{2147483647,-1}
+const	int	$const234	225		 %read{181,814} %write{2147483647,-1}
+const	int	$const235	189		 %read{182,778} %write{2147483647,-1}
+const	int	$const236	161		 %read{182,760} %write{2147483647,-1}
+const	int	$const237	192		 %read{183,781} %write{2147483647,-1}
+const	int	$const238	250		 %read{185,839} %write{2147483647,-1}
+const	int	$const239	164		 %read{185,824} %write{2147483647,-1}
+const	int	$const240	168		 %read{189,835} %write{2147483647,-1}
+const	int	$const241	171		 %read{192,762} %write{2147483647,-1}
+const	int	$const242	174		 %read{195,812} %write{2147483647,-1}
+const	int	$const243	175		 %read{196,836} %write{2147483647,-1}
+const	int	$const244	176		 %read{197,781} %write{2147483647,-1}
+const	int	$const245	180		 %read{201,840} %write{2147483647,-1}
+const	int	$const246	183		 %read{204,772} %write{2147483647,-1}
+const	int	$const247	207		 %read{208,796} %write{2147483647,-1}
+const	int	$const248	191		 %read{212,809} %write{2147483647,-1}
+const	int	$const249	193		 %read{214,842} %write{2147483647,-1}
+const	int	$const250	228		 %read{220,817} %write{2147483647,-1}
+const	int	$const251	206		 %read{222,795} %write{2147483647,-1}
+const	int	$const252	219		 %read{224,808} %write{2147483647,-1}
+const	int	$const253	224		 %read{225,813} %write{2147483647,-1}
+const	int	$const254	218		 %read{231,807} %write{2147483647,-1}
+const	int	$const255	210		 %read{231,817} %write{2147483647,-1}
+const	int	$const256	213		 %read{234,816} %write{2147483647,-1}
+const	int	$const257	214		 %read{235,808} %write{2147483647,-1}
+const	int	$const258	216		 %read{237,830} %write{2147483647,-1}
+const	int	$const259	226		 %read{238,815} %write{2147483647,-1}
+const	int	$const260	222		 %read{243,833} %write{2147483647,-1}
+const	int	$const261	223		 %read{244,837} %write{2147483647,-1}
+const	int	$const262	231		 %read{251,820} %write{2147483647,-1}
+const	int	$const263	234		 %read{255,828} %write{2147483647,-1}
+const	int	$const264	242		 %read{263,839} %write{2147483647,-1}
+const	int	$const265	253		 %read{264,842} %write{2147483647,-1}
+const	string	$const266	"hsv"		 %read{290,858} %write{2147483647,-1}
+temp	int	$tmp8	 %read{278,278} %write{277,277}
+temp	float	$tmp9	 %read{279,279} %write{278,278}
+const	float	$const267	255		 %read{279,855} %write{2147483647,-1}
+temp	float	$tmp10	 %read{290,290} %write{279,279}
+temp	int	$tmp11	 %read{281,281} %write{280,280}
+temp	float	$tmp12	 %read{282,282} %write{281,281}
+temp	float	$tmp13	 %read{283,283} %write{282,282}
+const	float	$const268	0.5		 %read{283,857} %write{2147483647,-1}
+temp	float	$tmp14	 %read{284,284} %write{283,283}
+temp	float	$tmp15	 %read{290,290} %write{284,284}
+temp	int	$tmp16	 %read{286,286} %write{285,285}
+temp	float	$tmp17	 %read{287,287} %write{286,286}
+temp	float	$tmp18	 %read{288,288} %write{287,287}
+temp	float	$tmp19	 %read{289,289} %write{288,288}
+temp	float	$tmp20	 %read{290,290} %write{289,289}
+temp	int	$tmp21	 %read{292,292} %write{291,291}
+temp	int	$tmp22	 %read{2147483647,-1} %write{294,294}
+const	string	$const269	"prim_id"		 %read{294,294} %write{2147483647,-1}
+temp	int	$tmp23	 %read{297,297} %write{296,296}
+temp	int	$tmp24	 %read{302,302} %write{301,301}
+temp	int	$tmp25	 %read{304,304} %write{303,303}
+temp	int	$tmp26	 %read{562,562} %write{561,561}
+temp	float	$tmp27	 %read{563,563} %write{562,562}
+temp	float	$tmp28	 %read{574,574} %write{563,563}
+temp	int	$tmp29	 %read{565,565} %write{564,564}
+temp	float	$tmp30	 %read{566,566} %write{565,565}
+temp	float	$tmp31	 %read{567,567} %write{566,566}
+temp	float	$tmp32	 %read{568,568} %write{567,567}
+temp	float	$tmp33	 %read{574,574} %write{568,568}
+temp	int	$tmp34	 %read{570,570} %write{569,569}
+temp	float	$tmp35	 %read{571,571} %write{570,570}
+temp	float	$tmp36	 %read{572,572} %write{571,571}
+temp	float	$tmp37	 %read{573,573} %write{572,572}
+temp	float	$tmp38	 %read{574,574} %write{573,573}
+temp	int	$tmp39	 %read{576,576} %write{575,575}
+temp	int	$tmp40	 %read{2147483647,-1} %write{578,578}
+const	string	$const270	"tessel_id"		 %read{578,578} %write{2147483647,-1}
+temp	int	$tmp41	 %read{581,581} %write{580,580}
+temp	int	$tmp42	 %read{586,586} %write{585,585}
+temp	int	$tmp43	 %read{588,588} %write{587,587}
+temp	int	$tmp44	 %read{846,846} %write{845,845}
+temp	float	$tmp45	 %read{847,847} %write{846,846}
+temp	float	$tmp46	 %read{858,858} %write{847,847}
+temp	int	$tmp47	 %read{849,849} %write{848,848}
+temp	float	$tmp48	 %read{850,850} %write{849,849}
+temp	float	$tmp49	 %read{851,851} %write{850,850}
+temp	float	$tmp50	 %read{852,852} %write{851,851}
+temp	float	$tmp51	 %read{858,858} %write{852,852}
+temp	int	$tmp52	 %read{854,854} %write{853,853}
+temp	float	$tmp53	 %read{855,855} %write{854,854}
+temp	float	$tmp54	 %read{856,856} %write{855,855}
+temp	float	$tmp55	 %read{857,857} %write{856,856}
+temp	float	$tmp56	 %read{858,858} %write{857,857}
+temp	closure color	$tmp57	 %read{861,861} %write{859,859}
+const	string	$const271	"holdout"		 %read{859,859} %write{2147483647,-1}
+temp	color	$tmp58	 %read{861,861} %write{860,860}
+temp	closure color	$tmp59	 %read{865,865} %write{861,861}
+temp	closure color	$tmp60	 %read{864,864} %write{862,862}
+const	string	$const272	"transparent"		 %read{862,862} %write{2147483647,-1}
+temp	float	$tmp61	 %read{864,864} %write{863,863}
+temp	closure color	$tmp62	 %read{865,865} %write{864,864}
+temp	float	$tmp63	 %read{868,868} %write{867,867}
+code ___main___
+	assign		matte_color i_matte_color 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_ei_matte.osl"} %line{46} %argrw{"wr"}
+	eq		$tmp1 i_matte_mode $const1 	%line{48} %argrw{"wrr"}
+	if		$tmp1 7 869 	%argrw{"r"}
+	closure		$tmp2 $const2 	%line{50} %argrw{"wr"}
+	mul		result $tmp2 matte_color 	%argrw{"wrr"}
+	assign		result_alpha $const3 	%line{52} %argrw{"wr"}
+	assign		o_outTransparency $const4 	%line{53} %argrw{"wr"}
+	eq		$tmp3 i_matte_mode $const5 	%line{57} %argrw{"wrr"}
+	if		$tmp3 291 859 	%argrw{"r"}
+	assign		___346_tri_id $const6 	%line{59} %argrw{"wr"}
+	getattribute	$tmp4 $const7 $const8 ___346_tri_id 	%line{60} %argrw{"wrrw"}
+	functioncall	$const9 291 	%line{61} %argrw{"r"}
+	eq		$tmp5 ___346_tri_id $const6 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{214} %argrw{"wrr"}
+	if		$tmp5 16 16 	%argrw{"r"}
+	assign		matte_color $const10 	%line{216} %argrw{"wr"}
+	return
+	bitand		___332_H ___346_tri_id $const11 	%line{219} %argrw{"wrr"}
+	bitand		$tmp6 ___346_tri_id $const12 	%line{220} %argrw{"wrr"}
+	shr		___332_S $tmp6 $const13 	%argrw{"wrr"}
+	bitand		$tmp7 ___346_tri_id $const14 	%line{221} %argrw{"wrr"}
+	shr		___332_V $tmp7 $const15 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const6 $const16 	%line{224} %argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const1 $const17 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const5 $const18 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const20 $const19 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const22 $const21 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const23 $const22 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const25 $const24 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const27 $const26 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const13 $const13 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const29 $const28 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const31 $const30 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const33 $const32 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const35 $const34 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const37 $const36 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const39 $const38 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const41 $const40 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const15 $const42 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const43 $const35 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const45 $const44 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const47 $const46 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const49 $const48 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const51 $const50 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const53 $const52 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const55 $const54 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const57 $const56 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const59 $const58 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const61 $const60 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const63 $const62 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const65 $const64 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const67 $const66 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const69 $const68 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const71 $const70 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const28 $const55 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const73 $const72 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const48 $const15 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const36 $const74 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const76 $const75 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const78 $const77 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const80 $const79 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const82 $const81 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const84 $const83 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const86 $const85 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const88 $const87 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const90 $const89 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const91 $const71 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const93 $const92 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const95 $const94 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const96 $const95 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const98 $const97 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const100 $const99 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const101 $const11 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const102 $const39 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const104 $const103 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const94 $const105 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const107 $const106 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const83 $const108 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const110 $const109 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const112 $const111 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const114 $const113 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const116 $const115 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const99 $const102 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const118 $const117 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const120 $const119 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const122 $const121 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const79 $const123 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const34 $const124 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const72 $const125 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const127 $const126 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const16 $const128 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const130 $const129 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const132 $const131 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const134 $const133 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const136 $const135 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const138 $const137 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const140 $const139 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const142 $const141 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const144 $const143 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const85 $const145 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const147 $const146 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const129 $const148 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const128 $const69 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const149 $const132 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const151 $const150 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const153 $const152 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const154 $const86 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const115 $const155 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const117 $const156 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const157 $const90 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const159 $const158 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const26 $const160 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const162 $const161 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const164 $const163 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const156 $const165 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const167 $const166 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const68 $const149 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const169 $const168 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const171 $const170 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const126 $const164 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const17 $const172 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const145 $const173 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const175 $const174 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const177 $const176 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const179 $const178 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const70 $const180 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const58 $const154 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const38 $const181 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const170 $const182 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const184 $const183 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const186 $const185 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const166 $const187 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const143 $const45 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const189 $const188 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const92 $const190 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const74 $const191 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const193 $const192 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const194 $const31 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const165 $const142 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const180 $const195 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const196 $const84 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const197 $const171 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const199 $const198 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const168 $const120 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const200 $const112 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const183 $const80 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const46 $const169 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const125 $const25 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const201 $const88 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const202 $const110 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const52 $const203 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const204 $const116 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const111 $const204 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const124 $const205 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const42 $const206 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const207 $const199 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const209 $const208 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const211 $const210 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const87 $const73 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const213 $const212 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const215 $const214 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const178 $const216 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const173 $const217 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const219 $const218 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const212 $const220 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const221 $const151 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const223 $const222 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const205 $const147 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const225 $const224 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const195 $const130 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const226 $const47 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const227 $const221 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const188 $const101 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const176 $const93 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const148 $const177 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const121 $const122 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const228 $const43 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const229 $const202 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const158 $const194 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const230 $const159 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const232 $const231 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const172 $const233 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const141 $const234 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const236 $const235 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const161 $const237 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const109 $const230 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const239 $const238 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const21 $const118 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const18 $const96 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const44 $const49 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const240 $const67 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const220 $const200 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const198 $const136 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const241 $const236 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const187 $const229 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const135 $const241 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const242 $const207 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const243 $const153 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const244 $const59 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const155 $const82 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const131 $const53 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const191 $const41 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const245 $const5 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const75 $const184 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const103 $const65 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const246 $const246 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const24 $const100 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const108 $const144 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const174 $const189 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const119 $const247 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const62 $const107 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const235 $const51 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const133 $const61 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const248 $const211 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const237 $const244 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const249 $const196 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const210 $const140 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const208 $const179 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const150 $const127 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const214 $const226 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const81 $const78 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const77 $const250 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const137 $const162 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const106 $const251 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const105 $const138 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const163 $const252 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const50 $const253 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const139 $const134 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const251 $const114 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const247 $const225 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const146 $const29 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const185 $const91 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const255 $const254 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const54 $const219 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const206 $const157 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const256 $const104 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const257 $const213 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const190 $const167 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const258 $const57 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const181 $const259 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const254 $const98 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const252 $const257 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const192 $const248 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const218 $const27 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const260 $const215 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const261 $const242 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const253 $const20 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const234 $const227 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const259 $const175 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const203 $const256 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const250 $const255 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const182 $const23 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const160 $const262 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const262 $const63 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const56 $const201 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const60 $const1 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const263 $const197 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const64 $const239 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const224 $const186 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const97 $const37 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const19 $const33 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const32 $const263 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const233 $const228 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const113 $const258 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const264 $const232 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const40 $const265 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const66 $const260 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const152 $const193 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const123 $const240 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const30 $const243 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const231 $const261 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const216 $const209 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const238 $const264 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const222 $const245 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const89 $const223 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const265 $const249 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const217 $const76 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const11 $const6 	%argrw{"wrr"}
+	aref		$tmp8 ___332_shuffle_1_255 ___332_H 	%line{231} %argrw{"wrr"}
+	assign		$tmp9 $tmp8 	%argrw{"wr"}
+	div		$tmp10 $tmp9 $const267 	%argrw{"wrr"}
+	aref		$tmp11 ___332_shuffle_1_255 ___332_S 	%line{232} %argrw{"wrr"}
+	assign		$tmp12 $tmp11 	%argrw{"wr"}
+	div		$tmp13 $tmp12 $const267 	%argrw{"wrr"}
+	mul		$tmp14 $tmp13 $const268 	%argrw{"wrr"}
+	add		$tmp15 $tmp14 $const268 	%argrw{"wrr"}
+	aref		$tmp16 ___332_shuffle_1_255 ___332_V 	%line{233} %argrw{"wrr"}
+	assign		$tmp17 $tmp16 	%argrw{"wr"}
+	div		$tmp18 $tmp17 $const267 	%argrw{"wrr"}
+	mul		$tmp19 $tmp18 $const268 	%argrw{"wrr"}
+	add		$tmp20 $tmp19 $const268 	%argrw{"wrr"}
+	color		matte_color $const266 $tmp10 $tmp15 $tmp20 	%argrw{"wrrrr"}
+	eq		$tmp21 i_matte_mode $const20 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_ei_matte.osl"} %line{63} %argrw{"wrr"}
+	if		$tmp21 575 859 	%argrw{"r"}
+	assign		___347_prim_id $const6 	%line{65} %argrw{"wr"}
+	getattribute	$tmp22 $const7 $const269 ___347_prim_id 	%line{66} %argrw{"wrrw"}
+	functioncall	$const9 575 	%line{67} %argrw{"r"}
+	eq		$tmp23 ___347_prim_id $const6 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{214} %argrw{"wrr"}
+	if		$tmp23 300 300 	%argrw{"r"}
+	assign		matte_color $const10 	%line{216} %argrw{"wr"}
+	return
+	bitand		___332_H ___347_prim_id $const11 	%line{219} %argrw{"wrr"}
+	bitand		$tmp24 ___347_prim_id $const12 	%line{220} %argrw{"wrr"}
+	shr		___332_S $tmp24 $const13 	%argrw{"wrr"}
+	bitand		$tmp25 ___347_prim_id $const14 	%line{221} %argrw{"wrr"}
+	shr		___332_V $tmp25 $const15 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const6 $const16 	%line{224} %argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const1 $const17 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const5 $const18 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const20 $const19 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const22 $const21 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const23 $const22 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const25 $const24 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const27 $const26 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const13 $const13 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const29 $const28 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const31 $const30 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const33 $const32 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const35 $const34 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const37 $const36 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const39 $const38 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const41 $const40 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const15 $const42 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const43 $const35 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const45 $const44 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const47 $const46 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const49 $const48 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const51 $const50 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const53 $const52 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const55 $const54 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const57 $const56 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const59 $const58 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const61 $const60 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const63 $const62 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const65 $const64 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const67 $const66 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const69 $const68 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const71 $const70 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const28 $const55 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const73 $const72 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const48 $const15 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const36 $const74 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const76 $const75 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const78 $const77 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const80 $const79 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const82 $const81 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const84 $const83 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const86 $const85 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const88 $const87 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const90 $const89 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const91 $const71 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const93 $const92 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const95 $const94 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const96 $const95 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const98 $const97 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const100 $const99 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const101 $const11 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const102 $const39 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const104 $const103 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const94 $const105 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const107 $const106 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const83 $const108 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const110 $const109 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const112 $const111 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const114 $const113 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const116 $const115 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const99 $const102 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const118 $const117 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const120 $const119 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const122 $const121 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const79 $const123 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const34 $const124 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const72 $const125 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const127 $const126 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const16 $const128 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const130 $const129 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const132 $const131 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const134 $const133 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const136 $const135 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const138 $const137 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const140 $const139 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const142 $const141 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const144 $const143 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const85 $const145 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const147 $const146 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const129 $const148 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const128 $const69 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const149 $const132 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const151 $const150 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const153 $const152 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const154 $const86 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const115 $const155 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const117 $const156 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const157 $const90 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const159 $const158 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const26 $const160 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const162 $const161 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const164 $const163 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const156 $const165 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const167 $const166 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const68 $const149 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const169 $const168 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const171 $const170 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const126 $const164 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const17 $const172 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const145 $const173 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const175 $const174 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const177 $const176 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const179 $const178 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const70 $const180 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const58 $const154 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const38 $const181 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const170 $const182 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const184 $const183 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const186 $const185 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const166 $const187 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const143 $const45 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const189 $const188 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const92 $const190 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const74 $const191 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const193 $const192 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const194 $const31 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const165 $const142 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const180 $const195 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const196 $const84 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const197 $const171 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const199 $const198 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const168 $const120 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const200 $const112 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const183 $const80 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const46 $const169 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const125 $const25 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const201 $const88 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const202 $const110 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const52 $const203 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const204 $const116 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const111 $const204 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const124 $const205 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const42 $const206 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const207 $const199 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const209 $const208 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const211 $const210 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const87 $const73 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const213 $const212 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const215 $const214 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const178 $const216 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const173 $const217 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const219 $const218 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const212 $const220 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const221 $const151 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const223 $const222 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const205 $const147 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const225 $const224 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const195 $const130 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const226 $const47 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const227 $const221 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const188 $const101 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const176 $const93 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const148 $const177 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const121 $const122 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const228 $const43 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const229 $const202 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const158 $const194 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const230 $const159 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const232 $const231 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const172 $const233 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const141 $const234 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const236 $const235 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const161 $const237 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const109 $const230 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const239 $const238 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const21 $const118 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const18 $const96 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const44 $const49 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const240 $const67 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const220 $const200 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const198 $const136 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const241 $const236 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const187 $const229 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const135 $const241 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const242 $const207 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const243 $const153 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const244 $const59 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const155 $const82 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const131 $const53 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const191 $const41 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const245 $const5 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const75 $const184 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const103 $const65 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const246 $const246 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const24 $const100 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const108 $const144 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const174 $const189 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const119 $const247 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const62 $const107 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const235 $const51 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const133 $const61 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const248 $const211 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const237 $const244 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const249 $const196 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const210 $const140 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const208 $const179 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const150 $const127 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const214 $const226 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const81 $const78 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const77 $const250 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const137 $const162 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const106 $const251 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const105 $const138 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const163 $const252 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const50 $const253 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const139 $const134 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const251 $const114 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const247 $const225 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const146 $const29 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const185 $const91 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const255 $const254 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const54 $const219 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const206 $const157 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const256 $const104 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const257 $const213 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const190 $const167 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const258 $const57 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const181 $const259 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const254 $const98 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const252 $const257 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const192 $const248 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const218 $const27 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const260 $const215 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const261 $const242 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const253 $const20 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const234 $const227 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const259 $const175 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const203 $const256 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const250 $const255 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const182 $const23 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const160 $const262 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const262 $const63 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const56 $const201 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const60 $const1 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const263 $const197 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const64 $const239 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const224 $const186 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const97 $const37 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const19 $const33 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const32 $const263 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const233 $const228 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const113 $const258 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const264 $const232 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const40 $const265 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const66 $const260 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const152 $const193 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const123 $const240 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const30 $const243 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const231 $const261 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const216 $const209 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const238 $const264 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const222 $const245 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const89 $const223 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const265 $const249 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const217 $const76 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const11 $const6 	%argrw{"wrr"}
+	aref		$tmp26 ___332_shuffle_1_255 ___332_H 	%line{231} %argrw{"wrr"}
+	assign		$tmp27 $tmp26 	%argrw{"wr"}
+	div		$tmp28 $tmp27 $const267 	%argrw{"wrr"}
+	aref		$tmp29 ___332_shuffle_1_255 ___332_S 	%line{232} %argrw{"wrr"}
+	assign		$tmp30 $tmp29 	%argrw{"wr"}
+	div		$tmp31 $tmp30 $const267 	%argrw{"wrr"}
+	mul		$tmp32 $tmp31 $const268 	%argrw{"wrr"}
+	add		$tmp33 $tmp32 $const268 	%argrw{"wrr"}
+	aref		$tmp34 ___332_shuffle_1_255 ___332_V 	%line{233} %argrw{"wrr"}
+	assign		$tmp35 $tmp34 	%argrw{"wr"}
+	div		$tmp36 $tmp35 $const267 	%argrw{"wrr"}
+	mul		$tmp37 $tmp36 $const268 	%argrw{"wrr"}
+	add		$tmp38 $tmp37 $const268 	%argrw{"wrr"}
+	color		matte_color $const266 $tmp28 $tmp33 $tmp38 	%argrw{"wrrrr"}
+	eq		$tmp39 i_matte_mode $const22 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_ei_matte.osl"} %line{69} %argrw{"wrr"}
+	if		$tmp39 859 859 	%argrw{"r"}
+	assign		___348_tessel_id $const6 	%line{71} %argrw{"wr"}
+	getattribute	$tmp40 $const7 $const270 ___348_tessel_id 	%line{72} %argrw{"wrrw"}
+	functioncall	$const9 859 	%line{73} %argrw{"r"}
+	eq		$tmp41 ___348_tessel_id $const6 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{214} %argrw{"wrr"}
+	if		$tmp41 584 584 	%argrw{"r"}
+	assign		matte_color $const10 	%line{216} %argrw{"wr"}
+	return
+	bitand		___332_H ___348_tessel_id $const11 	%line{219} %argrw{"wrr"}
+	bitand		$tmp42 ___348_tessel_id $const12 	%line{220} %argrw{"wrr"}
+	shr		___332_S $tmp42 $const13 	%argrw{"wrr"}
+	bitand		$tmp43 ___348_tessel_id $const14 	%line{221} %argrw{"wrr"}
+	shr		___332_V $tmp43 $const15 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const6 $const16 	%line{224} %argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const1 $const17 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const5 $const18 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const20 $const19 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const22 $const21 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const23 $const22 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const25 $const24 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const27 $const26 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const13 $const13 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const29 $const28 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const31 $const30 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const33 $const32 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const35 $const34 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const37 $const36 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const39 $const38 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const41 $const40 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const15 $const42 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const43 $const35 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const45 $const44 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const47 $const46 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const49 $const48 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const51 $const50 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const53 $const52 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const55 $const54 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const57 $const56 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const59 $const58 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const61 $const60 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const63 $const62 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const65 $const64 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const67 $const66 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const69 $const68 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const71 $const70 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const28 $const55 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const73 $const72 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const48 $const15 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const36 $const74 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const76 $const75 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const78 $const77 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const80 $const79 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const82 $const81 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const84 $const83 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const86 $const85 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const88 $const87 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const90 $const89 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const91 $const71 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const93 $const92 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const95 $const94 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const96 $const95 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const98 $const97 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const100 $const99 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const101 $const11 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const102 $const39 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const104 $const103 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const94 $const105 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const107 $const106 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const83 $const108 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const110 $const109 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const112 $const111 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const114 $const113 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const116 $const115 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const99 $const102 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const118 $const117 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const120 $const119 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const122 $const121 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const79 $const123 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const34 $const124 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const72 $const125 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const127 $const126 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const16 $const128 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const130 $const129 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const132 $const131 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const134 $const133 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const136 $const135 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const138 $const137 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const140 $const139 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const142 $const141 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const144 $const143 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const85 $const145 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const147 $const146 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const129 $const148 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const128 $const69 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const149 $const132 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const151 $const150 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const153 $const152 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const154 $const86 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const115 $const155 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const117 $const156 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const157 $const90 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const159 $const158 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const26 $const160 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const162 $const161 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const164 $const163 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const156 $const165 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const167 $const166 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const68 $const149 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const169 $const168 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const171 $const170 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const126 $const164 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const17 $const172 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const145 $const173 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const175 $const174 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const177 $const176 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const179 $const178 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const70 $const180 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const58 $const154 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const38 $const181 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const170 $const182 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const184 $const183 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const186 $const185 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const166 $const187 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const143 $const45 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const189 $const188 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const92 $const190 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const74 $const191 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const193 $const192 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const194 $const31 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const165 $const142 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const180 $const195 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const196 $const84 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const197 $const171 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const199 $const198 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const168 $const120 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const200 $const112 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const183 $const80 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const46 $const169 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const125 $const25 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const201 $const88 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const202 $const110 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const52 $const203 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const204 $const116 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const111 $const204 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const124 $const205 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const42 $const206 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const207 $const199 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const209 $const208 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const211 $const210 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const87 $const73 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const213 $const212 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const215 $const214 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const178 $const216 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const173 $const217 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const219 $const218 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const212 $const220 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const221 $const151 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const223 $const222 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const205 $const147 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const225 $const224 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const195 $const130 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const226 $const47 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const227 $const221 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const188 $const101 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const176 $const93 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const148 $const177 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const121 $const122 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const228 $const43 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const229 $const202 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const158 $const194 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const230 $const159 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const232 $const231 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const172 $const233 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const141 $const234 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const236 $const235 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const161 $const237 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const109 $const230 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const239 $const238 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const21 $const118 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const18 $const96 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const44 $const49 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const240 $const67 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const220 $const200 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const198 $const136 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const241 $const236 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const187 $const229 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const135 $const241 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const242 $const207 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const243 $const153 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const244 $const59 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const155 $const82 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const131 $const53 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const191 $const41 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const245 $const5 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const75 $const184 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const103 $const65 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const246 $const246 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const24 $const100 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const108 $const144 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const174 $const189 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const119 $const247 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const62 $const107 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const235 $const51 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const133 $const61 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const248 $const211 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const237 $const244 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const249 $const196 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const210 $const140 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const208 $const179 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const150 $const127 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const214 $const226 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const81 $const78 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const77 $const250 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const137 $const162 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const106 $const251 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const105 $const138 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const163 $const252 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const50 $const253 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const139 $const134 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const251 $const114 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const247 $const225 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const146 $const29 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const185 $const91 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const255 $const254 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const54 $const219 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const206 $const157 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const256 $const104 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const257 $const213 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const190 $const167 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const258 $const57 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const181 $const259 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const254 $const98 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const252 $const257 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const192 $const248 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const218 $const27 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const260 $const215 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const261 $const242 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const253 $const20 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const234 $const227 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const259 $const175 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const203 $const256 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const250 $const255 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const182 $const23 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const160 $const262 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const262 $const63 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const56 $const201 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const60 $const1 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const263 $const197 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const64 $const239 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const224 $const186 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const97 $const37 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const19 $const33 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const32 $const263 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const233 $const228 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const113 $const258 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const264 $const232 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const40 $const265 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const66 $const260 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const152 $const193 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const123 $const240 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const30 $const243 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const231 $const261 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const216 $const209 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const238 $const264 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const222 $const245 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const89 $const223 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const265 $const249 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const217 $const76 	%argrw{"wrr"}
+	aassign		___332_shuffle_1_255 $const11 $const6 	%argrw{"wrr"}
+	aref		$tmp44 ___332_shuffle_1_255 ___332_H 	%line{231} %argrw{"wrr"}
+	assign		$tmp45 $tmp44 	%argrw{"wr"}
+	div		$tmp46 $tmp45 $const267 	%argrw{"wrr"}
+	aref		$tmp47 ___332_shuffle_1_255 ___332_S 	%line{232} %argrw{"wrr"}
+	assign		$tmp48 $tmp47 	%argrw{"wr"}
+	div		$tmp49 $tmp48 $const267 	%argrw{"wrr"}
+	mul		$tmp50 $tmp49 $const268 	%argrw{"wrr"}
+	add		$tmp51 $tmp50 $const268 	%argrw{"wrr"}
+	aref		$tmp52 ___332_shuffle_1_255 ___332_V 	%line{233} %argrw{"wrr"}
+	assign		$tmp53 $tmp52 	%argrw{"wr"}
+	div		$tmp54 $tmp53 $const267 	%argrw{"wrr"}
+	mul		$tmp55 $tmp54 $const268 	%argrw{"wrr"}
+	add		$tmp56 $tmp55 $const268 	%argrw{"wrr"}
+	color		matte_color $const266 $tmp46 $tmp51 $tmp56 	%argrw{"wrrrr"}
+	closure		$tmp57 $const271 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_ei_matte.osl"} %line{76} %argrw{"wr"}
+	mul		$tmp58 i_matte_opacity matte_color 	%argrw{"wrr"}
+	mul		$tmp59 $tmp57 $tmp58 	%argrw{"wrr"}
+	closure		$tmp60 $const272 	%line{77} %argrw{"wr"}
+	sub		$tmp61 $const4 i_matte_opacity 	%argrw{"wrr"}
+	mul		$tmp62 $tmp60 $tmp61 	%argrw{"wrr"}
+	add		result $tmp59 $tmp62 	%argrw{"wrr"}
+	assign		result_alpha i_matte_opacity 	%line{79} %argrw{"wr"}
+	sub		$tmp63 $const4 i_matte_opacity 	%line{80} %argrw{"wrr"}
+	assign		o_outTransparency $tmp63 	%argrw{"wr"}
+	assign		Ci result 	%line{83} %argrw{"wr"}
+	assign		o_outColor matte_color 	%line{84} %argrw{"wr"}
+	end

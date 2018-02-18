@@ -1,0 +1,74 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_envSphere
+param	color	i_image	0 0 0 		 %read{34,34} %write{2147483647,-1}
+param	float	i_shearU	0 		 %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_shearV	0 		 %read{2147483647,-1} %write{2147483647,-1}
+param	string	i_filename	"" 		 %read{2147483647,-1} %write{2147483647,-1}
+param	int	i_flip	0 		 %read{2147483647,-1} %write{2147483647,-1}
+global	closure color	Ci	 %read{2147483647,-1} %write{34,34}
+temp	int	$tmp1	 %read{1,1} %write{0,0}
+const	string	$const1	"reflect"		 %read{0,8} %write{2147483647,-1}
+temp	int	$tmp2	 %read{2,6} %write{1,5}
+const	int	$const2	0		 %read{1,31} %write{2147483647,-1}
+temp	int	$tmp3	 %read{4,4} %write{3,3}
+const	string	$const3	"diffuse"		 %read{3,21} %write{2147483647,-1}
+temp	int	$tmp4	 %read{5,5} %write{4,4}
+temp	int	$tmp5	 %read{7,16} %write{6,15}
+temp	int	$tmp6	 %read{9,9} %write{8,8}
+temp	int	$tmp7	 %read{10,14} %write{9,13}
+temp	int	$tmp8	 %read{12,12} %write{11,11}
+const	string	$const4	"glossy"		 %read{11,11} %write{2147483647,-1}
+temp	int	$tmp9	 %read{13,13} %write{12,12}
+temp	int	$tmp10	 %read{15,15} %write{14,14}
+temp	int	$tmp11	 %read{17,26} %write{16,25}
+temp	int	$tmp12	 %read{19,19} %write{18,18}
+const	string	$const5	"refract"		 %read{18,18} %write{2147483647,-1}
+temp	int	$tmp13	 %read{20,24} %write{19,23}
+temp	int	$tmp14	 %read{22,22} %write{21,21}
+temp	int	$tmp15	 %read{23,23} %write{22,22}
+temp	int	$tmp16	 %read{25,25} %write{24,24}
+temp	int	$tmp17	 %read{27,31} %write{26,30}
+temp	int	$tmp18	 %read{29,29} %write{28,28}
+const	string	$const6	"volume_scatter"		 %read{28,28} %write{2147483647,-1}
+temp	int	$tmp19	 %read{30,30} %write{29,29}
+temp	int	$tmp20	 %read{32,32} %write{31,31}
+temp	closure color	$tmp21	 %read{34,34} %write{33,33}
+const	string	$const7	"background"		 %read{33,33} %write{2147483647,-1}
+code ___main___
+	raytype		$tmp1 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_envSphere.osl"} %line{31} %argrw{"wr"}
+	neq		$tmp2 $tmp1 $const2 	%argrw{"wrr"}
+	if		$tmp2 6 6 	%argrw{"r"}
+	raytype		$tmp3 $const3 	%argrw{"wr"}
+	neq		$tmp4 $tmp3 $const2 	%argrw{"wrr"}
+	assign		$tmp2 $tmp4 	%argrw{"wr"}
+	neq		$tmp5 $tmp2 $const2 	%argrw{"wrr"}
+	if		$tmp5 8 16 	%line{32} %argrw{"r"}
+	raytype		$tmp6 $const1 	%argrw{"wr"}
+	neq		$tmp7 $tmp6 $const2 	%argrw{"wrr"}
+	if		$tmp7 14 14 	%argrw{"r"}
+	raytype		$tmp8 $const4 	%argrw{"wr"}
+	neq		$tmp9 $tmp8 $const2 	%argrw{"wrr"}
+	assign		$tmp7 $tmp9 	%argrw{"wr"}
+	neq		$tmp10 $tmp7 $const2 	%argrw{"wrr"}
+	assign		$tmp5 $tmp10 	%argrw{"wr"}
+	neq		$tmp11 $tmp5 $const2 	%argrw{"wrr"}
+	if		$tmp11 18 26 	%line{33} %argrw{"r"}
+	raytype		$tmp12 $const5 	%argrw{"wr"}
+	neq		$tmp13 $tmp12 $const2 	%argrw{"wrr"}
+	if		$tmp13 24 24 	%argrw{"r"}
+	raytype		$tmp14 $const3 	%argrw{"wr"}
+	neq		$tmp15 $tmp14 $const2 	%argrw{"wrr"}
+	assign		$tmp13 $tmp15 	%argrw{"wr"}
+	neq		$tmp16 $tmp13 $const2 	%argrw{"wrr"}
+	assign		$tmp11 $tmp16 	%argrw{"wr"}
+	neq		$tmp17 $tmp11 $const2 	%argrw{"wrr"}
+	if		$tmp17 28 31 	%line{35} %argrw{"r"}
+	raytype		$tmp18 $const6 	%line{34} %argrw{"wr"}
+	neq		$tmp19 $tmp18 $const2 	%argrw{"wrr"}
+	assign		$tmp17 $tmp19 	%line{35} %argrw{"wr"}
+	eq		$tmp20 $tmp17 $const2 	%argrw{"wrr"}
+	if		$tmp20 35 35 	%line{30} %argrw{"r"}
+	closure		$tmp21 $const7 	%line{37} %argrw{"wr"}
+	mul		Ci $tmp21 i_image 	%argrw{"wrr"}
+	end

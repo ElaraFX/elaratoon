@@ -1,0 +1,317 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_grid
+param	color	i_defaultColor	0.5 0.5 0.5 		 %read{163,163} %write{2147483647,-1}
+param	float	i_alphaGain	1 		 %read{161,161} %write{2147483647,-1}
+param	int	i_alphaIsLuminance	0 		 %read{149,149} %write{2147483647,-1}
+param	float	i_alphaOffset	0 		 %read{162,162} %write{2147483647,-1}
+param	color	i_colorGain	1 1 1 		 %read{159,159} %write{2147483647,-1}
+param	color	i_colorOffset	0 0 0 		 %read{160,160} %write{2147483647,-1}
+param	int	i_invert	0 		 %read{150,150} %write{2147483647,-1}
+param	color	i_lineColor	1 1 1 		 %read{141,144} %write{2147483647,-1}
+param	color	i_fillerColor	0 0 0 		 %read{141,146} %write{2147483647,-1}
+param	float	i_uWidth	0.1 		 %read{38,60} %write{2147483647,-1}
+param	float	i_vWidth	0.1 		 %read{45,104} %write{2147483647,-1}
+param	float	i_contrast	1 		 %read{143,146} %write{2147483647,-1}
+param	float	i_filter	1 		 %read{42,49} %write{2147483647,-1}
+param	float	i_filterOffset	0 		 %read{43,50} %write{2147483647,-1}
+param	vector	i_uvCoord	0 0 0 		 %read{2,3} %write{2147483647,-1} %derivs
+oparam	float	o_outAlpha	1 		 %read{155,162} %write{148,164}
+oparam	color	o_outColor	0 0 0 		 %read{154,160} %write{147,163}
+local	float	___329_w	 %read{57,133} %write{55,99}
+local	float	___329_x0	 %read{59,127} %write{58,102}
+local	float	___329_x1	 %read{61,118} %write{59,103}
+local	float	___329_nedge	 %read{65,134} %write{60,104}
+local	float	___329_result	 %read{91,138} %write{67,137}
+local	float	___331_extinct	 %read{92,136} %write{89,133}
+local	float	dx	 %read{25,32} %write{0,0}
+local	float	dy	 %read{28,35} %write{1,1}
+local	float	ss	 %read{5,53} %write{2,18} %derivs
+local	float	tt	 %read{9,97} %write{4,23} %derivs
+local	float	___344_dss	 %read{40,55} %write{30,44}
+local	float	___344_dtt	 %read{47,99} %write{37,51}
+local	float	___344_f	 %read{147,148} %write{140,140}
+local	color	___344_lc	 %read{147,147} %write{143,143}
+local	color	___344_fc	 %read{147,147} %write{146,146}
+const	int	$const1	1		 %read{0,112} %write{2147483647,-1}
+const	int	$const2	0		 %read{2,111} %write{2147483647,-1}
+temp	float	$tmp1	 %read{4,4} %write{3,3} %derivs
+const	float	$const3	1		 %read{4,164} %write{2147483647,-1}
+temp	float	$tmp2	 %read{6,6} %write{5,5}
+const	int	$const4	100000		 %read{6,10} %write{2147483647,-1}
+temp	int	$tmp3	 %read{7,7} %write{6,6}
+temp	int	$tmp4	 %read{8,13} %write{7,12}
+temp	float	$tmp5	 %read{10,10} %write{9,9}
+temp	int	$tmp6	 %read{11,11} %write{10,10}
+temp	int	$tmp7	 %read{12,12} %write{11,11}
+const	float	$const5	1.000001		 %read{15,22} %write{2147483647,-1}
+const	string	$const6	"mod"		 %read{14,19} %write{2147483647,-1}
+temp	float	$tmp8	 %read{17,17} %write{16,16} %derivs
+temp	float	$tmp9	 %read{16,16} %write{15,15} %derivs
+temp	float	$tmp10	 %read{18,18} %write{17,17} %derivs
+temp	float	$tmp11	 %read{22,22} %write{21,21} %derivs
+temp	float	$tmp12	 %read{21,21} %write{20,20} %derivs
+temp	float	$tmp13	 %read{23,23} %write{22,22} %derivs
+temp	float	$tmp14	 %read{30,30} %write{26,26}
+temp	float	$tmp15	 %read{25,25} %write{24,24}
+temp	float	$tmp16	 %read{26,26} %write{25,25}
+temp	float	$tmp17	 %read{30,30} %write{29,29}
+temp	float	$tmp18	 %read{28,28} %write{27,27}
+temp	float	$tmp19	 %read{29,29} %write{28,28}
+temp	float	$tmp20	 %read{37,37} %write{33,33}
+temp	float	$tmp21	 %read{32,32} %write{31,31}
+temp	float	$tmp22	 %read{33,33} %write{32,32}
+temp	float	$tmp23	 %read{37,37} %write{36,36}
+temp	float	$tmp24	 %read{35,35} %write{34,34}
+temp	float	$tmp25	 %read{36,36} %write{35,35}
+temp	float	$tmp26	 %read{42,42} %write{41,41}
+const	float	$const7	0		 %read{41,156} %write{2147483647,-1}
+const	float	$const8	0.5		 %read{38,133} %write{2147483647,-1}
+temp	float	$tmp27	 %read{40,40} %write{38,38}
+const	string	$const9	"clamp"		 %read{39,46} %write{2147483647,-1}
+temp	float	$tmp28	 %read{41,41} %write{40,40}
+temp	float	$tmp29	 %read{44,44} %write{42,42}
+temp	float	$tmp30	 %read{44,44} %write{43,43}
+const	float	$const11	2		 %read{43,145} %write{2147483647,-1}
+temp	float	$tmp31	 %read{49,49} %write{48,48}
+temp	float	$tmp32	 %read{47,47} %write{45,45}
+temp	float	$tmp33	 %read{48,48} %write{47,47}
+temp	float	$tmp34	 %read{51,51} %write{49,49}
+temp	float	$tmp35	 %read{51,51} %write{50,50}
+temp	float	$tmp36	 %read{140,140} %write{94,94}
+temp	float	$tmp37	 %read{53,53} %write{52,52}
+temp	float	$tmp38	 %read{56,56} %write{53,53}
+const	string	$const12	"filteredpulsetrain"		 %read{54,98} %write{2147483647,-1}
+temp	float	$tmp39	 %read{58,58} %write{56,56}
+temp	float	$tmp40	 %read{58,58} %write{57,57}
+temp	int	$tmp41	 %read{62,62} %write{61,61}
+temp	float	$tmp42	 %read{64,64} %write{63,63}
+temp	float	$tmp43	 %read{65,65} %write{64,64}
+temp	int	$tmp44	 %read{66,66} %write{65,65}
+temp	float	$tmp45	 %read{87,87} %write{77,77}
+const	string	$const13	"integral"		 %read{69,122} %write{2147483647,-1}
+temp	float	$tmp46	 %read{72,72} %write{70,70}
+temp	float	$tmp47	 %read{72,72} %write{71,71}
+temp	float	$tmp48	 %read{77,77} %write{72,72}
+temp	float	$tmp49	 %read{77,77} %write{76,76}
+temp	float	$tmp50	 %read{74,74} %write{73,73}
+temp	float	$tmp51	 %read{75,75} %write{74,74}
+temp	float	$tmp52	 %read{76,76} %write{75,75}
+temp	float	$tmp53	 %read{87,87} %write{86,86}
+temp	float	$tmp54	 %read{81,81} %write{79,79}
+temp	float	$tmp55	 %read{81,81} %write{80,80}
+temp	float	$tmp56	 %read{86,86} %write{81,81}
+temp	float	$tmp57	 %read{86,86} %write{85,85}
+temp	float	$tmp58	 %read{83,83} %write{82,82}
+temp	float	$tmp59	 %read{84,84} %write{83,83}
+temp	float	$tmp60	 %read{85,85} %write{84,84}
+temp	float	$tmp61	 %read{88,88} %write{87,87}
+const	float	$const14	0.40000001		 %read{89,133} %write{2147483647,-1}
+temp	float	$tmp62	 %read{91,91} %write{90,90}
+temp	float	$tmp63	 %read{92,92} %write{91,91}
+temp	float	$tmp64	 %read{93,93} %write{92,92}
+temp	float	$tmp65	 %read{140,140} %write{138,138}
+temp	float	$tmp66	 %read{97,97} %write{96,96}
+temp	float	$tmp67	 %read{100,100} %write{97,97}
+temp	float	$tmp68	 %read{102,102} %write{100,100}
+temp	float	$tmp69	 %read{102,102} %write{101,101}
+temp	int	$tmp70	 %read{106,106} %write{105,105}
+temp	float	$tmp71	 %read{108,108} %write{107,107}
+temp	float	$tmp72	 %read{109,109} %write{108,108}
+temp	int	$tmp73	 %read{110,110} %write{109,109}
+temp	float	$tmp74	 %read{131,131} %write{121,121}
+temp	float	$tmp75	 %read{116,116} %write{114,114}
+temp	float	$tmp76	 %read{116,116} %write{115,115}
+temp	float	$tmp77	 %read{121,121} %write{116,116}
+temp	float	$tmp78	 %read{121,121} %write{120,120}
+temp	float	$tmp79	 %read{118,118} %write{117,117}
+temp	float	$tmp80	 %read{119,119} %write{118,118}
+temp	float	$tmp81	 %read{120,120} %write{119,119}
+temp	float	$tmp82	 %read{131,131} %write{130,130}
+temp	float	$tmp83	 %read{125,125} %write{123,123}
+temp	float	$tmp84	 %read{125,125} %write{124,124}
+temp	float	$tmp85	 %read{130,130} %write{125,125}
+temp	float	$tmp86	 %read{130,130} %write{129,129}
+temp	float	$tmp87	 %read{127,127} %write{126,126}
+temp	float	$tmp88	 %read{128,128} %write{127,127}
+temp	float	$tmp89	 %read{129,129} %write{128,128}
+temp	float	$tmp90	 %read{132,132} %write{131,131}
+temp	float	$tmp91	 %read{135,135} %write{134,134}
+temp	float	$tmp92	 %read{136,136} %write{135,135}
+temp	float	$tmp93	 %read{137,137} %write{136,136}
+temp	color	$tmp94	 %read{142,142} %write{141,141}
+temp	color	$tmp95	 %read{143,143} %write{142,142}
+temp	color	$tmp96	 %read{145,145} %write{144,144}
+temp	color	$tmp97	 %read{146,146} %write{145,145}
+temp	float	$tmp98	 %read{156,156} %write{149,149}
+temp	float	$tmp99	 %read{152,152} %write{150,150}
+const	string	$const15	"colorBalance"		 %read{151,151} %write{2147483647,-1}
+temp	int	$tmp100	 %read{153,153} %write{152,152}
+temp	int	$tmp101	 %read{157,157} %write{156,156}
+code ___main___
+	assign		dx $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_grid.osl"} %line{41} %argrw{"wr"}
+	assign		dy $const1 	%line{42} %argrw{"wr"}
+	compref		ss i_uvCoord $const2 	%line{44} %argrw{"wrr"}
+	compref		$tmp1 i_uvCoord $const1 	%line{45} %argrw{"wrr"}
+	sub		tt $const3 $tmp1 	%argrw{"wrr"}
+	abs		$tmp2 ss 	%line{47} %argrw{"wr"}
+	lt		$tmp3 $tmp2 $const4 	%argrw{"wrr"}
+	neq		$tmp4 $tmp3 $const2 	%argrw{"wrr"}
+	if		$tmp4 13 13 	%argrw{"r"}
+	abs		$tmp5 tt 	%argrw{"wr"}
+	lt		$tmp6 $tmp5 $const4 	%argrw{"wrr"}
+	neq		$tmp7 $tmp6 $const2 	%argrw{"wrr"}
+	assign		$tmp4 $tmp7 	%argrw{"wr"}
+	if		$tmp4 163 165 	%argrw{"r"}
+	functioncall	$const6 19 	%line{50} %argrw{"r"}
+	div		$tmp9 ss $const5 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{135} %argrw{"wrr"}
+	floor		$tmp8 $tmp9 	%argrw{"wr"}
+	mul		$tmp10 $const5 $tmp8 	%argrw{"wrr"}
+	sub		ss ss $tmp10 	%argrw{"wrr"}
+	functioncall	$const6 24 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_grid.osl"} %line{51} %argrw{"r"}
+	div		$tmp12 tt $const5 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{135} %argrw{"wrr"}
+	floor		$tmp11 $tmp12 	%argrw{"wr"}
+	mul		$tmp13 $const5 $tmp11 	%argrw{"wrr"}
+	sub		tt tt $tmp13 	%argrw{"wrr"}
+	Dx		$tmp15 ss 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_grid.osl"} %line{54} %argrw{"wr"} %argderivs{1}
+	mul		$tmp16 $tmp15 dx 	%argrw{"wrr"}
+	abs		$tmp14 $tmp16 	%argrw{"wr"}
+	Dy		$tmp18 ss 	%argrw{"wr"} %argderivs{1}
+	mul		$tmp19 $tmp18 dy 	%argrw{"wrr"}
+	abs		$tmp17 $tmp19 	%argrw{"wr"}
+	add		___344_dss $tmp14 $tmp17 	%argrw{"wrr"}
+	Dx		$tmp21 tt 	%line{55} %argrw{"wr"} %argderivs{1}
+	mul		$tmp22 $tmp21 dx 	%argrw{"wrr"}
+	abs		$tmp20 $tmp22 	%argrw{"wr"}
+	Dy		$tmp24 tt 	%argrw{"wr"} %argderivs{1}
+	mul		$tmp25 $tmp24 dy 	%argrw{"wrr"}
+	abs		$tmp23 $tmp25 	%argrw{"wr"}
+	add		___344_dtt $tmp20 $tmp23 	%argrw{"wrr"}
+	mul		$tmp27 i_uWidth $const8 	%line{61} %argrw{"wrr"}
+	functioncall	$const9 42 	%argrw{"r"}
+	min		$tmp28 ___344_dss $tmp27 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{142} %argrw{"wrr"}
+	max		$tmp26 $tmp28 $const7 	%argrw{"wrr"}
+	mul		$tmp29 $tmp26 i_filter 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_grid.osl"} %line{61} %argrw{"wrr"}
+	mul		$tmp30 i_filterOffset $const11 	%argrw{"wrr"}
+	add		___344_dss $tmp29 $tmp30 	%argrw{"wrr"}
+	mul		$tmp32 i_vWidth $const8 	%line{62} %argrw{"wrr"}
+	functioncall	$const9 49 	%argrw{"r"}
+	min		$tmp33 ___344_dtt $tmp32 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{142} %argrw{"wrr"}
+	max		$tmp31 $tmp33 $const7 	%argrw{"wrr"}
+	mul		$tmp34 $tmp31 i_filter 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_grid.osl"} %line{62} %argrw{"wrr"}
+	mul		$tmp35 i_filterOffset $const11 	%argrw{"wrr"}
+	add		___344_dtt $tmp34 $tmp35 	%argrw{"wrr"}
+	mul		$tmp37 i_uWidth $const8 	%line{64} %argrw{"wrr"}
+	add		$tmp38 ss $tmp37 	%argrw{"wrr"}
+	functioncall	$const12 96 	%argrw{"r"}
+	div		___329_w ___344_dss $const3 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{173} %argrw{"wrr"}
+	div		$tmp39 $tmp38 $const3 	%line{174} %argrw{"wrr"}
+	div		$tmp40 ___329_w $const11 	%argrw{"wrr"}
+	sub		___329_x0 $tmp39 $tmp40 	%argrw{"wrr"}
+	add		___329_x1 ___329_x0 ___329_w 	%line{175} %argrw{"wrr"}
+	div		___329_nedge i_uWidth $const3 	%line{176} %argrw{"wrr"}
+	eq		$tmp41 ___329_x0 ___329_x1 	%line{179} %argrw{"wrr"}
+	if		$tmp41 69 94 	%argrw{"r"}
+	floor		$tmp42 ___329_x0 	%line{182} %argrw{"wr"}
+	sub		$tmp43 ___329_x0 $tmp42 	%argrw{"wrr"}
+	lt		$tmp44 $tmp43 ___329_nedge 	%argrw{"wrr"}
+	if		$tmp44 68 69 	%argrw{"r"}
+	assign		___329_result $const2 	%argrw{"wr"}
+	assign		___329_result $const1 	%argrw{"wr"}
+	functioncall	$const13 78 	%line{186} %argrw{"r"}
+	sub		$tmp46 $const3 ___329_nedge 	%line{166} %argrw{"wrr"}
+	floor		$tmp47 ___329_x1 	%argrw{"wr"}
+	mul		$tmp48 $tmp46 $tmp47 	%argrw{"wrr"}
+	floor		$tmp50 ___329_x1 	%argrw{"wr"}
+	sub		$tmp51 ___329_x1 $tmp50 	%argrw{"wrr"}
+	sub		$tmp52 $tmp51 ___329_nedge 	%argrw{"wrr"}
+	max		$tmp49 $const7 $tmp52 	%argrw{"wrr"}
+	add		$tmp45 $tmp48 $tmp49 	%argrw{"wrr"}
+	functioncall	$const13 87 	%line{186} %argrw{"r"}
+	sub		$tmp54 $const3 ___329_nedge 	%line{166} %argrw{"wrr"}
+	floor		$tmp55 ___329_x0 	%argrw{"wr"}
+	mul		$tmp56 $tmp54 $tmp55 	%argrw{"wrr"}
+	floor		$tmp58 ___329_x0 	%argrw{"wr"}
+	sub		$tmp59 ___329_x0 $tmp58 	%argrw{"wrr"}
+	sub		$tmp60 $tmp59 ___329_nedge 	%argrw{"wrr"}
+	max		$tmp57 $const7 $tmp60 	%argrw{"wrr"}
+	add		$tmp53 $tmp56 $tmp57 	%argrw{"wrr"}
+	sub		$tmp61 $tmp45 $tmp53 	%line{186} %argrw{"wrr"}
+	div		___329_result $tmp61 ___329_w 	%argrw{"wrr"}
+	smoothstep	___331_extinct $const14 $const8 ___329_w 	%line{193} %argrw{"wrrr"}
+	sub		$tmp62 $const3 ___329_nedge 	%line{194} %argrw{"wrr"}
+	sub		$tmp63 $tmp62 ___329_result 	%argrw{"wrr"}
+	mul		$tmp64 ___331_extinct $tmp63 	%argrw{"wrr"}
+	add		___329_result ___329_result $tmp64 	%argrw{"wrr"}
+	assign		$tmp36 ___329_result 	%line{197} %argrw{"wr"}
+	return
+	mul		$tmp66 i_vWidth $const8 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_grid.osl"} %line{65} %argrw{"wrr"}
+	add		$tmp67 tt $tmp66 	%argrw{"wrr"}
+	functioncall	$const12 140 	%argrw{"r"}
+	div		___329_w ___344_dtt $const3 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{173} %argrw{"wrr"}
+	div		$tmp68 $tmp67 $const3 	%line{174} %argrw{"wrr"}
+	div		$tmp69 ___329_w $const11 	%argrw{"wrr"}
+	sub		___329_x0 $tmp68 $tmp69 	%argrw{"wrr"}
+	add		___329_x1 ___329_x0 ___329_w 	%line{175} %argrw{"wrr"}
+	div		___329_nedge i_vWidth $const3 	%line{176} %argrw{"wrr"}
+	eq		$tmp70 ___329_x0 ___329_x1 	%line{179} %argrw{"wrr"}
+	if		$tmp70 113 138 	%argrw{"r"}
+	floor		$tmp71 ___329_x0 	%line{182} %argrw{"wr"}
+	sub		$tmp72 ___329_x0 $tmp71 	%argrw{"wrr"}
+	lt		$tmp73 $tmp72 ___329_nedge 	%argrw{"wrr"}
+	if		$tmp73 112 113 	%argrw{"r"}
+	assign		___329_result $const2 	%argrw{"wr"}
+	assign		___329_result $const1 	%argrw{"wr"}
+	functioncall	$const13 122 	%line{186} %argrw{"r"}
+	sub		$tmp75 $const3 ___329_nedge 	%line{166} %argrw{"wrr"}
+	floor		$tmp76 ___329_x1 	%argrw{"wr"}
+	mul		$tmp77 $tmp75 $tmp76 	%argrw{"wrr"}
+	floor		$tmp79 ___329_x1 	%argrw{"wr"}
+	sub		$tmp80 ___329_x1 $tmp79 	%argrw{"wrr"}
+	sub		$tmp81 $tmp80 ___329_nedge 	%argrw{"wrr"}
+	max		$tmp78 $const7 $tmp81 	%argrw{"wrr"}
+	add		$tmp74 $tmp77 $tmp78 	%argrw{"wrr"}
+	functioncall	$const13 131 	%line{186} %argrw{"r"}
+	sub		$tmp83 $const3 ___329_nedge 	%line{166} %argrw{"wrr"}
+	floor		$tmp84 ___329_x0 	%argrw{"wr"}
+	mul		$tmp85 $tmp83 $tmp84 	%argrw{"wrr"}
+	floor		$tmp87 ___329_x0 	%argrw{"wr"}
+	sub		$tmp88 ___329_x0 $tmp87 	%argrw{"wrr"}
+	sub		$tmp89 $tmp88 ___329_nedge 	%argrw{"wrr"}
+	max		$tmp86 $const7 $tmp89 	%argrw{"wrr"}
+	add		$tmp82 $tmp85 $tmp86 	%argrw{"wrr"}
+	sub		$tmp90 $tmp74 $tmp82 	%line{186} %argrw{"wrr"}
+	div		___329_result $tmp90 ___329_w 	%argrw{"wrr"}
+	smoothstep	___331_extinct $const14 $const8 ___329_w 	%line{193} %argrw{"wrrr"}
+	sub		$tmp91 $const3 ___329_nedge 	%line{194} %argrw{"wrr"}
+	sub		$tmp92 $tmp91 ___329_result 	%argrw{"wrr"}
+	mul		$tmp93 ___331_extinct $tmp92 	%argrw{"wrr"}
+	add		___329_result ___329_result $tmp93 	%argrw{"wrr"}
+	assign		$tmp65 ___329_result 	%line{197} %argrw{"wr"}
+	return
+	mul		___344_f $tmp36 $tmp65 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_grid.osl"} %line{65} %argrw{"wrr"}
+	add		$tmp94 i_lineColor i_fillerColor 	%line{67} %argrw{"wrr"}
+	div		$tmp95 $tmp94 $const11 	%argrw{"wrr"}
+	mix		___344_lc $tmp95 i_lineColor i_contrast 	%argrw{"wrrr"}
+	add		$tmp96 i_fillerColor i_lineColor 	%line{68} %argrw{"wrr"}
+	div		$tmp97 $tmp96 $const11 	%argrw{"wrr"}
+	mix		___344_fc $tmp97 i_fillerColor i_contrast 	%argrw{"wrrr"}
+	mix		o_outColor ___344_lc ___344_fc ___344_f 	%line{70} %argrw{"wrrr"}
+	sub		o_outAlpha $const3 ___344_f 	%line{71} %argrw{"wrr"}
+	assign		$tmp98 i_alphaIsLuminance 	%line{80} %argrw{"wr"}
+	assign		$tmp99 i_invert 	%argrw{"wr"}
+	functioncall	$const15 163 	%argrw{"r"}
+	neq		$tmp100 $tmp99 $const7 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{124} %argrw{"wrr"}
+	if		$tmp100 156 156 	%argrw{"r"}
+	sub		o_outColor $const3 o_outColor 	%line{126} %argrw{"wrr"}
+	sub		o_outAlpha $const3 o_outAlpha 	%line{127} %argrw{"wrr"}
+	neq		$tmp101 $tmp98 $const7 	%line{130} %argrw{"wrr"}
+	if		$tmp101 159 159 	%argrw{"r"}
+	luminance	o_outAlpha o_outColor 	%line{132} %argrw{"wr"}
+	mul		o_outColor o_outColor i_colorGain 	%line{135} %argrw{"wrr"}
+	add		o_outColor o_outColor i_colorOffset 	%line{136} %argrw{"wrr"}
+	mul		o_outAlpha o_outAlpha i_alphaGain 	%line{138} %argrw{"wrr"}
+	add		o_outAlpha o_outAlpha i_alphaOffset 	%line{139} %argrw{"wrr"}
+	assign		o_outColor i_defaultColor 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_grid.osl"} %line{83} %argrw{"wr"}
+	assign		o_outAlpha $const3 	%line{84} %argrw{"wr"}
+	end

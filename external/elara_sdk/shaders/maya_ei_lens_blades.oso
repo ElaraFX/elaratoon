@@ -1,0 +1,251 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_ei_lens_blades
+param	float	fstop	1 		 %read{101,103} %write{2147483647,-1}
+param	float	fplane	1 		 %read{108,108} %write{2147483647,-1}
+param	int	blades	6 		 %read{1,47} %write{2147483647,-1}
+param	float	rotation	0 		 %read{70,76} %write{2147483647,-1}
+global	point	P	 %read{2147483647,-1} %write{112,112}
+global	vector	I	 %read{0,0} %write{113,113}
+global	float	u	 %read{4,82} %write{58,58}
+global	float	v	 %read{6,83} %write{2147483647,-1}
+global	closure color	Ci	 %read{2147483647,-1} %write{125,125}
+local	float	___308_r	 %read{26,45} %write{23,37}
+local	float	___308_theta	 %read{41,44} %write{26,41}
+local	float	___308_sx	 %read{8,38} %write{5,5}
+local	float	___308_sy	 %read{11,37} %write{7,7}
+local	vector	___316_bary	 %read{85,90} %write{81,89}
+local	int	___317_count	 %read{48,66} %write{47,50}
+local	int	___317_i	 %read{57,64} %write{54,54}
+local	float	___317_t0	 %read{70,72} %write{63,63}
+local	float	___317_t1	 %read{74,76} %write{69,69}
+local	float	___317_x0	 %read{92,92} %write{71,71}
+local	float	___317_y0	 %read{97,97} %write{73,73}
+local	float	___317_x1	 %read{94,94} %write{75,75}
+local	float	___317_y1	 %read{99,99} %write{77,77}
+local	vector	___317_bary	 %read{91,98} %write{90,90}
+local	vector	Ic	 %read{106,109} %write{0,0}
+local	float	dof_dx	 %read{101,101} %write{15,95}
+local	float	dof_dy	 %read{103,103} %write{16,100}
+local	point	org	 %read{110,121} %write{105,105}
+local	vector	dir	 %read{113,122} %write{111,111}
+const	int	$const1	3		 %read{1,50} %write{2147483647,-1}
+temp	int	$tmp1	 %read{2,2} %write{1,1}
+const	string	$const2	"concentric_sample_disk"		 %read{3,3} %write{2147483647,-1}
+const	float	$const3	2		 %read{4,68} %write{2147483647,-1}
+temp	float	$tmp2	 %read{5,5} %write{4,4}
+const	float	$const4	1		 %read{5,86} %write{2147483647,-1}
+temp	float	$tmp3	 %read{7,7} %write{6,6}
+const	float	$const5	0		 %read{8,105} %write{2147483647,-1}
+temp	int	$tmp4	 %read{9,9} %write{8,8}
+temp	int	$tmp5	 %read{10,14} %write{9,13}
+const	int	$const6	0		 %read{9,116} %write{2147483647,-1}
+temp	int	$tmp6	 %read{12,12} %write{11,11}
+temp	int	$tmp7	 %read{13,13} %write{12,12}
+temp	float	$tmp8	 %read{19,19} %write{18,18}
+temp	int	$tmp9	 %read{20,20} %write{19,19}
+temp	int	$tmp10	 %read{22,22} %write{21,21}
+temp	int	$tmp11	 %read{25,25} %write{24,24}
+const	float	$const7	8		 %read{28,28} %write{2147483647,-1}
+temp	float	$tmp12	 %read{28,28} %write{27,27}
+temp	float	$tmp13	 %read{31,31} %write{30,30}
+temp	int	$tmp14	 %read{33,33} %write{32,32}
+const	float	$const8	4		 %read{36,40} %write{2147483647,-1}
+temp	float	$tmp15	 %read{36,36} %write{35,35}
+const	float	$const9	6		 %read{39,39} %write{2147483647,-1}
+temp	float	$tmp16	 %read{39,39} %write{38,38}
+const	float	$const10	3.1415927		 %read{40,68} %write{2147483647,-1}
+temp	float	$tmp17	 %read{41,41} %write{40,40}
+temp	float	$tmp18	 %read{43,43} %write{42,42}
+temp	float	$tmp19	 %read{45,45} %write{44,44}
+const	string	$const11	"uniform_sample_poly_disk"		 %read{46,46} %write{2147483647,-1}
+temp	int	$tmp20	 %read{49,49} %write{48,48}
+temp	float	$tmp21	 %read{52,52} %write{51,51}
+temp	float	$tmp22	 %read{53,53} %write{52,52}
+const	float	$const12	0.99998999		 %read{53,53} %write{2147483647,-1}
+temp	float	$tmp23	 %read{54,54} %write{53,53}
+temp	float	$tmp24	 %read{56,56} %write{55,55}
+temp	float	$tmp25	 %read{58,58} %write{56,56}
+temp	float	$tmp26	 %read{58,58} %write{57,57}
+temp	float	$tmp27	 %read{61,61} %write{59,59}
+temp	float	$tmp28	 %read{61,61} %write{60,60}
+temp	float	$tmp29	 %read{63,63} %write{61,61}
+const	int	$const13	2		 %read{89,122} %write{2147483647,-1}
+temp	float	$tmp30	 %read{63,63} %write{62,62}
+const	int	$const14	1		 %read{64,119} %write{2147483647,-1}
+temp	int	$tmp31	 %read{65,65} %write{64,64}
+temp	float	$tmp32	 %read{67,67} %write{65,65}
+temp	float	$tmp33	 %read{67,67} %write{66,66}
+temp	float	$tmp34	 %read{69,69} %write{67,67}
+temp	float	$tmp35	 %read{69,69} %write{68,68}
+temp	float	$tmp36	 %read{71,71} %write{70,70}
+temp	float	$tmp37	 %read{73,73} %write{72,72}
+temp	float	$tmp38	 %read{75,75} %write{74,74}
+temp	float	$tmp39	 %read{77,77} %write{76,76}
+const	string	$const15	"uniform_sample_triangle"		 %read{78,78} %write{2147483647,-1}
+temp	float	$tmp40	 %read{80,80} %write{79,79}
+temp	float	$tmp41	 %read{81,81} %write{80,80}
+temp	float	$tmp42	 %read{83,83} %write{82,82}
+temp	float	$tmp43	 %read{84,84} %write{83,83}
+temp	float	$tmp44	 %read{86,86} %write{85,85}
+temp	float	$tmp45	 %read{88,88} %write{86,86}
+temp	float	$tmp46	 %read{88,88} %write{87,87}
+temp	float	$tmp47	 %read{89,89} %write{88,88}
+temp	float	$tmp48	 %read{92,92} %write{91,91}
+temp	float	$tmp49	 %read{95,95} %write{92,92}
+temp	float	$tmp50	 %read{94,94} %write{93,93}
+temp	float	$tmp51	 %read{95,95} %write{94,94}
+temp	float	$tmp52	 %read{97,97} %write{96,96}
+temp	float	$tmp53	 %read{100,100} %write{97,97}
+temp	float	$tmp54	 %read{99,99} %write{98,98}
+temp	float	$tmp55	 %read{100,100} %write{99,99}
+temp	float	$tmp56	 %read{102,102} %write{101,101}
+const	float	$const16	0.5		 %read{102,104} %write{2147483647,-1}
+temp	float	$tmp57	 %read{105,105} %write{102,102}
+temp	float	$tmp58	 %read{104,104} %write{103,103}
+temp	float	$tmp59	 %read{105,105} %write{104,104}
+temp	float	$tmp60	 %read{108,108} %write{107,107}
+temp	float	$tmp61	 %read{107,107} %write{106,106}
+temp	float	$tmp62	 %read{109,109} %write{108,108}
+temp	vector	$tmp63	 %read{110,110} %write{109,109}
+temp	point	$tmp64	 %read{111,111} %write{110,110}
+temp	closure color	$tmp65	 %read{125,125} %write{114,114}
+const	string	$const17	"dummy"		 %read{114,114} %write{2147483647,-1}
+temp	color	$tmp66	 %read{125,125} %write{124,124}
+temp	float	$tmp67	 %read{117,117} %write{115,115}
+temp	float	$tmp68	 %read{117,117} %write{116,116}
+temp	float	$tmp69	 %read{124,124} %write{117,117}
+temp	float	$tmp70	 %read{120,120} %write{118,118}
+temp	float	$tmp71	 %read{120,120} %write{119,119}
+temp	float	$tmp72	 %read{124,124} %write{120,120}
+temp	float	$tmp73	 %read{123,123} %write{121,121}
+temp	float	$tmp74	 %read{123,123} %write{122,122}
+temp	float	$tmp75	 %read{124,124} %write{123,123}
+code ___main___
+	assign		Ic I 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_ei_lens_blades.osl"} %line{115} %argrw{"wr"}
+	lt		$tmp1 blades $const1 	%line{119} %argrw{"wrr"}
+	if		$tmp1 46 101 	%argrw{"r"}
+	functioncall	$const2 46 	%line{123} %argrw{"r"}
+	mul		$tmp2 $const3 u 	%line{31} %argrw{"wrr"}
+	sub		___308_sx $tmp2 $const4 	%argrw{"wrr"}
+	mul		$tmp3 $const3 v 	%line{32} %argrw{"wrr"}
+	sub		___308_sy $tmp3 $const4 	%argrw{"wrr"}
+	eq		$tmp4 ___308_sx $const5 	%line{33} %argrw{"wrr"}
+	neq		$tmp5 $tmp4 $const6 	%argrw{"wrr"}
+	if		$tmp5 14 14 	%argrw{"r"}
+	eq		$tmp6 ___308_sy $const5 	%argrw{"wrr"}
+	neq		$tmp7 $tmp6 $const6 	%argrw{"wrr"}
+	assign		$tmp5 $tmp7 	%argrw{"wr"}
+	if		$tmp5 18 18 	%argrw{"r"}
+	assign		dof_dx $const5 	%line{34} %argrw{"wr"}
+	assign		dof_dy $const5 	%line{35} %argrw{"wr"}
+	return	%line{36}
+	neg		$tmp8 ___308_sy 	%line{38} %argrw{"wr"}
+	ge		$tmp9 ___308_sx $tmp8 	%argrw{"wrr"}
+	if		$tmp9 32 40 	%argrw{"r"}
+	gt		$tmp10 ___308_sx ___308_sy 	%line{39} %argrw{"wrr"}
+	if		$tmp10 29 32 	%argrw{"r"}
+	assign		___308_r ___308_sx 	%line{40} %argrw{"wr"}
+	gt		$tmp11 ___308_sy $const5 	%line{41} %argrw{"wrr"}
+	if		$tmp11 27 29 	%argrw{"r"}
+	div		___308_theta ___308_sy ___308_r 	%line{42} %argrw{"wrr"}
+	div		$tmp12 ___308_sy ___308_r 	%line{44} %argrw{"wrr"}
+	add		___308_theta $const7 $tmp12 	%argrw{"wrr"}
+	assign		___308_r ___308_sy 	%line{47} %argrw{"wr"}
+	div		$tmp13 ___308_sx ___308_r 	%line{48} %argrw{"wrr"}
+	sub		___308_theta $const3 $tmp13 	%argrw{"wrr"}
+	le		$tmp14 ___308_sx ___308_sy 	%line{52} %argrw{"wrr"}
+	if		$tmp14 37 40 	%argrw{"r"}
+	neg		___308_r ___308_sx 	%line{53} %argrw{"wr"}
+	div		$tmp15 ___308_sy ___308_r 	%line{54} %argrw{"wrr"}
+	sub		___308_theta $const8 $tmp15 	%argrw{"wrr"}
+	neg		___308_r ___308_sy 	%line{57} %argrw{"wr"}
+	div		$tmp16 ___308_sx ___308_r 	%line{58} %argrw{"wrr"}
+	add		___308_theta $const9 $tmp16 	%argrw{"wrr"}
+	div		$tmp17 $const10 $const8 	%line{61} %argrw{"wrr"}
+	mul		___308_theta ___308_theta $tmp17 	%argrw{"wrr"}
+	cos		$tmp18 ___308_theta 	%line{62} %argrw{"wr"}
+	mul		dof_dx ___308_r $tmp18 	%argrw{"wrr"}
+	sin		$tmp19 ___308_theta 	%line{63} %argrw{"wr"}
+	mul		dof_dy ___308_r $tmp19 	%argrw{"wrr"}
+	functioncall	$const11 101 	%line{131} %argrw{"r"}
+	assign		___317_count blades 	%line{83} %argrw{"wr"}
+	lt		$tmp20 ___317_count $const1 	%line{84} %argrw{"wrr"}
+	if		$tmp20 51 51 	%argrw{"r"}
+	assign		___317_count $const1 	%line{86} %argrw{"wr"}
+	assign		$tmp21 ___317_count 	%line{89} %argrw{"wr"}
+	mul		$tmp22 $tmp21 u 	%argrw{"wrr"}
+	mul		$tmp23 $tmp22 $const12 	%argrw{"wrr"}
+	assign		___317_i $tmp23 	%argrw{"wr"}
+	assign		$tmp24 ___317_count 	%line{90} %argrw{"wr"}
+	mul		$tmp25 u $tmp24 	%argrw{"wrr"}
+	assign		$tmp26 ___317_i 	%argrw{"wr"}
+	sub		u $tmp25 $tmp26 	%argrw{"wrr"}
+	assign		$tmp27 ___317_i 	%line{92} %argrw{"wr"}
+	assign		$tmp28 ___317_count 	%argrw{"wr"}
+	div		$tmp29 $tmp27 $tmp28 	%argrw{"wrr"}
+	mul		$tmp30 $const3 $const10 	%argrw{"wrr"}
+	mul		___317_t0 $tmp29 $tmp30 	%argrw{"wrr"}
+	add		$tmp31 ___317_i $const14 	%line{93} %argrw{"wrr"}
+	assign		$tmp32 $tmp31 	%argrw{"wr"}
+	assign		$tmp33 ___317_count 	%argrw{"wr"}
+	div		$tmp34 $tmp32 $tmp33 	%argrw{"wrr"}
+	mul		$tmp35 $const3 $const10 	%argrw{"wrr"}
+	mul		___317_t1 $tmp34 $tmp35 	%argrw{"wrr"}
+	add		$tmp36 ___317_t0 rotation 	%line{95} %argrw{"wrr"}
+	cos		___317_x0 $tmp36 	%argrw{"wr"}
+	add		$tmp37 ___317_t0 rotation 	%line{96} %argrw{"wrr"}
+	sin		___317_y0 $tmp37 	%argrw{"wr"}
+	add		$tmp38 ___317_t1 rotation 	%line{97} %argrw{"wrr"}
+	cos		___317_x1 $tmp38 	%argrw{"wr"}
+	add		$tmp39 ___317_t1 rotation 	%line{98} %argrw{"wrr"}
+	sin		___317_y1 $tmp39 	%argrw{"wr"}
+	functioncall	$const15 91 	%line{100} %argrw{"r"}
+	sqrt		$tmp40 u 	%line{70} %argrw{"wr"}
+	sub		$tmp41 $const4 $tmp40 	%argrw{"wrr"}
+	compassign	___316_bary $const6 $tmp41 	%argrw{"wrr"}
+	sqrt		$tmp42 u 	%line{71} %argrw{"wr"}
+	mul		$tmp43 v $tmp42 	%argrw{"wrr"}
+	compassign	___316_bary $const14 $tmp43 	%argrw{"wrr"}
+	compref		$tmp44 ___316_bary $const6 	%line{72} %argrw{"wrr"}
+	sub		$tmp45 $const4 $tmp44 	%argrw{"wrr"}
+	compref		$tmp46 ___316_bary $const14 	%argrw{"wrr"}
+	sub		$tmp47 $tmp45 $tmp46 	%argrw{"wrr"}
+	compassign	___316_bary $const13 $tmp47 	%argrw{"wrr"}
+	assign		___317_bary ___316_bary 	%line{74} %argrw{"wr"}
+	compref		$tmp48 ___317_bary $const6 	%line{102} %argrw{"wrr"}
+	mul		$tmp49 ___317_x0 $tmp48 	%argrw{"wrr"}
+	compref		$tmp50 ___317_bary $const14 	%argrw{"wrr"}
+	mul		$tmp51 ___317_x1 $tmp50 	%argrw{"wrr"}
+	add		dof_dx $tmp49 $tmp51 	%argrw{"wrr"}
+	compref		$tmp52 ___317_bary $const6 	%line{103} %argrw{"wrr"}
+	mul		$tmp53 ___317_y0 $tmp52 	%argrw{"wrr"}
+	compref		$tmp54 ___317_bary $const14 	%argrw{"wrr"}
+	mul		$tmp55 ___317_y1 $tmp54 	%argrw{"wrr"}
+	add		dof_dy $tmp53 $tmp55 	%argrw{"wrr"}
+	mul		$tmp56 dof_dx fstop 	%line{135} %argrw{"wrr"}
+	mul		$tmp57 $tmp56 $const16 	%argrw{"wrr"}
+	mul		$tmp58 dof_dy fstop 	%line{136} %argrw{"wrr"}
+	mul		$tmp59 $tmp58 $const16 	%argrw{"wrr"}
+	point		org $tmp57 $tmp59 $const5 	%line{137} %argrw{"wrrr"}
+	compref		$tmp61 Ic $const13 	%line{139} %argrw{"wrr"}
+	fabs		$tmp60 $tmp61 	%argrw{"wr"}
+	div		$tmp62 fplane $tmp60 	%argrw{"wrr"}
+	mul		$tmp63 Ic $tmp62 	%argrw{"wrr"}
+	sub		$tmp64 $tmp63 org 	%argrw{"wrr"}
+	normalize	dir $tmp64 	%argrw{"wr"}
+	assign		P org 	%line{141} %argrw{"wr"}
+	assign		I dir 	%line{142} %argrw{"wr"}
+	closure		$tmp65 $const17 	%line{145} %argrw{"wr"}
+	compref		$tmp67 org $const6 	%argrw{"wrr"}
+	compref		$tmp68 dir $const6 	%argrw{"wrr"}
+	add		$tmp69 $tmp67 $tmp68 	%argrw{"wrr"}
+	compref		$tmp70 org $const14 	%argrw{"wrr"}
+	compref		$tmp71 dir $const14 	%argrw{"wrr"}
+	add		$tmp72 $tmp70 $tmp71 	%argrw{"wrr"}
+	compref		$tmp73 org $const13 	%argrw{"wrr"}
+	compref		$tmp74 dir $const13 	%argrw{"wrr"}
+	add		$tmp75 $tmp73 $tmp74 	%argrw{"wrr"}
+	color		$tmp66 $tmp69 $tmp72 $tmp75 	%argrw{"wrrr"}
+	mul		Ci $tmp65 $tmp66 	%argrw{"wrr"}
+	end

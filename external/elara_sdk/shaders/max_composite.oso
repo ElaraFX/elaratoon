@@ -1,0 +1,65 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_composite
+param	closure color	materialList_1			%read{4,4} %write{2147483647,-1}
+param	closure color	materialList_2			%read{2147483647,-1} %write{2147483647,-1}
+param	closure color	materialList_3			%read{2147483647,-1} %write{2147483647,-1}
+param	closure color	materialList_4			%read{2147483647,-1} %write{2147483647,-1}
+param	closure color	materialList_5			%read{2147483647,-1} %write{2147483647,-1}
+param	closure color	materialList_6			%read{2147483647,-1} %write{2147483647,-1}
+param	closure color	materialList_7			%read{2147483647,-1} %write{2147483647,-1}
+param	closure color	materialList_8			%read{2147483647,-1} %write{2147483647,-1}
+param	closure color	materialList_9			%read{2147483647,-1} %write{2147483647,-1}
+param	closure color	materialList_10			%read{2147483647,-1} %write{2147483647,-1}
+param	int	materialList_1_isnull	1		%read{2,2} %write{2147483647,-1}
+param	int	materialList_2_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	materialList_3_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	materialList_4_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	materialList_5_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	materialList_6_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	materialList_7_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	materialList_8_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	materialList_9_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	materialList_10_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	mixType_1	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	mixType_2	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	mixType_3	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	mixType_4	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	mixType_5	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	mixType_6	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	mixType_7	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	mixType_8	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	mixType_9	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	mapEnables_1	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	mapEnables_2	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	mapEnables_3	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	mapEnables_4	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	mapEnables_5	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	mapEnables_6	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	mapEnables_7	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	mapEnables_8	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	mapEnables_9	1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	amount_1	100		%read{2147483647,-1} %write{2147483647,-1}
+param	float	amount_2	100		%read{2147483647,-1} %write{2147483647,-1}
+param	float	amount_3	100		%read{2147483647,-1} %write{2147483647,-1}
+param	float	amount_4	100		%read{2147483647,-1} %write{2147483647,-1}
+param	float	amount_5	100		%read{2147483647,-1} %write{2147483647,-1}
+param	float	amount_6	100		%read{2147483647,-1} %write{2147483647,-1}
+param	float	amount_7	100		%read{2147483647,-1} %write{2147483647,-1}
+param	float	amount_8	100		%read{2147483647,-1} %write{2147483647,-1}
+param	float	amount_9	100		%read{2147483647,-1} %write{2147483647,-1}
+oparam	closure color	result			%read{2147483647,-1} %write{2147483647,-1}
+local	closure color	out	%read{2147483647,-1} %write{0,4}
+local	int	first	%read{2147483647,-1} %write{1,5}
+const	int	$const1	0		%read{0,5} %write{2147483647,-1}
+const	int	$const2	1		%read{1,1} %write{2147483647,-1}
+temp	int	$tmp1	%read{3,3} %write{2,2}
+code ___main___
+	assign		out $const1 	%filename{"E:/github/elaramax/Shaders/max_composite.osl"} %line{92} %argrw{"wr"}
+	assign		first $const2 	%line{93} %argrw{"wr"}
+	eq		$tmp1 materialList_1_isnull $const1 	%line{94} %argrw{"wrr"}
+	if		$tmp1 6 6 	%argrw{"r"}
+	assign		out materialList_1 	%line{96} %argrw{"wr"}
+	assign		first $const1 	%line{97} %argrw{"wr"}
+	end

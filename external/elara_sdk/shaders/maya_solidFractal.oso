@@ -1,0 +1,506 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_solidFractal
+param	float	i_alphaGain	1 		 %read{267,267} %write{2147483647,-1}
+param	int	i_alphaIsLuminance	0 		 %read{255,255} %write{2147483647,-1}
+param	float	i_alphaOffset	0 		 %read{268,268} %write{2147483647,-1}
+param	float	i_amplitude	1 		 %read{247,247} %write{2147483647,-1}
+param	int	i_animated	0 		 %read{99,99} %write{2147483647,-1}
+param	float	i_bias	0 		 %read{233,243} %write{2147483647,-1}
+param	float	i_blend	0 		 %read{62,62} %write{2147483647,-1}
+param	color	i_colorGain	1 1 1 		 %read{265,265} %write{2147483647,-1}
+param	color	i_colorOffset	0 0 0 		 %read{266,266} %write{2147483647,-1}
+param	color	i_defaultColor	0.5 0.5 0.5 		 %read{269,269} %write{2147483647,-1}
+param	vector	i_depth	0 8 0 		 %read{120,211} %write{2147483647,-1}
+param	float	i_filter	1 		 %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_filterOffset	0 		 %read{2147483647,-1} %write{2147483647,-1}
+param	vector	i_filterSize	0 0 0 		 %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_frequencyRatio	2 		 %read{141,206} %write{2147483647,-1}
+param	int	i_inflection	0 		 %read{102,102} %write{2147483647,-1}
+param	int	i_invert	0 		 %read{256,256} %write{2147483647,-1}
+param	int	i_local	0 		 %read{0,0} %write{2147483647,-1}
+param	matrix	i_placementMatrix	1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1		 %read{20,20} %write{2147483647,-1} %derivs
+param	float	i_ratio	0.70700002 		 %read{142,205} %write{2147483647,-1}
+param	float	i_threshold	0 		 %read{231,248} %write{2147483647,-1}
+param	float	i_time	0 		 %read{101,101} %write{2147483647,-1}
+param	float	i_timeRatio	2 		 %read{101,101} %write{2147483647,-1}
+param	vector	i_ripples	1 1 1 		 %read{109,175} %write{2147483647,-1} %derivs
+param	int	i_wrap	1 		 %read{1,1} %write{2147483647,-1}
+oparam	color	o_outColor	1 1 1 		 %read{260,266} %write{254,269}
+oparam	float	o_outAlpha	1 		 %read{254,268} %write{251,270}
+global	point	P	 %read{11,17} %write{2147483647,-1} %derivs
+local	point	___307_Pref	 %read{8,19} %write{3,3} %derivs
+local	point	___307_pp	 %read{20,20} %write{4,19} %derivs
+local	point	___307_pq	 %read{21,95} %write{20,20} %derivs
+local	float	___353_i	 %read{183,212} %write{169,207}
+local	float	___353_lacunarity	 %read{183,225} %write{170,207}
+local	float	___353_mix	 %read{183,229} %write{171,228}
+local	float	___353_amp	 %read{183,221} %write{172,207}
+local	point	___353_pp	 %read{179,222} %write{178,178} %derivs
+local	float	___353_M_PIxel_size	 %read{181,216} %write{180,180}
+local	float	___353_nyquist	 %read{188,188} %write{181,181}
+local	float	___353_M_PIxel	 %read{183,216} %write{182,207}
+local	float	___355_weight	 %read{221,221} %write{220,220}
+local	float	___362_i	 %read{119,149} %write{105,144}
+local	float	___362_lacunarity	 %read{119,162} %write{106,144}
+local	float	___362_mix	 %read{119,167} %write{107,166}
+local	float	___362_amp	 %read{119,158} %write{108,144}
+local	point	___362_pp	 %read{115,159} %write{114,114} %derivs
+local	float	___362_M_PIxel_size	 %read{117,153} %write{116,116}
+local	float	___362_nyquist	 %read{124,124} %write{117,117}
+local	float	___362_M_PIxel	 %read{119,153} %write{118,144}
+local	float	___364_weight	 %read{158,158} %write{157,157}
+local	float	edgeDist	 %read{2147483647,-1} %write{5,94}
+local	float	outside	 %read{96,96} %write{56,58}
+local	point	pp	 %read{113,177} %write{95,95} %derivs
+local	float	___407_time	 %read{137,226} %write{98,101}
+local	float	___407_fractal	 %read{183,248} %write{167,247}
+local	float	___407_sn	 %read{239,246} %write{232,232}
+temp	float	$tmp1	 %read{6,6} %write{0,0}
+temp	float	$tmp2	 %read{54,59} %write{1,1}
+const	string	$const1	"transformP"		 %read{2,2} %write{2147483647,-1}
+const	point	$const2	0 0 0		 %read{3,14} %write{2147483647,-1}
+const	float	$const3	0		 %read{5,262} %write{2147483647,-1}
+temp	int	$tmp3	 %read{7,7} %write{6,6}
+temp	int	$tmp5	 %read{9,9} %write{8,8}
+const	string	$const4	"object"		 %read{11,13} %write{2147483647,-1}
+const	string	$const5	"transform"		 %read{10,18} %write{2147483647,-1}
+const	string	$const6	"common"		 %read{11,19} %write{2147483647,-1}
+temp	int	$tmp7	 %read{15,15} %write{14,14}
+const	string	$const7	"world"		 %read{17,19} %write{2147483647,-1}
+const	int	$const8	0		 %read{21,270} %write{2147483647,-1}
+temp	float	$tmp8	 %read{22,22} %write{21,21}
+const	int	$const9	1		 %read{22,211} %write{2147483647,-1}
+temp	int	$tmp9	 %read{23,23} %write{22,22}
+temp	int	$tmp10	 %read{24,29} %write{23,28}
+temp	float	$tmp11	 %read{26,26} %write{25,25}
+const	int	$const10	-1		 %read{26,50} %write{2147483647,-1}
+temp	int	$tmp12	 %read{27,27} %write{26,26}
+temp	int	$tmp13	 %read{28,28} %write{27,27}
+temp	int	$tmp14	 %read{30,35} %write{29,34}
+temp	float	$tmp15	 %read{32,32} %write{31,31}
+temp	int	$tmp16	 %read{33,33} %write{32,32}
+temp	int	$tmp17	 %read{34,34} %write{33,33}
+temp	int	$tmp18	 %read{36,41} %write{35,40}
+temp	float	$tmp19	 %read{38,38} %write{37,37}
+temp	int	$tmp20	 %read{39,39} %write{38,38}
+temp	int	$tmp21	 %read{40,40} %write{39,39}
+temp	int	$tmp22	 %read{42,47} %write{41,46}
+const	int	$const11	2		 %read{43,175} %write{2147483647,-1}
+temp	float	$tmp23	 %read{44,44} %write{43,43}
+temp	int	$tmp24	 %read{45,45} %write{44,44}
+temp	int	$tmp25	 %read{46,46} %write{45,45}
+temp	int	$tmp26	 %read{48,53} %write{47,52}
+temp	float	$tmp27	 %read{50,50} %write{49,49}
+temp	int	$tmp28	 %read{51,51} %write{50,50}
+temp	int	$tmp29	 %read{52,52} %write{51,51}
+temp	int	$tmp30	 %read{55,55} %write{54,54}
+const	float	$const12	1		 %read{57,261} %write{2147483647,-1}
+temp	int	$tmp31	 %read{60,60} %write{59,59}
+temp	int	$tmp32	 %read{61,65} %write{60,64}
+temp	int	$tmp33	 %read{63,63} %write{62,62}
+temp	int	$tmp34	 %read{64,64} %write{63,63}
+temp	float	$tmp35	 %read{94,94} %write{84,84}
+temp	float	$tmp36	 %read{84,84} %write{74,74}
+temp	float	$tmp37	 %read{69,69} %write{68,68}
+temp	float	$tmp38	 %read{67,67} %write{66,66}
+temp	float	$tmp39	 %read{68,68} %write{67,67}
+temp	float	$tmp40	 %read{74,74} %write{69,69}
+const	float	$const13	2		 %read{69,181} %write{2147483647,-1}
+temp	float	$tmp41	 %read{73,73} %write{72,72}
+temp	float	$tmp42	 %read{71,71} %write{70,70}
+temp	float	$tmp43	 %read{72,72} %write{71,71}
+temp	float	$tmp44	 %read{74,74} %write{73,73}
+temp	float	$tmp45	 %read{84,84} %write{83,83}
+temp	float	$tmp46	 %read{78,78} %write{77,77}
+temp	float	$tmp47	 %read{76,76} %write{75,75}
+temp	float	$tmp48	 %read{77,77} %write{76,76}
+temp	float	$tmp49	 %read{83,83} %write{78,78}
+temp	float	$tmp50	 %read{82,82} %write{81,81}
+temp	float	$tmp51	 %read{80,80} %write{79,79}
+temp	float	$tmp52	 %read{81,81} %write{80,80}
+temp	float	$tmp53	 %read{83,83} %write{82,82}
+temp	float	$tmp54	 %read{94,94} %write{93,93}
+temp	float	$tmp55	 %read{88,88} %write{87,87}
+temp	float	$tmp56	 %read{86,86} %write{85,85}
+temp	float	$tmp57	 %read{87,87} %write{86,86}
+temp	float	$tmp58	 %read{93,93} %write{88,88}
+temp	float	$tmp59	 %read{92,92} %write{91,91}
+temp	float	$tmp60	 %read{90,90} %write{89,89}
+temp	float	$tmp61	 %read{91,91} %write{90,90}
+temp	float	$tmp62	 %read{93,93} %write{92,92}
+temp	int	$tmp63	 %read{97,97} %write{96,96}
+temp	int	$tmp64	 %read{100,100} %write{99,99}
+temp	int	$tmp65	 %read{103,103} %write{102,102}
+const	string	$const14	"fTurbulence"		 %read{104,104} %write{2147483647,-1}
+temp	point	$tmp66	 %read{113,113} %write{112,112} %derivs
+temp	float	$tmp67	 %read{112,112} %write{109,109} %derivs
+temp	float	$tmp68	 %read{112,112} %write{110,110} %derivs
+temp	float	$tmp69	 %read{112,112} %write{111,111} %derivs
+temp	point	$tmp70	 %read{114,114} %write{113,113} %derivs
+temp	float	$tmp71	 %read{116,116} %write{115,115}
+temp	float	$tmp72	 %read{121,121} %write{120,120}
+temp	int	$tmp73	 %read{122,122} %write{121,121}
+temp	int	$tmp74	 %read{123,127} %write{122,126}
+temp	int	$tmp75	 %read{125,125} %write{124,124}
+temp	int	$tmp76	 %read{126,126} %write{125,125}
+temp	int	$tmp77	 %read{119,144} %write{119,144}
+temp	float	$tmp78	 %read{130,130} %write{129,129}
+temp	int	$tmp79	 %read{131,131} %write{130,130}
+temp	int	$tmp80	 %read{132,132} %write{131,131}
+temp	float	$tmp81	 %read{139,139} %write{138,138}
+temp	float	$tmp82	 %read{138,138} %write{137,137}
+temp	vector	$tmp83	 %read{135,135} %write{133,133}
+temp	float	$tmp84	 %read{135,135} %write{134,134}
+const	string	$const15	"uperlin"		 %read{134,223} %write{2147483647,-1}
+temp	vector	$tmp85	 %read{136,136} %write{135,135}
+temp	vector	$tmp86	 %read{137,137} %write{136,136}
+temp	float	$tmp87	 %read{140,140} %write{139,139}
+temp	int	$tmp88	 %read{146,146} %write{145,145}
+temp	int	$tmp89	 %read{147,152} %write{146,151}
+temp	float	$tmp90	 %read{149,149} %write{148,148}
+temp	int	$tmp91	 %read{150,150} %write{149,149}
+temp	int	$tmp92	 %read{151,151} %write{150,150}
+temp	float	$tmp93	 %read{154,154} %write{153,153}
+temp	float	$tmp94	 %read{156,156} %write{154,154}
+const	string	$const16	"clamp"		 %read{155,249} %write{2147483647,-1}
+temp	float	$tmp95	 %read{157,157} %write{156,156}
+temp	float	$tmp96	 %read{165,165} %write{158,158}
+temp	float	$tmp97	 %read{165,165} %write{164,164}
+temp	float	$tmp98	 %read{164,164} %write{163,163}
+temp	vector	$tmp99	 %read{161,161} %write{159,159}
+temp	float	$tmp100	 %read{161,161} %write{160,160}
+temp	vector	$tmp101	 %read{162,162} %write{161,161}
+temp	vector	$tmp102	 %read{163,163} %write{162,162}
+temp	float	$tmp103	 %read{166,166} %write{165,165}
+const	string	$const17	"fBrownianNoise"		 %read{168,168} %write{2147483647,-1}
+temp	point	$tmp104	 %read{177,177} %write{176,176} %derivs
+temp	float	$tmp105	 %read{176,176} %write{173,173} %derivs
+temp	float	$tmp106	 %read{176,176} %write{174,174} %derivs
+temp	float	$tmp107	 %read{176,176} %write{175,175} %derivs
+temp	point	$tmp108	 %read{178,178} %write{177,177} %derivs
+temp	float	$tmp109	 %read{180,180} %write{179,179}
+temp	float	$tmp110	 %read{185,185} %write{184,184}
+temp	int	$tmp111	 %read{186,186} %write{185,185}
+temp	int	$tmp112	 %read{187,191} %write{186,190}
+temp	int	$tmp113	 %read{189,189} %write{188,188}
+temp	int	$tmp114	 %read{190,190} %write{189,189}
+temp	int	$tmp115	 %read{183,207} %write{183,207}
+temp	float	$tmp116	 %read{194,194} %write{193,193}
+temp	int	$tmp117	 %read{195,195} %write{194,194}
+temp	int	$tmp118	 %read{196,196} %write{195,195}
+temp	float	$tmp119	 %read{202,202} %write{201,201}
+temp	vector	$tmp120	 %read{199,199} %write{197,197}
+temp	float	$tmp121	 %read{199,199} %write{198,198}
+temp	vector	$tmp122	 %read{200,200} %write{199,199}
+temp	vector	$tmp123	 %read{201,201} %write{200,200}
+temp	float	$tmp124	 %read{203,203} %write{202,202}
+temp	int	$tmp125	 %read{209,209} %write{208,208}
+temp	int	$tmp126	 %read{210,215} %write{209,214}
+temp	float	$tmp127	 %read{212,212} %write{211,211}
+temp	int	$tmp128	 %read{213,213} %write{212,212}
+temp	int	$tmp129	 %read{214,214} %write{213,213}
+temp	float	$tmp130	 %read{217,217} %write{216,216}
+temp	float	$tmp131	 %read{219,219} %write{217,217}
+temp	float	$tmp132	 %read{220,220} %write{219,219}
+temp	float	$tmp133	 %read{227,227} %write{221,221}
+temp	float	$tmp134	 %read{227,227} %write{226,226}
+temp	vector	$tmp135	 %read{224,224} %write{222,222}
+temp	float	$tmp136	 %read{224,224} %write{223,223}
+temp	vector	$tmp137	 %read{225,225} %write{224,224}
+temp	vector	$tmp138	 %read{226,226} %write{225,225}
+temp	float	$tmp139	 %read{228,228} %write{227,227}
+const	float	$const18	0.5		 %read{229,236} %write{2147483647,-1}
+temp	float	$tmp140	 %read{230,230} %write{229,229}
+temp	int	$tmp141	 %read{234,234} %write{233,233}
+temp	float	$tmp142	 %read{239,239} %write{238,238}
+temp	float	$tmp143	 %read{238,238} %write{235,235}
+temp	float	$tmp144	 %read{237,237} %write{236,236}
+temp	float	$tmp145	 %read{238,238} %write{237,237}
+temp	int	$tmp146	 %read{241,241} %write{240,240}
+temp	float	$tmp147	 %read{246,246} %write{245,245}
+temp	float	$tmp148	 %read{245,245} %write{242,242}
+temp	float	$tmp149	 %read{244,244} %write{243,243}
+temp	float	$tmp150	 %read{245,245} %write{244,244}
+temp	float	$tmp151	 %read{250,250} %write{248,248}
+temp	float	$tmp152	 %read{251,251} %write{250,250}
+temp	color	$tmp153	 %read{254,254} %write{252,252}
+temp	color	$tmp154	 %read{254,254} %write{253,253}
+temp	float	$tmp155	 %read{262,262} %write{255,255}
+temp	float	$tmp156	 %read{258,258} %write{256,256}
+const	string	$const19	"colorBalance"		 %read{257,257} %write{2147483647,-1}
+temp	int	$tmp157	 %read{259,259} %write{258,258}
+temp	int	$tmp158	 %read{263,263} %write{262,262}
+code ___main___
+	assign		$tmp1 i_local 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_solidFractal.osl"} %line{68} %argrw{"wr"}
+	assign		$tmp2 i_wrap 	%argrw{"wr"}
+	functioncall	$const1 96 	%argrw{"r"}
+	assign		___307_Pref $const2 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{32} %argrw{"wr"}
+	assign		___307_pp $const2 	%line{33} %argrw{"wr"}
+	assign		edgeDist $const3 	%line{35} %argrw{"wr"}
+	neq		$tmp3 $tmp1 $const3 	%line{37} %argrw{"wrr"}
+	if		$tmp3 14 20 	%argrw{"r"}
+	eq		$tmp5 ___307_Pref $const2 	%line{39} %argrw{"wrr"}
+	if		$tmp5 12 14 	%argrw{"r"}
+	functioncall	$const5 12 	%line{40} %argrw{"r"}
+	transform	___307_pp $const6 $const4 P 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{240} %argrw{"wrrr"}
+	functioncall	$const5 14 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{42} %argrw{"r"}
+	transform	___307_pp $const6 $const4 ___307_Pref 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{240} %argrw{"wrrr"}
+	eq		$tmp7 ___307_Pref $const2 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{46} %argrw{"wrr"}
+	if		$tmp7 18 20 	%argrw{"r"}
+	functioncall	$const5 18 	%line{47} %argrw{"r"}
+	transform	___307_pp $const6 $const7 P 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{240} %argrw{"wrrr"}
+	functioncall	$const5 20 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{49} %argrw{"r"}
+	transform	___307_pp $const6 $const7 ___307_Pref 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{240} %argrw{"wrrr"}
+	transform	___307_pq i_placementMatrix ___307_pp 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{52} %argrw{"wrr"}
+	compref		$tmp8 ___307_pq $const8 	%line{54} %argrw{"wrr"}
+	gt		$tmp9 $tmp8 $const9 	%argrw{"wrr"}
+	neq		$tmp10 $tmp9 $const8 	%argrw{"wrr"}
+	if		$tmp10 25 29 	%line{55} %argrw{"r"}
+	compref		$tmp11 ___307_pq $const8 	%argrw{"wrr"}
+	lt		$tmp12 $tmp11 $const10 	%argrw{"wrr"}
+	neq		$tmp13 $tmp12 $const8 	%argrw{"wrr"}
+	assign		$tmp10 $tmp13 	%argrw{"wr"}
+	neq		$tmp14 $tmp10 $const8 	%argrw{"wrr"}
+	if		$tmp14 31 35 	%line{56} %argrw{"r"}
+	compref		$tmp15 ___307_pq $const9 	%argrw{"wrr"}
+	gt		$tmp16 $tmp15 $const9 	%argrw{"wrr"}
+	neq		$tmp17 $tmp16 $const8 	%argrw{"wrr"}
+	assign		$tmp14 $tmp17 	%argrw{"wr"}
+	neq		$tmp18 $tmp14 $const8 	%argrw{"wrr"}
+	if		$tmp18 37 41 	%line{57} %argrw{"r"}
+	compref		$tmp19 ___307_pq $const9 	%argrw{"wrr"}
+	lt		$tmp20 $tmp19 $const10 	%argrw{"wrr"}
+	neq		$tmp21 $tmp20 $const8 	%argrw{"wrr"}
+	assign		$tmp18 $tmp21 	%argrw{"wr"}
+	neq		$tmp22 $tmp18 $const8 	%argrw{"wrr"}
+	if		$tmp22 43 47 	%line{58} %argrw{"r"}
+	compref		$tmp23 ___307_pq $const11 	%argrw{"wrr"}
+	gt		$tmp24 $tmp23 $const9 	%argrw{"wrr"}
+	neq		$tmp25 $tmp24 $const8 	%argrw{"wrr"}
+	assign		$tmp22 $tmp25 	%argrw{"wr"}
+	neq		$tmp26 $tmp22 $const8 	%argrw{"wrr"}
+	if		$tmp26 49 53 	%line{59} %argrw{"r"}
+	compref		$tmp27 ___307_pq $const11 	%argrw{"wrr"}
+	lt		$tmp28 $tmp27 $const10 	%argrw{"wrr"}
+	neq		$tmp29 $tmp28 $const8 	%argrw{"wrr"}
+	assign		$tmp26 $tmp29 	%argrw{"wr"}
+	if		$tmp26 58 95 	%line{54} %argrw{"r"}
+	neq		$tmp30 $tmp2 $const3 	%line{61} %argrw{"wrr"}
+	if		$tmp30 57 58 	%argrw{"r"}
+	assign		outside $const3 	%line{63} %argrw{"wr"}
+	assign		outside $const12 	%line{67} %argrw{"wr"}
+	assign		outside $const3 	%line{72} %argrw{"wr"}
+	eq		$tmp31 $tmp2 $const3 	%line{74} %argrw{"wrr"}
+	neq		$tmp32 $tmp31 $const8 	%argrw{"wrr"}
+	if		$tmp32 65 65 	%argrw{"r"}
+	gt		$tmp33 i_blend $const3 	%argrw{"wrr"}
+	neq		$tmp34 $tmp33 $const8 	%argrw{"wrr"}
+	assign		$tmp32 $tmp34 	%argrw{"wr"}
+	if		$tmp32 95 95 	%argrw{"r"}
+	compref		$tmp38 ___307_pq $const8 	%line{78} %argrw{"wrr"}
+	add		$tmp39 $tmp38 $const12 	%argrw{"wrr"}
+	abs		$tmp37 $tmp39 	%argrw{"wr"}
+	div		$tmp40 $tmp37 $const13 	%argrw{"wrr"}
+	compref		$tmp42 ___307_pq $const8 	%argrw{"wrr"}
+	sub		$tmp43 $tmp42 $const12 	%argrw{"wrr"}
+	abs		$tmp41 $tmp43 	%argrw{"wr"}
+	div		$tmp44 $tmp41 $const13 	%argrw{"wrr"}
+	min		$tmp36 $tmp40 $tmp44 	%argrw{"wrr"}
+	compref		$tmp47 ___307_pq $const9 	%line{79} %argrw{"wrr"}
+	add		$tmp48 $tmp47 $const12 	%argrw{"wrr"}
+	abs		$tmp46 $tmp48 	%argrw{"wr"}
+	div		$tmp49 $tmp46 $const13 	%argrw{"wrr"}
+	compref		$tmp51 ___307_pq $const9 	%argrw{"wrr"}
+	sub		$tmp52 $tmp51 $const12 	%argrw{"wrr"}
+	abs		$tmp50 $tmp52 	%argrw{"wr"}
+	div		$tmp53 $tmp50 $const13 	%argrw{"wrr"}
+	min		$tmp45 $tmp49 $tmp53 	%argrw{"wrr"}
+	min		$tmp35 $tmp36 $tmp45 	%argrw{"wrr"}
+	compref		$tmp56 ___307_pq $const11 	%line{80} %argrw{"wrr"}
+	add		$tmp57 $tmp56 $const12 	%argrw{"wrr"}
+	abs		$tmp55 $tmp57 	%argrw{"wr"}
+	div		$tmp58 $tmp55 $const13 	%argrw{"wrr"}
+	compref		$tmp60 ___307_pq $const11 	%argrw{"wrr"}
+	sub		$tmp61 $tmp60 $const12 	%argrw{"wrr"}
+	abs		$tmp59 $tmp61 	%argrw{"wr"}
+	div		$tmp62 $tmp59 $const13 	%argrw{"wrr"}
+	min		$tmp54 $tmp58 $tmp62 	%argrw{"wrr"}
+	min		edgeDist $tmp35 $tmp54 	%argrw{"wrr"}
+	assign		pp ___307_pq 	%line{84} %argrw{"wr"}
+	lt		$tmp63 outside $const9 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_solidFractal.osl"} %line{70} %argrw{"wrr"}
+	if		$tmp63 269 271 	%argrw{"r"}
+	assign		___407_time $const8 	%line{72} %argrw{"wr"}
+	gt		$tmp64 i_animated $const8 	%line{74} %argrw{"wrr"}
+	if		$tmp64 102 102 	%argrw{"r"}
+	mul		___407_time i_time i_timeRatio 	%line{76} %argrw{"wrr"}
+	gt		$tmp65 i_inflection $const8 	%line{81} %argrw{"wrr"}
+	if		$tmp65 168 231 	%argrw{"r"}
+	functioncall	$const14 168 	%line{85} %argrw{"r"}
+	assign		___362_i $const8 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\noise_utils.h"} %line{160} %argrw{"wr"}
+	assign		___362_lacunarity $const12 	%line{161} %argrw{"wr"}
+	assign		___362_mix $const8 	%line{162} %argrw{"wr"}
+	assign		___362_amp $const9 	%line{163} %argrw{"wr"}
+	compref		$tmp67 i_ripples $const8 	%line{164} %argrw{"wrr"}
+	compref		$tmp68 i_ripples $const9 	%argrw{"wrr"}
+	compref		$tmp69 i_ripples $const11 	%argrw{"wrr"}
+	point		$tmp66 $tmp67 $tmp68 $tmp69 	%argrw{"wrrr"}
+	mul		$tmp70 pp $tmp66 	%argrw{"wrr"}
+	div		___362_pp $tmp70 $const13 	%argrw{"wrr"}
+	area		$tmp71 ___362_pp 	%line{166} %argrw{"wr"} %argderivs{1}
+	sqrt		___362_M_PIxel_size $tmp71 	%argrw{"wr"}
+	mul		___362_nyquist $const13 ___362_M_PIxel_size 	%line{167} %argrw{"wrr"}
+	assign		___362_M_PIxel $const12 	%line{168} %argrw{"wr"}
+	while		$tmp77 120 133 145 145 	%line{170} %argrw{"r"}
+	compref		$tmp72 i_depth $const9 	%argrw{"wrr"}
+	lt		$tmp73 ___362_i $tmp72 	%argrw{"wrr"}
+	neq		$tmp74 $tmp73 $const8 	%argrw{"wrr"}
+	if		$tmp74 127 127 	%argrw{"r"}
+	gt		$tmp75 ___362_M_PIxel ___362_nyquist 	%argrw{"wrr"}
+	neq		$tmp76 $tmp75 $const8 	%argrw{"wrr"}
+	assign		$tmp74 $tmp76 	%argrw{"wr"}
+	neq		$tmp77 $tmp74 $const8 	%argrw{"wrr"}
+	if		$tmp77 129 133 	%argrw{"r"}
+	compref		$tmp78 i_depth $const8 	%argrw{"wrr"}
+	lt		$tmp79 ___362_i $tmp78 	%argrw{"wrr"}
+	neq		$tmp80 $tmp79 $const8 	%argrw{"wrr"}
+	assign		$tmp77 $tmp80 	%argrw{"wr"}
+	assign		$tmp83 ___362_pp 	%line{172} %argrw{"wr"}
+	noise		$tmp84 $const15 ___362_lacunarity 	%argrw{"wrr"}
+	add		$tmp85 $tmp83 $tmp84 	%argrw{"wrr"}
+	mul		$tmp86 $tmp85 ___362_lacunarity 	%argrw{"wrr"}
+	snoise		$tmp82 $tmp86 ___407_time 	%argrw{"wrr"}
+	abs		$tmp81 $tmp82 	%argrw{"wr"}
+	mul		$tmp87 ___362_amp $tmp81 	%argrw{"wrr"}
+	add		___362_mix ___362_mix $tmp87 	%argrw{"wrr"}
+	mul		___362_lacunarity ___362_lacunarity i_frequencyRatio 	%line{173} %argrw{"wrr"}
+	mul		___362_amp ___362_amp i_ratio 	%line{174} %argrw{"wrr"}
+	div		___362_M_PIxel ___362_M_PIxel i_frequencyRatio 	%line{175} %argrw{"wrr"}
+	add		___362_i ___362_i $const12 	%line{177} %argrw{"wrr"}
+	gt		$tmp88 ___362_M_PIxel ___362_M_PIxel_size 	%line{180} %argrw{"wrr"}
+	neq		$tmp89 $tmp88 $const8 	%argrw{"wrr"}
+	if		$tmp89 152 152 	%argrw{"r"}
+	compref		$tmp90 i_depth $const9 	%argrw{"wrr"}
+	le		$tmp91 ___362_i $tmp90 	%argrw{"wrr"}
+	neq		$tmp92 $tmp91 $const8 	%argrw{"wrr"}
+	assign		$tmp89 $tmp92 	%argrw{"wr"}
+	if		$tmp89 167 167 	%argrw{"r"}
+	div		$tmp93 ___362_M_PIxel ___362_M_PIxel_size 	%line{182} %argrw{"wrr"}
+	sub		$tmp94 $tmp93 $const12 	%argrw{"wrr"}
+	functioncall	$const16 158 	%argrw{"r"}
+	min		$tmp95 $tmp94 $const12 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{142} %argrw{"wrr"}
+	max		___364_weight $tmp95 $const3 	%argrw{"wrr"}
+	mul		$tmp96 ___364_weight ___362_amp 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\noise_utils.h"} %line{183} %argrw{"wrr"}
+	assign		$tmp99 ___362_pp 	%line{184} %argrw{"wr"}
+	noise		$tmp100 $const15 ___362_lacunarity 	%argrw{"wrr"}
+	add		$tmp101 $tmp99 $tmp100 	%argrw{"wrr"}
+	mul		$tmp102 $tmp101 ___362_lacunarity 	%argrw{"wrr"}
+	snoise		$tmp98 $tmp102 ___407_time 	%argrw{"wrr"}
+	abs		$tmp97 $tmp98 	%argrw{"wr"}
+	mul		$tmp103 $tmp96 $tmp97 	%argrw{"wrr"}
+	add		___362_mix ___362_mix $tmp103 	%argrw{"wrr"}
+	assign		___407_fractal ___362_mix 	%line{187} %argrw{"wr"}
+	functioncall	$const17 231 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_solidFractal.osl"} %line{91} %argrw{"r"}
+	assign		___353_i $const8 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\noise_utils.h"} %line{44} %argrw{"wr"}
+	assign		___353_lacunarity $const12 	%line{45} %argrw{"wr"}
+	assign		___353_mix $const8 	%line{46} %argrw{"wr"}
+	assign		___353_amp $const12 	%line{47} %argrw{"wr"}
+	compref		$tmp105 i_ripples $const8 	%line{48} %argrw{"wrr"}
+	compref		$tmp106 i_ripples $const9 	%argrw{"wrr"}
+	compref		$tmp107 i_ripples $const11 	%argrw{"wrr"}
+	point		$tmp104 $tmp105 $tmp106 $tmp107 	%argrw{"wrrr"}
+	mul		$tmp108 pp $tmp104 	%argrw{"wrr"}
+	div		___353_pp $tmp108 $const13 	%argrw{"wrr"}
+	area		$tmp109 ___353_pp 	%line{50} %argrw{"wr"} %argderivs{1}
+	sqrt		___353_M_PIxel_size $tmp109 	%argrw{"wr"}
+	mul		___353_nyquist $const13 ___353_M_PIxel_size 	%line{51} %argrw{"wrr"}
+	assign		___353_M_PIxel $const12 	%line{52} %argrw{"wr"}
+	while		$tmp115 184 197 208 208 	%line{54} %argrw{"r"}
+	compref		$tmp110 i_depth $const9 	%argrw{"wrr"}
+	lt		$tmp111 ___353_i $tmp110 	%argrw{"wrr"}
+	neq		$tmp112 $tmp111 $const8 	%argrw{"wrr"}
+	if		$tmp112 191 191 	%argrw{"r"}
+	gt		$tmp113 ___353_M_PIxel ___353_nyquist 	%argrw{"wrr"}
+	neq		$tmp114 $tmp113 $const8 	%argrw{"wrr"}
+	assign		$tmp112 $tmp114 	%argrw{"wr"}
+	neq		$tmp115 $tmp112 $const8 	%argrw{"wrr"}
+	if		$tmp115 193 197 	%argrw{"r"}
+	compref		$tmp116 i_depth $const8 	%argrw{"wrr"}
+	lt		$tmp117 ___353_i $tmp116 	%argrw{"wrr"}
+	neq		$tmp118 $tmp117 $const8 	%argrw{"wrr"}
+	assign		$tmp115 $tmp118 	%argrw{"wr"}
+	assign		$tmp120 ___353_pp 	%line{56} %argrw{"wr"}
+	noise		$tmp121 $const15 ___353_lacunarity 	%argrw{"wrr"}
+	add		$tmp122 $tmp120 $tmp121 	%argrw{"wrr"}
+	mul		$tmp123 $tmp122 ___353_lacunarity 	%argrw{"wrr"}
+	snoise		$tmp119 $tmp123 ___407_time 	%argrw{"wrr"}
+	mul		$tmp124 ___353_amp $tmp119 	%argrw{"wrr"}
+	add		___353_mix ___353_mix $tmp124 	%argrw{"wrr"}
+	mul		___353_lacunarity ___353_lacunarity i_frequencyRatio 	%line{57} %argrw{"wrr"}
+	mul		___353_amp ___353_amp i_ratio 	%line{58} %argrw{"wrr"}
+	div		___353_M_PIxel ___353_M_PIxel i_frequencyRatio 	%line{59} %argrw{"wrr"}
+	add		___353_i ___353_i $const12 	%line{61} %argrw{"wrr"}
+	gt		$tmp125 ___353_M_PIxel ___353_M_PIxel_size 	%line{64} %argrw{"wrr"}
+	neq		$tmp126 $tmp125 $const8 	%argrw{"wrr"}
+	if		$tmp126 215 215 	%argrw{"r"}
+	compref		$tmp127 i_depth $const9 	%argrw{"wrr"}
+	le		$tmp128 ___353_i $tmp127 	%argrw{"wrr"}
+	neq		$tmp129 $tmp128 $const8 	%argrw{"wrr"}
+	assign		$tmp126 $tmp129 	%argrw{"wr"}
+	if		$tmp126 229 229 	%argrw{"r"}
+	div		$tmp130 ___353_M_PIxel ___353_M_PIxel_size 	%line{66} %argrw{"wrr"}
+	sub		$tmp131 $tmp130 $const12 	%argrw{"wrr"}
+	functioncall	$const16 221 	%argrw{"r"}
+	min		$tmp132 $tmp131 $const12 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{142} %argrw{"wrr"}
+	max		___355_weight $tmp132 $const3 	%argrw{"wrr"}
+	mul		$tmp133 ___355_weight ___353_amp 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\noise_utils.h"} %line{67} %argrw{"wrr"}
+	assign		$tmp135 ___353_pp 	%line{68} %argrw{"wr"}
+	noise		$tmp136 $const15 ___353_lacunarity 	%argrw{"wrr"}
+	add		$tmp137 $tmp135 $tmp136 	%argrw{"wrr"}
+	mul		$tmp138 $tmp137 ___353_lacunarity 	%argrw{"wrr"}
+	snoise		$tmp134 $tmp138 ___407_time 	%argrw{"wrr"}
+	mul		$tmp139 $tmp133 $tmp134 	%argrw{"wrr"}
+	add		___353_mix ___353_mix $tmp139 	%argrw{"wrr"}
+	mul		$tmp140 ___353_mix $const18 	%line{71} %argrw{"wrr"}
+	add		___407_fractal $tmp140 $const18 	%argrw{"wrr"}
+	add		___407_fractal ___407_fractal i_threshold 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_solidFractal.osl"} %line{94} %argrw{"wrr"}
+	sign		___407_sn ___407_fractal 	%line{96} %argrw{"wr"}
+	gt		$tmp141 i_bias $const3 	%line{98} %argrw{"wrr"}
+	if		$tmp141 240 247 	%argrw{"r"}
+	abs		$tmp143 ___407_fractal 	%line{100} %argrw{"wr"}
+	mul		$tmp144 i_bias $const18 	%argrw{"wrr"}
+	sub		$tmp145 $const12 $tmp144 	%argrw{"wrr"}
+	pow		$tmp142 $tmp143 $tmp145 	%argrw{"wrr"}
+	mul		___407_fractal ___407_sn $tmp142 	%argrw{"wrr"}
+	lt		$tmp146 i_bias $const3 	%line{102} %argrw{"wrr"}
+	if		$tmp146 247 247 	%argrw{"r"}
+	abs		$tmp148 ___407_fractal 	%line{104} %argrw{"wr"}
+	add		$tmp149 $const12 i_bias 	%argrw{"wrr"}
+	div		$tmp150 $const12 $tmp149 	%argrw{"wrr"}
+	pow		$tmp147 $tmp148 $tmp150 	%argrw{"wrr"}
+	mul		___407_fractal ___407_sn $tmp147 	%argrw{"wrr"}
+	mul		___407_fractal ___407_fractal i_amplitude 	%line{107} %argrw{"wrr"}
+	add		$tmp151 ___407_fractal i_threshold 	%line{108} %argrw{"wrr"}
+	functioncall	$const16 252 	%argrw{"r"}
+	min		$tmp152 $tmp151 $const12 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{142} %argrw{"wrr"}
+	max		o_outAlpha $tmp152 $const3 	%argrw{"wrr"}
+	assign		$tmp153 $const3 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_solidFractal.osl"} %line{109} %argrw{"wr"}
+	assign		$tmp154 $const12 	%argrw{"wr"}
+	mix		o_outColor $tmp153 $tmp154 o_outAlpha 	%argrw{"wrrr"}
+	assign		$tmp155 i_alphaIsLuminance 	%line{118} %argrw{"wr"}
+	assign		$tmp156 i_invert 	%argrw{"wr"}
+	functioncall	$const19 269 	%argrw{"r"}
+	neq		$tmp157 $tmp156 $const3 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{124} %argrw{"wrr"}
+	if		$tmp157 262 262 	%argrw{"r"}
+	sub		o_outColor $const12 o_outColor 	%line{126} %argrw{"wrr"}
+	sub		o_outAlpha $const12 o_outAlpha 	%line{127} %argrw{"wrr"}
+	neq		$tmp158 $tmp155 $const3 	%line{130} %argrw{"wrr"}
+	if		$tmp158 265 265 	%argrw{"r"}
+	luminance	o_outAlpha o_outColor 	%line{132} %argrw{"wr"}
+	mul		o_outColor o_outColor i_colorGain 	%line{135} %argrw{"wrr"}
+	add		o_outColor o_outColor i_colorOffset 	%line{136} %argrw{"wrr"}
+	mul		o_outAlpha o_outAlpha i_alphaGain 	%line{138} %argrw{"wrr"}
+	add		o_outAlpha o_outAlpha i_alphaOffset 	%line{139} %argrw{"wrr"}
+	assign		o_outColor i_defaultColor 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_solidFractal.osl"} %line{122} %argrw{"wr"}
+	assign		o_outAlpha $const8 	%line{123} %argrw{"wr"}
+	end

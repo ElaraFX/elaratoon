@@ -1,0 +1,311 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_brownian
+param	float	i_alphaGain	1 		 %read{146,146} %write{2147483647,-1}
+param	int	i_alphaIsLuminance	0 		 %read{134,134} %write{2147483647,-1}
+param	float	i_alphaOffset	1 		 %read{147,147} %write{2147483647,-1}
+param	float	i_blend	0 		 %read{62,157} %write{2147483647,-1}
+param	color	i_colorGain	1 1 1 		 %read{144,144} %write{2147483647,-1}
+param	color	i_colorOffset	0 0 0 		 %read{145,145} %write{2147483647,-1}
+param	color	i_defaultColor	0.5 0.5 0.5 		 %read{159,160} %write{2147483647,-1}
+param	float	i_filter	1 		 %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_filterOffset	0 		 %read{2147483647,-1} %write{2147483647,-1}
+param	vector	i_filterSize	1 1 1 		 %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_increment	0.1 		 %read{108,111} %write{2147483647,-1}
+param	int	i_invert	0 		 %read{135,135} %write{2147483647,-1}
+param	int	i_local	0 		 %read{0,0} %write{2147483647,-1}
+param	float	i_lacunarity	4 		 %read{122,123} %write{2147483647,-1} %derivs
+param	float	i_octaves	3 		 %read{114,114} %write{2147483647,-1}
+param	vector	i_weight3d	1 1 1 		 %read{98,100} %write{2147483647,-1} %derivs
+param	matrix	i_placementMatrix	1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1		 %read{20,20} %write{2147483647,-1} %derivs
+param	int	i_wrap	0 		 %read{1,1} %write{2147483647,-1}
+oparam	color	o_outColor	1 1 1 		 %read{139,159} %write{133,160}
+oparam	float	o_outAlpha	0 		 %read{126,147} %write{125,161}
+global	point	P	 %read{11,17} %write{2147483647,-1} %derivs
+local	point	___307_Pref	 %read{8,19} %write{3,3} %derivs
+local	point	___307_pp	 %read{20,20} %write{4,19} %derivs
+local	point	___307_pq	 %read{21,95} %write{20,20} %derivs
+local	float	edgeDist	 %read{151,158} %write{5,94}
+local	float	outside	 %read{96,96} %write{56,58}
+local	point	pp	 %read{102,102} %write{95,95} %derivs
+local	point	___407_pn	 %read{106,106} %write{102,102} %derivs
+local	float	___407_i	 %read{112,124} %write{103,124}
+local	float	___407_amp	 %read{112,124} %write{104,124}
+local	float	___407_sum	 %read{112,125} %write{105,124}
+local	point	___407_pq	 %read{107,124} %write{106,124} %derivs
+local	float	___407_filterWidth	 %read{112,124} %write{107,124}
+local	float	___407_inc	 %read{121,124} %write{110,111}
+temp	float	$tmp1	 %read{6,6} %write{0,0}
+temp	float	$tmp2	 %read{54,59} %write{1,1}
+const	string	$const1	"transformP"		 %read{2,2} %write{2147483647,-1}
+const	point	$const2	0 0 0		 %read{3,14} %write{2147483647,-1}
+const	float	$const3	0		 %read{5,141} %write{2147483647,-1}
+temp	int	$tmp3	 %read{7,7} %write{6,6}
+temp	int	$tmp5	 %read{9,9} %write{8,8}
+const	string	$const4	"object"		 %read{11,13} %write{2147483647,-1}
+const	string	$const5	"transform"		 %read{10,18} %write{2147483647,-1}
+const	string	$const6	"common"		 %read{11,19} %write{2147483647,-1}
+temp	int	$tmp7	 %read{15,15} %write{14,14}
+const	string	$const7	"world"		 %read{17,19} %write{2147483647,-1}
+const	int	$const8	0		 %read{21,161} %write{2147483647,-1}
+temp	float	$tmp8	 %read{22,22} %write{21,21}
+const	int	$const9	1		 %read{22,104} %write{2147483647,-1}
+temp	int	$tmp9	 %read{23,23} %write{22,22}
+temp	int	$tmp10	 %read{24,29} %write{23,28}
+temp	float	$tmp11	 %read{26,26} %write{25,25}
+const	int	$const10	-1		 %read{26,50} %write{2147483647,-1}
+temp	int	$tmp12	 %read{27,27} %write{26,26}
+temp	int	$tmp13	 %read{28,28} %write{27,27}
+temp	int	$tmp14	 %read{30,35} %write{29,34}
+temp	float	$tmp15	 %read{32,32} %write{31,31}
+temp	int	$tmp16	 %read{33,33} %write{32,32}
+temp	int	$tmp17	 %read{34,34} %write{33,33}
+temp	int	$tmp18	 %read{36,41} %write{35,40}
+temp	float	$tmp19	 %read{38,38} %write{37,37}
+temp	int	$tmp20	 %read{39,39} %write{38,38}
+temp	int	$tmp21	 %read{40,40} %write{39,39}
+temp	int	$tmp22	 %read{42,47} %write{41,46}
+const	int	$const11	2		 %read{43,100} %write{2147483647,-1}
+temp	float	$tmp23	 %read{44,44} %write{43,43}
+temp	int	$tmp24	 %read{45,45} %write{44,44}
+temp	int	$tmp25	 %read{46,46} %write{45,45}
+temp	int	$tmp26	 %read{48,53} %write{47,52}
+temp	float	$tmp27	 %read{50,50} %write{49,49}
+temp	int	$tmp28	 %read{51,51} %write{50,50}
+temp	int	$tmp29	 %read{52,52} %write{51,51}
+temp	int	$tmp30	 %read{55,55} %write{54,54}
+const	float	$const12	1		 %read{57,140} %write{2147483647,-1}
+temp	int	$tmp31	 %read{60,60} %write{59,59}
+temp	int	$tmp32	 %read{61,65} %write{60,64}
+temp	int	$tmp33	 %read{63,63} %write{62,62}
+temp	int	$tmp34	 %read{64,64} %write{63,63}
+temp	float	$tmp35	 %read{94,94} %write{84,84}
+temp	float	$tmp36	 %read{84,84} %write{74,74}
+temp	float	$tmp37	 %read{69,69} %write{68,68}
+temp	float	$tmp38	 %read{67,67} %write{66,66}
+temp	float	$tmp39	 %read{68,68} %write{67,67}
+temp	float	$tmp40	 %read{74,74} %write{69,69}
+const	float	$const13	2		 %read{69,127} %write{2147483647,-1}
+temp	float	$tmp41	 %read{73,73} %write{72,72}
+temp	float	$tmp42	 %read{71,71} %write{70,70}
+temp	float	$tmp43	 %read{72,72} %write{71,71}
+temp	float	$tmp44	 %read{74,74} %write{73,73}
+temp	float	$tmp45	 %read{84,84} %write{83,83}
+temp	float	$tmp46	 %read{78,78} %write{77,77}
+temp	float	$tmp47	 %read{76,76} %write{75,75}
+temp	float	$tmp48	 %read{77,77} %write{76,76}
+temp	float	$tmp49	 %read{83,83} %write{78,78}
+temp	float	$tmp50	 %read{82,82} %write{81,81}
+temp	float	$tmp51	 %read{80,80} %write{79,79}
+temp	float	$tmp52	 %read{81,81} %write{80,80}
+temp	float	$tmp53	 %read{83,83} %write{82,82}
+temp	float	$tmp54	 %read{94,94} %write{93,93}
+temp	float	$tmp55	 %read{88,88} %write{87,87}
+temp	float	$tmp56	 %read{86,86} %write{85,85}
+temp	float	$tmp57	 %read{87,87} %write{86,86}
+temp	float	$tmp58	 %read{93,93} %write{88,88}
+temp	float	$tmp59	 %read{92,92} %write{91,91}
+temp	float	$tmp60	 %read{90,90} %write{89,89}
+temp	float	$tmp61	 %read{91,91} %write{90,90}
+temp	float	$tmp62	 %read{93,93} %write{92,92}
+temp	int	$tmp63	 %read{97,97} %write{96,96}
+temp	point	$tmp64	 %read{102,102} %write{101,101} %derivs
+temp	float	$tmp65	 %read{101,101} %write{98,98} %derivs
+temp	float	$tmp66	 %read{101,101} %write{99,99} %derivs
+temp	float	$tmp67	 %read{101,101} %write{100,100} %derivs
+temp	int	$tmp68	 %read{109,109} %write{108,108}
+const	float	$const14	0.99000001		 %read{113,113} %write{2147483647,-1}
+temp	int	$tmp69	 %read{112,124} %write{112,124}
+temp	float	$tmp70	 %read{118,118} %write{115,115}
+temp	float	$tmp71	 %read{117,117} %write{116,116}
+const	float	$const15	0.2		 %read{116,116} %write{2147483647,-1}
+const	float	$const16	0.75		 %read{116,116} %write{2147483647,-1}
+temp	float	$tmp72	 %read{118,118} %write{117,117}
+temp	float	$tmp73	 %read{119,119} %write{118,118}
+temp	float	$tmp74	 %read{120,120} %write{119,119}
+temp	float	$tmp75	 %read{127,127} %write{126,126}
+temp	float	$tmp76	 %read{128,128} %write{127,127}
+temp	color	$tmp77	 %read{132,132} %write{128,128}
+temp	color	$tmp78	 %read{133,133} %write{129,129}
+temp	color	$tmp79	 %read{132,132} %write{130,130}
+const	string	$const17	"clamp"		 %read{131,131} %write{2147483647,-1}
+temp	color	$tmp80	 %read{133,133} %write{132,132}
+temp	float	$tmp81	 %read{141,141} %write{134,134}
+temp	float	$tmp82	 %read{137,137} %write{135,135}
+const	string	$const18	"colorBalance"		 %read{136,136} %write{2147483647,-1}
+temp	int	$tmp83	 %read{138,138} %write{137,137}
+temp	int	$tmp84	 %read{142,142} %write{141,141}
+temp	int	$tmp85	 %read{149,149} %write{148,148}
+temp	int	$tmp86	 %read{150,154} %write{149,153}
+temp	int	$tmp87	 %read{152,152} %write{151,151}
+temp	int	$tmp88	 %read{153,153} %write{152,152}
+const	string	$const19	"blendDefaultColor"		 %read{155,155} %write{2147483647,-1}
+temp	float	$tmp89	 %read{159,159} %write{158,158}
+const	float	$const20	0.1		 %read{156,156} %write{2147483647,-1}
+temp	float	$tmp90	 %read{158,158} %write{156,156}
+const	float	$const21	0.5		 %read{157,157} %write{2147483647,-1}
+temp	float	$tmp91	 %read{158,158} %write{157,157}
+code ___main___
+	assign		$tmp1 i_local 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_brownian.osl"} %line{62} %argrw{"wr"}
+	assign		$tmp2 i_wrap 	%argrw{"wr"}
+	functioncall	$const1 96 	%argrw{"r"}
+	assign		___307_Pref $const2 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{32} %argrw{"wr"}
+	assign		___307_pp $const2 	%line{33} %argrw{"wr"}
+	assign		edgeDist $const3 	%line{35} %argrw{"wr"}
+	neq		$tmp3 $tmp1 $const3 	%line{37} %argrw{"wrr"}
+	if		$tmp3 14 20 	%argrw{"r"}
+	eq		$tmp5 ___307_Pref $const2 	%line{39} %argrw{"wrr"}
+	if		$tmp5 12 14 	%argrw{"r"}
+	functioncall	$const5 12 	%line{40} %argrw{"r"}
+	transform	___307_pp $const6 $const4 P 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{240} %argrw{"wrrr"}
+	functioncall	$const5 14 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{42} %argrw{"r"}
+	transform	___307_pp $const6 $const4 ___307_Pref 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{240} %argrw{"wrrr"}
+	eq		$tmp7 ___307_Pref $const2 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{46} %argrw{"wrr"}
+	if		$tmp7 18 20 	%argrw{"r"}
+	functioncall	$const5 18 	%line{47} %argrw{"r"}
+	transform	___307_pp $const6 $const7 P 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{240} %argrw{"wrrr"}
+	functioncall	$const5 20 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{49} %argrw{"r"}
+	transform	___307_pp $const6 $const7 ___307_Pref 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{240} %argrw{"wrrr"}
+	transform	___307_pq i_placementMatrix ___307_pp 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{52} %argrw{"wrr"}
+	compref		$tmp8 ___307_pq $const8 	%line{54} %argrw{"wrr"}
+	gt		$tmp9 $tmp8 $const9 	%argrw{"wrr"}
+	neq		$tmp10 $tmp9 $const8 	%argrw{"wrr"}
+	if		$tmp10 25 29 	%line{55} %argrw{"r"}
+	compref		$tmp11 ___307_pq $const8 	%argrw{"wrr"}
+	lt		$tmp12 $tmp11 $const10 	%argrw{"wrr"}
+	neq		$tmp13 $tmp12 $const8 	%argrw{"wrr"}
+	assign		$tmp10 $tmp13 	%argrw{"wr"}
+	neq		$tmp14 $tmp10 $const8 	%argrw{"wrr"}
+	if		$tmp14 31 35 	%line{56} %argrw{"r"}
+	compref		$tmp15 ___307_pq $const9 	%argrw{"wrr"}
+	gt		$tmp16 $tmp15 $const9 	%argrw{"wrr"}
+	neq		$tmp17 $tmp16 $const8 	%argrw{"wrr"}
+	assign		$tmp14 $tmp17 	%argrw{"wr"}
+	neq		$tmp18 $tmp14 $const8 	%argrw{"wrr"}
+	if		$tmp18 37 41 	%line{57} %argrw{"r"}
+	compref		$tmp19 ___307_pq $const9 	%argrw{"wrr"}
+	lt		$tmp20 $tmp19 $const10 	%argrw{"wrr"}
+	neq		$tmp21 $tmp20 $const8 	%argrw{"wrr"}
+	assign		$tmp18 $tmp21 	%argrw{"wr"}
+	neq		$tmp22 $tmp18 $const8 	%argrw{"wrr"}
+	if		$tmp22 43 47 	%line{58} %argrw{"r"}
+	compref		$tmp23 ___307_pq $const11 	%argrw{"wrr"}
+	gt		$tmp24 $tmp23 $const9 	%argrw{"wrr"}
+	neq		$tmp25 $tmp24 $const8 	%argrw{"wrr"}
+	assign		$tmp22 $tmp25 	%argrw{"wr"}
+	neq		$tmp26 $tmp22 $const8 	%argrw{"wrr"}
+	if		$tmp26 49 53 	%line{59} %argrw{"r"}
+	compref		$tmp27 ___307_pq $const11 	%argrw{"wrr"}
+	lt		$tmp28 $tmp27 $const10 	%argrw{"wrr"}
+	neq		$tmp29 $tmp28 $const8 	%argrw{"wrr"}
+	assign		$tmp26 $tmp29 	%argrw{"wr"}
+	if		$tmp26 58 95 	%line{54} %argrw{"r"}
+	neq		$tmp30 $tmp2 $const3 	%line{61} %argrw{"wrr"}
+	if		$tmp30 57 58 	%argrw{"r"}
+	assign		outside $const3 	%line{63} %argrw{"wr"}
+	assign		outside $const12 	%line{67} %argrw{"wr"}
+	assign		outside $const3 	%line{72} %argrw{"wr"}
+	eq		$tmp31 $tmp2 $const3 	%line{74} %argrw{"wrr"}
+	neq		$tmp32 $tmp31 $const8 	%argrw{"wrr"}
+	if		$tmp32 65 65 	%argrw{"r"}
+	gt		$tmp33 i_blend $const3 	%argrw{"wrr"}
+	neq		$tmp34 $tmp33 $const8 	%argrw{"wrr"}
+	assign		$tmp32 $tmp34 	%argrw{"wr"}
+	if		$tmp32 95 95 	%argrw{"r"}
+	compref		$tmp38 ___307_pq $const8 	%line{78} %argrw{"wrr"}
+	add		$tmp39 $tmp38 $const12 	%argrw{"wrr"}
+	abs		$tmp37 $tmp39 	%argrw{"wr"}
+	div		$tmp40 $tmp37 $const13 	%argrw{"wrr"}
+	compref		$tmp42 ___307_pq $const8 	%argrw{"wrr"}
+	sub		$tmp43 $tmp42 $const12 	%argrw{"wrr"}
+	abs		$tmp41 $tmp43 	%argrw{"wr"}
+	div		$tmp44 $tmp41 $const13 	%argrw{"wrr"}
+	min		$tmp36 $tmp40 $tmp44 	%argrw{"wrr"}
+	compref		$tmp47 ___307_pq $const9 	%line{79} %argrw{"wrr"}
+	add		$tmp48 $tmp47 $const12 	%argrw{"wrr"}
+	abs		$tmp46 $tmp48 	%argrw{"wr"}
+	div		$tmp49 $tmp46 $const13 	%argrw{"wrr"}
+	compref		$tmp51 ___307_pq $const9 	%argrw{"wrr"}
+	sub		$tmp52 $tmp51 $const12 	%argrw{"wrr"}
+	abs		$tmp50 $tmp52 	%argrw{"wr"}
+	div		$tmp53 $tmp50 $const13 	%argrw{"wrr"}
+	min		$tmp45 $tmp49 $tmp53 	%argrw{"wrr"}
+	min		$tmp35 $tmp36 $tmp45 	%argrw{"wrr"}
+	compref		$tmp56 ___307_pq $const11 	%line{80} %argrw{"wrr"}
+	add		$tmp57 $tmp56 $const12 	%argrw{"wrr"}
+	abs		$tmp55 $tmp57 	%argrw{"wr"}
+	div		$tmp58 $tmp55 $const13 	%argrw{"wrr"}
+	compref		$tmp60 ___307_pq $const11 	%argrw{"wrr"}
+	sub		$tmp61 $tmp60 $const12 	%argrw{"wrr"}
+	abs		$tmp59 $tmp61 	%argrw{"wr"}
+	div		$tmp62 $tmp59 $const13 	%argrw{"wrr"}
+	min		$tmp54 $tmp58 $tmp62 	%argrw{"wrr"}
+	min		edgeDist $tmp35 $tmp54 	%argrw{"wrr"}
+	assign		pp ___307_pq 	%line{84} %argrw{"wr"}
+	lt		$tmp63 outside $const9 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_brownian.osl"} %line{64} %argrw{"wrr"}
+	if		$tmp63 160 162 	%argrw{"r"}
+	compref		$tmp65 i_weight3d $const8 	%line{66} %argrw{"wrr"}
+	compref		$tmp66 i_weight3d $const9 	%argrw{"wrr"}
+	compref		$tmp67 i_weight3d $const11 	%argrw{"wrr"}
+	point		$tmp64 $tmp65 $tmp66 $tmp67 	%argrw{"wrrr"}
+	mul		___407_pn pp $tmp64 	%argrw{"wrr"}
+	assign		___407_i $const9 	%line{68} %argrw{"wr"}
+	assign		___407_amp $const9 	%line{69} %argrw{"wr"}
+	assign		___407_sum $const8 	%line{70} %argrw{"wr"}
+	assign		___407_pq ___407_pn 	%line{71} %argrw{"wr"}
+	area		___407_filterWidth ___407_pq 	%line{72} %argrw{"wr"} %argderivs{1}
+	lt		$tmp68 i_increment $const12 	%line{73} %argrw{"wrr"}
+	if		$tmp68 111 112 	%argrw{"r"}
+	sub		___407_inc $const12 i_increment 	%argrw{"wrr"}
+	assign		___407_inc i_increment 	%argrw{"wr"}
+	for		$tmp69 114 115 124 125 	%line{75} %argrw{"r"}
+	assign		___407_i $const14 	%argrw{"wr"}
+	lt		$tmp69 ___407_i i_octaves 	%argrw{"wrr"}
+	snoise		$tmp70 ___407_pq 	%line{77} %argrw{"wr"}
+	smoothstep	$tmp71 $const15 $const16 ___407_filterWidth 	%argrw{"wrrr"}
+	sub		$tmp72 $const12 $tmp71 	%argrw{"wrr"}
+	mul		$tmp73 $tmp70 $tmp72 	%argrw{"wrr"}
+	mul		$tmp74 ___407_amp $tmp73 	%argrw{"wrr"}
+	add		___407_sum ___407_sum $tmp74 	%argrw{"wrr"}
+	mul		___407_amp ___407_amp ___407_inc 	%line{78} %argrw{"wrr"}
+	mul		___407_pq ___407_pq i_lacunarity 	%line{79} %argrw{"wrr"}
+	mul		___407_filterWidth ___407_filterWidth i_lacunarity 	%line{80} %argrw{"wrr"}
+	add		___407_i ___407_i ___407_inc 	%line{75} %argrw{"wrr"}
+	assign		o_outAlpha ___407_sum 	%line{83} %argrw{"wr"}
+	add		$tmp75 o_outAlpha $const12 	%line{84} %argrw{"wrr"}
+	div		$tmp76 $tmp75 $const13 	%argrw{"wrr"}
+	assign		$tmp77 $tmp76 	%argrw{"wr"}
+	assign		$tmp78 $const3 	%argrw{"wr"}
+	assign		$tmp79 $const12 	%argrw{"wr"}
+	functioncall	$const17 134 	%argrw{"r"}
+	min		$tmp80 $tmp77 $tmp79 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{141} %argrw{"wrr"}
+	max		o_outColor $tmp80 $tmp78 	%argrw{"wrr"}
+	assign		$tmp81 i_alphaIsLuminance 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_brownian.osl"} %line{93} %argrw{"wr"}
+	assign		$tmp82 i_invert 	%argrw{"wr"}
+	functioncall	$const18 148 	%argrw{"r"}
+	neq		$tmp83 $tmp82 $const3 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{124} %argrw{"wrr"}
+	if		$tmp83 141 141 	%argrw{"r"}
+	sub		o_outColor $const12 o_outColor 	%line{126} %argrw{"wrr"}
+	sub		o_outAlpha $const12 o_outAlpha 	%line{127} %argrw{"wrr"}
+	neq		$tmp84 $tmp81 $const3 	%line{130} %argrw{"wrr"}
+	if		$tmp84 144 144 	%argrw{"r"}
+	luminance	o_outAlpha o_outColor 	%line{132} %argrw{"wr"}
+	mul		o_outColor o_outColor i_colorGain 	%line{135} %argrw{"wrr"}
+	add		o_outColor o_outColor i_colorOffset 	%line{136} %argrw{"wrr"}
+	mul		o_outAlpha o_outAlpha i_alphaGain 	%line{138} %argrw{"wrr"}
+	add		o_outAlpha o_outAlpha i_alphaOffset 	%line{139} %argrw{"wrr"}
+	gt		$tmp85 i_blend $const8 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_brownian.osl"} %line{95} %argrw{"wrr"}
+	neq		$tmp86 $tmp85 $const8 	%argrw{"wrr"}
+	if		$tmp86 154 154 	%argrw{"r"}
+	ge		$tmp87 edgeDist $const8 	%argrw{"wrr"}
+	neq		$tmp88 $tmp87 $const8 	%argrw{"wrr"}
+	assign		$tmp86 $tmp88 	%argrw{"wr"}
+	if		$tmp86 160 160 	%argrw{"r"}
+	functioncall	$const19 160 	%line{97} %argrw{"r"}
+	mul		$tmp90 $const20 i_blend 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{96} %argrw{"wrr"}
+	mul		$tmp91 $const21 i_blend 	%argrw{"wrr"}
+	smoothstep	$tmp89 $tmp90 $tmp91 edgeDist 	%argrw{"wrrr"}
+	mix		o_outColor i_defaultColor o_outColor $tmp89 	%argrw{"wrrr"}
+	assign		o_outColor i_defaultColor 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_brownian.osl"} %line{102} %argrw{"wr"}
+	assign		o_outAlpha $const8 	%line{103} %argrw{"wr"}
+	end

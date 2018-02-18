@@ -1,0 +1,259 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_stdout
+param	float	rgbAmount	1		%read{114,116} %write{2147483647,-1}
+param	float	rgbOffset	0		%read{117,119} %write{2147483647,-1}
+param	float	outputAmount	1		%read{121,124} %write{2147483647,-1}
+param	float	bumpAmount	1		%read{146,148} %write{2147483647,-1}
+param	int	invert	0		%read{125,149} %write{2147483647,-1}
+param	int	clamp0	0		%read{127,127} %write{2147483647,-1}
+param	int	alphaFromRGB	0		%read{131,131} %write{2147483647,-1}
+param	int	useColorMap	1		%read{2,2} %write{2147483647,-1}
+param	int	useRGBCurve	0		%read{4,4} %write{2147483647,-1}
+param	float[256]	monoCurve0	0		%read{10,55} %write{2147483647,-1}
+param	float[256]	rgbCurve0	0		%read{64,73} %write{2147483647,-1}
+param	float[256]	rgbCurve1	0		%read{82,91} %write{2147483647,-1}
+param	float[256]	rgbCurve2	0		%read{100,109} %write{2147483647,-1}
+param	color	stdout_color	0 0 0		%read{0,0} %write{2147483647,-1}
+param	float	stdout_alpha	1		%read{1,1} %write{2147483647,-1}
+param	vector	stdout_bump	0 0 0		%read{145,145} %write{2147483647,-1}
+oparam	color	result	0 0 0		%read{2147483647,-1} %write{143,143}
+oparam	vector	result_bump	0 0 0		%read{148,150} %write{145,150}
+oparam	float	result_alpha	1		%read{2147483647,-1} %write{144,144}
+local	float	___306_f	%read{139,139} %write{138,138}
+local	float	___368_tX	%read{13,106} %write{12,102}
+local	int	___368_pos	%read{15,108} %write{14,104}
+local	float	___368_subPos	%read{21,111} %write{16,106}
+local	float	___368_p1	%read{20,112} %write{17,107}
+local	float	___368_p2	%read{20,110} %write{19,109}
+local	color	outColor	%read{6,143} %write{0,130}
+local	float	outAlpha	%read{119,144} %write{1,142}
+const	int	$const1	0		%read{2,133} %write{2147483647,-1}
+temp	int	$tmp1	%read{3,3} %write{2,2}
+temp	int	$tmp2	%read{5,5} %write{4,4}
+temp	float	$tmp3	%read{23,23} %write{10,22}
+temp	float	$tmp4	%read{8,12} %write{6,6}
+const	string	$const2	"getCurveValue"		%read{7,97} %write{2147483647,-1}
+const	float	$const3	1		%read{8,146} %write{2147483647,-1}
+temp	int	$tmp5	%read{9,9} %write{8,8}
+const	int	$const4	255		%read{10,100} %write{2147483647,-1}
+const	float	$const5	255		%read{12,102} %write{2147483647,-1}
+temp	float	$tmp6	%read{14,14} %write{13,13}
+temp	float	$tmp7	%read{16,16} %write{15,15}
+const	int	$const6	1		%read{18,134} %write{2147483647,-1}
+temp	int	$tmp8	%read{19,19} %write{18,18}
+temp	float	$tmp9	%read{21,21} %write{20,20}
+temp	float	$tmp10	%read{22,22} %write{21,21}
+temp	float	$tmp11	%read{41,41} %write{28,40}
+temp	float	$tmp12	%read{26,30} %write{24,24}
+temp	int	$tmp13	%read{27,27} %write{26,26}
+temp	float	$tmp14	%read{32,32} %write{31,31}
+temp	float	$tmp15	%read{34,34} %write{33,33}
+temp	int	$tmp16	%read{37,37} %write{36,36}
+temp	float	$tmp17	%read{39,39} %write{38,38}
+temp	float	$tmp18	%read{40,40} %write{39,39}
+temp	float	$tmp19	%read{59,59} %write{46,58}
+const	int	$const7	2		%read{42,136} %write{2147483647,-1}
+temp	float	$tmp20	%read{44,48} %write{42,42}
+temp	int	$tmp21	%read{45,45} %write{44,44}
+temp	float	$tmp22	%read{50,50} %write{49,49}
+temp	float	$tmp23	%read{52,52} %write{51,51}
+temp	int	$tmp24	%read{55,55} %write{54,54}
+temp	float	$tmp25	%read{57,57} %write{56,56}
+temp	float	$tmp26	%read{58,58} %write{57,57}
+temp	float	$tmp27	%read{77,77} %write{64,76}
+temp	float	$tmp28	%read{62,66} %write{60,60}
+temp	int	$tmp29	%read{63,63} %write{62,62}
+temp	float	$tmp30	%read{68,68} %write{67,67}
+temp	float	$tmp31	%read{70,70} %write{69,69}
+temp	int	$tmp32	%read{73,73} %write{72,72}
+temp	float	$tmp33	%read{75,75} %write{74,74}
+temp	float	$tmp34	%read{76,76} %write{75,75}
+temp	float	$tmp35	%read{95,95} %write{82,94}
+temp	float	$tmp36	%read{80,84} %write{78,78}
+temp	int	$tmp37	%read{81,81} %write{80,80}
+temp	float	$tmp38	%read{86,86} %write{85,85}
+temp	float	$tmp39	%read{88,88} %write{87,87}
+temp	int	$tmp40	%read{91,91} %write{90,90}
+temp	float	$tmp41	%read{93,93} %write{92,92}
+temp	float	$tmp42	%read{94,94} %write{93,93}
+temp	float	$tmp43	%read{113,113} %write{100,112}
+temp	float	$tmp44	%read{98,102} %write{96,96}
+temp	int	$tmp45	%read{99,99} %write{98,98}
+temp	float	$tmp46	%read{104,104} %write{103,103}
+temp	float	$tmp47	%read{106,106} %write{105,105}
+temp	int	$tmp48	%read{109,109} %write{108,108}
+temp	float	$tmp49	%read{111,111} %write{110,110}
+temp	float	$tmp50	%read{112,112} %write{111,111}
+temp	int	$tmp51	%read{115,115} %write{114,114}
+const	float	$const8	0		%read{117,142} %write{2147483647,-1}
+temp	int	$tmp52	%read{118,118} %write{117,117}
+temp	float	$tmp53	%read{120,120} %write{119,119}
+temp	int	$tmp54	%read{122,122} %write{121,121}
+const	color	$const9	0 0 0		%read{130,130} %write{2147483647,-1}
+const	color	$const10	1 1 1		%read{129,129} %write{2147483647,-1}
+const	string	$const11	"clamp"		%read{128,140} %write{2147483647,-1}
+temp	color	$tmp57	%read{130,130} %write{129,129}
+const	string	$const12	"intensity"		%read{132,132} %write{2147483647,-1}
+temp	float	$tmp58	%read{135,135} %write{133,133}
+temp	float	$tmp59	%read{135,135} %write{134,134}
+temp	float	$tmp60	%read{137,137} %write{135,135}
+temp	float	$tmp61	%read{137,137} %write{136,136}
+temp	float	$tmp62	%read{138,138} %write{137,137}
+const	float	$const13	0.33333334		%read{138,138} %write{2147483647,-1}
+temp	float	$tmp63	%read{142,142} %write{141,141}
+temp	int	$tmp64	%read{147,147} %write{146,146}
+code ___main___
+	assign		outColor stdout_color 	%filename{"E:/github/elaramax/Shaders/max_stdout.osl"} %line{57} %argrw{"wr"}
+	assign		outAlpha stdout_alpha 	%line{58} %argrw{"wr"}
+	neq		$tmp1 useColorMap $const1 	%line{60} %argrw{"wrr"}
+	if		$tmp1 114 114 	%argrw{"r"}
+	eq		$tmp2 useRGBCurve $const1 	%line{62} %argrw{"wrr"}
+	if		$tmp2 60 114 	%argrw{"r"}
+	compref		$tmp4 outColor $const1 	%line{64} %argrw{"wrr"}
+	functioncall	$const2 23 	%argrw{"r"}
+	ge		$tmp5 $tmp4 $const3 	%line{21} %argrw{"wrr"}
+	if		$tmp5 12 12 	%argrw{"r"}
+	aref		$tmp3 monoCurve0 $const4 	%line{23} %argrw{"wrr"}
+	return
+	mul		___368_tX $const5 $tmp4 	%line{25} %argrw{"wrr"}
+	floor		$tmp6 ___368_tX 	%line{26} %argrw{"wr"}
+	assign		___368_pos $tmp6 	%argrw{"wr"}
+	assign		$tmp7 ___368_pos 	%line{27} %argrw{"wr"}
+	sub		___368_subPos ___368_tX $tmp7 	%argrw{"wrr"}
+	aref		___368_p1 monoCurve0 ___368_pos 	%line{28} %argrw{"wrr"}
+	add		$tmp8 ___368_pos $const6 	%line{29} %argrw{"wrr"}
+	aref		___368_p2 monoCurve0 $tmp8 	%argrw{"wrr"}
+	sub		$tmp9 ___368_p2 ___368_p1 	%line{30} %argrw{"wrr"}
+	mul		$tmp10 $tmp9 ___368_subPos 	%argrw{"wrr"}
+	add		$tmp3 ___368_p1 $tmp10 	%argrw{"wrr"}
+	compassign	outColor $const1 $tmp3 	%line{64} %argrw{"wrr"}
+	compref		$tmp12 outColor $const6 	%line{65} %argrw{"wrr"}
+	functioncall	$const2 41 	%argrw{"r"}
+	ge		$tmp13 $tmp12 $const3 	%line{21} %argrw{"wrr"}
+	if		$tmp13 30 30 	%argrw{"r"}
+	aref		$tmp11 monoCurve0 $const4 	%line{23} %argrw{"wrr"}
+	return
+	mul		___368_tX $const5 $tmp12 	%line{25} %argrw{"wrr"}
+	floor		$tmp14 ___368_tX 	%line{26} %argrw{"wr"}
+	assign		___368_pos $tmp14 	%argrw{"wr"}
+	assign		$tmp15 ___368_pos 	%line{27} %argrw{"wr"}
+	sub		___368_subPos ___368_tX $tmp15 	%argrw{"wrr"}
+	aref		___368_p1 monoCurve0 ___368_pos 	%line{28} %argrw{"wrr"}
+	add		$tmp16 ___368_pos $const6 	%line{29} %argrw{"wrr"}
+	aref		___368_p2 monoCurve0 $tmp16 	%argrw{"wrr"}
+	sub		$tmp17 ___368_p2 ___368_p1 	%line{30} %argrw{"wrr"}
+	mul		$tmp18 $tmp17 ___368_subPos 	%argrw{"wrr"}
+	add		$tmp11 ___368_p1 $tmp18 	%argrw{"wrr"}
+	compassign	outColor $const6 $tmp11 	%line{65} %argrw{"wrr"}
+	compref		$tmp20 outColor $const7 	%line{66} %argrw{"wrr"}
+	functioncall	$const2 59 	%argrw{"r"}
+	ge		$tmp21 $tmp20 $const3 	%line{21} %argrw{"wrr"}
+	if		$tmp21 48 48 	%argrw{"r"}
+	aref		$tmp19 monoCurve0 $const4 	%line{23} %argrw{"wrr"}
+	return
+	mul		___368_tX $const5 $tmp20 	%line{25} %argrw{"wrr"}
+	floor		$tmp22 ___368_tX 	%line{26} %argrw{"wr"}
+	assign		___368_pos $tmp22 	%argrw{"wr"}
+	assign		$tmp23 ___368_pos 	%line{27} %argrw{"wr"}
+	sub		___368_subPos ___368_tX $tmp23 	%argrw{"wrr"}
+	aref		___368_p1 monoCurve0 ___368_pos 	%line{28} %argrw{"wrr"}
+	add		$tmp24 ___368_pos $const6 	%line{29} %argrw{"wrr"}
+	aref		___368_p2 monoCurve0 $tmp24 	%argrw{"wrr"}
+	sub		$tmp25 ___368_p2 ___368_p1 	%line{30} %argrw{"wrr"}
+	mul		$tmp26 $tmp25 ___368_subPos 	%argrw{"wrr"}
+	add		$tmp19 ___368_p1 $tmp26 	%argrw{"wrr"}
+	compassign	outColor $const7 $tmp19 	%line{66} %argrw{"wrr"}
+	compref		$tmp28 outColor $const1 	%line{70} %argrw{"wrr"}
+	functioncall	$const2 77 	%argrw{"r"}
+	ge		$tmp29 $tmp28 $const3 	%line{21} %argrw{"wrr"}
+	if		$tmp29 66 66 	%argrw{"r"}
+	aref		$tmp27 rgbCurve0 $const4 	%line{23} %argrw{"wrr"}
+	return
+	mul		___368_tX $const5 $tmp28 	%line{25} %argrw{"wrr"}
+	floor		$tmp30 ___368_tX 	%line{26} %argrw{"wr"}
+	assign		___368_pos $tmp30 	%argrw{"wr"}
+	assign		$tmp31 ___368_pos 	%line{27} %argrw{"wr"}
+	sub		___368_subPos ___368_tX $tmp31 	%argrw{"wrr"}
+	aref		___368_p1 rgbCurve0 ___368_pos 	%line{28} %argrw{"wrr"}
+	add		$tmp32 ___368_pos $const6 	%line{29} %argrw{"wrr"}
+	aref		___368_p2 rgbCurve0 $tmp32 	%argrw{"wrr"}
+	sub		$tmp33 ___368_p2 ___368_p1 	%line{30} %argrw{"wrr"}
+	mul		$tmp34 $tmp33 ___368_subPos 	%argrw{"wrr"}
+	add		$tmp27 ___368_p1 $tmp34 	%argrw{"wrr"}
+	compassign	outColor $const1 $tmp27 	%line{70} %argrw{"wrr"}
+	compref		$tmp36 outColor $const6 	%line{71} %argrw{"wrr"}
+	functioncall	$const2 95 	%argrw{"r"}
+	ge		$tmp37 $tmp36 $const3 	%line{21} %argrw{"wrr"}
+	if		$tmp37 84 84 	%argrw{"r"}
+	aref		$tmp35 rgbCurve1 $const4 	%line{23} %argrw{"wrr"}
+	return
+	mul		___368_tX $const5 $tmp36 	%line{25} %argrw{"wrr"}
+	floor		$tmp38 ___368_tX 	%line{26} %argrw{"wr"}
+	assign		___368_pos $tmp38 	%argrw{"wr"}
+	assign		$tmp39 ___368_pos 	%line{27} %argrw{"wr"}
+	sub		___368_subPos ___368_tX $tmp39 	%argrw{"wrr"}
+	aref		___368_p1 rgbCurve1 ___368_pos 	%line{28} %argrw{"wrr"}
+	add		$tmp40 ___368_pos $const6 	%line{29} %argrw{"wrr"}
+	aref		___368_p2 rgbCurve1 $tmp40 	%argrw{"wrr"}
+	sub		$tmp41 ___368_p2 ___368_p1 	%line{30} %argrw{"wrr"}
+	mul		$tmp42 $tmp41 ___368_subPos 	%argrw{"wrr"}
+	add		$tmp35 ___368_p1 $tmp42 	%argrw{"wrr"}
+	compassign	outColor $const6 $tmp35 	%line{71} %argrw{"wrr"}
+	compref		$tmp44 outColor $const7 	%line{72} %argrw{"wrr"}
+	functioncall	$const2 113 	%argrw{"r"}
+	ge		$tmp45 $tmp44 $const3 	%line{21} %argrw{"wrr"}
+	if		$tmp45 102 102 	%argrw{"r"}
+	aref		$tmp43 rgbCurve2 $const4 	%line{23} %argrw{"wrr"}
+	return
+	mul		___368_tX $const5 $tmp44 	%line{25} %argrw{"wrr"}
+	floor		$tmp46 ___368_tX 	%line{26} %argrw{"wr"}
+	assign		___368_pos $tmp46 	%argrw{"wr"}
+	assign		$tmp47 ___368_pos 	%line{27} %argrw{"wr"}
+	sub		___368_subPos ___368_tX $tmp47 	%argrw{"wrr"}
+	aref		___368_p1 rgbCurve2 ___368_pos 	%line{28} %argrw{"wrr"}
+	add		$tmp48 ___368_pos $const6 	%line{29} %argrw{"wrr"}
+	aref		___368_p2 rgbCurve2 $tmp48 	%argrw{"wrr"}
+	sub		$tmp49 ___368_p2 ___368_p1 	%line{30} %argrw{"wrr"}
+	mul		$tmp50 $tmp49 ___368_subPos 	%argrw{"wrr"}
+	add		$tmp43 ___368_p1 $tmp50 	%argrw{"wrr"}
+	compassign	outColor $const7 $tmp43 	%line{72} %argrw{"wrr"}
+	neq		$tmp51 rgbAmount $const3 	%line{76} %argrw{"wrr"}
+	if		$tmp51 117 117 	%argrw{"r"}
+	mul		outColor outColor rgbAmount 	%line{78} %argrw{"wrr"}
+	neq		$tmp52 rgbOffset $const8 	%line{80} %argrw{"wrr"}
+	if		$tmp52 121 121 	%argrw{"r"}
+	mul		$tmp53 rgbOffset outAlpha 	%line{82} %argrw{"wrr"}
+	add		outColor outColor $tmp53 	%argrw{"wrr"}
+	neq		$tmp54 outputAmount $const3 	%line{84} %argrw{"wrr"}
+	if		$tmp54 125 125 	%argrw{"r"}
+	mul		outColor outColor outputAmount 	%line{86} %argrw{"wrr"}
+	mul		outAlpha outAlpha outputAmount 	%line{87} %argrw{"wrr"}
+	if		invert 127 127 	%line{89} %argrw{"r"}
+	sub		outColor $const3 outColor 	%line{91} %argrw{"wrr"}
+	if		clamp0 131 131 	%line{93} %argrw{"r"}
+	functioncall	$const11 131 	%line{95} %argrw{"r"}
+	min		$tmp57 outColor $const10 	%filename{"E:/OSL_install\\shaders\\stdosl.h"} %line{143} %argrw{"wrr"}
+	max		outColor $tmp57 $const9 	%argrw{"wrr"}
+	if		alphaFromRGB 140 140 	%filename{"E:/github/elaramax/Shaders/max_stdout.osl"} %line{97} %argrw{"r"}
+	functioncall	$const12 140 	%line{99} %argrw{"r"}
+	compref		$tmp58 outColor $const1 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{28} %argrw{"wrr"}
+	compref		$tmp59 outColor $const6 	%argrw{"wrr"}
+	add		$tmp60 $tmp58 $tmp59 	%argrw{"wrr"}
+	compref		$tmp61 outColor $const7 	%argrw{"wrr"}
+	add		$tmp62 $tmp60 $tmp61 	%argrw{"wrr"}
+	mul		___306_f $tmp62 $const13 	%argrw{"wrr"}
+	assign		outAlpha ___306_f 	%line{29} %argrw{"wr"}
+	functioncall	$const11 143 	%filename{"E:/github/elaramax/Shaders/max_stdout.osl"} %line{101} %argrw{"r"}
+	min		$tmp63 outAlpha $const3 	%filename{"E:/OSL_install\\shaders\\stdosl.h"} %line{144} %argrw{"wrr"}
+	max		outAlpha $tmp63 $const8 	%argrw{"wrr"}
+	assign		result outColor 	%filename{"E:/github/elaramax/Shaders/max_stdout.osl"} %line{102} %argrw{"wr"}
+	assign		result_alpha outAlpha 	%line{103} %argrw{"wr"}
+	assign		result_bump stdout_bump 	%line{107} %argrw{"wr"}
+	neq		$tmp64 bumpAmount $const3 	%line{108} %argrw{"wrr"}
+	if		$tmp64 149 149 	%argrw{"r"}
+	mul		result_bump result_bump bumpAmount 	%line{110} %argrw{"wrr"}
+	if		invert 151 151 	%line{112} %argrw{"r"}
+	neg		result_bump result_bump 	%line{114} %argrw{"wr"}
+	end

@@ -1,0 +1,55 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_rgb_tint
+param	color	tex_red	1 0 0		%read{10,10} %write{2147483647,-1}
+param	color	tex_green	0 1 0		%read{12,12} %write{2147483647,-1}
+param	color	tex_blue	0 0 1		%read{15,15} %write{2147483647,-1}
+param	int	tex_map1_isnull	0		%read{3,3} %write{2147483647,-1}
+param	float	tex_map1_alpha	1		%read{17,17} %write{2147483647,-1}
+param	color	tex_map1	0 0 0		%read{7,7} %write{2147483647,-1}
+param	vector	tex_map1_bump	0 0 0		%read{20,20} %write{2147483647,-1}
+param	int	tex_map1Enabled	1		%read{0,18} %write{2147483647,-1}
+oparam	color	result	0 0 0		%read{2147483647,-1} %write{16,16}
+oparam	vector	result_bump	0 0 0		%read{2147483647,-1} %write{20,20}
+oparam	float	result_alpha	1		%read{2147483647,-1} %write{17,17}
+local	color	col	%read{9,14} %write{7,8}
+const	int	$const1	1		%read{0,18} %write{2147483647,-1}
+temp	int	$tmp1	%read{1,1} %write{0,0}
+temp	int	$tmp2	%read{2,6} %write{1,5}
+const	int	$const2	0		%read{1,9} %write{2147483647,-1}
+temp	int	$tmp3	%read{4,4} %write{3,3}
+temp	int	$tmp4	%read{5,5} %write{4,4}
+const	color	$const3	1 1 1		%read{8,8} %write{2147483647,-1}
+temp	float	$tmp5	%read{10,10} %write{9,9}
+temp	color	$tmp6	%read{13,13} %write{10,10}
+temp	float	$tmp7	%read{12,12} %write{11,11}
+temp	color	$tmp8	%read{13,13} %write{12,12}
+temp	color	$tmp9	%read{16,16} %write{13,13}
+const	int	$const4	2		%read{14,14} %write{2147483647,-1}
+temp	float	$tmp10	%read{15,15} %write{14,14}
+temp	color	$tmp11	%read{16,16} %write{15,15}
+temp	int	$tmp12	%read{19,19} %write{18,18}
+code ___main___
+	eq		$tmp1 tex_map1Enabled $const1 	%filename{"E:/github/elaramax/Shaders/max_rgb_tint.osl"} %line{32} %argrw{"wrr"}
+	neq		$tmp2 $tmp1 $const2 	%argrw{"wrr"}
+	if		$tmp2 6 6 	%argrw{"r"}
+	eq		$tmp3 tex_map1_isnull $const2 	%argrw{"wrr"}
+	neq		$tmp4 $tmp3 $const2 	%argrw{"wrr"}
+	assign		$tmp2 $tmp4 	%argrw{"wr"}
+	if		$tmp2 8 9 	%argrw{"r"}
+	assign		col tex_map1 	%line{34} %argrw{"wr"}
+	assign		col $const3 	%line{38} %argrw{"wr"}
+	compref		$tmp5 col $const2 	%line{40} %argrw{"wrr"}
+	mul		$tmp6 tex_red $tmp5 	%argrw{"wrr"}
+	compref		$tmp7 col $const1 	%argrw{"wrr"}
+	mul		$tmp8 tex_green $tmp7 	%argrw{"wrr"}
+	add		$tmp9 $tmp6 $tmp8 	%argrw{"wrr"}
+	compref		$tmp10 col $const4 	%argrw{"wrr"}
+	mul		$tmp11 tex_blue $tmp10 	%argrw{"wrr"}
+	add		result $tmp9 $tmp11 	%argrw{"wrr"}
+	assign		result_alpha tex_map1_alpha 	%line{41} %argrw{"wr"}
+	eq		$tmp12 tex_map1Enabled $const1 	%line{42} %argrw{"wrr"}
+	if		$tmp12 21 21 	%argrw{"r"}
+	assign		result_bump tex_map1_bump 	%line{44} %argrw{"wr"}
+	end

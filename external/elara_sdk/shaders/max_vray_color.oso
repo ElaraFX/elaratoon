@@ -1,0 +1,43 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_vray_color
+param	int	tex_color_mode	0		%read{0,0} %write{2147483647,-1}
+param	float	tex_temperature	6500		%read{3,3} %write{2147483647,-1}
+param	float	tex_red	1		%read{8,8} %write{2147483647,-1}
+param	float	tex_green	1		%read{8,8} %write{2147483647,-1}
+param	float	tex_blue	1		%read{8,8} %write{2147483647,-1}
+param	float	tex_rgb_multiplier	1		%read{9,9} %write{2147483647,-1}
+param	float	tex_alpha	1		%read{11,11} %write{2147483647,-1}
+param	color	tex_color	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	tex_color_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	color	tex_color_base	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	tex_color_gamma	1		%read{10,10} %write{2147483647,-1}
+param	int	tex_gamma_correction	0		%read{2147483647,-1} %write{2147483647,-1}
+param	float	tex_gamma_value	2.2		%read{2147483647,-1} %write{2147483647,-1}
+oparam	float	result_alpha	1		%read{2147483647,-1} %write{11,11}
+oparam	vector	result_bump	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+oparam	color	result	0 0 0		%read{2147483647,-1} %write{7,10}
+const	int	$const1	1		%read{0,0} %write{2147483647,-1}
+temp	int	$tmp1	%read{1,1} %write{0,0}
+temp	int	$tmp2	%read{2,6} %write{1,5}
+const	int	$const2	0		%read{1,7} %write{2147483647,-1}
+const	float	$const3	955		%read{3,3} %write{2147483647,-1}
+temp	int	$tmp3	%read{4,4} %write{3,3}
+temp	int	$tmp4	%read{5,5} %write{4,4}
+temp	color	$tmp5	%read{9,9} %write{8,8}
+temp	color	$tmp6	%read{10,10} %write{9,9}
+code ___main___
+	eq		$tmp1 tex_color_mode $const1 	%filename{"E:/github/elaramax/Shaders/max_vray_color.osl"} %line{40} %argrw{"wrr"}
+	neq		$tmp2 $tmp1 $const2 	%argrw{"wrr"}
+	if		$tmp2 6 6 	%argrw{"r"}
+	lt		$tmp3 tex_temperature $const3 	%argrw{"wrr"}
+	neq		$tmp4 $tmp3 $const2 	%argrw{"wrr"}
+	assign		$tmp2 $tmp4 	%argrw{"wr"}
+	if		$tmp2 8 11 	%argrw{"r"}
+	assign		result $const2 	%line{42} %argrw{"wr"}
+	color		$tmp5 tex_red tex_green tex_blue 	%line{46} %argrw{"wrrr"}
+	mul		$tmp6 $tmp5 tex_rgb_multiplier 	%argrw{"wrr"}
+	pow		result $tmp6 tex_color_gamma 	%argrw{"wrr"}
+	assign		result_alpha tex_alpha 	%line{48} %argrw{"wr"}
+	end

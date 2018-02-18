@@ -1,0 +1,639 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader osl_volume_cylinder
+param	float	i_radius	1		%read{9,9} %write{2147483647,-1}
+param	float	i_height	1		%read{20,341} %write{2147483647,-1}
+param	color	i_color	1 1 1		%read{360,360} %write{2147483647,-1}
+param	float	i_scale	10		%read{142,142} %write{2147483647,-1}
+param	float	i_density	100		%read{361,361} %write{2147483647,-1}
+param	float	i_shift	0		%read{216,295} %write{2147483647,-1}
+param	int	i_noise_type	0		%read{149,251} %write{2147483647,-1}
+param	float	i_noise_level	3		%read{154,256} %write{2147483647,-1}
+param	float	i_taper	0.2		%read{351,355} %write{2147483647,-1}
+param	int	i_invert	0		%read{289,289} %write{2147483647,-1}
+param	float	i_min_thresh	0		%read{298,337} %write{2147483647,-1}
+param	float	i_max_thresh	0		%read{301,337} %write{2147483647,-1}
+param	float	i_phase	0		%read{112,214} %write{2147483647,-1}
+param	int	i_wind_dir	0		%read{25,45} %write{2147483647,-1}
+param	float	i_wind_strength	0		%read{113,113} %write{2147483647,-1}
+param	int	i_seed	0		%read{51,51} %write{2147483647,-1}
+global	point	P	%read{0,0} %write{2147483647,-1}
+global	closure color	Ci	%read{2147483647,-1} %write{363,363}
+local	float	___324_rx	%read{227,275} %write{227,271}
+local	float	___324_ry	%read{227,275} %write{227,272}
+local	float	___324_rz	%read{227,275} %write{227,273}
+local	float	___325_sum	%read{227,249} %write{223,248}
+local	float	___325_l	%read{227,246} %write{226,237}
+local	float	___325_f	%read{227,247} %write{224,237}
+local	float	___329_sum	%read{257,281} %write{253,280}
+local	float	___329_l	%read{257,278} %write{256,268}
+local	float	___329_f	%read{257,279} %write{254,268}
+local	float	___334_rx	%read{155,203} %write{155,199}
+local	float	___334_ry	%read{155,203} %write{155,200}
+local	float	___334_rz	%read{155,203} %write{155,201}
+local	float	___335_sum	%read{155,177} %write{151,176}
+local	float	___335_l	%read{155,174} %write{154,165}
+local	float	___335_f	%read{155,175} %write{152,165}
+local	float	___339_sum	%read{185,209} %write{181,208}
+local	float	___339_l	%read{185,206} %write{184,196}
+local	float	___339_f	%read{185,207} %write{182,196}
+local	point	Po	%read{2,340} %write{0,0}
+local	float	density	%read{290,362} %write{1,357}
+local	float	dist2	%read{10,339} %write{8,8}
+local	float	radius2	%read{10,339} %write{9,9}
+local	vector	___368_windV	%read{112,112} %write{27,49}
+local	int	___368_seed	%read{53,71} %write{51,70}
+local	int	___368_rx	%read{73,115} %write{71,90}
+local	int	___368_ry	%read{93,123} %write{91,110}
+local	int	___368_rz	%read{131,131} %write{111,111}
+local	vector	___368_seedPt	%read{141,141} %write{140,140}
+local	point	___368_Pn	%read{145,219} %write{142,142}
+local	float	___368_t	%read{345,354} %write{339,350}
+local	float	___368_u2	%read{344,347} %write{343,343}
+local	float	___368_u3	%read{348,350} %write{344,344}
+local	float	___368_r_taper	%read{352,354} %write{351,351}
+const	string	$const1	"world"		%read{0,0} %write{2147483647,-1}
+const	string	$const2	"object"		%read{0,0} %write{2147483647,-1}
+const	int	$const3	0		%read{1,326} %write{2147483647,-1}
+temp	float	$tmp1	%read{4,4} %write{2,2}
+temp	float	$tmp2	%read{4,4} %write{3,3}
+temp	float	$tmp3	%read{8,8} %write{4,4}
+const	int	$const4	1		%read{5,330} %write{2147483647,-1}
+temp	float	$tmp4	%read{7,7} %write{5,5}
+temp	float	$tmp5	%read{7,7} %write{6,6}
+temp	float	$tmp6	%read{8,8} %write{7,7}
+temp	int	$tmp7	%read{11,11} %write{10,10}
+temp	int	$tmp8	%read{12,17} %write{11,16}
+const	int	$const5	2		%read{13,340} %write{2147483647,-1}
+temp	float	$tmp9	%read{14,14} %write{13,13}
+temp	int	$tmp10	%read{15,15} %write{14,14}
+temp	int	$tmp11	%read{16,16} %write{15,15}
+temp	int	$tmp12	%read{18,23} %write{17,22}
+temp	float	$tmp13	%read{20,20} %write{19,19}
+temp	int	$tmp14	%read{21,21} %write{20,20}
+temp	int	$tmp15	%read{22,22} %write{21,21}
+const	string	$const6	"maxVFogWindDir"		%read{24,24} %write{2147483647,-1}
+temp	int	$tmp16	%read{26,26} %write{25,25}
+const	vector	$const7	0 -1 0		%read{27,27} %write{2147483647,-1}
+temp	int	$tmp17	%read{30,30} %write{29,29}
+const	vector	$const8	0 1 0		%read{31,31} %write{2147483647,-1}
+const	int	$const9	3		%read{33,106} %write{2147483647,-1}
+temp	int	$tmp18	%read{34,34} %write{33,33}
+const	vector	$const10	1 0 0		%read{35,35} %write{2147483647,-1}
+temp	int	$tmp19	%read{38,38} %write{37,37}
+const	vector	$const11	-1 0 0		%read{39,39} %write{2147483647,-1}
+const	int	$const12	4		%read{41,41} %write{2147483647,-1}
+temp	int	$tmp20	%read{42,42} %write{41,41}
+const	vector	$const13	0 0 1		%read{43,43} %write{2147483647,-1}
+const	int	$const14	5		%read{45,100} %write{2147483647,-1}
+temp	int	$tmp21	%read{46,46} %write{45,45}
+const	vector	$const15	0 0 -1		%read{47,47} %write{2147483647,-1}
+const	vector	$const16	0 0 0		%read{49,49} %write{2147483647,-1}
+const	string	$const17	"ei_hash"		%read{52,92} %write{2147483647,-1}
+const	int	$const18	2127912214		%read{53,93} %write{2147483647,-1}
+temp	int	$tmp22	%read{55,55} %write{53,53}
+const	int	$const19	12		%read{54,94} %write{2147483647,-1}
+temp	int	$tmp23	%read{55,55} %write{54,54}
+const	int	$const20	-949894596		%read{56,96} %write{2147483647,-1}
+temp	int	$tmp24	%read{58,58} %write{56,56}
+const	int	$const21	19		%read{57,97} %write{2147483647,-1}
+temp	int	$tmp25	%read{58,58} %write{57,57}
+const	int	$const22	374761393		%read{59,99} %write{2147483647,-1}
+temp	int	$tmp26	%read{61,61} %write{59,59}
+temp	int	$tmp27	%read{61,61} %write{60,60}
+const	int	$const23	-744332180		%read{62,102} %write{2147483647,-1}
+temp	int	$tmp28	%read{64,64} %write{62,62}
+const	int	$const24	9		%read{63,103} %write{2147483647,-1}
+temp	int	$tmp29	%read{64,64} %write{63,63}
+const	int	$const25	-42973499		%read{65,105} %write{2147483647,-1}
+temp	int	$tmp30	%read{67,67} %write{65,65}
+temp	int	$tmp31	%read{67,67} %write{66,66}
+const	int	$const26	-1252372727		%read{68,108} %write{2147483647,-1}
+temp	int	$tmp32	%read{70,70} %write{68,68}
+const	int	$const27	16		%read{69,109} %write{2147483647,-1}
+temp	int	$tmp33	%read{70,70} %write{69,69}
+temp	int	$tmp34	%read{75,75} %write{73,73}
+temp	int	$tmp35	%read{75,75} %write{74,74}
+temp	int	$tmp36	%read{78,78} %write{76,76}
+temp	int	$tmp37	%read{78,78} %write{77,77}
+temp	int	$tmp38	%read{81,81} %write{79,79}
+temp	int	$tmp39	%read{81,81} %write{80,80}
+temp	int	$tmp40	%read{84,84} %write{82,82}
+temp	int	$tmp41	%read{84,84} %write{83,83}
+temp	int	$tmp42	%read{87,87} %write{85,85}
+temp	int	$tmp43	%read{87,87} %write{86,86}
+temp	int	$tmp44	%read{90,90} %write{88,88}
+temp	int	$tmp45	%read{90,90} %write{89,89}
+temp	int	$tmp46	%read{95,95} %write{93,93}
+temp	int	$tmp47	%read{95,95} %write{94,94}
+temp	int	$tmp48	%read{98,98} %write{96,96}
+temp	int	$tmp49	%read{98,98} %write{97,97}
+temp	int	$tmp50	%read{101,101} %write{99,99}
+temp	int	$tmp51	%read{101,101} %write{100,100}
+temp	int	$tmp52	%read{104,104} %write{102,102}
+temp	int	$tmp53	%read{104,104} %write{103,103}
+temp	int	$tmp54	%read{107,107} %write{105,105}
+temp	int	$tmp55	%read{107,107} %write{106,106}
+temp	int	$tmp56	%read{110,110} %write{108,108}
+temp	int	$tmp57	%read{110,110} %write{109,109}
+temp	vector	$tmp58	%read{113,113} %write{112,112}
+temp	vector	$tmp59	%read{140,140} %write{113,113}
+temp	vector	$tmp60	%read{139,139} %write{138,138}
+temp	float	$tmp61	%read{138,138} %write{121,121}
+const	string	$const29	"ei_htof"		%read{114,130} %write{2147483647,-1}
+const	int	$const30	16777215		%read{115,131} %write{2147483647,-1}
+temp	int	$tmp62	%read{120,120} %write{115,115}
+const	float	$const31	1		%read{119,360} %write{2147483647,-1}
+temp	float	$tmp63	%read{119,119} %write{118,118}
+const	int	$const32	24		%read{116,132} %write{2147483647,-1}
+temp	int	$tmp64	%read{117,117} %write{116,116}
+temp	float	$tmp65	%read{118,118} %write{117,117}
+temp	float	$tmp66	%read{121,121} %write{119,119}
+temp	float	$tmp67	%read{121,121} %write{120,120}
+temp	float	$tmp68	%read{138,138} %write{129,129}
+temp	int	$tmp69	%read{128,128} %write{123,123}
+temp	float	$tmp70	%read{127,127} %write{126,126}
+temp	int	$tmp71	%read{125,125} %write{124,124}
+temp	float	$tmp72	%read{126,126} %write{125,125}
+temp	float	$tmp73	%read{129,129} %write{127,127}
+temp	float	$tmp74	%read{129,129} %write{128,128}
+temp	float	$tmp75	%read{138,138} %write{137,137}
+temp	int	$tmp76	%read{136,136} %write{131,131}
+temp	float	$tmp77	%read{135,135} %write{134,134}
+temp	int	$tmp78	%read{133,133} %write{132,132}
+temp	float	$tmp79	%read{134,134} %write{133,133}
+temp	float	$tmp80	%read{137,137} %write{135,135}
+temp	float	$tmp81	%read{137,137} %write{136,136}
+temp	vector	$tmp82	%read{140,140} %write{139,139}
+const	float	$const33	1000		%read{139,139} %write{2147483647,-1}
+temp	point	$tmp83	%read{142,142} %write{141,141}
+temp	int	$tmp84	%read{144,144} %write{143,143}
+temp	float	$tmp85	%read{216,216} %write{177,214}
+temp	float	$tmp86	%read{155,213} %write{145,145}
+temp	float	$tmp87	%read{155,213} %write{146,146}
+temp	float	$tmp88	%read{155,213} %write{147,147}
+const	string	$const34	"maxNoiseFunction4"		%read{148,148} %write{2147483647,-1}
+temp	int	$tmp89	%read{150,150} %write{149,149}
+const	float	$const35	0		%read{151,363} %write{2147483647,-1}
+temp	int	$tmp90	%read{153,165} %write{154,165}
+temp	float	$tmp91	%read{155,165} %write{155,165}
+const	string	$const36	"maxNoise4"		%read{159,212} %write{2147483647,-1}
+const	string	$const37	"perlin"		%read{161,286} %write{2147483647,-1}
+temp	point	$tmp92	%read{155,165} %write{155,165}
+temp	float	$tmp93	%read{155,165} %write{155,165}
+const	float	$const38	2		%read{164,267} %write{2147483647,-1}
+temp	int	$tmp94	%read{167,167} %write{166,166}
+temp	float	$tmp95	%read{174,174} %write{173,173}
+temp	point	$tmp96	%read{173,173} %write{172,172}
+temp	float	$tmp97	%read{175,175} %write{174,174}
+temp	float	$tmp98	%read{176,176} %write{175,175}
+temp	int	$tmp99	%read{180,180} %write{179,179}
+temp	int	$tmp100	%read{183,196} %write{184,196}
+temp	float	$tmp101	%read{185,196} %write{185,196}
+temp	float	$tmp102	%read{185,196} %write{185,196}
+temp	point	$tmp103	%read{185,196} %write{185,196}
+temp	float	$tmp104	%read{185,196} %write{185,196}
+temp	int	$tmp105	%read{198,198} %write{197,197}
+temp	float	$tmp106	%read{206,206} %write{205,205}
+temp	float	$tmp107	%read{205,205} %write{204,204}
+temp	point	$tmp108	%read{204,204} %write{203,203}
+temp	float	$tmp109	%read{207,207} %write{206,206}
+temp	float	$tmp110	%read{208,208} %write{207,207}
+const	float	$const39	4		%read{209,281} %write{2147483647,-1}
+temp	float	$tmp111	%read{210,210} %write{209,209}
+temp	point	$tmp112	%read{214,214} %write{213,213}
+temp	float	$tmp113	%read{288,288} %write{249,286}
+temp	float	$tmp114	%read{227,285} %write{217,217}
+temp	float	$tmp115	%read{227,285} %write{218,218}
+temp	float	$tmp116	%read{227,285} %write{219,219}
+const	string	$const40	"maxNoiseFunction3"		%read{220,220} %write{2147483647,-1}
+temp	int	$tmp117	%read{222,222} %write{221,221}
+temp	int	$tmp118	%read{225,237} %write{226,237}
+temp	float	$tmp119	%read{227,237} %write{227,237}
+const	string	$const41	"maxNoise3"		%read{231,284} %write{2147483647,-1}
+temp	point	$tmp120	%read{227,237} %write{227,237}
+temp	float	$tmp121	%read{227,237} %write{227,237}
+temp	int	$tmp122	%read{239,239} %write{238,238}
+temp	float	$tmp123	%read{246,246} %write{245,245}
+temp	point	$tmp124	%read{245,245} %write{244,244}
+temp	float	$tmp125	%read{247,247} %write{246,246}
+temp	float	$tmp126	%read{248,248} %write{247,247}
+temp	int	$tmp127	%read{252,252} %write{251,251}
+temp	int	$tmp128	%read{255,268} %write{256,268}
+temp	float	$tmp129	%read{257,268} %write{257,268}
+temp	float	$tmp130	%read{257,268} %write{257,268}
+temp	point	$tmp131	%read{257,268} %write{257,268}
+temp	float	$tmp132	%read{257,268} %write{257,268}
+temp	int	$tmp133	%read{270,270} %write{269,269}
+temp	float	$tmp134	%read{278,278} %write{277,277}
+temp	float	$tmp135	%read{277,277} %write{276,276}
+temp	point	$tmp136	%read{276,276} %write{275,275}
+temp	float	$tmp137	%read{279,279} %write{278,278}
+temp	float	$tmp138	%read{280,280} %write{279,279}
+temp	float	$tmp139	%read{282,282} %write{281,281}
+temp	point	$tmp140	%read{286,286} %write{285,285}
+const	float	$const42	0.5		%read{290,341} %write{2147483647,-1}
+temp	float	$tmp141	%read{291,291} %write{290,290}
+temp	int	$tmp142	%read{293,293} %write{292,292}
+temp	float	$tmp143	%read{297,297} %write{296,296}
+const	float	$const43	9.9999997e-005		%read{296,296} %write{2147483647,-1}
+temp	float	$tmp144	%read{296,296} %write{295,295}
+temp	int	$tmp145	%read{299,299} %write{298,298}
+temp	int	$tmp146	%read{300,304} %write{299,303}
+temp	int	$tmp147	%read{302,302} %write{301,301}
+temp	int	$tmp148	%read{303,303} %write{302,302}
+temp	int	$tmp149	%read{306,306} %write{305,305}
+const	string	$const44	"maxThreshold"		%read{307,323} %write{2147483647,-1}
+temp	int	$tmp150	%read{309,309} %write{308,308}
+temp	int	$tmp151	%read{313,313} %write{312,312}
+temp	int	$tmp152	%read{317,317} %write{316,316}
+temp	float	$tmp153	%read{322,322} %write{320,320}
+temp	float	$tmp154	%read{322,322} %write{321,321}
+temp	int	$tmp155	%read{325,325} %write{324,324}
+temp	int	$tmp156	%read{329,329} %write{328,328}
+temp	int	$tmp157	%read{333,333} %write{332,332}
+temp	float	$tmp158	%read{338,338} %write{336,336}
+temp	float	$tmp159	%read{338,338} %write{337,337}
+temp	float	$tmp160	%read{342,342} %write{340,340}
+temp	float	$tmp161	%read{342,342} %write{341,341}
+temp	float	$tmp162	%read{343,343} %write{342,342}
+temp	int	$tmp163	%read{346,346} %write{345,345}
+temp	int	$tmp164	%read{349,349} %write{348,348}
+temp	int	$tmp165	%read{353,353} %write{352,352}
+temp	float	$tmp166	%read{355,355} %write{354,354}
+temp	float	$tmp167	%read{356,356} %write{355,355}
+temp	float	$tmp168	%read{357,357} %write{356,356}
+temp	color	$tmp169	%read{363,363} %write{358,358}
+temp	color	$tmp170	%read{363,363} %write{359,359}
+temp	color	$tmp171	%read{363,363} %write{360,360}
+const	float	$const45	0.0099999998		%read{361,361} %write{2147483647,-1}
+temp	float	$tmp172	%read{362,362} %write{361,361}
+temp	float	$tmp173	%read{363,363} %write{362,362}
+const	string	$const46	"volume_hg"		%read{363,363} %write{2147483647,-1}
+code ___main___
+	transform	Po $const1 $const2 P 	%filename{"E:/github/elaramax/Shaders/osl_volume_cylinder.osl"} %line{40} %argrw{"wrrr"}
+	assign		density $const3 	%line{42} %argrw{"wr"}
+	compref		$tmp1 Po $const3 	%line{44} %argrw{"wrr"}
+	compref		$tmp2 Po $const3 	%argrw{"wrr"}
+	mul		$tmp3 $tmp1 $tmp2 	%argrw{"wrr"}
+	compref		$tmp4 Po $const4 	%argrw{"wrr"}
+	compref		$tmp5 Po $const4 	%argrw{"wrr"}
+	mul		$tmp6 $tmp4 $tmp5 	%argrw{"wrr"}
+	add		dist2 $tmp3 $tmp6 	%argrw{"wrr"}
+	mul		radius2 i_radius i_radius 	%line{45} %argrw{"wrr"}
+	lt		$tmp7 dist2 radius2 	%line{47} %argrw{"wrr"}
+	neq		$tmp8 $tmp7 $const3 	%argrw{"wrr"}
+	if		$tmp8 17 17 	%line{48} %argrw{"r"}
+	compref		$tmp9 Po $const5 	%argrw{"wrr"}
+	ge		$tmp10 $tmp9 $const3 	%argrw{"wrr"}
+	neq		$tmp11 $tmp10 $const3 	%argrw{"wrr"}
+	assign		$tmp8 $tmp11 	%argrw{"wr"}
+	neq		$tmp12 $tmp8 $const3 	%argrw{"wrr"}
+	if		$tmp12 23 23 	%line{49} %argrw{"r"}
+	compref		$tmp13 Po $const5 	%argrw{"wrr"}
+	le		$tmp14 $tmp13 i_height 	%argrw{"wrr"}
+	neq		$tmp15 $tmp14 $const3 	%argrw{"wrr"}
+	assign		$tmp12 $tmp15 	%argrw{"wr"}
+	if		$tmp12 358 358 	%line{47} %argrw{"r"}
+	functioncall	$const6 51 	%line{52} %argrw{"r"}
+	eq		$tmp16 i_wind_dir $const3 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{328} %argrw{"wrr"}
+	if		$tmp16 29 51 	%argrw{"r"}
+	assign		___368_windV $const7 	%line{330} %argrw{"wr"}
+	return
+	eq		$tmp17 i_wind_dir $const4 	%line{332} %argrw{"wrr"}
+	if		$tmp17 33 51 	%argrw{"r"}
+	assign		___368_windV $const8 	%line{334} %argrw{"wr"}
+	return
+	eq		$tmp18 i_wind_dir $const9 	%line{336} %argrw{"wrr"}
+	if		$tmp18 37 51 	%argrw{"r"}
+	assign		___368_windV $const10 	%line{338} %argrw{"wr"}
+	return
+	eq		$tmp19 i_wind_dir $const5 	%line{340} %argrw{"wrr"}
+	if		$tmp19 41 51 	%argrw{"r"}
+	assign		___368_windV $const11 	%line{342} %argrw{"wr"}
+	return
+	eq		$tmp20 i_wind_dir $const12 	%line{344} %argrw{"wrr"}
+	if		$tmp20 45 51 	%argrw{"r"}
+	assign		___368_windV $const13 	%line{346} %argrw{"wr"}
+	return
+	eq		$tmp21 i_wind_dir $const14 	%line{348} %argrw{"wrr"}
+	if		$tmp21 49 51 	%argrw{"r"}
+	assign		___368_windV $const15 	%line{350} %argrw{"wr"}
+	return
+	assign		___368_windV $const16 	%line{354} %argrw{"wr"}
+	return
+	assign		___368_seed i_seed 	%filename{"E:/github/elaramax/Shaders/osl_volume_cylinder.osl"} %line{53} %argrw{"wr"}
+	functioncall	$const17 72 	%line{54} %argrw{"r"}
+	add		$tmp22 ___368_seed $const18 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{360} %argrw{"wrr"}
+	shl		$tmp23 ___368_seed $const19 	%argrw{"wrr"}
+	add		___368_seed $tmp22 $tmp23 	%argrw{"wrr"}
+	xor		$tmp24 ___368_seed $const20 	%line{361} %argrw{"wrr"}
+	shr		$tmp25 ___368_seed $const21 	%argrw{"wrr"}
+	xor		___368_seed $tmp24 $tmp25 	%argrw{"wrr"}
+	add		$tmp26 ___368_seed $const22 	%line{362} %argrw{"wrr"}
+	shl		$tmp27 ___368_seed $const14 	%argrw{"wrr"}
+	add		___368_seed $tmp26 $tmp27 	%argrw{"wrr"}
+	add		$tmp28 ___368_seed $const23 	%line{363} %argrw{"wrr"}
+	shl		$tmp29 ___368_seed $const24 	%argrw{"wrr"}
+	xor		___368_seed $tmp28 $tmp29 	%argrw{"wrr"}
+	add		$tmp30 ___368_seed $const25 	%line{364} %argrw{"wrr"}
+	shl		$tmp31 ___368_seed $const9 	%argrw{"wrr"}
+	add		___368_seed $tmp30 $tmp31 	%argrw{"wrr"}
+	xor		$tmp32 ___368_seed $const26 	%line{365} %argrw{"wrr"}
+	shr		$tmp33 ___368_seed $const27 	%argrw{"wrr"}
+	xor		___368_seed $tmp32 $tmp33 	%argrw{"wrr"}
+	assign		___368_rx ___368_seed 	%line{366} %argrw{"wr"}
+	functioncall	$const17 92 	%filename{"E:/github/elaramax/Shaders/osl_volume_cylinder.osl"} %line{55} %argrw{"r"}
+	add		$tmp34 ___368_rx $const18 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{360} %argrw{"wrr"}
+	shl		$tmp35 ___368_rx $const19 	%argrw{"wrr"}
+	add		___368_rx $tmp34 $tmp35 	%argrw{"wrr"}
+	xor		$tmp36 ___368_rx $const20 	%line{361} %argrw{"wrr"}
+	shr		$tmp37 ___368_rx $const21 	%argrw{"wrr"}
+	xor		___368_rx $tmp36 $tmp37 	%argrw{"wrr"}
+	add		$tmp38 ___368_rx $const22 	%line{362} %argrw{"wrr"}
+	shl		$tmp39 ___368_rx $const14 	%argrw{"wrr"}
+	add		___368_rx $tmp38 $tmp39 	%argrw{"wrr"}
+	add		$tmp40 ___368_rx $const23 	%line{363} %argrw{"wrr"}
+	shl		$tmp41 ___368_rx $const24 	%argrw{"wrr"}
+	xor		___368_rx $tmp40 $tmp41 	%argrw{"wrr"}
+	add		$tmp42 ___368_rx $const25 	%line{364} %argrw{"wrr"}
+	shl		$tmp43 ___368_rx $const9 	%argrw{"wrr"}
+	add		___368_rx $tmp42 $tmp43 	%argrw{"wrr"}
+	xor		$tmp44 ___368_rx $const26 	%line{365} %argrw{"wrr"}
+	shr		$tmp45 ___368_rx $const27 	%argrw{"wrr"}
+	xor		___368_rx $tmp44 $tmp45 	%argrw{"wrr"}
+	assign		___368_ry ___368_rx 	%line{366} %argrw{"wr"}
+	functioncall	$const17 112 	%filename{"E:/github/elaramax/Shaders/osl_volume_cylinder.osl"} %line{56} %argrw{"r"}
+	add		$tmp46 ___368_ry $const18 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{360} %argrw{"wrr"}
+	shl		$tmp47 ___368_ry $const19 	%argrw{"wrr"}
+	add		___368_ry $tmp46 $tmp47 	%argrw{"wrr"}
+	xor		$tmp48 ___368_ry $const20 	%line{361} %argrw{"wrr"}
+	shr		$tmp49 ___368_ry $const21 	%argrw{"wrr"}
+	xor		___368_ry $tmp48 $tmp49 	%argrw{"wrr"}
+	add		$tmp50 ___368_ry $const22 	%line{362} %argrw{"wrr"}
+	shl		$tmp51 ___368_ry $const14 	%argrw{"wrr"}
+	add		___368_ry $tmp50 $tmp51 	%argrw{"wrr"}
+	add		$tmp52 ___368_ry $const23 	%line{363} %argrw{"wrr"}
+	shl		$tmp53 ___368_ry $const24 	%argrw{"wrr"}
+	xor		___368_ry $tmp52 $tmp53 	%argrw{"wrr"}
+	add		$tmp54 ___368_ry $const25 	%line{364} %argrw{"wrr"}
+	shl		$tmp55 ___368_ry $const9 	%argrw{"wrr"}
+	add		___368_ry $tmp54 $tmp55 	%argrw{"wrr"}
+	xor		$tmp56 ___368_ry $const26 	%line{365} %argrw{"wrr"}
+	shr		$tmp57 ___368_ry $const27 	%argrw{"wrr"}
+	xor		___368_ry $tmp56 $tmp57 	%argrw{"wrr"}
+	assign		___368_rz ___368_ry 	%line{366} %argrw{"wr"}
+	mul		$tmp58 ___368_windV i_phase 	%filename{"E:/github/elaramax/Shaders/osl_volume_cylinder.osl"} %line{57} %argrw{"wrr"}
+	mul		$tmp59 $tmp58 i_wind_strength 	%argrw{"wrr"}
+	functioncall	$const29 122 	%argrw{"r"}
+	bitand		$tmp62 ___368_rx $const30 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{371} %argrw{"wrr"}
+	shl		$tmp64 $const4 $const32 	%argrw{"wrr"}
+	assign		$tmp65 $tmp64 	%argrw{"wr"}
+	assign		$tmp63 $tmp65 	%argrw{"wr"}
+	div		$tmp66 $const31 $tmp63 	%argrw{"wrr"}
+	assign		$tmp67 $tmp62 	%argrw{"wr"}
+	mul		$tmp61 $tmp67 $tmp66 	%argrw{"wrr"}
+	functioncall	$const29 130 	%filename{"E:/github/elaramax/Shaders/osl_volume_cylinder.osl"} %line{57} %argrw{"r"}
+	bitand		$tmp69 ___368_ry $const30 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{371} %argrw{"wrr"}
+	shl		$tmp71 $const4 $const32 	%argrw{"wrr"}
+	assign		$tmp72 $tmp71 	%argrw{"wr"}
+	assign		$tmp70 $tmp72 	%argrw{"wr"}
+	div		$tmp73 $const31 $tmp70 	%argrw{"wrr"}
+	assign		$tmp74 $tmp69 	%argrw{"wr"}
+	mul		$tmp68 $tmp74 $tmp73 	%argrw{"wrr"}
+	functioncall	$const29 138 	%filename{"E:/github/elaramax/Shaders/osl_volume_cylinder.osl"} %line{57} %argrw{"r"}
+	bitand		$tmp76 ___368_rz $const30 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{371} %argrw{"wrr"}
+	shl		$tmp78 $const4 $const32 	%argrw{"wrr"}
+	assign		$tmp79 $tmp78 	%argrw{"wr"}
+	assign		$tmp77 $tmp79 	%argrw{"wr"}
+	div		$tmp80 $const31 $tmp77 	%argrw{"wrr"}
+	assign		$tmp81 $tmp76 	%argrw{"wr"}
+	mul		$tmp75 $tmp81 $tmp80 	%argrw{"wrr"}
+	vector		$tmp60 $tmp61 $tmp68 $tmp75 	%filename{"E:/github/elaramax/Shaders/osl_volume_cylinder.osl"} %line{57} %argrw{"wrrr"}
+	mul		$tmp82 $const33 $tmp60 	%argrw{"wrr"}
+	add		___368_seedPt $tmp59 $tmp82 	%argrw{"wrr"}
+	add		$tmp83 Po ___368_seedPt 	%line{59} %argrw{"wrr"}
+	div		___368_Pn $tmp83 i_scale 	%argrw{"wrr"}
+	neq		$tmp84 i_phase $const3 	%line{62} %argrw{"wrr"}
+	if		$tmp84 217 289 	%argrw{"r"}
+	compref		$tmp86 ___368_Pn $const3 	%line{64} %argrw{"wrr"}
+	compref		$tmp87 ___368_Pn $const4 	%argrw{"wrr"}
+	compref		$tmp88 ___368_Pn $const5 	%argrw{"wrr"}
+	functioncall	$const34 216 	%argrw{"r"}
+	eq		$tmp89 i_noise_type $const4 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{246} %argrw{"wrr"}
+	if		$tmp89 179 216 	%argrw{"r"}
+	assign		___335_sum $const35 	%line{248} %argrw{"wr"}
+	assign		___335_f $const31 	%line{250} %argrw{"wr"}
+	for		$tmp90 155 156 165 166 	%line{252} %argrw{"r"}
+	assign		___335_l i_noise_level 	%argrw{"wr"}
+	ge		$tmp90 ___335_l $const31 	%argrw{"wrr"}
+	mul		___334_rx $tmp86 ___335_f 	%line{254} %argrw{"wrr"}
+	mul		___334_ry $tmp87 ___335_f 	%line{255} %argrw{"wrr"}
+	mul		___334_rz $tmp88 ___335_f 	%line{256} %argrw{"wrr"}
+	functioncall	$const36 162 	%line{258} %argrw{"r"}
+	point		$tmp92 ___334_rx ___334_ry ___334_rz 	%line{164} %argrw{"wrrr"}
+	noise		$tmp91 $const37 $tmp92 i_phase 	%argrw{"wrrr"}
+	div		$tmp93 $tmp91 ___335_f 	%line{258} %argrw{"wrr"}
+	add		___335_sum ___335_sum $tmp93 	%argrw{"wrr"}
+	mul		___335_f ___335_f $const38 	%line{259} %argrw{"wrr"}
+	sub		___335_l ___335_l $const31 	%line{252} %argrw{"wrr"}
+	gt		$tmp94 ___335_l $const35 	%line{262} %argrw{"wrr"}
+	if		$tmp94 177 177 	%argrw{"r"}
+	mul		___334_rx $tmp86 ___335_f 	%line{264} %argrw{"wrr"}
+	mul		___334_ry $tmp87 ___335_f 	%line{265} %argrw{"wrr"}
+	mul		___334_rz $tmp88 ___335_f 	%line{266} %argrw{"wrr"}
+	functioncall	$const36 174 	%line{268} %argrw{"r"}
+	point		$tmp96 ___334_rx ___334_ry ___334_rz 	%line{164} %argrw{"wrrr"}
+	noise		$tmp95 $const37 $tmp96 i_phase 	%argrw{"wrrr"}
+	mul		$tmp97 ___335_l $tmp95 	%line{268} %argrw{"wrr"}
+	div		$tmp98 $tmp97 ___335_f 	%argrw{"wrr"}
+	add		___335_sum ___335_sum $tmp98 	%argrw{"wrr"}
+	assign		$tmp85 ___335_sum 	%line{271} %argrw{"wr"}
+	return
+	eq		$tmp99 i_noise_type $const5 	%line{273} %argrw{"wrr"}
+	if		$tmp99 212 216 	%argrw{"r"}
+	assign		___339_sum $const35 	%line{275} %argrw{"wr"}
+	assign		___339_f $const31 	%line{277} %argrw{"wr"}
+	for		$tmp100 185 186 196 197 	%line{279} %argrw{"r"}
+	assign		___339_l i_noise_level 	%argrw{"wr"}
+	ge		$tmp100 ___339_l $const31 	%argrw{"wrr"}
+	mul		___334_rx $tmp86 ___339_f 	%line{281} %argrw{"wrr"}
+	mul		___334_ry $tmp87 ___339_f 	%line{282} %argrw{"wrr"}
+	mul		___334_rz $tmp88 ___339_f 	%line{283} %argrw{"wrr"}
+	functioncall	$const36 192 	%line{285} %argrw{"r"}
+	point		$tmp103 ___334_rx ___334_ry ___334_rz 	%line{164} %argrw{"wrrr"}
+	noise		$tmp102 $const37 $tmp103 i_phase 	%argrw{"wrrr"}
+	fabs		$tmp101 $tmp102 	%line{285} %argrw{"wr"}
+	div		$tmp104 $tmp101 ___339_f 	%argrw{"wrr"}
+	add		___339_sum ___339_sum $tmp104 	%argrw{"wrr"}
+	mul		___339_f ___339_f $const38 	%line{286} %argrw{"wrr"}
+	sub		___339_l ___339_l $const31 	%line{279} %argrw{"wrr"}
+	gt		$tmp105 ___339_l $const35 	%line{289} %argrw{"wrr"}
+	if		$tmp105 209 209 	%argrw{"r"}
+	mul		___334_rx $tmp86 ___339_f 	%line{291} %argrw{"wrr"}
+	mul		___334_ry $tmp87 ___339_f 	%line{292} %argrw{"wrr"}
+	mul		___334_rz $tmp88 ___339_f 	%line{293} %argrw{"wrr"}
+	functioncall	$const36 205 	%line{295} %argrw{"r"}
+	point		$tmp108 ___334_rx ___334_ry ___334_rz 	%line{164} %argrw{"wrrr"}
+	noise		$tmp107 $const37 $tmp108 i_phase 	%argrw{"wrrr"}
+	fabs		$tmp106 $tmp107 	%line{295} %argrw{"wr"}
+	mul		$tmp109 ___339_l $tmp106 	%argrw{"wrr"}
+	div		$tmp110 $tmp109 ___339_f 	%argrw{"wrr"}
+	add		___339_sum ___339_sum $tmp110 	%argrw{"wrr"}
+	mul		$tmp111 ___339_sum $const39 	%line{298} %argrw{"wrr"}
+	sub		$tmp85 $tmp111 $const31 	%argrw{"wrr"}
+	return
+	functioncall	$const36 215 	%line{302} %argrw{"r"}
+	point		$tmp112 $tmp86 $tmp87 $tmp88 	%line{164} %argrw{"wrrr"}
+	noise		$tmp85 $const37 $tmp112 i_phase 	%argrw{"wrrr"}
+	return	%line{302}
+	add		density $tmp85 i_shift 	%filename{"E:/github/elaramax/Shaders/osl_volume_cylinder.osl"} %line{64} %argrw{"wrr"}
+	compref		$tmp114 ___368_Pn $const3 	%line{68} %argrw{"wrr"}
+	compref		$tmp115 ___368_Pn $const4 	%argrw{"wrr"}
+	compref		$tmp116 ___368_Pn $const5 	%argrw{"wrr"}
+	functioncall	$const40 288 	%argrw{"r"}
+	eq		$tmp117 i_noise_type $const4 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{176} %argrw{"wrr"}
+	if		$tmp117 251 288 	%argrw{"r"}
+	assign		___325_sum $const35 	%line{178} %argrw{"wr"}
+	assign		___325_f $const31 	%line{180} %argrw{"wr"}
+	for		$tmp118 227 228 237 238 	%line{182} %argrw{"r"}
+	assign		___325_l i_noise_level 	%argrw{"wr"}
+	ge		$tmp118 ___325_l $const31 	%argrw{"wrr"}
+	mul		___324_rx $tmp114 ___325_f 	%line{184} %argrw{"wrr"}
+	mul		___324_ry $tmp115 ___325_f 	%line{185} %argrw{"wrr"}
+	mul		___324_rz $tmp116 ___325_f 	%line{186} %argrw{"wrr"}
+	functioncall	$const41 234 	%line{188} %argrw{"r"}
+	point		$tmp120 ___324_rx ___324_ry ___324_rz 	%line{159} %argrw{"wrrr"}
+	noise		$tmp119 $const37 $tmp120 	%argrw{"wrr"}
+	div		$tmp121 $tmp119 ___325_f 	%line{188} %argrw{"wrr"}
+	add		___325_sum ___325_sum $tmp121 	%argrw{"wrr"}
+	mul		___325_f ___325_f $const38 	%line{189} %argrw{"wrr"}
+	sub		___325_l ___325_l $const31 	%line{182} %argrw{"wrr"}
+	gt		$tmp122 ___325_l $const35 	%line{192} %argrw{"wrr"}
+	if		$tmp122 249 249 	%argrw{"r"}
+	mul		___324_rx $tmp114 ___325_f 	%line{194} %argrw{"wrr"}
+	mul		___324_ry $tmp115 ___325_f 	%line{195} %argrw{"wrr"}
+	mul		___324_rz $tmp116 ___325_f 	%line{196} %argrw{"wrr"}
+	functioncall	$const41 246 	%line{198} %argrw{"r"}
+	point		$tmp124 ___324_rx ___324_ry ___324_rz 	%line{159} %argrw{"wrrr"}
+	noise		$tmp123 $const37 $tmp124 	%argrw{"wrr"}
+	mul		$tmp125 ___325_l $tmp123 	%line{198} %argrw{"wrr"}
+	div		$tmp126 $tmp125 ___325_f 	%argrw{"wrr"}
+	add		___325_sum ___325_sum $tmp126 	%argrw{"wrr"}
+	assign		$tmp113 ___325_sum 	%line{201} %argrw{"wr"}
+	return
+	eq		$tmp127 i_noise_type $const5 	%line{203} %argrw{"wrr"}
+	if		$tmp127 284 288 	%argrw{"r"}
+	assign		___329_sum $const35 	%line{205} %argrw{"wr"}
+	assign		___329_f $const31 	%line{207} %argrw{"wr"}
+	for		$tmp128 257 258 268 269 	%line{209} %argrw{"r"}
+	assign		___329_l i_noise_level 	%argrw{"wr"}
+	ge		$tmp128 ___329_l $const31 	%argrw{"wrr"}
+	mul		___324_rx $tmp114 ___329_f 	%line{211} %argrw{"wrr"}
+	mul		___324_ry $tmp115 ___329_f 	%line{212} %argrw{"wrr"}
+	mul		___324_rz $tmp116 ___329_f 	%line{213} %argrw{"wrr"}
+	functioncall	$const41 264 	%line{215} %argrw{"r"}
+	point		$tmp131 ___324_rx ___324_ry ___324_rz 	%line{159} %argrw{"wrrr"}
+	noise		$tmp130 $const37 $tmp131 	%argrw{"wrr"}
+	fabs		$tmp129 $tmp130 	%line{215} %argrw{"wr"}
+	div		$tmp132 $tmp129 ___329_f 	%argrw{"wrr"}
+	add		___329_sum ___329_sum $tmp132 	%argrw{"wrr"}
+	mul		___329_f ___329_f $const38 	%line{216} %argrw{"wrr"}
+	sub		___329_l ___329_l $const31 	%line{209} %argrw{"wrr"}
+	gt		$tmp133 ___329_l $const35 	%line{219} %argrw{"wrr"}
+	if		$tmp133 281 281 	%argrw{"r"}
+	mul		___324_rx $tmp114 ___329_f 	%line{221} %argrw{"wrr"}
+	mul		___324_ry $tmp115 ___329_f 	%line{222} %argrw{"wrr"}
+	mul		___324_rz $tmp116 ___329_f 	%line{223} %argrw{"wrr"}
+	functioncall	$const41 277 	%line{225} %argrw{"r"}
+	point		$tmp136 ___324_rx ___324_ry ___324_rz 	%line{159} %argrw{"wrrr"}
+	noise		$tmp135 $const37 $tmp136 	%argrw{"wrr"}
+	fabs		$tmp134 $tmp135 	%line{225} %argrw{"wr"}
+	mul		$tmp137 ___329_l $tmp134 	%argrw{"wrr"}
+	div		$tmp138 $tmp137 ___329_f 	%argrw{"wrr"}
+	add		___329_sum ___329_sum $tmp138 	%argrw{"wrr"}
+	mul		$tmp139 ___329_sum $const39 	%line{228} %argrw{"wrr"}
+	sub		$tmp113 $tmp139 $const31 	%argrw{"wrr"}
+	return
+	functioncall	$const41 287 	%line{232} %argrw{"r"}
+	point		$tmp140 $tmp114 $tmp115 $tmp116 	%line{159} %argrw{"wrrr"}
+	noise		$tmp113 $const37 $tmp140 	%argrw{"wrr"}
+	return	%line{232}
+	add		density $tmp113 i_shift 	%filename{"E:/github/elaramax/Shaders/osl_volume_cylinder.osl"} %line{68} %argrw{"wrr"}
+	if		i_invert 292 292 	%line{72} %argrw{"r"}
+	add		$tmp141 density $const42 	%line{74} %argrw{"wrr"}
+	sub		density $const42 $tmp141 	%argrw{"wrr"}
+	lt		$tmp142 density $const3 	%line{78} %argrw{"wrr"}
+	if		$tmp142 295 298 	%argrw{"r"}
+	assign		density $const3 	%line{80} %argrw{"wr"}
+	add		$tmp144 $const31 i_shift 	%line{84} %argrw{"wrr"}
+	max		$tmp143 $const43 $tmp144 	%argrw{"wrr"}
+	div		density density $tmp143 	%argrw{"wrr"}
+	neq		$tmp145 i_min_thresh $const3 	%line{88} %argrw{"wrr"}
+	neq		$tmp146 $tmp145 $const3 	%argrw{"wrr"}
+	if		$tmp146 301 304 	%argrw{"r"}
+	neq		$tmp147 i_max_thresh $const3 	%argrw{"wrr"}
+	neq		$tmp148 $tmp147 $const3 	%argrw{"wrr"}
+	assign		$tmp146 $tmp148 	%argrw{"wr"}
+	if		$tmp146 339 339 	%argrw{"r"}
+	le		$tmp149 i_min_thresh i_max_thresh 	%line{90} %argrw{"wrr"}
+	if		$tmp149 323 339 	%argrw{"r"}
+	functioncall	$const44 323 	%line{92} %argrw{"r"}
+	lt		$tmp150 density i_min_thresh 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{308} %argrw{"wrr"}
+	if		$tmp150 312 312 	%argrw{"r"}
+	assign		density $const3 	%line{310} %argrw{"wr"}
+	return
+	gt		$tmp151 density i_max_thresh 	%line{313} %argrw{"wrr"}
+	if		$tmp151 316 316 	%argrw{"r"}
+	assign		density $const4 	%line{315} %argrw{"wr"}
+	return
+	eq		$tmp152 i_min_thresh i_max_thresh 	%line{318} %argrw{"wrr"}
+	if		$tmp152 320 320 	%argrw{"r"}
+	assign		density density 	%line{320} %argrw{"wr"}
+	return
+	sub		$tmp153 density i_min_thresh 	%line{323} %argrw{"wrr"}
+	sub		$tmp154 i_max_thresh i_min_thresh 	%argrw{"wrr"}
+	div		density $tmp153 $tmp154 	%argrw{"wrr"}
+	functioncall	$const44 339 	%filename{"E:/github/elaramax/Shaders/osl_volume_cylinder.osl"} %line{96} %argrw{"r"}
+	lt		$tmp155 density i_max_thresh 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{308} %argrw{"wrr"}
+	if		$tmp155 328 328 	%argrw{"r"}
+	assign		density $const3 	%line{310} %argrw{"wr"}
+	return
+	gt		$tmp156 density i_min_thresh 	%line{313} %argrw{"wrr"}
+	if		$tmp156 332 332 	%argrw{"r"}
+	assign		density $const4 	%line{315} %argrw{"wr"}
+	return
+	eq		$tmp157 i_max_thresh i_min_thresh 	%line{318} %argrw{"wrr"}
+	if		$tmp157 336 336 	%argrw{"r"}
+	assign		density density 	%line{320} %argrw{"wr"}
+	return
+	sub		$tmp158 density i_max_thresh 	%line{323} %argrw{"wrr"}
+	sub		$tmp159 i_min_thresh i_max_thresh 	%argrw{"wrr"}
+	div		density $tmp158 $tmp159 	%argrw{"wrr"}
+	div		___368_t dist2 radius2 	%filename{"E:/github/elaramax/Shaders/osl_volume_cylinder.osl"} %line{101} %argrw{"wrr"}
+	compref		$tmp160 Po $const5 	%line{102} %argrw{"wrr"}
+	mul		$tmp161 i_height $const42 	%argrw{"wrr"}
+	div		$tmp162 $tmp160 $tmp161 	%argrw{"wrr"}
+	sub		___368_u2 $tmp162 $const31 	%argrw{"wrr"}
+	neg		___368_u3 ___368_u2 	%line{103} %argrw{"wr"}
+	gt		$tmp163 ___368_u2 ___368_t 	%line{105} %argrw{"wrr"}
+	if		$tmp163 348 348 	%argrw{"r"}
+	assign		___368_t ___368_u2 	%line{107} %argrw{"wr"}
+	gt		$tmp164 ___368_u3 ___368_t 	%line{110} %argrw{"wrr"}
+	if		$tmp164 351 351 	%argrw{"r"}
+	assign		___368_t ___368_u3 	%line{112} %argrw{"wr"}
+	sub		___368_r_taper $const31 i_taper 	%line{115} %argrw{"wrr"}
+	gt		$tmp165 ___368_t ___368_r_taper 	%line{117} %argrw{"wrr"}
+	if		$tmp165 358 358 	%argrw{"r"}
+	sub		$tmp166 ___368_t ___368_r_taper 	%line{119} %argrw{"wrr"}
+	div		$tmp167 $tmp166 i_taper 	%argrw{"wrr"}
+	sub		$tmp168 $const31 $tmp167 	%argrw{"wrr"}
+	mul		density density $tmp168 	%argrw{"wrr"}
+	assign		$tmp169 $const35 	%line{128} %argrw{"wr"}
+	assign		$tmp170 $const31 	%argrw{"wr"}
+	sub		$tmp171 $const31 i_color 	%line{126} %argrw{"wrr"}
+	mul		$tmp172 i_density $const45 	%line{127} %argrw{"wrr"}
+	mul		$tmp173 $tmp172 density 	%argrw{"wrr"}
+	closure		Ci $const46 $tmp169 $tmp170 $tmp171 $tmp173 $const35 	%line{128} %argrw{"wrrrrrr"}
+	end

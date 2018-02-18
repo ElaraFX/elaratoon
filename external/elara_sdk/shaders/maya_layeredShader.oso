@@ -1,0 +1,207 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_layeredShader
+param	int	i_compositingFlag	0 		 %read{71,71} %write{2147483647,-1}
+param	int	i_mtoer_nlayers	0 		 %read{68,68} %write{2147483647,-1}
+param	color	i_inputs_color_0	-99 -99 -99 		 %read{32,32} %write{0,0}
+param	color	i_inputs_color_1	-99 -99 -99 		 %read{33,33} %write{1,1}
+param	color	i_inputs_color_2	-99 -99 -99 		 %read{34,34} %write{2,2}
+param	color	i_inputs_color_3	-99 -99 -99 		 %read{35,35} %write{3,3}
+param	color	i_inputs_color_4	-99 -99 -99 		 %read{36,36} %write{4,4}
+param	color	i_inputs_color_5	-99 -99 -99 		 %read{37,37} %write{5,5}
+param	color	i_inputs_color_6	-99 -99 -99 		 %read{38,38} %write{6,6}
+param	color	i_inputs_color_7	-99 -99 -99 		 %read{39,39} %write{7,7}
+param	color	i_inputs_color_8	-99 -99 -99 		 %read{40,40} %write{8,8}
+param	color	i_inputs_color_9	-99 -99 -99 		 %read{41,41} %write{9,9}
+param	color	i_inputs_color_10	-99 -99 -99 		 %read{42,42} %write{10,10}
+param	color	i_inputs_color_11	-99 -99 -99 		 %read{43,43} %write{11,11}
+param	color	i_inputs_color_12	-99 -99 -99 		 %read{44,44} %write{12,12}
+param	color	i_inputs_color_13	-99 -99 -99 		 %read{45,45} %write{13,13}
+param	color	i_inputs_color_14	-99 -99 -99 		 %read{46,46} %write{14,14}
+param	color	i_inputs_color_15	-99 -99 -99 		 %read{47,47} %write{15,15}
+param	color	i_inputs_transparency_0	-99 -99 -99 		 %read{48,48} %write{16,16}
+param	color	i_inputs_transparency_1	-99 -99 -99 		 %read{49,49} %write{17,17}
+param	color	i_inputs_transparency_2	-99 -99 -99 		 %read{50,50} %write{18,18}
+param	color	i_inputs_transparency_3	-99 -99 -99 		 %read{51,51} %write{19,19}
+param	color	i_inputs_transparency_4	-99 -99 -99 		 %read{52,52} %write{20,20}
+param	color	i_inputs_transparency_5	-99 -99 -99 		 %read{53,53} %write{21,21}
+param	color	i_inputs_transparency_6	-99 -99 -99 		 %read{54,54} %write{22,22}
+param	color	i_inputs_transparency_7	-99 -99 -99 		 %read{55,55} %write{23,23}
+param	color	i_inputs_transparency_8	-99 -99 -99 		 %read{56,56} %write{24,24}
+param	color	i_inputs_transparency_9	-99 -99 -99 		 %read{57,57} %write{25,25}
+param	color	i_inputs_transparency_10	-99 -99 -99 		 %read{58,58} %write{26,26}
+param	color	i_inputs_transparency_11	-99 -99 -99 		 %read{59,59} %write{27,27}
+param	color	i_inputs_transparency_12	-99 -99 -99 		 %read{60,60} %write{28,28}
+param	color	i_inputs_transparency_13	-99 -99 -99 		 %read{61,61} %write{29,29}
+param	color	i_inputs_transparency_14	-99 -99 -99 		 %read{62,62} %write{30,30}
+param	color	i_inputs_transparency_15	-99 -99 -99 		 %read{63,63} %write{31,31}
+param	float	i_matteOpacityMode	2 		 %read{80,83} %write{2147483647,-1}
+param	float	i_matteOpacity	1 		 %read{85,87} %write{2147483647,-1}
+oparam	color	o_outColor	0 0 0 		 %read{76,90} %write{64,76}
+oparam	color	o_outTransparency	0 0 0 		 %read{75,92} %write{65,88}
+global	closure color	Ci	 %read{2147483647,-1} %write{93,93}
+local	color[16]	i_inputs_color	 %read{70,70} %write{32,47}
+local	color[16]	i_inputs_transparency	 %read{69,69} %write{48,63}
+local	int	i	 %read{66,78} %write{66,78}
+local	color	___312_trs	 %read{66,78} %write{66,78}
+local	color	___312_col	 %read{66,78} %write{66,78}
+const	color	$const1	-99 -99 -99		 %read{0,31} %write{2147483647,-1}
+const	int	$const2	0		 %read{32,82} %write{2147483647,-1}
+const	int	$const3	1		 %read{33,83} %write{2147483647,-1}
+const	int	$const4	2		 %read{34,50} %write{2147483647,-1}
+const	int	$const5	3		 %read{35,51} %write{2147483647,-1}
+const	int	$const6	4		 %read{36,52} %write{2147483647,-1}
+const	int	$const7	5		 %read{37,53} %write{2147483647,-1}
+const	int	$const8	6		 %read{38,54} %write{2147483647,-1}
+const	int	$const9	7		 %read{39,55} %write{2147483647,-1}
+const	int	$const10	8		 %read{40,56} %write{2147483647,-1}
+const	int	$const11	9		 %read{41,57} %write{2147483647,-1}
+const	int	$const12	10		 %read{42,58} %write{2147483647,-1}
+const	int	$const13	11		 %read{43,59} %write{2147483647,-1}
+const	int	$const14	12		 %read{44,60} %write{2147483647,-1}
+const	int	$const15	13		 %read{45,61} %write{2147483647,-1}
+const	int	$const16	14		 %read{46,62} %write{2147483647,-1}
+const	int	$const17	15		 %read{47,63} %write{2147483647,-1}
+temp	int	$tmp1	 %read{66,78} %write{66,78}
+temp	int	$tmp2	 %read{72,72} %write{71,71}
+temp	color	$tmp3	 %read{74,74} %write{73,73}
+const	float	$const18	1		 %read{73,88} %write{2147483647,-1}
+temp	color	$tmp4	 %read{76,76} %write{75,75}
+const	string	$const19	"computeSurfaceTransparency"		 %read{79,79} %write{2147483647,-1}
+temp	int	$tmp5	 %read{81,81} %write{80,80}
+temp	int	$tmp6	 %read{84,84} %write{83,83}
+temp	color	$tmp7	 %read{87,87} %write{86,86}
+temp	closure color	$tmp8	 %read{90,90} %write{89,89}
+const	string	$const20	"holdout"		 %read{89,89} %write{2147483647,-1}
+temp	closure color	$tmp9	 %read{93,93} %write{90,90}
+temp	closure color	$tmp10	 %read{92,92} %write{91,91}
+const	string	$const21	"transparent"		 %read{91,91} %write{2147483647,-1}
+temp	closure color	$tmp11	 %read{93,93} %write{92,92}
+code i_inputs_color_0
+	assign		i_inputs_color_0 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{57} %argrw{"wr"}
+code i_inputs_color_1
+	assign		i_inputs_color_1 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{58} %argrw{"wr"}
+code i_inputs_color_2
+	assign		i_inputs_color_2 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{59} %argrw{"wr"}
+code i_inputs_color_3
+	assign		i_inputs_color_3 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{60} %argrw{"wr"}
+code i_inputs_color_4
+	assign		i_inputs_color_4 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{61} %argrw{"wr"}
+code i_inputs_color_5
+	assign		i_inputs_color_5 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{62} %argrw{"wr"}
+code i_inputs_color_6
+	assign		i_inputs_color_6 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{63} %argrw{"wr"}
+code i_inputs_color_7
+	assign		i_inputs_color_7 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{64} %argrw{"wr"}
+code i_inputs_color_8
+	assign		i_inputs_color_8 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{65} %argrw{"wr"}
+code i_inputs_color_9
+	assign		i_inputs_color_9 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{66} %argrw{"wr"}
+code i_inputs_color_10
+	assign		i_inputs_color_10 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{67} %argrw{"wr"}
+code i_inputs_color_11
+	assign		i_inputs_color_11 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{68} %argrw{"wr"}
+code i_inputs_color_12
+	assign		i_inputs_color_12 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{69} %argrw{"wr"}
+code i_inputs_color_13
+	assign		i_inputs_color_13 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{70} %argrw{"wr"}
+code i_inputs_color_14
+	assign		i_inputs_color_14 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{71} %argrw{"wr"}
+code i_inputs_color_15
+	assign		i_inputs_color_15 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{72} %argrw{"wr"}
+code i_inputs_transparency_0
+	assign		i_inputs_transparency_0 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{75} %argrw{"wr"}
+code i_inputs_transparency_1
+	assign		i_inputs_transparency_1 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{76} %argrw{"wr"}
+code i_inputs_transparency_2
+	assign		i_inputs_transparency_2 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{77} %argrw{"wr"}
+code i_inputs_transparency_3
+	assign		i_inputs_transparency_3 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{78} %argrw{"wr"}
+code i_inputs_transparency_4
+	assign		i_inputs_transparency_4 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{79} %argrw{"wr"}
+code i_inputs_transparency_5
+	assign		i_inputs_transparency_5 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{80} %argrw{"wr"}
+code i_inputs_transparency_6
+	assign		i_inputs_transparency_6 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{81} %argrw{"wr"}
+code i_inputs_transparency_7
+	assign		i_inputs_transparency_7 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{82} %argrw{"wr"}
+code i_inputs_transparency_8
+	assign		i_inputs_transparency_8 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{83} %argrw{"wr"}
+code i_inputs_transparency_9
+	assign		i_inputs_transparency_9 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{84} %argrw{"wr"}
+code i_inputs_transparency_10
+	assign		i_inputs_transparency_10 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{85} %argrw{"wr"}
+code i_inputs_transparency_11
+	assign		i_inputs_transparency_11 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{86} %argrw{"wr"}
+code i_inputs_transparency_12
+	assign		i_inputs_transparency_12 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{87} %argrw{"wr"}
+code i_inputs_transparency_13
+	assign		i_inputs_transparency_13 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{88} %argrw{"wr"}
+code i_inputs_transparency_14
+	assign		i_inputs_transparency_14 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{89} %argrw{"wr"}
+code i_inputs_transparency_15
+	assign		i_inputs_transparency_15 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{90} %argrw{"wr"}
+code ___main___
+	aassign		i_inputs_color $const2 i_inputs_color_0 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredShader.osl"} %line{119} %argrw{"wrr"}
+	aassign		i_inputs_color $const3 i_inputs_color_1 	%argrw{"wrr"}
+	aassign		i_inputs_color $const4 i_inputs_color_2 	%argrw{"wrr"}
+	aassign		i_inputs_color $const5 i_inputs_color_3 	%argrw{"wrr"}
+	aassign		i_inputs_color $const6 i_inputs_color_4 	%argrw{"wrr"}
+	aassign		i_inputs_color $const7 i_inputs_color_5 	%argrw{"wrr"}
+	aassign		i_inputs_color $const8 i_inputs_color_6 	%argrw{"wrr"}
+	aassign		i_inputs_color $const9 i_inputs_color_7 	%argrw{"wrr"}
+	aassign		i_inputs_color $const10 i_inputs_color_8 	%argrw{"wrr"}
+	aassign		i_inputs_color $const11 i_inputs_color_9 	%argrw{"wrr"}
+	aassign		i_inputs_color $const12 i_inputs_color_10 	%argrw{"wrr"}
+	aassign		i_inputs_color $const13 i_inputs_color_11 	%argrw{"wrr"}
+	aassign		i_inputs_color $const14 i_inputs_color_12 	%argrw{"wrr"}
+	aassign		i_inputs_color $const15 i_inputs_color_13 	%argrw{"wrr"}
+	aassign		i_inputs_color $const16 i_inputs_color_14 	%argrw{"wrr"}
+	aassign		i_inputs_color $const17 i_inputs_color_15 	%argrw{"wrr"}
+	aassign		i_inputs_transparency $const2 i_inputs_transparency_0 	%line{138} %argrw{"wrr"}
+	aassign		i_inputs_transparency $const3 i_inputs_transparency_1 	%argrw{"wrr"}
+	aassign		i_inputs_transparency $const4 i_inputs_transparency_2 	%argrw{"wrr"}
+	aassign		i_inputs_transparency $const5 i_inputs_transparency_3 	%argrw{"wrr"}
+	aassign		i_inputs_transparency $const6 i_inputs_transparency_4 	%argrw{"wrr"}
+	aassign		i_inputs_transparency $const7 i_inputs_transparency_5 	%argrw{"wrr"}
+	aassign		i_inputs_transparency $const8 i_inputs_transparency_6 	%argrw{"wrr"}
+	aassign		i_inputs_transparency $const9 i_inputs_transparency_7 	%argrw{"wrr"}
+	aassign		i_inputs_transparency $const10 i_inputs_transparency_8 	%argrw{"wrr"}
+	aassign		i_inputs_transparency $const11 i_inputs_transparency_9 	%argrw{"wrr"}
+	aassign		i_inputs_transparency $const12 i_inputs_transparency_10 	%argrw{"wrr"}
+	aassign		i_inputs_transparency $const13 i_inputs_transparency_11 	%argrw{"wrr"}
+	aassign		i_inputs_transparency $const14 i_inputs_transparency_12 	%argrw{"wrr"}
+	aassign		i_inputs_transparency $const15 i_inputs_transparency_13 	%argrw{"wrr"}
+	aassign		i_inputs_transparency $const16 i_inputs_transparency_14 	%argrw{"wrr"}
+	aassign		i_inputs_transparency $const17 i_inputs_transparency_15 	%argrw{"wrr"}
+	assign		o_outColor $const2 	%line{142} %argrw{"wr"}
+	assign		o_outTransparency $const3 	%line{143} %argrw{"wr"}
+	for		$tmp1 68 69 78 79 	%line{145} %argrw{"r"}
+	assign		i $const2 	%argrw{"wr"}
+	lt		$tmp1 i i_mtoer_nlayers 	%argrw{"wrr"}
+	aref		___312_trs i_inputs_transparency i 	%line{147} %argrw{"wrr"}
+	aref		___312_col i_inputs_color i 	%line{148} %argrw{"wrr"}
+	eq		$tmp2 i_compositingFlag $const3 	%line{152} %argrw{"wrr"}
+	if		$tmp2 75 75 	%argrw{"r"}
+	sub		$tmp3 $const18 ___312_trs 	%line{155} %argrw{"wrr"}
+	mul		___312_col ___312_col $tmp3 	%argrw{"wrr"}
+	mul		$tmp4 ___312_col o_outTransparency 	%line{158} %argrw{"wrr"}
+	add		o_outColor o_outColor $tmp4 	%argrw{"wrr"}
+	mul		o_outTransparency o_outTransparency ___312_trs 	%line{159} %argrw{"wrr"}
+	add		i i $const3 	%line{145} %argrw{"wrr"}
+	functioncall	$const19 89 	%line{168} %argrw{"r"}
+	eq		$tmp5 i_matteOpacityMode $const2 	%line{30} %argrw{"wrr"}
+	if		$tmp5 83 88 	%argrw{"r"}
+	assign		o_outTransparency $const2 	%line{33} %argrw{"wr"}
+	eq		$tmp6 i_matteOpacityMode $const3 	%line{35} %argrw{"wrr"}
+	if		$tmp6 86 88 	%argrw{"r"}
+	assign		o_outTransparency i_matteOpacity 	%line{38} %argrw{"wr"}
+	sub		$tmp7 $const18 o_outTransparency 	%line{43} %argrw{"wrr"}
+	mul		o_outTransparency $tmp7 i_matteOpacity 	%argrw{"wrr"}
+	sub		o_outTransparency $const18 o_outTransparency 	%line{46} %argrw{"wrr"}
+	closure		$tmp8 $const20 	%line{169} %argrw{"wr"}
+	mul		$tmp9 $tmp8 o_outColor 	%argrw{"wrr"}
+	closure		$tmp10 $const21 	%argrw{"wr"}
+	mul		$tmp11 $tmp10 o_outTransparency 	%argrw{"wrr"}
+	add		Ci $tmp9 $tmp11 	%argrw{"wrr"}
+	end

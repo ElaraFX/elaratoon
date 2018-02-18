@@ -1,0 +1,8 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_unknow_texmap
+oparam	color	result	1 0 1		%read{2147483647,-1} %write{2147483647,-1}
+oparam	float	result_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+code ___main___
+	end

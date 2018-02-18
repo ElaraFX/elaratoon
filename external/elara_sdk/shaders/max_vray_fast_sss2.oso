@@ -1,0 +1,124 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_vray_fast_sss2
+param	int	preset	0		%read{2147483647,-1} %write{2147483647,-1}
+param	float	scale	1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	IOR	1.3		%read{2147483647,-1} %write{2147483647,-1}
+param	int	multiple_scattering	2		%read{2147483647,-1} %write{2147483647,-1}
+param	int	prepass_rate	-1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	prepass_id	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	auto_calculate_density	0		%read{2147483647,-1} %write{2147483647,-1}
+param	float	samples_per_unit_area	16		%read{2147483647,-1} %write{2147483647,-1}
+param	float	surface_offset	0.001		%read{2147483647,-1} %write{2147483647,-1}
+param	int	preview_samples	0		%read{2147483647,-1} %write{2147483647,-1}
+param	float	max_distance	0.1		%read{2147483647,-1} %write{2147483647,-1}
+param	color	background_color	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+param	float	background_color_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	color	background_color_base	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+param	color	samples_color	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	samples_color_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	color	samples_color_base	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+param	color	overall_color	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	overall_color_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	color	overall_color_base	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+param	color	diffuse_color	0.5 0.5 0.5		%read{2147483647,-1} %write{2147483647,-1}
+param	float	diffuse_color_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	color	diffuse_color_base	0.5 0.5 0.5		%read{2147483647,-1} %write{2147483647,-1}
+param	float	diffuse_amount	0		%read{2147483647,-1} %write{2147483647,-1}
+param	color	sub_surface_color	0.5 0.5 0.5		%read{2147483647,-1} %write{2147483647,-1}
+param	float	sub_surface_color_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	color	sub_surface_color_base	0.5 0.5 0.5		%read{2147483647,-1} %write{2147483647,-1}
+param	color	scatter_color	0.5 0.5 0.5		%read{2147483647,-1} %write{2147483647,-1}
+param	float	scatter_color_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	color	scatter_color_base	0.5 0.5 0.5		%read{2147483647,-1} %write{2147483647,-1}
+param	float	scatter_radius	1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	phase_function	0		%read{2147483647,-1} %write{2147483647,-1}
+param	color	specular_color	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	specular_color_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	color	specular_color_base	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	specular_amount	1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	specular_glossiness	0.60000002		%read{2147483647,-1} %write{2147483647,-1}
+param	int	specular_subdivs	8		%read{2147483647,-1} %write{2147483647,-1}
+param	int	trace_reflections	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	reflection_depth	5		%read{2147483647,-1} %write{2147483647,-1}
+param	int	single_scatter	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	single_scatter_subdivs	8		%read{2147483647,-1} %write{2147483647,-1}
+param	int	refraction_depth	5		%read{2147483647,-1} %write{2147483647,-1}
+param	int	front_lighting	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	back_lighting	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	scatter_gi	0		%read{2147483647,-1} %write{2147483647,-1}
+param	float	prepass_LOD_threshold	4		%read{2147483647,-1} %write{2147483647,-1}
+param	float	interpolation_accuracy	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	legacy_mode	0		%read{2147483647,-1} %write{2147483647,-1}
+param	float	prepass_blur	1.2		%read{2147483647,-1} %write{2147483647,-1}
+param	float	cutoff_threshold	0.0099999998		%read{2147483647,-1} %write{2147483647,-1}
+param	int	prepass_mode	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_bump_on	1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_bump_multiplier	30		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_overall_color_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_overall_color_on	1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_overall_color_multiplier	100		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_diffuse_color_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_diffuse_color_on	1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_diffuse_color_multiplier	100		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_diffuse_amount_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_diffuse_amount_on	1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_diffuse_amount_multiplier	100		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_specular_color_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_specular_color_on	1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_specular_color_multiplier	100		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_specular_amount_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_specular_amount_on	1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_specular_amount_multiplier	100		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_specular_glossiness_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_specular_glossiness_on	1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_specular_glossiness_multiplier	100		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_sss_color_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_sss_color_on	1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_sss_color_multiplier	100		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_scatter_color_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_scatter_color_on	1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_scatter_color_multiplier	100		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_scatter_radius_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_scatter_radius_on	1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_scatter_radius_multiplier	100		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_displacement_isnull	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	texmap_displacement_on	1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_displacement_multiplier	100		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_bump_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	vector	texmap_bump_bump	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+param	color	texmap_bump	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_overall_color_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	vector	texmap_overall_color_bump	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+param	color	texmap_overall_color	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_diffuse_color_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	vector	texmap_diffuse_color_bump	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+param	color	texmap_diffuse_color	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_diffuse_amount_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	vector	texmap_diffuse_amount_bump	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+param	color	texmap_diffuse_amount	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_specular_color_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	vector	texmap_specular_color_bump	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+param	color	texmap_specular_color	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_specular_amount_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	vector	texmap_specular_amount_bump	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+param	color	texmap_specular_amount	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_specular_glossiness_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	vector	texmap_specular_glossiness_bump	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+param	color	texmap_specular_glossiness	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_sss_color_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	vector	texmap_sss_color_bump	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+param	color	texmap_sss_color	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_scatter_color_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	vector	texmap_scatter_color_bump	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+param	color	texmap_scatter_color	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_scatter_radius_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	vector	texmap_scatter_radius_bump	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+param	color	texmap_scatter_radius	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_displacement_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	vector	texmap_displacement_bump	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+param	color	texmap_displacement	1 1 1		%read{2147483647,-1} %write{2147483647,-1}
+oparam	closure color	result			%read{2147483647,-1} %write{2147483647,-1}
+code ___main___
+	end

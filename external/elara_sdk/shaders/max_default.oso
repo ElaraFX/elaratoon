@@ -1,0 +1,27 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_default
+global	normal	N	%read{2,4} %write{2147483647,-1}
+global	closure color	Ci	%read{2147483647,-1} %write{6,6}
+local	color	wire_color	%read{3,3} %write{0,1}
+local	closure color	input	%read{6,6} %write{5,5}
+const	int	$const1	1		%read{0,0} %write{2147483647,-1}
+temp	int	$tmp1	%read{2147483647,-1} %write{1,1}
+const	string	$const2	"wire_color"		%read{1,1} %write{2147483647,-1}
+temp	closure color	$tmp2	%read{3,3} %write{2,2}
+const	string	$const3	"diffuse"		%read{2,2} %write{2147483647,-1}
+temp	closure color	$tmp3	%read{5,5} %write{3,3}
+temp	closure color	$tmp4	%read{5,5} %write{4,4}
+const	float	$const4	0.30000001		%read{4,4} %write{2147483647,-1}
+const	float	$const5	1.6		%read{4,4} %write{2147483647,-1}
+const	string	$const6	"microfacet_beckmann"		%read{4,4} %write{2147483647,-1}
+code ___main___
+	assign		wire_color $const1 	%filename{"E:/github/elaramax/Shaders/max_default.osl"} %line{21} %argrw{"wr"}
+	getattribute	$tmp1 $const2 wire_color 	%line{22} %argrw{"wrw"}
+	closure		$tmp2 $const3 N 	%line{24} %argrw{"wrr"}
+	mul		$tmp3 $tmp2 wire_color 	%argrw{"wrr"}
+	closure		$tmp4 $const6 N $const4 $const5 	%argrw{"wrrrr"}
+	add		input $tmp3 $tmp4 	%argrw{"wrr"}
+	assign		Ci input 	%line{26} %argrw{"wr"}
+	end

@@ -1,0 +1,758 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader physicalsky
+param	vector	sun_dir	0.57700002 0.57700002 0.57700002		%read{12,14} %write{2147483647,-1}
+param	float	sun_disk_size	1		%read{259,259} %write{2147483647,-1}
+param	float	sun_disk_intensity	5		%read{271,279} %write{2147483647,-1}
+param	float	sun_glow_size	1		%read{260,260} %write{2147483647,-1}
+param	float	sun_glow_intensity	1		%read{274,274} %write{2147483647,-1}
+param	float	sun_glow_falloff	5		%read{272,272} %write{2147483647,-1}
+param	int	type	0		%read{17,17} %write{2147483647,-1}
+param	float	haze	5		%read{11,11} %write{2147483647,-1}
+param	color	zenith_color	0.109 0.109 0.109		%read{337,337} %write{2147483647,-1}
+param	float	a	-1		%read{319,332} %write{2147483647,-1}
+param	float	b	-0.31999999		%read{317,331} %write{2147483647,-1}
+param	float	c	10		%read{312,326} %write{2147483647,-1}
+param	float	d	-3		%read{307,323} %write{2147483647,-1}
+param	float	e	0.44999999		%read{314,328} %write{2147483647,-1}
+param	float	intensity	1		%read{338,338} %write{2147483647,-1}
+oparam	color	result	0 0 0		%read{2147483647,-1} %write{0,340}
+global	vector	I	%read{1,1} %write{2147483647,-1}
+local	float	___306_sun_disk_size	%read{261,277} %write{259,259}
+local	float	___306_sun_glow_size	%read{261,261} %write{260,260}
+local	float	___306_sun_total_size	%read{265,267} %write{261,261}
+local	float	___306_intensity	%read{276,280} %write{262,279}
+local	float	___306_gamma	%read{265,277} %write{264,264}
+local	float	___307_r	%read{270,273} %write{268,268}
+local	float	___309_cos_gamma	%read{94,123} %write{93,99}
+local	float	___309_gamma	%read{118,118} %write{100,100}
+local	float	___309_cos_theta	%read{114,114} %write{101,101}
+local	float	___309_cos_theta_sun	%read{103,134} %write{102,102}
+local	float	___309_theta_sun	%read{129,129} %write{103,103}
+local	float	___309_a	%read{116,127} %write{105,105}
+local	float	___309_b	%read{114,126} %write{107,107}
+local	float	___309_c	%read{120,131} %write{109,109}
+local	float	___309_d	%read{118,129} %write{111,111}
+local	float	___309_e	%read{122,133} %write{113,113}
+local	float	___309_ratio	%read{138,138} %write{137,137}
+local	color	___312_spectrum	%read{216,237} %write{215,215}
+local	color	___312_res	%read{241,253} %write{240,240}
+local	float	___312_result	%read{249,253} %write{247,247}
+local	color	___312_rgb	%read{251,254} %write{248,253}
+local	float	___315_cos_gamma	%read{21,193} %write{20,26}
+local	float	___315_gamma	%read{154,188} %write{27,27}
+local	float	___315_cos_theta	%read{150,184} %write{28,28}
+local	float	___315_cos_theta_sun	%read{31,204} %write{29,29}
+local	float	___315_t2	%read{40,62} %write{30,30}
+local	float	___315_theta_sun	%read{32,199} %write{31,31}
+local	float	___315_theta_sun2	%read{33,72} %write{32,32}
+local	float	___315_theta_sun3	%read{34,71} %write{33,33}
+local	float	___315_zenith_x	%read{208,208} %write{55,55}
+local	float	___315_zenith_y	%read{209,209} %write{77,77}
+local	float	___315_chi	%read{87,87} %write{83,83}
+local	float	___315_zenith_Y	%read{139,139} %write{91,91}
+local	float	___315_chromatic_Y	%read{256,256} %write{139,139}
+local	float	___315_a	%read{152,197} %write{141,175}
+local	float	___315_b	%read{150,196} %write{143,177}
+local	float	___315_c	%read{156,201} %write{145,179}
+local	float	___315_d	%read{154,199} %write{147,181}
+local	float	___315_e	%read{158,203} %write{149,183}
+local	float	___315_ratio_x	%read{208,208} %write{173,173}
+local	float	___315_ratio_y	%read{209,209} %write{207,207}
+local	float	___315_chromaticity_x	%read{211,212} %write{208,208}
+local	float	___315_chromaticity_y	%read{211,214} %write{209,209}
+local	color	___315_linear_RGB	%read{257,257} %write{256,256}
+local	float	___318_ray_pos_x	%read{294,296} %write{284,284}
+local	float	___318_ray_pos_y	%read{299,299} %write{287,287}
+local	float	___318_sun_pos_x	%read{293,321} %write{289,289}
+local	float	___318_sun_pos_y	%read{299,299} %write{292,292}
+local	float	___318_cos_z_sun	%read{297,329} %write{293,293}
+local	float	___318_cos_z	%read{297,317} %write{294,294}
+local	float	___318_sin_z_sun	%read{298,298} %write{295,295}
+local	float	___318_sin_z	%read{298,298} %write{296,296}
+local	float	___318_chi	%read{305,307} %write{304,304}
+local	float	___318_cos_chi	%read{314,315} %write{305,305}
+local	float	___318_pi_over_2	%read{309,323} %write{306,306}
+local	float	___318_f_chi	%read{334,334} %write{316,316}
+local	float	___318_phi_z	%read{334,334} %write{320,320}
+local	float	___318_f_z_sun	%read{335,335} %write{330,330}
+local	float	___318_phi_0	%read{335,335} %write{333,333}
+local	float	___318_ratio	%read{337,337} %write{336,336}
+local	vector	Iw	%read{2,4} %write{1,1}
+local	vector	ray_dir	%read{7,286} %write{6,10}
+local	float	haze_val	%read{30,272} %write{11,11}
+local	vector	sun_d	%read{20,291} %write{16,16}
+local	color	sky_color	%read{339,340} %write{281,339}
+const	color	$const1	0 0 0		%read{0,248} %write{2147483647,-1}
+const	int	$const2	0		%read{2,291} %write{2147483647,-1}
+temp	float	$tmp1	%read{6,6} %write{2,2}
+const	int	$const3	2		%read{3,290} %write{2147483647,-1}
+temp	float	$tmp2	%read{6,6} %write{3,3}
+const	int	$const4	1		%read{4,288} %write{2147483647,-1}
+temp	float	$tmp3	%read{5,5} %write{4,4}
+temp	float	$tmp4	%read{6,6} %write{5,5}
+temp	float	$tmp5	%read{8,8} %write{7,7}
+const	float	$const5	0.001		%read{8,10} %write{2147483647,-1}
+temp	int	$tmp6	%read{9,9} %write{8,8}
+const	float	$const6	2		%read{11,306} %write{2147483647,-1}
+temp	float	$tmp7	%read{16,16} %write{12,12}
+temp	float	$tmp8	%read{16,16} %write{13,13}
+temp	float	$tmp9	%read{15,15} %write{14,14}
+temp	float	$tmp10	%read{16,16} %write{15,15}
+temp	int	$tmp11	%read{18,18} %write{17,17}
+temp	color	$tmp12	%read{281,281} %write{257,257}
+const	string	$const7	"get_haze_driven_sky_color"		%read{19,19} %write{2147483647,-1}
+const	float	$const8	0		%read{21,270} %write{2147483647,-1}
+temp	int	$tmp13	%read{22,22} %write{21,21}
+const	float	$const9	1		%read{24,333} %write{2147483647,-1}
+temp	int	$tmp14	%read{25,25} %write{24,24}
+const	float	$const10	0.00165		%read{34,34} %write{2147483647,-1}
+temp	float	$tmp15	%read{36,36} %write{34,34}
+const	float	$const11	0.0037420001		%read{35,35} %write{2147483647,-1}
+temp	float	$tmp16	%read{36,36} %write{35,35}
+temp	float	$tmp17	%read{38,38} %write{36,36}
+const	float	$const12	0.0020880001		%read{37,37} %write{2147483647,-1}
+temp	float	$tmp18	%read{38,38} %write{37,37}
+temp	float	$tmp19	%read{39,39} %write{38,38}
+temp	float	$tmp20	%read{40,40} %write{39,39}
+temp	float	$tmp21	%read{48,48} %write{40,40}
+const	float	$const13	-0.029028		%read{41,41} %write{2147483647,-1}
+temp	float	$tmp22	%read{43,43} %write{41,41}
+const	float	$const14	0.063772999		%read{42,42} %write{2147483647,-1}
+temp	float	$tmp23	%read{43,43} %write{42,42}
+temp	float	$tmp24	%read{45,45} %write{43,43}
+const	float	$const15	0.032019999		%read{44,44} %write{2147483647,-1}
+temp	float	$tmp25	%read{45,45} %write{44,44}
+temp	float	$tmp26	%read{46,46} %write{45,45}
+const	float	$const16	0.0039479998		%read{46,46} %write{2147483647,-1}
+temp	float	$tmp27	%read{47,47} %write{46,46}
+temp	float	$tmp28	%read{48,48} %write{47,47}
+temp	float	$tmp29	%read{55,55} %write{48,48}
+const	float	$const17	0.116936		%read{49,49} %write{2147483647,-1}
+temp	float	$tmp30	%read{51,51} %write{49,49}
+const	float	$const18	0.21196		%read{50,50} %write{2147483647,-1}
+temp	float	$tmp31	%read{51,51} %write{50,50}
+temp	float	$tmp32	%read{53,53} %write{51,51}
+const	float	$const19	0.060523		%read{52,52} %write{2147483647,-1}
+temp	float	$tmp33	%read{53,53} %write{52,52}
+temp	float	$tmp34	%read{54,54} %write{53,53}
+const	float	$const20	0.25885201		%read{54,54} %write{2147483647,-1}
+temp	float	$tmp35	%read{55,55} %write{54,54}
+const	float	$const21	0.0027590001		%read{56,56} %write{2147483647,-1}
+temp	float	$tmp36	%read{58,58} %write{56,56}
+const	float	$const22	0.0061050002		%read{57,57} %write{2147483647,-1}
+temp	float	$tmp37	%read{58,58} %write{57,57}
+temp	float	$tmp38	%read{60,60} %write{58,58}
+const	float	$const23	0.0031620001		%read{59,59} %write{2147483647,-1}
+temp	float	$tmp39	%read{60,60} %write{59,59}
+temp	float	$tmp40	%read{61,61} %write{60,60}
+temp	float	$tmp41	%read{62,62} %write{61,61}
+temp	float	$tmp42	%read{70,70} %write{62,62}
+const	float	$const24	-0.042149		%read{63,63} %write{2147483647,-1}
+temp	float	$tmp43	%read{65,65} %write{63,63}
+const	float	$const25	0.089700997		%read{64,64} %write{2147483647,-1}
+temp	float	$tmp44	%read{65,65} %write{64,64}
+temp	float	$tmp45	%read{67,67} %write{65,65}
+const	float	$const26	0.041536		%read{66,66} %write{2147483647,-1}
+temp	float	$tmp46	%read{67,67} %write{66,66}
+temp	float	$tmp47	%read{68,68} %write{67,67}
+const	float	$const27	0.0051580002		%read{68,68} %write{2147483647,-1}
+temp	float	$tmp48	%read{69,69} %write{68,68}
+temp	float	$tmp49	%read{70,70} %write{69,69}
+temp	float	$tmp50	%read{77,77} %write{70,70}
+const	float	$const28	0.153467		%read{71,71} %write{2147483647,-1}
+temp	float	$tmp51	%read{73,73} %write{71,71}
+const	float	$const29	0.26756799		%read{72,72} %write{2147483647,-1}
+temp	float	$tmp52	%read{73,73} %write{72,72}
+temp	float	$tmp53	%read{75,75} %write{73,73}
+const	float	$const30	0.066698		%read{74,74} %write{2147483647,-1}
+temp	float	$tmp54	%read{75,75} %write{74,74}
+temp	float	$tmp55	%read{76,76} %write{75,75}
+const	float	$const31	0.26688099		%read{76,76} %write{2147483647,-1}
+temp	float	$tmp56	%read{77,77} %write{76,76}
+const	float	$const32	4		%read{78,78} %write{2147483647,-1}
+const	float	$const33	9		%read{78,78} %write{2147483647,-1}
+temp	float	$tmp57	%read{80,80} %write{78,78}
+const	float	$const34	120		%read{79,79} %write{2147483647,-1}
+temp	float	$tmp58	%read{80,80} %write{79,79}
+temp	float	$tmp59	%read{83,83} %write{80,80}
+const	float	$const35	3.1415927		%read{82,306} %write{2147483647,-1}
+temp	float	$tmp60	%read{82,82} %write{81,81}
+temp	float	$tmp61	%read{83,83} %write{82,82}
+const	float	$const36	1000		%read{86,86} %write{2147483647,-1}
+const	float	$const37	4.0453		%read{84,84} %write{2147483647,-1}
+temp	float	$tmp62	%read{85,85} %write{84,84}
+const	float	$const38	4.9710002		%read{85,85} %write{2147483647,-1}
+temp	float	$tmp63	%read{86,86} %write{85,85}
+temp	float	$tmp64	%read{88,88} %write{86,86}
+temp	float	$tmp65	%read{88,88} %write{87,87}
+temp	float	$tmp66	%read{90,90} %write{88,88}
+const	float	$const39	0.2155		%read{89,89} %write{2147483647,-1}
+temp	float	$tmp67	%read{90,90} %write{89,89}
+temp	float	$tmp68	%read{91,91} %write{90,90}
+const	float	$const40	2.4191999		%read{91,91} %write{2147483647,-1}
+temp	float	$tmp69	%read{139,139} %write{138,138}
+const	string	$const41	"get_sky_luminance"		%read{92,92} %write{2147483647,-1}
+temp	int	$tmp70	%read{95,95} %write{94,94}
+temp	int	$tmp71	%read{98,98} %write{97,97}
+const	float	$const42	0.178721		%read{104,104} %write{2147483647,-1}
+temp	float	$tmp72	%read{105,105} %write{104,104}
+const	float	$const43	1.463037		%read{105,105} %write{2147483647,-1}
+const	float	$const44	-0.35540199		%read{106,106} %write{2147483647,-1}
+temp	float	$tmp73	%read{107,107} %write{106,106}
+const	float	$const45	0.42749399		%read{107,107} %write{2147483647,-1}
+const	float	$const46	-0.022669001		%read{108,108} %write{2147483647,-1}
+temp	float	$tmp74	%read{109,109} %write{108,108}
+const	float	$const47	5.3250561		%read{109,109} %write{2147483647,-1}
+const	float	$const48	0.120647		%read{110,110} %write{2147483647,-1}
+temp	float	$tmp75	%read{111,111} %write{110,110}
+const	float	$const49	2.5770521		%read{111,111} %write{2147483647,-1}
+const	float	$const50	-0.066967003		%read{112,112} %write{2147483647,-1}
+temp	float	$tmp76	%read{113,113} %write{112,112}
+const	float	$const51	0.37027499		%read{113,113} %write{2147483647,-1}
+temp	float	$tmp77	%read{116,116} %write{115,115}
+temp	float	$tmp78	%read{115,115} %write{114,114}
+temp	float	$tmp79	%read{117,117} %write{116,116}
+temp	float	$tmp80	%read{125,125} %write{117,117}
+temp	float	$tmp81	%read{120,120} %write{119,119}
+temp	float	$tmp82	%read{119,119} %write{118,118}
+temp	float	$tmp83	%read{121,121} %write{120,120}
+temp	float	$tmp84	%read{124,124} %write{121,121}
+temp	float	$tmp85	%read{123,123} %write{122,122}
+temp	float	$tmp86	%read{124,124} %write{123,123}
+temp	float	$tmp87	%read{125,125} %write{124,124}
+temp	float	$tmp88	%read{137,137} %write{125,125}
+temp	float	$tmp89	%read{127,127} %write{126,126}
+temp	float	$tmp90	%read{128,128} %write{127,127}
+temp	float	$tmp91	%read{136,136} %write{128,128}
+temp	float	$tmp92	%read{131,131} %write{130,130}
+temp	float	$tmp93	%read{130,130} %write{129,129}
+temp	float	$tmp94	%read{132,132} %write{131,131}
+temp	float	$tmp95	%read{135,135} %write{132,132}
+temp	float	$tmp96	%read{134,134} %write{133,133}
+temp	float	$tmp97	%read{135,135} %write{134,134}
+temp	float	$tmp98	%read{136,136} %write{135,135}
+temp	float	$tmp99	%read{137,137} %write{136,136}
+const	float	$const52	-0.019257		%read{140,140} %write{2147483647,-1}
+temp	float	$tmp100	%read{141,141} %write{140,140}
+const	float	$const53	0.25922		%read{141,141} %write{2147483647,-1}
+const	float	$const54	-0.066513002		%read{142,142} %write{2147483647,-1}
+temp	float	$tmp101	%read{143,143} %write{142,142}
+const	float	$const55	0.000818		%read{143,143} %write{2147483647,-1}
+const	float	$const56	-0.000417		%read{144,144} %write{2147483647,-1}
+temp	float	$tmp102	%read{145,145} %write{144,144}
+const	float	$const57	0.212479		%read{145,145} %write{2147483647,-1}
+const	float	$const58	-0.064097002		%read{146,146} %write{2147483647,-1}
+temp	float	$tmp103	%read{147,147} %write{146,146}
+const	float	$const59	0.898875		%read{147,147} %write{2147483647,-1}
+const	float	$const60	-0.0032510001		%read{148,148} %write{2147483647,-1}
+temp	float	$tmp104	%read{149,149} %write{148,148}
+const	float	$const61	0.045178		%read{149,149} %write{2147483647,-1}
+temp	float	$tmp105	%read{152,152} %write{151,151}
+temp	float	$tmp106	%read{151,151} %write{150,150}
+temp	float	$tmp107	%read{153,153} %write{152,152}
+temp	float	$tmp108	%read{161,161} %write{153,153}
+temp	float	$tmp109	%read{156,156} %write{155,155}
+temp	float	$tmp110	%read{155,155} %write{154,154}
+temp	float	$tmp111	%read{157,157} %write{156,156}
+temp	float	$tmp112	%read{160,160} %write{157,157}
+temp	float	$tmp113	%read{159,159} %write{158,158}
+temp	float	$tmp114	%read{160,160} %write{159,159}
+temp	float	$tmp115	%read{161,161} %write{160,160}
+temp	float	$tmp116	%read{173,173} %write{161,161}
+temp	float	$tmp117	%read{163,163} %write{162,162}
+temp	float	$tmp118	%read{164,164} %write{163,163}
+temp	float	$tmp119	%read{172,172} %write{164,164}
+temp	float	$tmp120	%read{167,167} %write{166,166}
+temp	float	$tmp121	%read{166,166} %write{165,165}
+temp	float	$tmp122	%read{168,168} %write{167,167}
+temp	float	$tmp123	%read{171,171} %write{168,168}
+temp	float	$tmp124	%read{170,170} %write{169,169}
+temp	float	$tmp125	%read{171,171} %write{170,170}
+temp	float	$tmp126	%read{172,172} %write{171,171}
+temp	float	$tmp127	%read{173,173} %write{172,172}
+const	float	$const62	-0.016697999		%read{174,174} %write{2147483647,-1}
+temp	float	$tmp128	%read{175,175} %write{174,174}
+const	float	$const63	0.26078701		%read{175,175} %write{2147483647,-1}
+const	float	$const64	-0.094958		%read{176,176} %write{2147483647,-1}
+temp	float	$tmp129	%read{177,177} %write{176,176}
+const	float	$const65	0.0092129996		%read{177,177} %write{2147483647,-1}
+const	float	$const66	-0.0079279998		%read{178,178} %write{2147483647,-1}
+temp	float	$tmp130	%read{179,179} %write{178,178}
+const	float	$const67	0.21022999		%read{179,179} %write{2147483647,-1}
+const	float	$const68	-0.044050001		%read{180,180} %write{2147483647,-1}
+temp	float	$tmp131	%read{181,181} %write{180,180}
+const	float	$const69	1.653694		%read{181,181} %write{2147483647,-1}
+const	float	$const70	-0.010922		%read{182,182} %write{2147483647,-1}
+temp	float	$tmp132	%read{183,183} %write{182,182}
+const	float	$const71	0.052919		%read{183,183} %write{2147483647,-1}
+temp	float	$tmp133	%read{186,186} %write{185,185}
+temp	float	$tmp134	%read{185,185} %write{184,184}
+temp	float	$tmp135	%read{187,187} %write{186,186}
+temp	float	$tmp136	%read{195,195} %write{187,187}
+temp	float	$tmp137	%read{190,190} %write{189,189}
+temp	float	$tmp138	%read{189,189} %write{188,188}
+temp	float	$tmp139	%read{191,191} %write{190,190}
+temp	float	$tmp140	%read{194,194} %write{191,191}
+temp	float	$tmp141	%read{193,193} %write{192,192}
+temp	float	$tmp142	%read{194,194} %write{193,193}
+temp	float	$tmp143	%read{195,195} %write{194,194}
+temp	float	$tmp144	%read{207,207} %write{195,195}
+temp	float	$tmp145	%read{197,197} %write{196,196}
+temp	float	$tmp146	%read{198,198} %write{197,197}
+temp	float	$tmp147	%read{206,206} %write{198,198}
+temp	float	$tmp148	%read{201,201} %write{200,200}
+temp	float	$tmp149	%read{200,200} %write{199,199}
+temp	float	$tmp150	%read{202,202} %write{201,201}
+temp	float	$tmp151	%read{205,205} %write{202,202}
+temp	float	$tmp152	%read{204,204} %write{203,203}
+temp	float	$tmp153	%read{205,205} %write{204,204}
+temp	float	$tmp154	%read{206,206} %write{205,205}
+temp	float	$tmp155	%read{207,207} %write{206,206}
+temp	color	$tmp156	%read{256,256} %write{251,254}
+const	string	$const72	"chromatic_to_color"		%read{210,210} %write{2147483647,-1}
+temp	float	$tmp157	%read{215,215} %write{211,211}
+temp	float	$tmp158	%read{213,213} %write{212,212}
+temp	float	$tmp159	%read{214,214} %write{213,213}
+temp	float	$tmp160	%read{215,215} %write{214,214}
+const	float	$const73	2.3706727		%read{217,217} %write{2147483647,-1}
+temp	float	$tmp161	%read{217,217} %write{216,216}
+temp	float	$tmp162	%read{220,220} %write{217,217}
+const	float	$const74	-0.9000386		%read{219,219} %write{2147483647,-1}
+temp	float	$tmp163	%read{219,219} %write{218,218}
+temp	float	$tmp164	%read{220,220} %write{219,219}
+temp	float	$tmp165	%read{223,223} %write{220,220}
+const	float	$const75	-0.47063425		%read{222,222} %write{2147483647,-1}
+temp	float	$tmp166	%read{222,222} %write{221,221}
+temp	float	$tmp167	%read{223,223} %write{222,222}
+temp	float	$tmp168	%read{240,240} %write{223,223}
+const	float	$const76	-0.51388317		%read{225,225} %write{2147483647,-1}
+temp	float	$tmp169	%read{225,225} %write{224,224}
+temp	float	$tmp170	%read{228,228} %write{225,225}
+const	float	$const77	1.4253021		%read{227,227} %write{2147483647,-1}
+temp	float	$tmp171	%read{227,227} %write{226,226}
+temp	float	$tmp172	%read{228,228} %write{227,227}
+temp	float	$tmp173	%read{231,231} %write{228,228}
+const	float	$const78	0.088581152		%read{230,230} %write{2147483647,-1}
+temp	float	$tmp174	%read{230,230} %write{229,229}
+temp	float	$tmp175	%read{231,231} %write{230,230}
+temp	float	$tmp176	%read{240,240} %write{231,231}
+const	float	$const79	0.0052981423		%read{233,233} %write{2147483647,-1}
+temp	float	$tmp177	%read{233,233} %write{232,232}
+temp	float	$tmp178	%read{236,236} %write{233,233}
+const	float	$const80	-0.014694885		%read{235,235} %write{2147483647,-1}
+temp	float	$tmp179	%read{235,235} %write{234,234}
+temp	float	$tmp180	%read{236,236} %write{235,235}
+temp	float	$tmp181	%read{239,239} %write{236,236}
+const	float	$const81	1.0093969		%read{238,238} %write{2147483647,-1}
+temp	float	$tmp182	%read{238,238} %write{237,237}
+temp	float	$tmp183	%read{239,239} %write{238,238}
+temp	float	$tmp184	%read{240,240} %write{239,239}
+temp	float	$tmp185	%read{243,243} %write{241,241}
+temp	float	$tmp186	%read{243,243} %write{242,242}
+temp	float	$tmp187	%read{245,245} %write{243,243}
+temp	float	$tmp188	%read{245,245} %write{244,244}
+temp	float	$tmp189	%read{247,247} %write{245,245}
+const	float	$const82	3		%read{246,246} %write{2147483647,-1}
+temp	float	$tmp190	%read{247,247} %write{246,246}
+const	float	$const83	1e-006		%read{249,249} %write{2147483647,-1}
+temp	int	$tmp191	%read{250,250} %write{249,249}
+temp	float	$tmp192	%read{281,281} %write{280,280}
+const	string	$const84	"get_sun_intensity"		%read{258,258} %write{2147483647,-1}
+const	float	$const85	0.046500001		%read{259,260} %write{2147483647,-1}
+temp	float	$tmp193	%read{264,264} %write{263,263}
+temp	int	$tmp194	%read{266,266} %write{265,265}
+temp	float	$tmp195	%read{268,268} %write{267,267}
+temp	float	$tmp196	%read{271,271} %write{270,270}
+temp	float	$tmp197	%read{270,270} %write{269,269}
+temp	float	$tmp198	%read{275,275} %write{271,271}
+temp	float	$tmp199	%read{274,274} %write{273,273}
+temp	float	$tmp200	%read{273,273} %write{272,272}
+temp	float	$tmp201	%read{275,275} %write{274,274}
+temp	float	$tmp202	%read{276,276} %write{275,275}
+temp	int	$tmp203	%read{278,278} %write{277,277}
+const	string	$const86	"get_cie_standard_sky_color"		%read{282,282} %write{2147483647,-1}
+temp	float	$tmp204	%read{284,284} %write{283,283}
+temp	float	$tmp205	%read{287,287} %write{285,285}
+temp	float	$tmp206	%read{287,287} %write{286,286}
+temp	float	$tmp207	%read{289,289} %write{288,288}
+temp	float	$tmp208	%read{292,292} %write{290,290}
+temp	float	$tmp209	%read{292,292} %write{291,291}
+temp	float	$tmp210	%read{303,303} %write{297,297}
+temp	float	$tmp211	%read{302,302} %write{298,298}
+temp	float	$tmp212	%read{302,302} %write{301,301}
+temp	float	$tmp213	%read{301,301} %write{300,300}
+temp	float	$tmp214	%read{300,300} %write{299,299}
+temp	float	$tmp215	%read{303,303} %write{302,302}
+temp	float	$tmp216	%read{304,304} %write{303,303}
+temp	float	$tmp217	%read{311,311} %write{308,308}
+temp	float	$tmp218	%read{308,308} %write{307,307}
+temp	float	$tmp219	%read{311,311} %write{310,310}
+temp	float	$tmp220	%read{310,310} %write{309,309}
+temp	float	$tmp221	%read{312,312} %write{311,311}
+temp	float	$tmp222	%read{313,313} %write{312,312}
+temp	float	$tmp223	%read{316,316} %write{313,313}
+temp	float	$tmp224	%read{315,315} %write{314,314}
+temp	float	$tmp225	%read{316,316} %write{315,315}
+temp	float	$tmp226	%read{319,319} %write{318,318}
+temp	float	$tmp227	%read{318,318} %write{317,317}
+temp	float	$tmp228	%read{320,320} %write{319,319}
+temp	float	$tmp229	%read{325,325} %write{322,322}
+temp	float	$tmp230	%read{322,322} %write{321,321}
+temp	float	$tmp231	%read{325,325} %write{324,324}
+temp	float	$tmp232	%read{324,324} %write{323,323}
+temp	float	$tmp233	%read{326,326} %write{325,325}
+temp	float	$tmp234	%read{327,327} %write{326,326}
+temp	float	$tmp235	%read{330,330} %write{327,327}
+temp	float	$tmp236	%read{329,329} %write{328,328}
+temp	float	$tmp237	%read{330,330} %write{329,329}
+temp	float	$tmp238	%read{332,332} %write{331,331}
+temp	float	$tmp239	%read{333,333} %write{332,332}
+temp	float	$tmp240	%read{336,336} %write{334,334}
+temp	float	$tmp241	%read{336,336} %write{335,335}
+const	float	$const87	0.0049999999		%read{338,338} %write{2147483647,-1}
+temp	float	$tmp242	%read{339,339} %write{338,338}
+code ___main___
+	assign		result $const1 	%filename{"E:/github/elaramax/Shaders/physicalsky.osl"} %line{217} %argrw{"wr"}
+	assign		Iw I 	%line{219} %argrw{"wr"}
+	compref		$tmp1 Iw $const2 	%line{220} %argrw{"wrr"}
+	compref		$tmp2 Iw $const3 	%argrw{"wrr"}
+	compref		$tmp3 Iw $const4 	%argrw{"wrr"}
+	neg		$tmp4 $tmp3 	%argrw{"wr"}
+	vector		ray_dir $tmp1 $tmp2 $tmp4 	%argrw{"wrrr"}
+	compref		$tmp5 ray_dir $const4 	%line{222} %argrw{"wrr"}
+	le		$tmp6 $tmp5 $const5 	%argrw{"wrr"}
+	if		$tmp6 11 11 	%argrw{"r"}
+	compassign	ray_dir $const4 $const5 	%line{224} %argrw{"wrr"}
+	max		haze_val haze $const6 	%line{226} %argrw{"wrr"}
+	compref		$tmp7 sun_dir $const2 	%line{228} %argrw{"wrr"}
+	compref		$tmp8 sun_dir $const3 	%argrw{"wrr"}
+	compref		$tmp9 sun_dir $const4 	%argrw{"wrr"}
+	neg		$tmp10 $tmp9 	%argrw{"wr"}
+	vector		sun_d $tmp7 $tmp8 $tmp10 	%argrw{"wrrr"}
+	eq		$tmp11 type $const2 	%line{231} %argrw{"wrr"}
+	if		$tmp11 282 338 	%argrw{"r"}
+	functioncall	$const7 258 	%line{233} %argrw{"r"}
+	dot		___315_cos_gamma ray_dir sun_d 	%line{107} %argrw{"wrr"}
+	lt		$tmp13 ___315_cos_gamma $const8 	%line{108} %argrw{"wrr"}
+	if		$tmp13 24 24 	%argrw{"r"}
+	assign		___315_cos_gamma $const8 	%line{110} %argrw{"wr"}
+	gt		$tmp14 ___315_cos_gamma $const9 	%line{112} %argrw{"wrr"}
+	if		$tmp14 27 27 	%argrw{"r"}
+	sub		___315_cos_gamma $const6 ___315_cos_gamma 	%line{114} %argrw{"wrr"}
+	acos		___315_gamma ___315_cos_gamma 	%line{116} %argrw{"wr"}
+	compref		___315_cos_theta ray_dir $const4 	%line{118} %argrw{"wrr"}
+	compref		___315_cos_theta_sun sun_d $const4 	%line{119} %argrw{"wrr"}
+	mul		___315_t2 haze_val haze_val 	%line{121} %argrw{"wrr"}
+	acos		___315_theta_sun ___315_cos_theta_sun 	%line{123} %argrw{"wr"}
+	mul		___315_theta_sun2 ___315_theta_sun ___315_theta_sun 	%line{124} %argrw{"wrr"}
+	mul		___315_theta_sun3 ___315_theta_sun ___315_theta_sun2 	%line{125} %argrw{"wrr"}
+	mul		$tmp15 $const10 ___315_theta_sun3 	%line{127} %argrw{"wrr"}
+	mul		$tmp16 $const11 ___315_theta_sun2 	%argrw{"wrr"}
+	sub		$tmp17 $tmp15 $tmp16 	%argrw{"wrr"}
+	mul		$tmp18 $const12 ___315_theta_sun 	%argrw{"wrr"}
+	add		$tmp19 $tmp17 $tmp18 	%argrw{"wrr"}
+	add		$tmp20 $tmp19 $const8 	%argrw{"wrr"}
+	mul		$tmp21 $tmp20 ___315_t2 	%argrw{"wrr"}
+	mul		$tmp22 $const13 ___315_theta_sun3 	%argrw{"wrr"}
+	mul		$tmp23 $const14 ___315_theta_sun2 	%argrw{"wrr"}
+	add		$tmp24 $tmp22 $tmp23 	%argrw{"wrr"}
+	mul		$tmp25 $const15 ___315_theta_sun 	%argrw{"wrr"}
+	sub		$tmp26 $tmp24 $tmp25 	%argrw{"wrr"}
+	add		$tmp27 $tmp26 $const16 	%argrw{"wrr"}
+	mul		$tmp28 $tmp27 haze_val 	%argrw{"wrr"}
+	add		$tmp29 $tmp21 $tmp28 	%argrw{"wrr"}
+	mul		$tmp30 $const17 ___315_theta_sun3 	%argrw{"wrr"}
+	mul		$tmp31 $const18 ___315_theta_sun2 	%argrw{"wrr"}
+	sub		$tmp32 $tmp30 $tmp31 	%argrw{"wrr"}
+	mul		$tmp33 $const19 ___315_theta_sun 	%argrw{"wrr"}
+	add		$tmp34 $tmp32 $tmp33 	%argrw{"wrr"}
+	add		$tmp35 $tmp34 $const20 	%argrw{"wrr"}
+	add		___315_zenith_x $tmp29 $tmp35 	%argrw{"wrr"}
+	mul		$tmp36 $const21 ___315_theta_sun3 	%line{128} %argrw{"wrr"}
+	mul		$tmp37 $const22 ___315_theta_sun2 	%argrw{"wrr"}
+	sub		$tmp38 $tmp36 $tmp37 	%argrw{"wrr"}
+	mul		$tmp39 $const23 ___315_theta_sun 	%argrw{"wrr"}
+	add		$tmp40 $tmp38 $tmp39 	%argrw{"wrr"}
+	add		$tmp41 $tmp40 $const8 	%argrw{"wrr"}
+	mul		$tmp42 $tmp41 ___315_t2 	%argrw{"wrr"}
+	mul		$tmp43 $const24 ___315_theta_sun3 	%argrw{"wrr"}
+	mul		$tmp44 $const25 ___315_theta_sun2 	%argrw{"wrr"}
+	add		$tmp45 $tmp43 $tmp44 	%argrw{"wrr"}
+	mul		$tmp46 $const26 ___315_theta_sun 	%argrw{"wrr"}
+	sub		$tmp47 $tmp45 $tmp46 	%argrw{"wrr"}
+	add		$tmp48 $tmp47 $const27 	%argrw{"wrr"}
+	mul		$tmp49 $tmp48 haze_val 	%argrw{"wrr"}
+	add		$tmp50 $tmp42 $tmp49 	%argrw{"wrr"}
+	mul		$tmp51 $const28 ___315_theta_sun3 	%argrw{"wrr"}
+	mul		$tmp52 $const29 ___315_theta_sun2 	%argrw{"wrr"}
+	sub		$tmp53 $tmp51 $tmp52 	%argrw{"wrr"}
+	mul		$tmp54 $const30 ___315_theta_sun 	%argrw{"wrr"}
+	add		$tmp55 $tmp53 $tmp54 	%argrw{"wrr"}
+	add		$tmp56 $tmp55 $const31 	%argrw{"wrr"}
+	add		___315_zenith_y $tmp50 $tmp56 	%argrw{"wrr"}
+	div		$tmp57 $const32 $const33 	%line{130} %argrw{"wrr"}
+	div		$tmp58 haze_val $const34 	%argrw{"wrr"}
+	sub		$tmp59 $tmp57 $tmp58 	%argrw{"wrr"}
+	mul		$tmp60 $const6 ___315_theta_sun 	%argrw{"wrr"}
+	sub		$tmp61 $const35 $tmp60 	%argrw{"wrr"}
+	mul		___315_chi $tmp59 $tmp61 	%argrw{"wrr"}
+	mul		$tmp62 $const37 haze_val 	%line{131} %argrw{"wrr"}
+	sub		$tmp63 $tmp62 $const38 	%argrw{"wrr"}
+	mul		$tmp64 $const36 $tmp63 	%argrw{"wrr"}
+	tan		$tmp65 ___315_chi 	%argrw{"wr"}
+	mul		$tmp66 $tmp64 $tmp65 	%argrw{"wrr"}
+	mul		$tmp67 $const39 haze_val 	%argrw{"wrr"}
+	sub		$tmp68 $tmp66 $tmp67 	%argrw{"wrr"}
+	add		___315_zenith_Y $tmp68 $const40 	%argrw{"wrr"}
+	functioncall	$const41 139 	%line{132} %argrw{"r"}
+	dot		___309_cos_gamma ray_dir sun_d 	%line{60} %argrw{"wrr"}
+	lt		$tmp70 ___309_cos_gamma $const8 	%line{61} %argrw{"wrr"}
+	if		$tmp70 97 97 	%argrw{"r"}
+	assign		___309_cos_gamma $const8 	%line{63} %argrw{"wr"}
+	gt		$tmp71 ___309_cos_gamma $const9 	%line{65} %argrw{"wrr"}
+	if		$tmp71 100 100 	%argrw{"r"}
+	sub		___309_cos_gamma $const6 ___309_cos_gamma 	%line{67} %argrw{"wrr"}
+	acos		___309_gamma ___309_cos_gamma 	%line{69} %argrw{"wr"}
+	compref		___309_cos_theta ray_dir $const4 	%line{70} %argrw{"wrr"}
+	compref		___309_cos_theta_sun sun_d $const4 	%line{71} %argrw{"wrr"}
+	acos		___309_theta_sun ___309_cos_theta_sun 	%line{72} %argrw{"wr"}
+	mul		$tmp72 $const42 haze_val 	%line{74} %argrw{"wrr"}
+	sub		___309_a $tmp72 $const43 	%argrw{"wrr"}
+	mul		$tmp73 $const44 haze_val 	%line{75} %argrw{"wrr"}
+	add		___309_b $tmp73 $const45 	%argrw{"wrr"}
+	mul		$tmp74 $const46 haze_val 	%line{76} %argrw{"wrr"}
+	add		___309_c $tmp74 $const47 	%argrw{"wrr"}
+	mul		$tmp75 $const48 haze_val 	%line{77} %argrw{"wrr"}
+	sub		___309_d $tmp75 $const49 	%argrw{"wrr"}
+	mul		$tmp76 $const50 haze_val 	%line{78} %argrw{"wrr"}
+	add		___309_e $tmp76 $const51 	%argrw{"wrr"}
+	div		$tmp78 ___309_b ___309_cos_theta 	%line{79} %argrw{"wrr"}
+	exp		$tmp77 $tmp78 	%argrw{"wr"}
+	mul		$tmp79 ___309_a $tmp77 	%argrw{"wrr"}
+	add		$tmp80 $const9 $tmp79 	%argrw{"wrr"}
+	mul		$tmp82 ___309_d ___309_gamma 	%argrw{"wrr"}
+	exp		$tmp81 $tmp82 	%argrw{"wr"}
+	mul		$tmp83 ___309_c $tmp81 	%argrw{"wrr"}
+	add		$tmp84 $const9 $tmp83 	%argrw{"wrr"}
+	mul		$tmp85 ___309_e ___309_cos_gamma 	%argrw{"wrr"}
+	mul		$tmp86 $tmp85 ___309_cos_gamma 	%argrw{"wrr"}
+	add		$tmp87 $tmp84 $tmp86 	%argrw{"wrr"}
+	mul		$tmp88 $tmp80 $tmp87 	%argrw{"wrr"}
+	exp		$tmp89 ___309_b 	%argrw{"wr"}
+	mul		$tmp90 ___309_a $tmp89 	%argrw{"wrr"}
+	add		$tmp91 $const9 $tmp90 	%argrw{"wrr"}
+	mul		$tmp93 ___309_d ___309_theta_sun 	%argrw{"wrr"}
+	exp		$tmp92 $tmp93 	%argrw{"wr"}
+	mul		$tmp94 ___309_c $tmp92 	%argrw{"wrr"}
+	add		$tmp95 $const9 $tmp94 	%argrw{"wrr"}
+	mul		$tmp96 ___309_e ___309_cos_theta_sun 	%argrw{"wrr"}
+	mul		$tmp97 $tmp96 ___309_cos_theta_sun 	%argrw{"wrr"}
+	add		$tmp98 $tmp95 $tmp97 	%argrw{"wrr"}
+	mul		$tmp99 $tmp91 $tmp98 	%argrw{"wrr"}
+	div		___309_ratio $tmp88 $tmp99 	%argrw{"wrr"}
+	assign		$tmp69 ___309_ratio 	%line{80} %argrw{"wr"}
+	mul		___315_chromatic_Y ___315_zenith_Y $tmp69 	%line{132} %argrw{"wrr"}
+	mul		$tmp100 $const52 haze_val 	%line{136} %argrw{"wrr"}
+	sub		___315_a $tmp100 $const53 	%argrw{"wrr"}
+	mul		$tmp101 $const54 haze_val 	%line{137} %argrw{"wrr"}
+	add		___315_b $tmp101 $const55 	%argrw{"wrr"}
+	mul		$tmp102 $const56 haze_val 	%line{138} %argrw{"wrr"}
+	add		___315_c $tmp102 $const57 	%argrw{"wrr"}
+	mul		$tmp103 $const58 haze_val 	%line{139} %argrw{"wrr"}
+	sub		___315_d $tmp103 $const59 	%argrw{"wrr"}
+	mul		$tmp104 $const60 haze_val 	%line{140} %argrw{"wrr"}
+	add		___315_e $tmp104 $const61 	%argrw{"wrr"}
+	div		$tmp106 ___315_b ___315_cos_theta 	%line{141} %argrw{"wrr"}
+	exp		$tmp105 $tmp106 	%argrw{"wr"}
+	mul		$tmp107 ___315_a $tmp105 	%argrw{"wrr"}
+	add		$tmp108 $const9 $tmp107 	%argrw{"wrr"}
+	mul		$tmp110 ___315_d ___315_gamma 	%argrw{"wrr"}
+	exp		$tmp109 $tmp110 	%argrw{"wr"}
+	mul		$tmp111 ___315_c $tmp109 	%argrw{"wrr"}
+	add		$tmp112 $const9 $tmp111 	%argrw{"wrr"}
+	mul		$tmp113 ___315_e ___315_cos_gamma 	%argrw{"wrr"}
+	mul		$tmp114 $tmp113 ___315_cos_gamma 	%argrw{"wrr"}
+	add		$tmp115 $tmp112 $tmp114 	%argrw{"wrr"}
+	mul		$tmp116 $tmp108 $tmp115 	%argrw{"wrr"}
+	exp		$tmp117 ___315_b 	%line{142} %argrw{"wr"}
+	mul		$tmp118 ___315_a $tmp117 	%argrw{"wrr"}
+	add		$tmp119 $const9 $tmp118 	%argrw{"wrr"}
+	mul		$tmp121 ___315_d ___315_theta_sun 	%argrw{"wrr"}
+	exp		$tmp120 $tmp121 	%argrw{"wr"}
+	mul		$tmp122 ___315_c $tmp120 	%argrw{"wrr"}
+	add		$tmp123 $const9 $tmp122 	%argrw{"wrr"}
+	mul		$tmp124 ___315_e ___315_cos_theta_sun 	%argrw{"wrr"}
+	mul		$tmp125 $tmp124 ___315_cos_theta_sun 	%argrw{"wrr"}
+	add		$tmp126 $tmp123 $tmp125 	%argrw{"wrr"}
+	mul		$tmp127 $tmp119 $tmp126 	%argrw{"wrr"}
+	div		___315_ratio_x $tmp116 $tmp127 	%argrw{"wrr"}
+	mul		$tmp128 $const62 haze_val 	%line{145} %argrw{"wrr"}
+	sub		___315_a $tmp128 $const63 	%argrw{"wrr"}
+	mul		$tmp129 $const64 haze_val 	%line{146} %argrw{"wrr"}
+	add		___315_b $tmp129 $const65 	%argrw{"wrr"}
+	mul		$tmp130 $const66 haze_val 	%line{147} %argrw{"wrr"}
+	add		___315_c $tmp130 $const67 	%argrw{"wrr"}
+	mul		$tmp131 $const68 haze_val 	%line{148} %argrw{"wrr"}
+	sub		___315_d $tmp131 $const69 	%argrw{"wrr"}
+	mul		$tmp132 $const70 haze_val 	%line{149} %argrw{"wrr"}
+	add		___315_e $tmp132 $const71 	%argrw{"wrr"}
+	div		$tmp134 ___315_b ___315_cos_theta 	%line{150} %argrw{"wrr"}
+	exp		$tmp133 $tmp134 	%argrw{"wr"}
+	mul		$tmp135 ___315_a $tmp133 	%argrw{"wrr"}
+	add		$tmp136 $const9 $tmp135 	%argrw{"wrr"}
+	mul		$tmp138 ___315_d ___315_gamma 	%argrw{"wrr"}
+	exp		$tmp137 $tmp138 	%argrw{"wr"}
+	mul		$tmp139 ___315_c $tmp137 	%argrw{"wrr"}
+	add		$tmp140 $const9 $tmp139 	%argrw{"wrr"}
+	mul		$tmp141 ___315_e ___315_cos_gamma 	%argrw{"wrr"}
+	mul		$tmp142 $tmp141 ___315_cos_gamma 	%argrw{"wrr"}
+	add		$tmp143 $tmp140 $tmp142 	%argrw{"wrr"}
+	mul		$tmp144 $tmp136 $tmp143 	%argrw{"wrr"}
+	exp		$tmp145 ___315_b 	%line{151} %argrw{"wr"}
+	mul		$tmp146 ___315_a $tmp145 	%argrw{"wrr"}
+	add		$tmp147 $const9 $tmp146 	%argrw{"wrr"}
+	mul		$tmp149 ___315_d ___315_theta_sun 	%argrw{"wrr"}
+	exp		$tmp148 $tmp149 	%argrw{"wr"}
+	mul		$tmp150 ___315_c $tmp148 	%argrw{"wrr"}
+	add		$tmp151 $const9 $tmp150 	%argrw{"wrr"}
+	mul		$tmp152 ___315_e ___315_cos_theta_sun 	%argrw{"wrr"}
+	mul		$tmp153 $tmp152 ___315_cos_theta_sun 	%argrw{"wrr"}
+	add		$tmp154 $tmp151 $tmp153 	%argrw{"wrr"}
+	mul		$tmp155 $tmp147 $tmp154 	%argrw{"wrr"}
+	div		___315_ratio_y $tmp144 $tmp155 	%argrw{"wrr"}
+	mul		___315_chromaticity_x ___315_zenith_x ___315_ratio_x 	%line{154} %argrw{"wrr"}
+	mul		___315_chromaticity_y ___315_zenith_y ___315_ratio_y 	%line{155} %argrw{"wrr"}
+	functioncall	$const72 256 	%line{158} %argrw{"r"}
+	div		$tmp157 ___315_chromaticity_x ___315_chromaticity_y 	%line{85} %argrw{"wrr"}
+	sub		$tmp158 $const9 ___315_chromaticity_x 	%argrw{"wrr"}
+	sub		$tmp159 $tmp158 ___315_chromaticity_y 	%argrw{"wrr"}
+	div		$tmp160 $tmp159 ___315_chromaticity_y 	%argrw{"wrr"}
+	color		___312_spectrum $tmp157 $const9 $tmp160 	%argrw{"wrrr"}
+	compref		$tmp161 ___312_spectrum $const2 	%line{86} %argrw{"wrr"}
+	mul		$tmp162 $const73 $tmp161 	%argrw{"wrr"}
+	compref		$tmp163 ___312_spectrum $const4 	%argrw{"wrr"}
+	mul		$tmp164 $const74 $tmp163 	%argrw{"wrr"}
+	add		$tmp165 $tmp162 $tmp164 	%argrw{"wrr"}
+	compref		$tmp166 ___312_spectrum $const3 	%argrw{"wrr"}
+	mul		$tmp167 $const75 $tmp166 	%argrw{"wrr"}
+	add		$tmp168 $tmp165 $tmp167 	%argrw{"wrr"}
+	compref		$tmp169 ___312_spectrum $const2 	%line{87} %argrw{"wrr"}
+	mul		$tmp170 $const76 $tmp169 	%argrw{"wrr"}
+	compref		$tmp171 ___312_spectrum $const4 	%argrw{"wrr"}
+	mul		$tmp172 $const77 $tmp171 	%argrw{"wrr"}
+	add		$tmp173 $tmp170 $tmp172 	%argrw{"wrr"}
+	compref		$tmp174 ___312_spectrum $const3 	%argrw{"wrr"}
+	mul		$tmp175 $const78 $tmp174 	%argrw{"wrr"}
+	add		$tmp176 $tmp173 $tmp175 	%argrw{"wrr"}
+	compref		$tmp177 ___312_spectrum $const2 	%line{88} %argrw{"wrr"}
+	mul		$tmp178 $const79 $tmp177 	%argrw{"wrr"}
+	compref		$tmp179 ___312_spectrum $const4 	%argrw{"wrr"}
+	mul		$tmp180 $const80 $tmp179 	%argrw{"wrr"}
+	add		$tmp181 $tmp178 $tmp180 	%argrw{"wrr"}
+	compref		$tmp182 ___312_spectrum $const3 	%argrw{"wrr"}
+	mul		$tmp183 $const81 $tmp182 	%argrw{"wrr"}
+	add		$tmp184 $tmp181 $tmp183 	%argrw{"wrr"}
+	color		___312_res $tmp168 $tmp176 $tmp184 	%argrw{"wrrr"}
+	compref		$tmp185 ___312_res $const2 	%line{89} %argrw{"wrr"}
+	compref		$tmp186 ___312_res $const4 	%argrw{"wrr"}
+	add		$tmp187 $tmp185 $tmp186 	%argrw{"wrr"}
+	compref		$tmp188 ___312_res $const3 	%argrw{"wrr"}
+	add		$tmp189 $tmp187 $tmp188 	%argrw{"wrr"}
+	div		$tmp190 $const9 $const82 	%argrw{"wrr"}
+	mul		___312_result $tmp189 $tmp190 	%argrw{"wrr"}
+	assign		___312_rgb $const1 	%line{90} %argrw{"wr"}
+	lt		$tmp191 ___312_result $const83 	%line{91} %argrw{"wrr"}
+	if		$tmp191 253 256 	%argrw{"r"}
+	assign		$tmp156 ___312_rgb 	%line{93} %argrw{"wr"}
+	return
+	div		___312_rgb ___312_res ___312_result 	%line{97} %argrw{"wrr"}
+	assign		$tmp156 ___312_rgb 	%line{98} %argrw{"wr"}
+	return
+	mul		___315_linear_RGB $tmp156 ___315_chromatic_Y 	%line{158} %argrw{"wrr"}
+	assign		$tmp12 ___315_linear_RGB 	%line{159} %argrw{"wr"}
+	functioncall	$const84 281 	%line{234} %argrw{"r"}
+	mul		___306_sun_disk_size sun_disk_size $const85 	%line{37} %argrw{"wrr"}
+	mul		___306_sun_glow_size sun_glow_size $const85 	%line{38} %argrw{"wrr"}
+	add		___306_sun_total_size ___306_sun_disk_size ___306_sun_glow_size 	%line{39} %argrw{"wrr"}
+	assign		___306_intensity $const9 	%line{41} %argrw{"wr"}
+	dot		$tmp193 ray_dir sun_d 	%line{42} %argrw{"wrr"}
+	acos		___306_gamma $tmp193 	%argrw{"wr"}
+	lt		$tmp194 ___306_gamma ___306_sun_total_size 	%line{43} %argrw{"wrr"}
+	if		$tmp194 280 280 	%argrw{"r"}
+	div		$tmp195 ___306_gamma ___306_sun_total_size 	%line{45} %argrw{"wrr"}
+	sub		___307_r $const9 $tmp195 	%argrw{"wrr"}
+	mul		$tmp197 haze_val $const6 	%line{46} %argrw{"wrr"}
+	smoothstep	$tmp196 $const8 $tmp197 ___307_r 	%argrw{"wrrr"}
+	mul		$tmp198 sun_disk_intensity $tmp196 	%argrw{"wrr"}
+	mul		$tmp200 sun_glow_falloff haze_val 	%argrw{"wrr"}
+	pow		$tmp199 ___307_r $tmp200 	%argrw{"wrr"}
+	mul		$tmp201 sun_glow_intensity $tmp199 	%argrw{"wrr"}
+	add		$tmp202 $tmp198 $tmp201 	%argrw{"wrr"}
+	add		___306_intensity ___306_intensity $tmp202 	%argrw{"wrr"}
+	lt		$tmp203 ___306_gamma ___306_sun_disk_size 	%line{47} %argrw{"wrr"}
+	if		$tmp203 280 280 	%argrw{"r"}
+	add		___306_intensity ___306_intensity sun_disk_intensity 	%line{49} %argrw{"wrr"}
+	assign		$tmp192 ___306_intensity 	%line{52} %argrw{"wr"}
+	mul		sky_color $tmp12 $tmp192 	%line{234} %argrw{"wrr"}
+	functioncall	$const86 338 	%line{238} %argrw{"r"}
+	compref		$tmp204 ray_dir $const4 	%line{172} %argrw{"wrr"}
+	acos		___318_ray_pos_x $tmp204 	%argrw{"wr"}
+	compref		$tmp205 ray_dir $const3 	%line{173} %argrw{"wrr"}
+	compref		$tmp206 ray_dir $const2 	%argrw{"wrr"}
+	atan2		___318_ray_pos_y $tmp205 $tmp206 	%argrw{"wrr"}
+	compref		$tmp207 sun_d $const4 	%line{175} %argrw{"wrr"}
+	acos		___318_sun_pos_x $tmp207 	%argrw{"wr"}
+	compref		$tmp208 sun_d $const3 	%line{176} %argrw{"wrr"}
+	compref		$tmp209 sun_d $const2 	%argrw{"wrr"}
+	atan2		___318_sun_pos_y $tmp208 $tmp209 	%argrw{"wrr"}
+	cos		___318_cos_z_sun ___318_sun_pos_x 	%line{178} %argrw{"wr"}
+	cos		___318_cos_z ___318_ray_pos_x 	%line{179} %argrw{"wr"}
+	sin		___318_sin_z_sun ___318_sun_pos_x 	%line{180} %argrw{"wr"}
+	sin		___318_sin_z ___318_ray_pos_x 	%line{181} %argrw{"wr"}
+	mul		$tmp210 ___318_cos_z_sun ___318_cos_z 	%line{183} %argrw{"wrr"}
+	mul		$tmp211 ___318_sin_z_sun ___318_sin_z 	%argrw{"wrr"}
+	sub		$tmp214 ___318_ray_pos_y ___318_sun_pos_y 	%argrw{"wrr"}
+	fabs		$tmp213 $tmp214 	%argrw{"wr"}
+	cos		$tmp212 $tmp213 	%argrw{"wr"}
+	mul		$tmp215 $tmp211 $tmp212 	%argrw{"wrr"}
+	add		$tmp216 $tmp210 $tmp215 	%argrw{"wrr"}
+	acos		___318_chi $tmp216 	%argrw{"wr"}
+	cos		___318_cos_chi ___318_chi 	%line{184} %argrw{"wr"}
+	div		___318_pi_over_2 $const35 $const6 	%line{186} %argrw{"wrr"}
+	mul		$tmp218 d ___318_chi 	%line{187} %argrw{"wrr"}
+	exp		$tmp217 $tmp218 	%argrw{"wr"}
+	mul		$tmp220 d ___318_pi_over_2 	%argrw{"wrr"}
+	exp		$tmp219 $tmp220 	%argrw{"wr"}
+	sub		$tmp221 $tmp217 $tmp219 	%argrw{"wrr"}
+	mul		$tmp222 c $tmp221 	%argrw{"wrr"}
+	add		$tmp223 $const9 $tmp222 	%argrw{"wrr"}
+	mul		$tmp224 e ___318_cos_chi 	%argrw{"wrr"}
+	mul		$tmp225 $tmp224 ___318_cos_chi 	%argrw{"wrr"}
+	add		___318_f_chi $tmp223 $tmp225 	%argrw{"wrr"}
+	div		$tmp227 b ___318_cos_z 	%line{188} %argrw{"wrr"}
+	exp		$tmp226 $tmp227 	%argrw{"wr"}
+	mul		$tmp228 a $tmp226 	%argrw{"wrr"}
+	add		___318_phi_z $const9 $tmp228 	%argrw{"wrr"}
+	mul		$tmp230 d ___318_sun_pos_x 	%line{189} %argrw{"wrr"}
+	exp		$tmp229 $tmp230 	%argrw{"wr"}
+	mul		$tmp232 d ___318_pi_over_2 	%argrw{"wrr"}
+	exp		$tmp231 $tmp232 	%argrw{"wr"}
+	sub		$tmp233 $tmp229 $tmp231 	%argrw{"wrr"}
+	mul		$tmp234 c $tmp233 	%argrw{"wrr"}
+	add		$tmp235 $const9 $tmp234 	%argrw{"wrr"}
+	mul		$tmp236 e ___318_cos_z_sun 	%argrw{"wrr"}
+	mul		$tmp237 $tmp236 ___318_cos_z_sun 	%argrw{"wrr"}
+	add		___318_f_z_sun $tmp235 $tmp237 	%argrw{"wrr"}
+	exp		$tmp238 b 	%line{190} %argrw{"wr"}
+	mul		$tmp239 a $tmp238 	%argrw{"wrr"}
+	add		___318_phi_0 $const9 $tmp239 	%argrw{"wrr"}
+	mul		$tmp240 ___318_f_chi ___318_phi_z 	%line{191} %argrw{"wrr"}
+	mul		$tmp241 ___318_f_z_sun ___318_phi_0 	%argrw{"wrr"}
+	div		___318_ratio $tmp240 $tmp241 	%argrw{"wrr"}
+	mul		sky_color zenith_color ___318_ratio 	%line{193} %argrw{"wrr"}
+	mul		$tmp242 $const87 intensity 	%line{241} %argrw{"wrr"}
+	mul		sky_color $tmp242 sky_color 	%argrw{"wrr"}
+	assign		result sky_color 	%line{242} %argrw{"wr"}
+	end

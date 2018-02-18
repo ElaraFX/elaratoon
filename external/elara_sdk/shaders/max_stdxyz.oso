@@ -1,0 +1,228 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_stdxyz
+param	int	coordSys	0		%read{1,8} %write{2147483647,-1}
+param	string	mapChannel	""		%read{10,10} %write{2147483647,-1}
+param	vector	offset	0 0 0		%read{15,37} %write{2147483647,-1}
+param	vector	scale	1 1 1		%read{23,113} %write{2147483647,-1}
+param	vector	angle	0 0 0		%read{18,80} %write{2147483647,-1}
+param	float	blur	0		%read{2147483647,-1} %write{2147483647,-1}
+param	float	blurOffset	0		%read{2147483647,-1} %write{2147483647,-1}
+oparam	point	result	0 0 0		%read{116,117} %write{0,117}
+global	point	P	%read{4,7} %write{2147483647,-1}
+local	float	___305_s	%read{46,59} %write{42,42}
+local	float	___305_c	%read{46,59} %write{43,43}
+local	float	___305_tmp	%read{46,59} %write{46,59}
+local	int	___305_i	%read{46,59} %write{45,59}
+local	float	___308_s	%read{66,79} %write{62,62}
+local	float	___308_c	%read{66,79} %write{63,63}
+local	float	___308_tmp	%read{66,79} %write{66,79}
+local	int	___308_i	%read{66,79} %write{65,79}
+local	float	___311_s	%read{86,99} %write{82,82}
+local	float	___311_c	%read{86,99} %write{83,83}
+local	float	___311_tmp	%read{86,99} %write{86,99}
+local	int	___311_i	%read{86,99} %write{85,99}
+local	matrix	___315_tm	%read{28,116} %write{27,115}
+local	int	___315_i	%read{102,115} %write{101,115}
+const	point	$const1	0 0 0		%read{0,0} %write{2147483647,-1}
+const	int	$const2	0		%read{1,107} %write{2147483647,-1}
+temp	int	$tmp1	%read{2,2} %write{1,1}
+const	string	$const3	"object"		%read{4,4} %write{2147483647,-1}
+const	string	$const4	"transform"		%read{3,3} %write{2147483647,-1}
+const	string	$const5	"common"		%read{4,4} %write{2147483647,-1}
+const	int	$const6	3		%read{5,101} %write{2147483647,-1}
+temp	int	$tmp2	%read{6,6} %write{5,5}
+const	int	$const7	1		%read{8,111} %write{2147483647,-1}
+temp	int	$tmp3	%read{9,9} %write{8,8}
+temp	int	$tmp4	%read{11,11} %write{10,10}
+temp	int	$tmp5	%read{12,12} %write{11,11}
+temp	int	$tmp6	%read{2147483647,-1} %write{13,13}
+const	string	$const8	"uv0"		%read{13,13} %write{2147483647,-1}
+const	string	$const9	"eval_transform"		%read{14,14} %write{2147483647,-1}
+const	vector	$const10	0 0 0		%read{15,18} %write{2147483647,-1}
+temp	int	$tmp8	%read{16,16} %write{15,15}
+temp	int	$tmp9	%read{17,21} %write{16,20}
+temp	int	$tmp11	%read{19,19} %write{18,18}
+temp	int	$tmp12	%read{20,20} %write{19,19}
+temp	int	$tmp13	%read{22,26} %write{21,25}
+const	vector	$const11	1 1 1		%read{23,23} %write{2147483647,-1}
+temp	int	$tmp15	%read{24,24} %write{23,23}
+temp	int	$tmp16	%read{25,25} %write{24,24}
+temp	float	$tmp17	%read{30,30} %write{28,28}
+temp	float	$tmp18	%read{30,30} %write{29,29}
+temp	float	$tmp19	%read{31,31} %write{30,30}
+temp	float	$tmp20	%read{34,34} %write{32,32}
+temp	float	$tmp21	%read{34,34} %write{33,33}
+temp	float	$tmp22	%read{35,35} %write{34,34}
+const	int	$const12	2		%read{36,115} %write{2147483647,-1}
+temp	float	$tmp23	%read{38,38} %write{36,36}
+temp	float	$tmp24	%read{38,38} %write{37,37}
+temp	float	$tmp25	%read{39,39} %write{38,38}
+temp	float	$tmp26	%read{42,43} %write{40,40}
+const	string	$const13	"rotate_x"		%read{41,41} %write{2147483647,-1}
+const	int	$const14	4		%read{45,85} %write{2147483647,-1}
+temp	int	$tmp27	%read{44,59} %write{45,59}
+temp	float	$tmp28	%read{46,59} %write{46,59}
+temp	float	$tmp29	%read{46,59} %write{46,59}
+temp	float	$tmp30	%read{46,59} %write{46,59}
+temp	float	$tmp31	%read{46,59} %write{46,59}
+temp	float	$tmp32	%read{46,59} %write{46,59}
+temp	float	$tmp33	%read{46,59} %write{46,59}
+temp	float	$tmp34	%read{46,59} %write{46,59}
+temp	float	$tmp35	%read{46,59} %write{46,59}
+temp	float	$tmp36	%read{46,59} %write{46,59}
+temp	float	$tmp37	%read{62,63} %write{60,60}
+const	string	$const15	"rotate_y"		%read{61,61} %write{2147483647,-1}
+temp	int	$tmp38	%read{64,79} %write{65,79}
+temp	float	$tmp39	%read{66,79} %write{66,79}
+temp	float	$tmp40	%read{66,79} %write{66,79}
+temp	float	$tmp41	%read{66,79} %write{66,79}
+temp	float	$tmp42	%read{66,79} %write{66,79}
+temp	float	$tmp43	%read{66,79} %write{66,79}
+temp	float	$tmp44	%read{66,79} %write{66,79}
+temp	float	$tmp45	%read{66,79} %write{66,79}
+temp	float	$tmp46	%read{66,79} %write{66,79}
+temp	float	$tmp47	%read{66,79} %write{66,79}
+temp	float	$tmp48	%read{82,83} %write{80,80}
+const	string	$const16	"rotate_z"		%read{81,81} %write{2147483647,-1}
+temp	int	$tmp49	%read{84,99} %write{85,99}
+temp	float	$tmp50	%read{86,99} %write{86,99}
+temp	float	$tmp51	%read{86,99} %write{86,99}
+temp	float	$tmp52	%read{86,99} %write{86,99}
+temp	float	$tmp53	%read{86,99} %write{86,99}
+temp	float	$tmp54	%read{86,99} %write{86,99}
+temp	float	$tmp55	%read{86,99} %write{86,99}
+temp	float	$tmp56	%read{86,99} %write{86,99}
+temp	float	$tmp57	%read{86,99} %write{86,99}
+temp	float	$tmp58	%read{86,99} %write{86,99}
+temp	int	$tmp59	%read{100,115} %write{101,115}
+temp	float	$tmp60	%read{102,115} %write{102,115}
+temp	float	$tmp61	%read{102,115} %write{102,115}
+temp	float	$tmp62	%read{102,115} %write{102,115}
+temp	float	$tmp63	%read{102,115} %write{102,115}
+temp	float	$tmp64	%read{102,115} %write{102,115}
+temp	float	$tmp65	%read{102,115} %write{102,115}
+temp	float	$tmp66	%read{102,115} %write{102,115}
+temp	float	$tmp67	%read{102,115} %write{102,115}
+temp	float	$tmp68	%read{102,115} %write{102,115}
+code ___main___
+	assign		result $const1 	%filename{"E:/github/elaramax/Shaders/max_stdxyz.osl"} %line{109} %argrw{"wr"}
+	eq		$tmp1 coordSys $const2 	%line{111} %argrw{"wrr"}
+	if		$tmp1 5 14 	%argrw{"r"}
+	functioncall	$const4 5 	%line{113} %argrw{"r"}
+	transform	result $const5 $const3 P 	%filename{"E:/OSL_install\\shaders\\stdosl.h"} %line{243} %argrw{"wrrr"}
+	eq		$tmp2 coordSys $const6 	%filename{"E:/github/elaramax/Shaders/max_stdxyz.osl"} %line{115} %argrw{"wrr"}
+	if		$tmp2 8 14 	%argrw{"r"}
+	assign		result P 	%line{117} %argrw{"wr"}
+	eq		$tmp3 coordSys $const7 	%line{119} %argrw{"wrr"}
+	if		$tmp3 14 14 	%argrw{"r"}
+	getattribute	$tmp4 mapChannel result 	%line{121} %argrw{"wrw"}
+	eq		$tmp5 $tmp4 $const2 	%argrw{"wrr"}
+	if		$tmp5 14 14 	%argrw{"r"}
+	getattribute	$tmp6 $const8 result 	%line{123} %argrw{"wrw"}
+	functioncall	$const9 118 	%line{127} %argrw{"r"}
+	neq		$tmp8 offset $const10 	%line{69} %argrw{"wrr"}
+	neq		$tmp9 $tmp8 $const2 	%argrw{"wrr"}
+	if		$tmp9 18 21 	%line{70} %argrw{"r"}
+	neq		$tmp11 angle $const10 	%argrw{"wrr"}
+	neq		$tmp12 $tmp11 $const2 	%argrw{"wrr"}
+	assign		$tmp9 $tmp12 	%argrw{"wr"}
+	neq		$tmp13 $tmp9 $const2 	%argrw{"wrr"}
+	if		$tmp13 23 26 	%line{71} %argrw{"r"}
+	neq		$tmp15 scale $const11 	%argrw{"wrr"}
+	neq		$tmp16 $tmp15 $const2 	%argrw{"wrr"}
+	assign		$tmp13 $tmp16 	%argrw{"wr"}
+	if		$tmp13 117 117 	%line{69} %argrw{"r"}
+	assign		___315_tm $const7 	%line{73} %argrw{"wr"}
+	mxcompref	$tmp17 ___315_tm $const6 $const2 	%line{74} %argrw{"wrrr"}
+	compref		$tmp18 offset $const2 	%argrw{"wrr"}
+	add		$tmp19 $tmp17 $tmp18 	%argrw{"wrr"}
+	mxcompassign	___315_tm $const6 $const2 $tmp19 	%argrw{"wrrr"}
+	mxcompref	$tmp20 ___315_tm $const6 $const7 	%line{75} %argrw{"wrrr"}
+	compref		$tmp21 offset $const7 	%argrw{"wrr"}
+	add		$tmp22 $tmp20 $tmp21 	%argrw{"wrr"}
+	mxcompassign	___315_tm $const6 $const7 $tmp22 	%argrw{"wrrr"}
+	mxcompref	$tmp23 ___315_tm $const6 $const12 	%line{76} %argrw{"wrrr"}
+	compref		$tmp24 offset $const12 	%argrw{"wrr"}
+	add		$tmp25 $tmp23 $tmp24 	%argrw{"wrr"}
+	mxcompassign	___315_tm $const6 $const12 $tmp25 	%argrw{"wrrr"}
+	compref		$tmp26 angle $const2 	%line{78} %argrw{"wrr"}
+	functioncall	$const13 60 	%argrw{"r"}
+	sin		___305_s $tmp26 	%line{24} %argrw{"wr"}
+	cos		___305_c $tmp26 	%line{25} %argrw{"wr"}
+	for		$tmp27 46 48 60 60 	%line{29} %argrw{"r"}
+	assign		___305_i $const14 	%argrw{"wr"}
+	sub		___305_i ___305_i $const7 	%argrw{"wrr"}
+	ge		$tmp27 ___305_i $const2 	%argrw{"wrr"}
+	mxcompref	$tmp28 ___315_tm ___305_i $const7 	%line{31} %argrw{"wrrr"}
+	mul		$tmp29 $tmp28 ___305_c 	%argrw{"wrr"}
+	mxcompref	$tmp30 ___315_tm ___305_i $const12 	%argrw{"wrrr"}
+	mul		$tmp31 $tmp30 ___305_s 	%argrw{"wrr"}
+	sub		___305_tmp $tmp29 $tmp31 	%argrw{"wrr"}
+	mxcompref	$tmp32 ___315_tm ___305_i $const7 	%line{32} %argrw{"wrrr"}
+	mul		$tmp33 $tmp32 ___305_s 	%argrw{"wrr"}
+	mxcompref	$tmp34 ___315_tm ___305_i $const12 	%argrw{"wrrr"}
+	mul		$tmp35 $tmp34 ___305_c 	%argrw{"wrr"}
+	add		$tmp36 $tmp33 $tmp35 	%argrw{"wrr"}
+	mxcompassign	___315_tm ___305_i $const12 $tmp36 	%argrw{"wrrr"}
+	mxcompassign	___315_tm ___305_i $const7 ___305_tmp 	%line{33} %argrw{"wrrr"}
+	compref		$tmp37 angle $const7 	%line{79} %argrw{"wrr"}
+	functioncall	$const15 80 	%argrw{"r"}
+	sin		___308_s $tmp37 	%line{39} %argrw{"wr"}
+	cos		___308_c $tmp37 	%line{40} %argrw{"wr"}
+	for		$tmp38 66 68 80 80 	%line{44} %argrw{"r"}
+	assign		___308_i $const14 	%argrw{"wr"}
+	sub		___308_i ___308_i $const7 	%argrw{"wrr"}
+	ge		$tmp38 ___308_i $const2 	%argrw{"wrr"}
+	mxcompref	$tmp39 ___315_tm ___308_i $const12 	%line{46} %argrw{"wrrr"}
+	mul		$tmp40 $tmp39 ___308_c 	%argrw{"wrr"}
+	mxcompref	$tmp41 ___315_tm ___308_i $const2 	%argrw{"wrrr"}
+	mul		$tmp42 $tmp41 ___308_s 	%argrw{"wrr"}
+	sub		___308_tmp $tmp40 $tmp42 	%argrw{"wrr"}
+	mxcompref	$tmp43 ___315_tm ___308_i $const12 	%line{47} %argrw{"wrrr"}
+	mul		$tmp44 $tmp43 ___308_s 	%argrw{"wrr"}
+	mxcompref	$tmp45 ___315_tm ___308_i $const2 	%argrw{"wrrr"}
+	mul		$tmp46 $tmp45 ___308_c 	%argrw{"wrr"}
+	add		$tmp47 $tmp44 $tmp46 	%argrw{"wrr"}
+	mxcompassign	___315_tm ___308_i $const2 $tmp47 	%argrw{"wrrr"}
+	mxcompassign	___315_tm ___308_i $const12 ___308_tmp 	%line{48} %argrw{"wrrr"}
+	compref		$tmp48 angle $const12 	%line{80} %argrw{"wrr"}
+	functioncall	$const16 100 	%argrw{"r"}
+	sin		___311_s $tmp48 	%line{54} %argrw{"wr"}
+	cos		___311_c $tmp48 	%line{55} %argrw{"wr"}
+	for		$tmp49 86 88 100 100 	%line{59} %argrw{"r"}
+	assign		___311_i $const14 	%argrw{"wr"}
+	sub		___311_i ___311_i $const7 	%argrw{"wrr"}
+	ge		$tmp49 ___311_i $const2 	%argrw{"wrr"}
+	mxcompref	$tmp50 ___315_tm ___311_i $const2 	%line{61} %argrw{"wrrr"}
+	mul		$tmp51 $tmp50 ___311_c 	%argrw{"wrr"}
+	mxcompref	$tmp52 ___315_tm ___311_i $const7 	%argrw{"wrrr"}
+	mul		$tmp53 $tmp52 ___311_s 	%argrw{"wrr"}
+	sub		___311_tmp $tmp51 $tmp53 	%argrw{"wrr"}
+	mxcompref	$tmp54 ___315_tm ___311_i $const2 	%line{62} %argrw{"wrrr"}
+	mul		$tmp55 $tmp54 ___311_s 	%argrw{"wrr"}
+	mxcompref	$tmp56 ___315_tm ___311_i $const7 	%argrw{"wrrr"}
+	mul		$tmp57 $tmp56 ___311_c 	%argrw{"wrr"}
+	add		$tmp58 $tmp55 $tmp57 	%argrw{"wrr"}
+	mxcompassign	___315_tm ___311_i $const7 $tmp58 	%argrw{"wrrr"}
+	mxcompassign	___315_tm ___311_i $const2 ___311_tmp 	%line{63} %argrw{"wrrr"}
+	for		$tmp59 102 104 116 116 	%line{83} %argrw{"r"}
+	assign		___315_i $const6 	%argrw{"wr"}
+	sub		___315_i ___315_i $const7 	%argrw{"wrr"}
+	ge		$tmp59 ___315_i $const2 	%argrw{"wrr"}
+	mxcompref	$tmp60 ___315_tm ___315_i $const2 	%line{85} %argrw{"wrrr"}
+	compref		$tmp61 scale $const2 	%argrw{"wrr"}
+	mul		$tmp62 $tmp60 $tmp61 	%argrw{"wrr"}
+	mxcompassign	___315_tm ___315_i $const2 $tmp62 	%argrw{"wrrr"}
+	mxcompref	$tmp63 ___315_tm ___315_i $const7 	%line{86} %argrw{"wrrr"}
+	compref		$tmp64 scale $const7 	%argrw{"wrr"}
+	mul		$tmp65 $tmp63 $tmp64 	%argrw{"wrr"}
+	mxcompassign	___315_tm ___315_i $const7 $tmp65 	%argrw{"wrrr"}
+	mxcompref	$tmp66 ___315_tm ___315_i $const12 	%line{87} %argrw{"wrrr"}
+	compref		$tmp67 scale $const12 	%argrw{"wrr"}
+	mul		$tmp68 $tmp66 $tmp67 	%argrw{"wrr"}
+	mxcompassign	___315_tm ___315_i $const12 $tmp68 	%argrw{"wrrr"}
+	transform	result ___315_tm result 	%line{90} %argrw{"wrr"}
+	assign		result result 	%line{93} %argrw{"wr"}
+	end

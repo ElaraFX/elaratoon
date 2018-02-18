@@ -1,0 +1,184 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_file
+param	float	i_alphaGain	1 		 %read{85,85} %write{2147483647,-1}
+param	int	i_alphaIsLuminance	0 		 %read{73,73} %write{2147483647,-1}
+param	float	i_alphaOffset	0 		 %read{86,86} %write{2147483647,-1}
+param	color	i_colorGain	1 1 1 		 %read{83,83} %write{2147483647,-1}
+param	color	i_colorOffset	0 0 0 		 %read{84,84} %write{2147483647,-1}
+param	color	i_defaultColor	0 0 0 		 %read{87,87} %write{2147483647,-1}
+param	string	i_fileName	"" 		 %read{0,0} %write{2147483647,-1}
+param	int	i_filterType	0 		 %read{24,24} %write{2147483647,-1}
+param	float	i_filter	0 		 %read{26,26} %write{2147483647,-1}
+param	float	i_filterOffset	0 		 %read{29,30} %write{2147483647,-1}
+param	int	i_invert	0 		 %read{74,74} %write{2147483647,-1}
+param	vector	i_uvCoord	0 0 0 		 %read{1,2} %write{2147483647,-1} %derivs
+oparam	float	o_outAlpha	0 		 %read{79,89} %write{29,88}
+oparam	color	o_outColor	0 0 0 		 %read{33,88} %write{29,87}
+oparam	color	o_outTransparency	0 0 0 		 %read{2147483647,-1} %write{90,90}
+local	string	fileName	 %read{3,41} %write{0,0}
+local	float	ss	 %read{4,30} %write{1,17} %derivs
+local	float	tt	 %read{8,30} %write{2,22} %derivs
+local	int	num_channels	 %read{27,31} %write{3,3}
+local	float	___344_filterWidth	 %read{29,30} %write{23,26}
+local	int	___350_nativeFormat	 %read{42,55} %write{40,41}
+local	float	___351_texture_gamma	 %read{62,71} %write{59,60}
+const	int	$const1	0		 %read{1,66} %write{2147483647,-1}
+const	int	$const2	1		 %read{2,69} %write{2147483647,-1}
+temp	int	$tmp1	 %read{2147483647,-1} %write{3,3}
+const	string	$const3	"channels"		 %read{3,3} %write{2147483647,-1}
+temp	float	$tmp2	 %read{5,5} %write{4,4}
+const	int	$const4	100000		 %read{5,9} %write{2147483647,-1}
+temp	int	$tmp3	 %read{6,6} %write{5,5}
+temp	int	$tmp4	 %read{7,12} %write{6,11}
+temp	float	$tmp5	 %read{9,9} %write{8,8}
+temp	int	$tmp6	 %read{10,10} %write{9,9}
+temp	int	$tmp7	 %read{11,11} %write{10,10}
+const	float	$const5	1		 %read{14,89} %write{2147483647,-1}
+const	string	$const6	"mod"		 %read{13,18} %write{2147483647,-1}
+temp	float	$tmp8	 %read{16,16} %write{15,15} %derivs
+temp	float	$tmp9	 %read{15,15} %write{14,14} %derivs
+temp	float	$tmp10	 %read{17,17} %write{16,16} %derivs
+temp	float	$tmp11	 %read{21,21} %write{20,20} %derivs
+temp	float	$tmp12	 %read{20,20} %write{19,19} %derivs
+temp	float	$tmp13	 %read{22,22} %write{21,21} %derivs
+temp	int	$tmp14	 %read{25,25} %write{24,24}
+const	int	$const7	3		 %read{27,45} %write{2147483647,-1}
+temp	int	$tmp15	 %read{28,28} %write{27,27}
+const	string	$const8	"width"		 %read{29,30} %write{2147483647,-1}
+const	string	$const9	"blur"		 %read{29,30} %write{2147483647,-1}
+const	string	$const10	"swrap"		 %read{29,30} %write{2147483647,-1}
+const	string	$const11	"clamp"		 %read{29,30} %write{2147483647,-1}
+const	string	$const12	"twrap"		 %read{29,30} %write{2147483647,-1}
+const	string	$const13	"alpha"		 %read{29,29} %write{2147483647,-1}
+temp	int	$tmp16	 %read{32,32} %write{31,31}
+temp	float	$tmp17	 %read{35,35} %write{34,34}
+temp	int	$tmp18	 %read{38,38} %write{37,37}
+const	string	$const14	"displace"		 %read{37,37} %write{2147483647,-1}
+temp	int	$tmp19	 %read{39,39} %write{38,38}
+temp	int	$tmp20	 %read{2147483647,-1} %write{41,41}
+const	string	$const15	"format"		 %read{41,41} %write{2147483647,-1}
+const	int	$const16	2		 %read{42,72} %write{2147483647,-1}
+temp	int	$tmp21	 %read{43,43} %write{42,42}
+temp	int	$tmp22	 %read{44,48} %write{43,47}
+temp	int	$tmp23	 %read{46,46} %write{45,45}
+temp	int	$tmp24	 %read{47,47} %write{46,46}
+temp	int	$tmp25	 %read{49,53} %write{48,52}
+const	int	$const17	4		 %read{50,50} %write{2147483647,-1}
+temp	int	$tmp26	 %read{51,51} %write{50,50}
+temp	int	$tmp27	 %read{52,52} %write{51,51}
+temp	int	$tmp28	 %read{54,58} %write{53,57}
+const	int	$const18	5		 %read{55,55} %write{2147483647,-1}
+temp	int	$tmp29	 %read{56,56} %write{55,55}
+temp	int	$tmp30	 %read{57,57} %write{56,56}
+temp	int	$tmp31	 %read{2147483647,-1} %write{60,60}
+const	string	$const19	"options"		 %read{60,60} %write{2147483647,-1}
+const	string	$const20	"texture_gamma"		 %read{60,60} %write{2147483647,-1}
+const	string	$const21	"ei_degamma"		 %read{61,61} %write{2147483647,-1}
+temp	int	$tmp32	 %read{63,63} %write{62,62}
+temp	float	$tmp33	 %read{66,66} %write{65,65}
+temp	float	$tmp34	 %read{65,65} %write{64,64}
+temp	float	$tmp35	 %read{69,69} %write{68,68}
+temp	float	$tmp36	 %read{68,68} %write{67,67}
+temp	float	$tmp37	 %read{72,72} %write{71,71}
+temp	float	$tmp38	 %read{71,71} %write{70,70}
+temp	float	$tmp39	 %read{80,80} %write{73,73}
+temp	float	$tmp40	 %read{76,76} %write{74,74}
+const	string	$const22	"colorBalance"		 %read{75,75} %write{2147483647,-1}
+const	float	$const23	0		 %read{76,80} %write{2147483647,-1}
+temp	int	$tmp41	 %read{77,77} %write{76,76}
+temp	int	$tmp42	 %read{81,81} %write{80,80}
+temp	float	$tmp43	 %read{90,90} %write{89,89}
+code ___main___
+	assign		fileName i_fileName 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_file.osl"} %line{51} %argrw{"wr"}
+	compref		ss i_uvCoord $const1 	%line{55} %argrw{"wrr"}
+	compref		tt i_uvCoord $const2 	%line{56} %argrw{"wrr"}
+	gettextureinfo	$tmp1 fileName $const3 num_channels 	%line{59} %argrw{"wrrw"}
+	abs		$tmp2 ss 	%line{61} %argrw{"wr"}
+	lt		$tmp3 $tmp2 $const4 	%argrw{"wrr"}
+	neq		$tmp4 $tmp3 $const1 	%argrw{"wrr"}
+	if		$tmp4 12 12 	%argrw{"r"}
+	abs		$tmp5 tt 	%argrw{"wr"}
+	lt		$tmp6 $tmp5 $const4 	%argrw{"wrr"}
+	neq		$tmp7 $tmp6 $const1 	%argrw{"wrr"}
+	assign		$tmp4 $tmp7 	%argrw{"wr"}
+	if		$tmp4 87 89 	%argrw{"r"}
+	functioncall	$const6 18 	%line{63} %argrw{"r"}
+	div		$tmp9 ss $const5 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{135} %argrw{"wrr"}
+	floor		$tmp8 $tmp9 	%argrw{"wr"}
+	mul		$tmp10 $const5 $tmp8 	%argrw{"wrr"}
+	sub		ss ss $tmp10 	%argrw{"wrr"}
+	functioncall	$const6 23 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_file.osl"} %line{64} %argrw{"r"}
+	div		$tmp12 tt $const5 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{135} %argrw{"wrr"}
+	floor		$tmp11 $tmp12 	%argrw{"wr"}
+	mul		$tmp13 $const5 $tmp11 	%argrw{"wrr"}
+	sub		tt tt $tmp13 	%argrw{"wrr"}
+	assign		___344_filterWidth $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_file.osl"} %line{66} %argrw{"wr"}
+	gt		$tmp14 i_filterType $const1 	%line{67} %argrw{"wrr"}
+	if		$tmp14 27 27 	%argrw{"r"}
+	assign		___344_filterWidth i_filter 	%line{69} %argrw{"wr"}
+	gt		$tmp15 num_channels $const7 	%line{72} %argrw{"wrr"}
+	if		$tmp15 30 37 	%argrw{"r"}
+	texture		o_outColor fileName ss tt $const8 ___344_filterWidth $const9 i_filterOffset $const10 $const11 $const12 $const11 $const13 o_outAlpha 	%line{81} %argrw{"wrrrrrrrrrrrrw"} %argderivs{2,3}
+	texture		o_outColor fileName ss tt $const8 ___344_filterWidth $const9 i_filterOffset $const10 $const11 $const12 $const11 	%line{91} %argrw{"wrrrrrrrrrrr"} %argderivs{2,3}
+	eq		$tmp16 num_channels $const7 	%line{93} %argrw{"wrr"}
+	if		$tmp16 34 37 	%argrw{"r"}
+	luminance	o_outAlpha o_outColor 	%line{95} %argrw{"wr"}
+	compref		$tmp17 o_outColor $const1 	%line{99} %argrw{"wrr"}
+	assign		o_outColor $tmp17 	%argrw{"wr"}
+	compref		o_outAlpha o_outColor $const1 	%line{100} %argrw{"wrr"}
+	raytype		$tmp18 $const14 	%line{104} %argrw{"wr"}
+	eq		$tmp19 $tmp18 $const1 	%argrw{"wrr"}
+	if		$tmp19 73 73 	%argrw{"r"}
+	assign		___350_nativeFormat $const1 	%line{106} %argrw{"wr"}
+	gettextureinfo	$tmp20 fileName $const15 ___350_nativeFormat 	%line{107} %argrw{"wrrw"}
+	eq		$tmp21 ___350_nativeFormat $const16 	%line{112} %argrw{"wrr"}
+	neq		$tmp22 $tmp21 $const1 	%argrw{"wrr"}
+	if		$tmp22 45 48 	%argrw{"r"}
+	eq		$tmp23 ___350_nativeFormat $const7 	%argrw{"wrr"}
+	neq		$tmp24 $tmp23 $const1 	%argrw{"wrr"}
+	assign		$tmp22 $tmp24 	%argrw{"wr"}
+	neq		$tmp25 $tmp22 $const1 	%argrw{"wrr"}
+	if		$tmp25 50 53 	%line{113} %argrw{"r"}
+	eq		$tmp26 ___350_nativeFormat $const17 	%argrw{"wrr"}
+	neq		$tmp27 $tmp26 $const1 	%argrw{"wrr"}
+	assign		$tmp25 $tmp27 	%argrw{"wr"}
+	neq		$tmp28 $tmp25 $const1 	%argrw{"wrr"}
+	if		$tmp28 55 58 	%argrw{"r"}
+	eq		$tmp29 ___350_nativeFormat $const18 	%argrw{"wrr"}
+	neq		$tmp30 $tmp29 $const1 	%argrw{"wrr"}
+	assign		$tmp28 $tmp30 	%argrw{"wr"}
+	if		$tmp28 73 73 	%line{112} %argrw{"r"}
+	assign		___351_texture_gamma $const5 	%line{115} %argrw{"wr"}
+	getattribute	$tmp31 $const19 $const20 ___351_texture_gamma 	%line{116} %argrw{"wrrw"}
+	functioncall	$const21 73 	%line{118} %argrw{"r"}
+	neq		$tmp32 ___351_texture_gamma $const5 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{155} %argrw{"wrr"}
+	if		$tmp32 73 73 	%argrw{"r"}
+	compref		$tmp34 o_outColor $const1 	%line{157} %argrw{"wrr"}
+	pow		$tmp33 $tmp34 ___351_texture_gamma 	%argrw{"wrr"}
+	compassign	o_outColor $const1 $tmp33 	%argrw{"wrr"}
+	compref		$tmp36 o_outColor $const2 	%line{158} %argrw{"wrr"}
+	pow		$tmp35 $tmp36 ___351_texture_gamma 	%argrw{"wrr"}
+	compassign	o_outColor $const2 $tmp35 	%argrw{"wrr"}
+	compref		$tmp38 o_outColor $const16 	%line{159} %argrw{"wrr"}
+	pow		$tmp37 $tmp38 ___351_texture_gamma 	%argrw{"wrr"}
+	compassign	o_outColor $const16 $tmp37 	%argrw{"wrr"}
+	assign		$tmp39 i_alphaIsLuminance 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_file.osl"} %line{129} %argrw{"wr"}
+	assign		$tmp40 i_invert 	%argrw{"wr"}
+	functioncall	$const22 87 	%argrw{"r"}
+	neq		$tmp41 $tmp40 $const23 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{124} %argrw{"wrr"}
+	if		$tmp41 80 80 	%argrw{"r"}
+	sub		o_outColor $const5 o_outColor 	%line{126} %argrw{"wrr"}
+	sub		o_outAlpha $const5 o_outAlpha 	%line{127} %argrw{"wrr"}
+	neq		$tmp42 $tmp39 $const23 	%line{130} %argrw{"wrr"}
+	if		$tmp42 83 83 	%argrw{"r"}
+	luminance	o_outAlpha o_outColor 	%line{132} %argrw{"wr"}
+	mul		o_outColor o_outColor i_colorGain 	%line{135} %argrw{"wrr"}
+	add		o_outColor o_outColor i_colorOffset 	%line{136} %argrw{"wrr"}
+	mul		o_outAlpha o_outAlpha i_alphaGain 	%line{138} %argrw{"wrr"}
+	add		o_outAlpha o_outAlpha i_alphaOffset 	%line{139} %argrw{"wrr"}
+	assign		o_outColor i_defaultColor 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_file.osl"} %line{133} %argrw{"wr"}
+	luminance	o_outAlpha o_outColor 	%line{134} %argrw{"wr"}
+	sub		$tmp43 $const5 o_outAlpha 	%line{137} %argrw{"wrr"}
+	assign		o_outTransparency $tmp43 	%argrw{"wr"}
+	end

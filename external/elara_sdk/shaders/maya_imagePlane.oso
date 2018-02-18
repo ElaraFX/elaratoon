@@ -1,0 +1,56 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_imagePlane
+param	float	i_alphaGain	1 		 %read{2147483647,-1} %write{2147483647,-1}
+param	color	i_colorGain	1 1 1 		 %read{2147483647,-1} %write{2147483647,-1}
+param	color	i_colorOffset	0 0 0 		 %read{2147483647,-1} %write{2147483647,-1}
+param	string	i_fileName	"" 		 %read{0,0} %write{2147483647,-1}
+oparam	float	o_outAlpha	0 		 %read{15,15} %write{7,14}
+oparam	color	o_outColor	0 0 0 		 %read{11,18} %write{7,13}
+oparam	color	o_outTransparency	0 0 0 		 %read{2147483647,-1} %write{16,16}
+global	float	u	 %read{1,1} %write{2147483647,-1} %derivs
+global	float	v	 %read{2,2} %write{2147483647,-1} %derivs
+global	closure color	Ci	 %read{2147483647,-1} %write{18,18}
+local	string	fileName	 %read{3,8} %write{0,0}
+local	float	ss	 %read{7,8} %write{1,1} %derivs
+local	float	tt	 %read{7,8} %write{2,2} %derivs
+local	int	num_channels	 %read{5,9} %write{3,3}
+local	float	filterWidth	 %read{7,8} %write{4,4}
+const	float	$const1	1		 %read{2,15} %write{2147483647,-1}
+temp	int	$tmp1	 %read{2147483647,-1} %write{3,3}
+const	string	$const2	"channels"		 %read{3,3} %write{2147483647,-1}
+const	int	$const3	0		 %read{4,14} %write{2147483647,-1}
+const	int	$const4	3		 %read{5,9} %write{2147483647,-1}
+temp	int	$tmp2	 %read{6,6} %write{5,5}
+const	string	$const5	"width"		 %read{7,8} %write{2147483647,-1}
+const	string	$const6	"blur"		 %read{7,8} %write{2147483647,-1}
+const	string	$const7	"swrap"		 %read{7,8} %write{2147483647,-1}
+const	string	$const8	"clamp"		 %read{7,8} %write{2147483647,-1}
+const	string	$const9	"twrap"		 %read{7,8} %write{2147483647,-1}
+const	string	$const10	"alpha"		 %read{7,7} %write{2147483647,-1}
+temp	int	$tmp3	 %read{10,10} %write{9,9}
+temp	float	$tmp4	 %read{13,13} %write{12,12}
+temp	float	$tmp5	 %read{16,16} %write{15,15}
+temp	closure color	$tmp6	 %read{18,18} %write{17,17}
+const	string	$const12	"holdout"		 %read{17,17} %write{2147483647,-1}
+code ___main___
+	assign		fileName i_fileName 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_imagePlane.osl"} %line{35} %argrw{"wr"}
+	assign		ss u 	%line{39} %argrw{"wr"}
+	sub		tt $const1 v 	%line{40} %argrw{"wrr"}
+	gettextureinfo	$tmp1 fileName $const2 num_channels 	%line{43} %argrw{"wrrw"}
+	assign		filterWidth $const3 	%line{45} %argrw{"wr"}
+	gt		$tmp2 num_channels $const4 	%line{46} %argrw{"wrr"}
+	if		$tmp2 8 15 	%argrw{"r"}
+	texture		o_outColor fileName ss tt $const5 filterWidth $const6 $const3 $const7 $const8 $const9 $const8 $const10 o_outAlpha 	%line{55} %argrw{"wrrrrrrrrrrrrw"} %argderivs{2,3}
+	texture		o_outColor fileName ss tt $const5 filterWidth $const6 $const3 $const7 $const8 $const9 $const8 	%line{65} %argrw{"wrrrrrrrrrrr"} %argderivs{2,3}
+	eq		$tmp3 num_channels $const4 	%line{67} %argrw{"wrr"}
+	if		$tmp3 12 15 	%argrw{"r"}
+	luminance	o_outAlpha o_outColor 	%line{69} %argrw{"wr"}
+	compref		$tmp4 o_outColor $const3 	%line{73} %argrw{"wrr"}
+	assign		o_outColor $tmp4 	%argrw{"wr"}
+	compref		o_outAlpha o_outColor $const3 	%line{74} %argrw{"wrr"}
+	sub		$tmp5 $const1 o_outAlpha 	%line{78} %argrw{"wrr"}
+	assign		o_outTransparency $tmp5 	%argrw{"wr"}
+	closure		$tmp6 $const12 	%line{79} %argrw{"wr"}
+	mul		Ci $tmp6 o_outColor 	%argrw{"wrr"}
+	end

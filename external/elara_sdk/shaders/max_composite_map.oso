@@ -1,0 +1,1244 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_composite_map
+param	color	tex_mapList_1	0 0 0		%read{0,0} %write{2147483647,-1}
+param	color	tex_mapList_2	0 0 0		%read{1,1} %write{2147483647,-1}
+param	color	tex_mapList_3	0 0 0		%read{2,2} %write{2147483647,-1}
+param	color	tex_mapList_4	0 0 0		%read{3,3} %write{2147483647,-1}
+param	color	tex_mapList_5	0 0 0		%read{4,4} %write{2147483647,-1}
+param	color	tex_mapList_6	0 0 0		%read{5,5} %write{2147483647,-1}
+param	color	tex_mapList_7	0 0 0		%read{6,6} %write{2147483647,-1}
+param	color	tex_mapList_8	0 0 0		%read{7,7} %write{2147483647,-1}
+param	color	tex_mapList_9	0 0 0		%read{8,8} %write{2147483647,-1}
+param	color	tex_mapList_10	0 0 0		%read{9,9} %write{2147483647,-1}
+param	float	tex_mapList_1_alpha	0		%read{10,10} %write{2147483647,-1}
+param	float	tex_mapList_2_alpha	0		%read{11,11} %write{2147483647,-1}
+param	float	tex_mapList_3_alpha	0		%read{12,12} %write{2147483647,-1}
+param	float	tex_mapList_4_alpha	0		%read{13,13} %write{2147483647,-1}
+param	float	tex_mapList_5_alpha	0		%read{14,14} %write{2147483647,-1}
+param	float	tex_mapList_6_alpha	0		%read{15,15} %write{2147483647,-1}
+param	float	tex_mapList_7_alpha	0		%read{16,16} %write{2147483647,-1}
+param	float	tex_mapList_8_alpha	0		%read{17,17} %write{2147483647,-1}
+param	float	tex_mapList_9_alpha	0		%read{18,18} %write{2147483647,-1}
+param	float	tex_mapList_10_alpha	0		%read{19,19} %write{2147483647,-1}
+param	vector	tex_mapList_1_bump	0 0 0		%read{20,20} %write{2147483647,-1}
+param	vector	tex_mapList_2_bump	0 0 0		%read{21,21} %write{2147483647,-1}
+param	vector	tex_mapList_3_bump	0 0 0		%read{22,22} %write{2147483647,-1}
+param	vector	tex_mapList_4_bump	0 0 0		%read{23,23} %write{2147483647,-1}
+param	vector	tex_mapList_5_bump	0 0 0		%read{24,24} %write{2147483647,-1}
+param	vector	tex_mapList_6_bump	0 0 0		%read{25,25} %write{2147483647,-1}
+param	vector	tex_mapList_7_bump	0 0 0		%read{26,26} %write{2147483647,-1}
+param	vector	tex_mapList_8_bump	0 0 0		%read{27,27} %write{2147483647,-1}
+param	vector	tex_mapList_9_bump	0 0 0		%read{28,28} %write{2147483647,-1}
+param	vector	tex_mapList_10_bump	0 0 0		%read{29,29} %write{2147483647,-1}
+param	int	tex_mapList_1_isnull	0		%read{30,30} %write{2147483647,-1}
+param	int	tex_mapList_2_isnull	0		%read{31,31} %write{2147483647,-1}
+param	int	tex_mapList_3_isnull	0		%read{32,32} %write{2147483647,-1}
+param	int	tex_mapList_4_isnull	0		%read{33,33} %write{2147483647,-1}
+param	int	tex_mapList_5_isnull	0		%read{34,34} %write{2147483647,-1}
+param	int	tex_mapList_6_isnull	0		%read{35,35} %write{2147483647,-1}
+param	int	tex_mapList_7_isnull	0		%read{36,36} %write{2147483647,-1}
+param	int	tex_mapList_8_isnull	0		%read{37,37} %write{2147483647,-1}
+param	int	tex_mapList_9_isnull	0		%read{38,38} %write{2147483647,-1}
+param	int	tex_mapList_10_isnull	0		%read{39,39} %write{2147483647,-1}
+param	color	tex_mask_1	0 0 0		%read{40,40} %write{2147483647,-1}
+param	color	tex_mask_2	0 0 0		%read{41,41} %write{2147483647,-1}
+param	color	tex_mask_3	0 0 0		%read{42,42} %write{2147483647,-1}
+param	color	tex_mask_4	0 0 0		%read{43,43} %write{2147483647,-1}
+param	color	tex_mask_5	0 0 0		%read{44,44} %write{2147483647,-1}
+param	color	tex_mask_6	0 0 0		%read{45,45} %write{2147483647,-1}
+param	color	tex_mask_7	0 0 0		%read{46,46} %write{2147483647,-1}
+param	color	tex_mask_8	0 0 0		%read{47,47} %write{2147483647,-1}
+param	color	tex_mask_9	0 0 0		%read{48,48} %write{2147483647,-1}
+param	color	tex_mask_10	0 0 0		%read{49,49} %write{2147483647,-1}
+param	float	tex_mask_1_alpha	0		%read{50,50} %write{2147483647,-1}
+param	float	tex_mask_2_alpha	0		%read{51,51} %write{2147483647,-1}
+param	float	tex_mask_3_alpha	0		%read{52,52} %write{2147483647,-1}
+param	float	tex_mask_4_alpha	0		%read{53,53} %write{2147483647,-1}
+param	float	tex_mask_5_alpha	0		%read{54,54} %write{2147483647,-1}
+param	float	tex_mask_6_alpha	0		%read{55,55} %write{2147483647,-1}
+param	float	tex_mask_7_alpha	0		%read{56,56} %write{2147483647,-1}
+param	float	tex_mask_8_alpha	0		%read{57,57} %write{2147483647,-1}
+param	float	tex_mask_9_alpha	0		%read{58,58} %write{2147483647,-1}
+param	float	tex_mask_10_alpha	0		%read{59,59} %write{2147483647,-1}
+param	vector	tex_mask_1_bump	0 0 0		%read{60,60} %write{2147483647,-1}
+param	vector	tex_mask_2_bump	0 0 0		%read{61,61} %write{2147483647,-1}
+param	vector	tex_mask_3_bump	0 0 0		%read{62,62} %write{2147483647,-1}
+param	vector	tex_mask_4_bump	0 0 0		%read{63,63} %write{2147483647,-1}
+param	vector	tex_mask_5_bump	0 0 0		%read{64,64} %write{2147483647,-1}
+param	vector	tex_mask_6_bump	0 0 0		%read{65,65} %write{2147483647,-1}
+param	vector	tex_mask_7_bump	0 0 0		%read{66,66} %write{2147483647,-1}
+param	vector	tex_mask_8_bump	0 0 0		%read{67,67} %write{2147483647,-1}
+param	vector	tex_mask_9_bump	0 0 0		%read{68,68} %write{2147483647,-1}
+param	vector	tex_mask_10_bump	0 0 0		%read{69,69} %write{2147483647,-1}
+param	int	tex_mask_1_isnull	0		%read{70,70} %write{2147483647,-1}
+param	int	tex_mask_2_isnull	0		%read{71,71} %write{2147483647,-1}
+param	int	tex_mask_3_isnull	0		%read{72,72} %write{2147483647,-1}
+param	int	tex_mask_4_isnull	0		%read{73,73} %write{2147483647,-1}
+param	int	tex_mask_5_isnull	0		%read{74,74} %write{2147483647,-1}
+param	int	tex_mask_6_isnull	0		%read{75,75} %write{2147483647,-1}
+param	int	tex_mask_7_isnull	0		%read{76,76} %write{2147483647,-1}
+param	int	tex_mask_8_isnull	0		%read{77,77} %write{2147483647,-1}
+param	int	tex_mask_9_isnull	0		%read{78,78} %write{2147483647,-1}
+param	int	tex_mask_10_isnull	0		%read{79,79} %write{2147483647,-1}
+param	int	tex_blendMode_1	0		%read{80,80} %write{2147483647,-1}
+param	int	tex_blendMode_2	0		%read{81,81} %write{2147483647,-1}
+param	int	tex_blendMode_3	0		%read{82,82} %write{2147483647,-1}
+param	int	tex_blendMode_4	0		%read{83,83} %write{2147483647,-1}
+param	int	tex_blendMode_5	0		%read{84,84} %write{2147483647,-1}
+param	int	tex_blendMode_6	0		%read{85,85} %write{2147483647,-1}
+param	int	tex_blendMode_7	0		%read{86,86} %write{2147483647,-1}
+param	int	tex_blendMode_8	0		%read{87,87} %write{2147483647,-1}
+param	int	tex_blendMode_9	0		%read{88,88} %write{2147483647,-1}
+param	int	tex_blendMode_10	0		%read{89,89} %write{2147483647,-1}
+param	int	tex_mapEnabled_1	0		%read{90,90} %write{2147483647,-1}
+param	int	tex_mapEnabled_2	0		%read{91,91} %write{2147483647,-1}
+param	int	tex_mapEnabled_3	0		%read{92,92} %write{2147483647,-1}
+param	int	tex_mapEnabled_4	0		%read{93,93} %write{2147483647,-1}
+param	int	tex_mapEnabled_5	0		%read{94,94} %write{2147483647,-1}
+param	int	tex_mapEnabled_6	0		%read{95,95} %write{2147483647,-1}
+param	int	tex_mapEnabled_7	0		%read{96,96} %write{2147483647,-1}
+param	int	tex_mapEnabled_8	0		%read{97,97} %write{2147483647,-1}
+param	int	tex_mapEnabled_9	0		%read{98,98} %write{2147483647,-1}
+param	int	tex_mapEnabled_10	0		%read{99,99} %write{2147483647,-1}
+param	int	tex_maskEnabled_1	1		%read{100,100} %write{2147483647,-1}
+param	int	tex_maskEnabled_2	1		%read{101,101} %write{2147483647,-1}
+param	int	tex_maskEnabled_3	1		%read{102,102} %write{2147483647,-1}
+param	int	tex_maskEnabled_4	1		%read{103,103} %write{2147483647,-1}
+param	int	tex_maskEnabled_5	1		%read{104,104} %write{2147483647,-1}
+param	int	tex_maskEnabled_6	1		%read{105,105} %write{2147483647,-1}
+param	int	tex_maskEnabled_7	1		%read{106,106} %write{2147483647,-1}
+param	int	tex_maskEnabled_8	1		%read{107,107} %write{2147483647,-1}
+param	int	tex_maskEnabled_9	1		%read{108,108} %write{2147483647,-1}
+param	int	tex_maskEnabled_10	1		%read{109,109} %write{2147483647,-1}
+param	float	tex_opacity_1	100		%read{110,110} %write{2147483647,-1}
+param	float	tex_opacity_2	100		%read{111,111} %write{2147483647,-1}
+param	float	tex_opacity_3	100		%read{112,112} %write{2147483647,-1}
+param	float	tex_opacity_4	100		%read{113,113} %write{2147483647,-1}
+param	float	tex_opacity_5	100		%read{114,114} %write{2147483647,-1}
+param	float	tex_opacity_6	100		%read{115,115} %write{2147483647,-1}
+param	float	tex_opacity_7	100		%read{116,116} %write{2147483647,-1}
+param	float	tex_opacity_8	100		%read{117,117} %write{2147483647,-1}
+param	float	tex_opacity_9	100		%read{118,118} %write{2147483647,-1}
+param	float	tex_opacity_10	100		%read{119,119} %write{2147483647,-1}
+oparam	color	result	0 0 0		%read{2147483647,-1} %write{733,733}
+oparam	vector	result_bump	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+oparam	float	result_alpha	1		%read{2147483647,-1} %write{732,732}
+local	float	___238_r	%read{127,731} %write{127,731}
+local	float	___238_g	%read{127,731} %write{127,731}
+local	float	___238_b	%read{127,731} %write{127,731}
+local	float	___238_mincomp	%read{127,731} %write{127,731}
+local	float	___238_maxcomp	%read{127,731} %write{127,731}
+local	float	___238_delta	%read{127,731} %write{127,731}
+local	float	___238_h	%read{127,731} %write{127,731}
+local	float	___238_s	%read{127,731} %write{127,731}
+local	float	___238_v	%read{127,731} %write{127,731}
+local	float	___240_minval	%read{127,731} %write{127,731}
+local	color	___240_hsv	%read{127,731} %write{127,731}
+local	float	___240_maxval	%read{127,731} %write{127,731}
+local	float	___240_h	%read{127,731} %write{127,731}
+local	float	___240_s	%read{127,731} %write{127,731}
+local	float	___240_l	%read{127,731} %write{127,731}
+local	color	___237_r	%read{127,731} %write{127,731}
+local	float	___243_h	%read{127,731} %write{127,731}
+local	float	___243_s	%read{127,731} %write{127,731}
+local	float	___243_v	%read{127,731} %write{127,731}
+local	color	___243_r	%read{127,731} %write{127,731}
+local	int	___245_hi	%read{127,731} %write{127,731}
+local	float	___245_f	%read{127,731} %write{127,731}
+local	float	___245_p	%read{127,731} %write{127,731}
+local	float	___245_q	%read{127,731} %write{127,731}
+local	float	___245_t	%read{127,731} %write{127,731}
+local	float	___246_h	%read{127,731} %write{127,731}
+local	float	___246_s	%read{127,731} %write{127,731}
+local	float	___246_l	%read{127,731} %write{127,731}
+local	float	___246_v	%read{127,731} %write{127,731}
+local	color	___246_r	%read{127,731} %write{127,731}
+local	float	___248_min	%read{127,731} %write{127,731}
+local	color	___242_r	%read{127,731} %write{127,731}
+local	color	___305_b_result	%read{127,731} %write{127,731}
+local	color	___305_fg_hsv	%read{127,731} %write{127,731}
+local	color	___305_bg_hsv	%read{127,731} %write{127,731}
+local	color[10]	tex_mapLists	%read{127,731} %write{0,9}
+local	float[10]	tex_mapLists_alpha	%read{127,731} %write{10,19}
+local	vector[10]	tex_mapLists_bump	%read{2147483647,-1} %write{20,29}
+local	int[10]	tex_mapLists_isnull	%read{2147483647,-1} %write{30,39}
+local	color[10]	tex_masks	%read{127,731} %write{40,49}
+local	float[10]	tex_masks_alpha	%read{2147483647,-1} %write{50,59}
+local	vector[10]	tex_masks_bump	%read{2147483647,-1} %write{60,69}
+local	int[10]	tex_masks_isnull	%read{2147483647,-1} %write{70,79}
+local	int[10]	tex_blendModes	%read{127,731} %write{80,89}
+local	int[10]	tex_mapEnableds	%read{127,731} %write{90,99}
+local	int[10]	tex_maskEnableds	%read{127,731} %write{100,109}
+local	float[10]	tex_opacitys	%read{127,731} %write{110,119}
+local	color	bg	%read{127,731} %write{120,731}
+local	float	bg_alpha	%read{127,731} %write{121,731}
+local	color	fg	%read{127,733} %write{122,731}
+local	float	fg_alpha	%read{127,732} %write{123,731}
+local	int	map_blend_mode	%read{127,731} %write{124,731}
+local	int	___332_i	%read{127,731} %write{126,731}
+local	int	___333_map_enabled	%read{127,731} %write{127,731}
+local	float	___333_map_opacity	%read{127,731} %write{127,731}
+local	int	___333_map_mask_enabled	%read{2147483647,-1} %write{127,731}
+local	color	___333_map_mask	%read{2147483647,-1} %write{127,731}
+local	float	___334_o	%read{127,731} %write{127,731}
+local	color	___334_blended_color	%read{127,731} %write{127,731}
+local	float	___334_blended_alpha	%read{2147483647,-1} %write{127,731}
+local	float	___334_alpha	%read{127,731} %write{127,731}
+const	int	$const1	0		%read{0,687} %write{2147483647,-1}
+const	int	$const2	1		%read{1,731} %write{2147483647,-1}
+const	int	$const3	2		%read{2,681} %write{2147483647,-1}
+const	int	$const4	3		%read{3,570} %write{2147483647,-1}
+const	int	$const5	4		%read{4,573} %write{2147483647,-1}
+const	int	$const6	5		%read{5,163} %write{2147483647,-1}
+const	int	$const7	6		%read{6,167} %write{2147483647,-1}
+const	int	$const8	7		%read{7,169} %write{2147483647,-1}
+const	int	$const9	8		%read{8,174} %write{2147483647,-1}
+const	int	$const10	9		%read{9,177} %write{2147483647,-1}
+temp	int	$tmp1	%read{125,731} %write{126,731}
+temp	int	$tmp2	%read{127,731} %write{127,731}
+temp	int	$tmp3	%read{127,731} %write{127,731}
+const	float	$const11	0		%read{137,137} %write{2147483647,-1}
+temp	int	$tmp4	%read{127,731} %write{127,731}
+temp	int	$tmp5	%read{127,731} %write{127,731}
+const	float	$const12	100		%read{141,141} %write{2147483647,-1}
+const	string	$const13	"blend"		%read{145,145} %write{2147483647,-1}
+temp	int	$tmp6	%read{127,731} %write{127,731}
+temp	int	$tmp7	%read{127,731} %write{127,731}
+temp	color	$tmp8	%read{127,731} %write{127,731}
+const	float	$const14	2		%read{153,694} %write{2147483647,-1}
+temp	int	$tmp9	%read{127,731} %write{127,731}
+temp	int	$tmp10	%read{127,731} %write{127,731}
+temp	int	$tmp11	%read{127,731} %write{127,731}
+temp	int	$tmp12	%read{127,731} %write{127,731}
+temp	int	$tmp13	%read{127,731} %write{127,731}
+temp	int	$tmp14	%read{127,731} %write{127,731}
+temp	color	$tmp15	%read{127,731} %write{127,731}
+const	float	$const15	1		%read{172,721} %write{2147483647,-1}
+temp	color	$tmp16	%read{127,731} %write{127,731}
+const	color	$const16	0 0 0		%read{173,225} %write{2147483647,-1}
+temp	int	$tmp18	%read{127,731} %write{127,731}
+temp	int	$tmp19	%read{127,731} %write{127,731}
+temp	color	$tmp20	%read{127,731} %write{127,731}
+temp	color	$tmp21	%read{127,731} %write{127,731}
+const	int	$const17	10		%read{182,182} %write{2147483647,-1}
+temp	int	$tmp22	%read{127,731} %write{127,731}
+const	int	$const18	11		%read{184,184} %write{2147483647,-1}
+temp	int	$tmp23	%read{127,731} %write{127,731}
+temp	color	$tmp24	%read{127,731} %write{127,731}
+const	color	$const19	1 1 1		%read{187,197} %write{2147483647,-1}
+const	int	$const20	12		%read{188,188} %write{2147483647,-1}
+temp	int	$tmp26	%read{127,731} %write{127,731}
+temp	color	$tmp27	%read{127,731} %write{127,731}
+temp	color	$tmp28	%read{127,731} %write{127,731}
+const	int	$const21	13		%read{193,193} %write{2147483647,-1}
+temp	int	$tmp30	%read{127,731} %write{127,731}
+temp	color	$tmp31	%read{127,731} %write{127,731}
+temp	color	$tmp32	%read{127,731} %write{127,731}
+const	int	$const22	14		%read{198,198} %write{2147483647,-1}
+temp	int	$tmp34	%read{127,731} %write{127,731}
+const	int	$const23	15		%read{200,200} %write{2147483647,-1}
+temp	int	$tmp35	%read{127,731} %write{127,731}
+const	int	$const24	16		%read{202,202} %write{2147483647,-1}
+temp	int	$tmp36	%read{127,731} %write{127,731}
+const	int	$const25	17		%read{204,204} %write{2147483647,-1}
+temp	int	$tmp37	%read{127,731} %write{127,731}
+const	int	$const26	18		%read{206,206} %write{2147483647,-1}
+temp	int	$tmp38	%read{127,731} %write{127,731}
+const	int	$const27	19		%read{208,208} %write{2147483647,-1}
+temp	int	$tmp39	%read{127,731} %write{127,731}
+temp	color	$tmp40	%read{127,731} %write{127,731}
+const	int	$const28	20		%read{212,212} %write{2147483647,-1}
+temp	int	$tmp41	%read{127,731} %write{127,731}
+temp	color	$tmp42	%read{127,731} %write{127,731}
+temp	color	$tmp43	%read{127,731} %write{127,731}
+temp	color	$tmp44	%read{127,731} %write{127,731}
+const	int	$const29	21		%read{218,218} %write{2147483647,-1}
+temp	int	$tmp45	%read{127,731} %write{127,731}
+const	int	$const30	22		%read{220,220} %write{2147483647,-1}
+temp	int	$tmp46	%read{127,731} %write{127,731}
+const	int	$const31	23		%read{222,222} %write{2147483647,-1}
+temp	int	$tmp47	%read{127,731} %write{127,731}
+const	string	$const32	"blend_color"		%read{224,224} %write{2147483647,-1}
+const	string	$const33	"hsv"		%read{227,603} %write{2147483647,-1}
+const	string	$const34	"transformc"		%read{226,594} %write{2147483647,-1}
+const	string	$const35	"rgb"		%read{227,710} %write{2147483647,-1}
+temp	int	$tmp48	%read{127,731} %write{127,731}
+temp	int	$tmp49	%read{127,731} %write{127,731}
+const	string	$const36	"RGB"		%read{230,598} %write{2147483647,-1}
+temp	int	$tmp50	%read{127,731} %write{127,731}
+temp	int	$tmp51	%read{127,731} %write{127,731}
+temp	int	$tmp52	%read{127,731} %write{127,731}
+const	string	$const37	"rgb_to_hsv"		%read{237,647} %write{2147483647,-1}
+temp	float	$tmp53	%read{127,731} %write{127,731}
+temp	float	$tmp54	%read{127,731} %write{127,731}
+temp	int	$tmp55	%read{127,731} %write{127,731}
+temp	int	$tmp56	%read{127,731} %write{127,731}
+temp	int	$tmp57	%read{127,731} %write{127,731}
+temp	float	$tmp58	%read{127,731} %write{127,731}
+temp	int	$tmp59	%read{127,731} %write{127,731}
+temp	float	$tmp60	%read{127,731} %write{127,731}
+temp	float	$tmp61	%read{127,731} %write{127,731}
+temp	float	$tmp62	%read{127,731} %write{127,731}
+temp	float	$tmp63	%read{127,731} %write{127,731}
+const	float	$const38	4		%read{265,675} %write{2147483647,-1}
+const	float	$const39	6		%read{266,676} %write{2147483647,-1}
+temp	int	$tmp64	%read{127,731} %write{127,731}
+const	string	$const40	"hsl"		%read{271,639} %write{2147483647,-1}
+temp	int	$tmp65	%read{127,731} %write{127,731}
+const	string	$const41	"rgb_to_hsl"		%read{273,641} %write{2147483647,-1}
+temp	float	$tmp66	%read{127,731} %write{127,731}
+temp	float	$tmp67	%read{127,731} %write{127,731}
+temp	float	$tmp68	%read{127,731} %write{127,731}
+temp	float	$tmp69	%read{127,731} %write{127,731}
+temp	float	$tmp70	%read{127,731} %write{127,731}
+temp	float	$tmp71	%read{127,731} %write{127,731}
+temp	int	$tmp72	%read{127,731} %write{127,731}
+temp	int	$tmp73	%read{127,731} %write{127,731}
+temp	int	$tmp74	%read{127,731} %write{127,731}
+temp	float	$tmp75	%read{127,731} %write{127,731}
+temp	int	$tmp76	%read{127,731} %write{127,731}
+temp	float	$tmp77	%read{127,731} %write{127,731}
+temp	float	$tmp78	%read{127,731} %write{127,731}
+temp	float	$tmp79	%read{127,731} %write{127,731}
+temp	float	$tmp80	%read{127,731} %write{127,731}
+temp	int	$tmp81	%read{127,731} %write{127,731}
+temp	float	$tmp82	%read{127,731} %write{127,731}
+temp	int	$tmp83	%read{127,731} %write{127,731}
+const	float	$const42	0.5		%read{320,688} %write{2147483647,-1}
+temp	int	$tmp84	%read{127,731} %write{127,731}
+temp	float	$tmp85	%read{127,731} %write{127,731}
+temp	float	$tmp86	%read{127,731} %write{127,731}
+temp	float	$tmp87	%read{127,731} %write{127,731}
+temp	float	$tmp88	%read{127,731} %write{127,731}
+temp	float	$tmp89	%read{127,731} %write{127,731}
+const	string	$const43	"YIQ"		%read{330,698} %write{2147483647,-1}
+temp	int	$tmp90	%read{127,731} %write{127,731}
+temp	float	$tmp91	%read{127,731} %write{127,731}
+const	vector	$const44	0.29899999 0.58700001 0.114		%read{332,700} %write{2147483647,-1}
+temp	float	$tmp93	%read{127,731} %write{127,731}
+const	vector	$const45	0.59600002 -0.27500001 -0.32100001		%read{333,701} %write{2147483647,-1}
+temp	float	$tmp95	%read{127,731} %write{127,731}
+const	vector	$const46	0.212 -0.523 0.31099999		%read{334,702} %write{2147483647,-1}
+const	string	$const47	"XYZ"		%read{336,704} %write{2147483647,-1}
+temp	int	$tmp97	%read{127,731} %write{127,731}
+temp	float	$tmp98	%read{127,731} %write{127,731}
+const	vector	$const48	0.412453 0.35758001 0.18042301		%read{338,706} %write{2147483647,-1}
+temp	float	$tmp100	%read{127,731} %write{127,731}
+const	vector	$const49	0.212671 0.71516001 0.072168998		%read{339,707} %write{2147483647,-1}
+temp	float	$tmp102	%read{127,731} %write{127,731}
+const	vector	$const50	0.019334 0.119193 0.95022702		%read{340,708} %write{2147483647,-1}
+const	string	$const51	"Unknown color space \"%s\""		%read{342,710} %write{2147483647,-1}
+temp	int	$tmp104	%read{127,731} %write{127,731}
+temp	int	$tmp105	%read{127,731} %write{127,731}
+temp	int	$tmp106	%read{127,731} %write{127,731}
+temp	int	$tmp107	%read{127,731} %write{127,731}
+temp	int	$tmp108	%read{127,731} %write{127,731}
+temp	float	$tmp109	%read{127,731} %write{127,731}
+temp	float	$tmp110	%read{127,731} %write{127,731}
+temp	int	$tmp111	%read{127,731} %write{127,731}
+temp	int	$tmp112	%read{127,731} %write{127,731}
+temp	int	$tmp113	%read{127,731} %write{127,731}
+temp	float	$tmp114	%read{127,731} %write{127,731}
+temp	int	$tmp115	%read{127,731} %write{127,731}
+temp	float	$tmp116	%read{127,731} %write{127,731}
+temp	float	$tmp117	%read{127,731} %write{127,731}
+temp	float	$tmp118	%read{127,731} %write{127,731}
+temp	float	$tmp119	%read{127,731} %write{127,731}
+temp	int	$tmp120	%read{127,731} %write{127,731}
+temp	int	$tmp121	%read{127,731} %write{127,731}
+temp	float	$tmp122	%read{127,731} %write{127,731}
+temp	float	$tmp123	%read{127,731} %write{127,731}
+temp	float	$tmp124	%read{127,731} %write{127,731}
+temp	float	$tmp125	%read{127,731} %write{127,731}
+temp	float	$tmp126	%read{127,731} %write{127,731}
+temp	float	$tmp127	%read{127,731} %write{127,731}
+temp	int	$tmp128	%read{127,731} %write{127,731}
+temp	int	$tmp129	%read{127,731} %write{127,731}
+temp	int	$tmp130	%read{127,731} %write{127,731}
+temp	float	$tmp131	%read{127,731} %write{127,731}
+temp	int	$tmp132	%read{127,731} %write{127,731}
+temp	float	$tmp133	%read{127,731} %write{127,731}
+temp	float	$tmp134	%read{127,731} %write{127,731}
+temp	float	$tmp135	%read{127,731} %write{127,731}
+temp	float	$tmp136	%read{127,731} %write{127,731}
+temp	int	$tmp137	%read{127,731} %write{127,731}
+temp	float	$tmp138	%read{127,731} %write{127,731}
+temp	int	$tmp139	%read{127,731} %write{127,731}
+temp	int	$tmp140	%read{127,731} %write{127,731}
+temp	float	$tmp141	%read{127,731} %write{127,731}
+temp	float	$tmp142	%read{127,731} %write{127,731}
+temp	float	$tmp143	%read{127,731} %write{127,731}
+temp	float	$tmp144	%read{127,731} %write{127,731}
+temp	float	$tmp145	%read{127,731} %write{127,731}
+temp	int	$tmp146	%read{127,731} %write{127,731}
+temp	float	$tmp147	%read{127,731} %write{127,731}
+temp	float	$tmp149	%read{127,731} %write{127,731}
+temp	float	$tmp151	%read{127,731} %write{127,731}
+temp	int	$tmp153	%read{127,731} %write{127,731}
+temp	float	$tmp154	%read{127,731} %write{127,731}
+temp	float	$tmp156	%read{127,731} %write{127,731}
+temp	float	$tmp158	%read{127,731} %write{127,731}
+temp	color	$tmp160	%read{127,731} %write{127,731}
+temp	float	$tmp161	%read{127,731} %write{127,731}
+temp	float	$tmp162	%read{127,731} %write{127,731}
+temp	float	$tmp163	%read{127,731} %write{127,731}
+temp	int	$tmp164	%read{127,731} %write{127,731}
+temp	int	$tmp165	%read{127,731} %write{127,731}
+temp	int	$tmp166	%read{127,731} %write{127,731}
+temp	int	$tmp167	%read{127,731} %write{127,731}
+temp	int	$tmp168	%read{127,731} %write{127,731}
+const	string	$const52	"hsv_to_rgb"		%read{479,539} %write{2147483647,-1}
+const	float	$const53	9.9999997e-005		%read{483,543} %write{2147483647,-1}
+temp	int	$tmp169	%read{127,731} %write{127,731}
+temp	float	$tmp170	%read{127,731} %write{127,731}
+temp	float	$tmp171	%read{127,731} %write{127,731}
+temp	float	$tmp172	%read{127,731} %write{127,731}
+temp	float	$tmp173	%read{127,731} %write{127,731}
+temp	float	$tmp174	%read{127,731} %write{127,731}
+temp	float	$tmp175	%read{127,731} %write{127,731}
+temp	float	$tmp176	%read{127,731} %write{127,731}
+temp	float	$tmp177	%read{127,731} %write{127,731}
+temp	float	$tmp178	%read{127,731} %write{127,731}
+temp	int	$tmp179	%read{127,731} %write{127,731}
+temp	int	$tmp180	%read{127,731} %write{127,731}
+temp	int	$tmp181	%read{127,731} %write{127,731}
+temp	int	$tmp182	%read{127,731} %write{127,731}
+temp	int	$tmp183	%read{127,731} %write{127,731}
+temp	int	$tmp184	%read{127,731} %write{127,731}
+const	string	$const54	"hsl_to_rgb"		%read{520,520} %write{2147483647,-1}
+temp	int	$tmp185	%read{127,731} %write{127,731}
+temp	float	$tmp186	%read{127,731} %write{127,731}
+temp	float	$tmp187	%read{127,731} %write{127,731}
+temp	float	$tmp188	%read{127,731} %write{127,731}
+temp	int	$tmp189	%read{127,731} %write{127,731}
+temp	float	$tmp190	%read{127,731} %write{127,731}
+temp	float	$tmp191	%read{127,731} %write{127,731}
+temp	color	$tmp192	%read{127,731} %write{127,731}
+temp	int	$tmp193	%read{127,731} %write{127,731}
+temp	float	$tmp194	%read{127,731} %write{127,731}
+temp	float	$tmp195	%read{127,731} %write{127,731}
+temp	float	$tmp196	%read{127,731} %write{127,731}
+temp	float	$tmp197	%read{127,731} %write{127,731}
+temp	float	$tmp198	%read{127,731} %write{127,731}
+temp	float	$tmp199	%read{127,731} %write{127,731}
+temp	float	$tmp200	%read{127,731} %write{127,731}
+temp	float	$tmp201	%read{127,731} %write{127,731}
+temp	float	$tmp202	%read{127,731} %write{127,731}
+temp	int	$tmp203	%read{127,731} %write{127,731}
+temp	int	$tmp204	%read{127,731} %write{127,731}
+temp	int	$tmp205	%read{127,731} %write{127,731}
+temp	int	$tmp206	%read{127,731} %write{127,731}
+temp	int	$tmp207	%read{127,731} %write{127,731}
+temp	int	$tmp208	%read{127,731} %write{127,731}
+temp	float	$tmp209	%read{127,731} %write{127,731}
+const	vector	$const55	1 0.95569998 0.61989999		%read{582,582} %write{2147483647,-1}
+temp	float	$tmp211	%read{127,731} %write{127,731}
+const	vector	$const56	1 -0.27160001 -0.6469		%read{583,583} %write{2147483647,-1}
+temp	float	$tmp213	%read{127,731} %write{127,731}
+const	vector	$const57	1 -1.1082 1.7051001		%read{584,584} %write{2147483647,-1}
+temp	int	$tmp215	%read{127,731} %write{127,731}
+temp	float	$tmp216	%read{127,731} %write{127,731}
+const	vector	$const58	3.240479 -1.53715 -0.49853501		%read{588,588} %write{2147483647,-1}
+temp	float	$tmp218	%read{127,731} %write{127,731}
+const	vector	$const59	-0.96925598 1.875991 0.041556001		%read{589,589} %write{2147483647,-1}
+temp	float	$tmp220	%read{127,731} %write{127,731}
+const	vector	$const60	0.055647999 -0.204043 1.0573111		%read{590,590} %write{2147483647,-1}
+temp	int	$tmp222	%read{127,731} %write{127,731}
+temp	int	$tmp223	%read{127,731} %write{127,731}
+temp	int	$tmp224	%read{127,731} %write{127,731}
+temp	int	$tmp225	%read{127,731} %write{127,731}
+temp	int	$tmp226	%read{127,731} %write{127,731}
+temp	float	$tmp227	%read{127,731} %write{127,731}
+temp	float	$tmp228	%read{127,731} %write{127,731}
+temp	int	$tmp229	%read{127,731} %write{127,731}
+temp	int	$tmp230	%read{127,731} %write{127,731}
+temp	int	$tmp231	%read{127,731} %write{127,731}
+temp	float	$tmp232	%read{127,731} %write{127,731}
+temp	int	$tmp233	%read{127,731} %write{127,731}
+temp	float	$tmp234	%read{127,731} %write{127,731}
+temp	float	$tmp235	%read{127,731} %write{127,731}
+temp	float	$tmp236	%read{127,731} %write{127,731}
+temp	float	$tmp237	%read{127,731} %write{127,731}
+temp	int	$tmp238	%read{127,731} %write{127,731}
+temp	int	$tmp239	%read{127,731} %write{127,731}
+temp	float	$tmp240	%read{127,731} %write{127,731}
+temp	float	$tmp241	%read{127,731} %write{127,731}
+temp	float	$tmp242	%read{127,731} %write{127,731}
+temp	float	$tmp243	%read{127,731} %write{127,731}
+temp	float	$tmp244	%read{127,731} %write{127,731}
+temp	float	$tmp245	%read{127,731} %write{127,731}
+temp	int	$tmp246	%read{127,731} %write{127,731}
+temp	int	$tmp247	%read{127,731} %write{127,731}
+temp	int	$tmp248	%read{127,731} %write{127,731}
+temp	float	$tmp249	%read{127,731} %write{127,731}
+temp	int	$tmp250	%read{127,731} %write{127,731}
+temp	float	$tmp251	%read{127,731} %write{127,731}
+temp	float	$tmp252	%read{127,731} %write{127,731}
+temp	float	$tmp253	%read{127,731} %write{127,731}
+temp	float	$tmp254	%read{127,731} %write{127,731}
+temp	int	$tmp255	%read{127,731} %write{127,731}
+temp	float	$tmp256	%read{127,731} %write{127,731}
+temp	int	$tmp257	%read{127,731} %write{127,731}
+temp	int	$tmp258	%read{127,731} %write{127,731}
+temp	float	$tmp259	%read{127,731} %write{127,731}
+temp	float	$tmp260	%read{127,731} %write{127,731}
+temp	float	$tmp261	%read{127,731} %write{127,731}
+temp	float	$tmp262	%read{127,731} %write{127,731}
+temp	float	$tmp263	%read{127,731} %write{127,731}
+temp	int	$tmp264	%read{127,731} %write{127,731}
+temp	float	$tmp265	%read{127,731} %write{127,731}
+temp	float	$tmp267	%read{127,731} %write{127,731}
+temp	float	$tmp269	%read{127,731} %write{127,731}
+temp	int	$tmp271	%read{127,731} %write{127,731}
+temp	float	$tmp272	%read{127,731} %write{127,731}
+temp	float	$tmp274	%read{127,731} %write{127,731}
+temp	float	$tmp276	%read{127,731} %write{127,731}
+const	int	$const61	24		%read{714,714} %write{2147483647,-1}
+temp	int	$tmp278	%read{127,731} %write{127,731}
+temp	float	$tmp279	%read{127,731} %write{127,731}
+temp	float	$tmp280	%read{127,731} %write{127,731}
+temp	float	$tmp281	%read{127,731} %write{127,731}
+temp	color	$tmp282	%read{127,731} %write{127,731}
+temp	float	$tmp283	%read{127,731} %write{127,731}
+temp	float	$tmp284	%read{127,731} %write{127,731}
+temp	color	$tmp285	%read{127,731} %write{127,731}
+temp	color	$tmp286	%read{127,731} %write{127,731}
+temp	int	$tmp287	%read{2147483647,-1} %write{127,731}
+code ___main___
+	aassign		tex_mapLists $const1 tex_mapList_1 	%filename{"E:/github/elaramax/Shaders/max_composite_map.osl"} %line{258} %argrw{"wrr"}
+	aassign		tex_mapLists $const2 tex_mapList_2 	%argrw{"wrr"}
+	aassign		tex_mapLists $const3 tex_mapList_3 	%argrw{"wrr"}
+	aassign		tex_mapLists $const4 tex_mapList_4 	%argrw{"wrr"}
+	aassign		tex_mapLists $const5 tex_mapList_5 	%argrw{"wrr"}
+	aassign		tex_mapLists $const6 tex_mapList_6 	%argrw{"wrr"}
+	aassign		tex_mapLists $const7 tex_mapList_7 	%argrw{"wrr"}
+	aassign		tex_mapLists $const8 tex_mapList_8 	%argrw{"wrr"}
+	aassign		tex_mapLists $const9 tex_mapList_9 	%argrw{"wrr"}
+	aassign		tex_mapLists $const10 tex_mapList_10 	%argrw{"wrr"}
+	aassign		tex_mapLists_alpha $const1 tex_mapList_1_alpha 	%line{259} %argrw{"wrr"}
+	aassign		tex_mapLists_alpha $const2 tex_mapList_2_alpha 	%argrw{"wrr"}
+	aassign		tex_mapLists_alpha $const3 tex_mapList_3_alpha 	%argrw{"wrr"}
+	aassign		tex_mapLists_alpha $const4 tex_mapList_4_alpha 	%argrw{"wrr"}
+	aassign		tex_mapLists_alpha $const5 tex_mapList_5_alpha 	%argrw{"wrr"}
+	aassign		tex_mapLists_alpha $const6 tex_mapList_6_alpha 	%argrw{"wrr"}
+	aassign		tex_mapLists_alpha $const7 tex_mapList_7_alpha 	%argrw{"wrr"}
+	aassign		tex_mapLists_alpha $const8 tex_mapList_8_alpha 	%argrw{"wrr"}
+	aassign		tex_mapLists_alpha $const9 tex_mapList_9_alpha 	%argrw{"wrr"}
+	aassign		tex_mapLists_alpha $const10 tex_mapList_10_alpha 	%argrw{"wrr"}
+	aassign		tex_mapLists_bump $const1 tex_mapList_1_bump 	%line{260} %argrw{"wrr"}
+	aassign		tex_mapLists_bump $const2 tex_mapList_2_bump 	%argrw{"wrr"}
+	aassign		tex_mapLists_bump $const3 tex_mapList_3_bump 	%argrw{"wrr"}
+	aassign		tex_mapLists_bump $const4 tex_mapList_4_bump 	%argrw{"wrr"}
+	aassign		tex_mapLists_bump $const5 tex_mapList_5_bump 	%argrw{"wrr"}
+	aassign		tex_mapLists_bump $const6 tex_mapList_6_bump 	%argrw{"wrr"}
+	aassign		tex_mapLists_bump $const7 tex_mapList_7_bump 	%argrw{"wrr"}
+	aassign		tex_mapLists_bump $const8 tex_mapList_8_bump 	%argrw{"wrr"}
+	aassign		tex_mapLists_bump $const9 tex_mapList_9_bump 	%argrw{"wrr"}
+	aassign		tex_mapLists_bump $const10 tex_mapList_10_bump 	%argrw{"wrr"}
+	aassign		tex_mapLists_isnull $const1 tex_mapList_1_isnull 	%line{261} %argrw{"wrr"}
+	aassign		tex_mapLists_isnull $const2 tex_mapList_2_isnull 	%argrw{"wrr"}
+	aassign		tex_mapLists_isnull $const3 tex_mapList_3_isnull 	%argrw{"wrr"}
+	aassign		tex_mapLists_isnull $const4 tex_mapList_4_isnull 	%argrw{"wrr"}
+	aassign		tex_mapLists_isnull $const5 tex_mapList_5_isnull 	%argrw{"wrr"}
+	aassign		tex_mapLists_isnull $const6 tex_mapList_6_isnull 	%argrw{"wrr"}
+	aassign		tex_mapLists_isnull $const7 tex_mapList_7_isnull 	%argrw{"wrr"}
+	aassign		tex_mapLists_isnull $const8 tex_mapList_8_isnull 	%argrw{"wrr"}
+	aassign		tex_mapLists_isnull $const9 tex_mapList_9_isnull 	%argrw{"wrr"}
+	aassign		tex_mapLists_isnull $const10 tex_mapList_10_isnull 	%argrw{"wrr"}
+	aassign		tex_masks $const1 tex_mask_1 	%line{263} %argrw{"wrr"}
+	aassign		tex_masks $const2 tex_mask_2 	%argrw{"wrr"}
+	aassign		tex_masks $const3 tex_mask_3 	%argrw{"wrr"}
+	aassign		tex_masks $const4 tex_mask_4 	%argrw{"wrr"}
+	aassign		tex_masks $const5 tex_mask_5 	%argrw{"wrr"}
+	aassign		tex_masks $const6 tex_mask_6 	%argrw{"wrr"}
+	aassign		tex_masks $const7 tex_mask_7 	%argrw{"wrr"}
+	aassign		tex_masks $const8 tex_mask_8 	%argrw{"wrr"}
+	aassign		tex_masks $const9 tex_mask_9 	%argrw{"wrr"}
+	aassign		tex_masks $const10 tex_mask_10 	%argrw{"wrr"}
+	aassign		tex_masks_alpha $const1 tex_mask_1_alpha 	%line{264} %argrw{"wrr"}
+	aassign		tex_masks_alpha $const2 tex_mask_2_alpha 	%argrw{"wrr"}
+	aassign		tex_masks_alpha $const3 tex_mask_3_alpha 	%argrw{"wrr"}
+	aassign		tex_masks_alpha $const4 tex_mask_4_alpha 	%argrw{"wrr"}
+	aassign		tex_masks_alpha $const5 tex_mask_5_alpha 	%argrw{"wrr"}
+	aassign		tex_masks_alpha $const6 tex_mask_6_alpha 	%argrw{"wrr"}
+	aassign		tex_masks_alpha $const7 tex_mask_7_alpha 	%argrw{"wrr"}
+	aassign		tex_masks_alpha $const8 tex_mask_8_alpha 	%argrw{"wrr"}
+	aassign		tex_masks_alpha $const9 tex_mask_9_alpha 	%argrw{"wrr"}
+	aassign		tex_masks_alpha $const10 tex_mask_10_alpha 	%argrw{"wrr"}
+	aassign		tex_masks_bump $const1 tex_mask_1_bump 	%line{265} %argrw{"wrr"}
+	aassign		tex_masks_bump $const2 tex_mask_2_bump 	%argrw{"wrr"}
+	aassign		tex_masks_bump $const3 tex_mask_3_bump 	%argrw{"wrr"}
+	aassign		tex_masks_bump $const4 tex_mask_4_bump 	%argrw{"wrr"}
+	aassign		tex_masks_bump $const5 tex_mask_5_bump 	%argrw{"wrr"}
+	aassign		tex_masks_bump $const6 tex_mask_6_bump 	%argrw{"wrr"}
+	aassign		tex_masks_bump $const7 tex_mask_7_bump 	%argrw{"wrr"}
+	aassign		tex_masks_bump $const8 tex_mask_8_bump 	%argrw{"wrr"}
+	aassign		tex_masks_bump $const9 tex_mask_9_bump 	%argrw{"wrr"}
+	aassign		tex_masks_bump $const10 tex_mask_10_bump 	%argrw{"wrr"}
+	aassign		tex_masks_isnull $const1 tex_mask_1_isnull 	%line{266} %argrw{"wrr"}
+	aassign		tex_masks_isnull $const2 tex_mask_2_isnull 	%argrw{"wrr"}
+	aassign		tex_masks_isnull $const3 tex_mask_3_isnull 	%argrw{"wrr"}
+	aassign		tex_masks_isnull $const4 tex_mask_4_isnull 	%argrw{"wrr"}
+	aassign		tex_masks_isnull $const5 tex_mask_5_isnull 	%argrw{"wrr"}
+	aassign		tex_masks_isnull $const6 tex_mask_6_isnull 	%argrw{"wrr"}
+	aassign		tex_masks_isnull $const7 tex_mask_7_isnull 	%argrw{"wrr"}
+	aassign		tex_masks_isnull $const8 tex_mask_8_isnull 	%argrw{"wrr"}
+	aassign		tex_masks_isnull $const9 tex_mask_9_isnull 	%argrw{"wrr"}
+	aassign		tex_masks_isnull $const10 tex_mask_10_isnull 	%argrw{"wrr"}
+	aassign		tex_blendModes $const1 tex_blendMode_1 	%line{268} %argrw{"wrr"}
+	aassign		tex_blendModes $const2 tex_blendMode_2 	%argrw{"wrr"}
+	aassign		tex_blendModes $const3 tex_blendMode_3 	%argrw{"wrr"}
+	aassign		tex_blendModes $const4 tex_blendMode_4 	%argrw{"wrr"}
+	aassign		tex_blendModes $const5 tex_blendMode_5 	%argrw{"wrr"}
+	aassign		tex_blendModes $const6 tex_blendMode_6 	%argrw{"wrr"}
+	aassign		tex_blendModes $const7 tex_blendMode_7 	%argrw{"wrr"}
+	aassign		tex_blendModes $const8 tex_blendMode_8 	%argrw{"wrr"}
+	aassign		tex_blendModes $const9 tex_blendMode_9 	%argrw{"wrr"}
+	aassign		tex_blendModes $const10 tex_blendMode_10 	%argrw{"wrr"}
+	aassign		tex_mapEnableds $const1 tex_mapEnabled_1 	%line{269} %argrw{"wrr"}
+	aassign		tex_mapEnableds $const2 tex_mapEnabled_2 	%argrw{"wrr"}
+	aassign		tex_mapEnableds $const3 tex_mapEnabled_3 	%argrw{"wrr"}
+	aassign		tex_mapEnableds $const4 tex_mapEnabled_4 	%argrw{"wrr"}
+	aassign		tex_mapEnableds $const5 tex_mapEnabled_5 	%argrw{"wrr"}
+	aassign		tex_mapEnableds $const6 tex_mapEnabled_6 	%argrw{"wrr"}
+	aassign		tex_mapEnableds $const7 tex_mapEnabled_7 	%argrw{"wrr"}
+	aassign		tex_mapEnableds $const8 tex_mapEnabled_8 	%argrw{"wrr"}
+	aassign		tex_mapEnableds $const9 tex_mapEnabled_9 	%argrw{"wrr"}
+	aassign		tex_mapEnableds $const10 tex_mapEnabled_10 	%argrw{"wrr"}
+	aassign		tex_maskEnableds $const1 tex_maskEnabled_1 	%line{270} %argrw{"wrr"}
+	aassign		tex_maskEnableds $const2 tex_maskEnabled_2 	%argrw{"wrr"}
+	aassign		tex_maskEnableds $const3 tex_maskEnabled_3 	%argrw{"wrr"}
+	aassign		tex_maskEnableds $const4 tex_maskEnabled_4 	%argrw{"wrr"}
+	aassign		tex_maskEnableds $const5 tex_maskEnabled_5 	%argrw{"wrr"}
+	aassign		tex_maskEnableds $const6 tex_maskEnabled_6 	%argrw{"wrr"}
+	aassign		tex_maskEnableds $const7 tex_maskEnabled_7 	%argrw{"wrr"}
+	aassign		tex_maskEnableds $const8 tex_maskEnabled_8 	%argrw{"wrr"}
+	aassign		tex_maskEnableds $const9 tex_maskEnabled_9 	%argrw{"wrr"}
+	aassign		tex_maskEnableds $const10 tex_maskEnabled_10 	%argrw{"wrr"}
+	aassign		tex_opacitys $const1 tex_opacity_1 	%line{272} %argrw{"wrr"}
+	aassign		tex_opacitys $const2 tex_opacity_2 	%argrw{"wrr"}
+	aassign		tex_opacitys $const3 tex_opacity_3 	%argrw{"wrr"}
+	aassign		tex_opacitys $const4 tex_opacity_4 	%argrw{"wrr"}
+	aassign		tex_opacitys $const5 tex_opacity_5 	%argrw{"wrr"}
+	aassign		tex_opacitys $const6 tex_opacity_6 	%argrw{"wrr"}
+	aassign		tex_opacitys $const7 tex_opacity_7 	%argrw{"wrr"}
+	aassign		tex_opacitys $const8 tex_opacity_8 	%argrw{"wrr"}
+	aassign		tex_opacitys $const9 tex_opacity_9 	%argrw{"wrr"}
+	aassign		tex_opacitys $const10 tex_opacity_10 	%argrw{"wrr"}
+	assign		bg $const1 	%line{274} %argrw{"wr"}
+	assign		bg_alpha $const1 	%line{275} %argrw{"wr"}
+	assign		fg $const1 	%line{276} %argrw{"wr"}
+	assign		fg_alpha $const1 	%line{277} %argrw{"wr"}
+	assign		map_blend_mode $const1 	%line{278} %argrw{"wr"}
+	for		$tmp1 127 128 730 732 	%line{280} %argrw{"r"}
+	assign		___332_i $const10 	%argrw{"wr"}
+	ge		$tmp1 ___332_i $const1 	%argrw{"wrr"}
+	aref		___333_map_enabled tex_mapEnableds ___332_i 	%line{282} %argrw{"wrr"}
+	aref		___333_map_opacity tex_opacitys ___332_i 	%line{283} %argrw{"wrr"}
+	aref		___333_map_mask_enabled tex_maskEnableds ___332_i 	%line{284} %argrw{"wrr"}
+	aref		___333_map_mask tex_masks ___332_i 	%line{285} %argrw{"wrr"}
+	aref		bg tex_mapLists ___332_i 	%line{287} %argrw{"wrr"}
+	aref		bg_alpha tex_mapLists_alpha ___332_i 	%line{288} %argrw{"wrr"}
+	eq		$tmp2 ___333_map_enabled $const2 	%line{290} %argrw{"wrr"}
+	neq		$tmp3 $tmp2 $const1 	%argrw{"wrr"}
+	if		$tmp3 140 140 	%argrw{"r"}
+	neq		$tmp4 ___333_map_opacity $const11 	%argrw{"wrr"}
+	neq		$tmp5 $tmp4 $const1 	%argrw{"wrr"}
+	assign		$tmp3 $tmp5 	%argrw{"wr"}
+	if		$tmp3 728 730 	%argrw{"r"}
+	div		___334_o ___333_map_opacity $const12 	%line{292} %argrw{"wrr"}
+	mul		bg_alpha bg_alpha ___334_o 	%line{293} %argrw{"wrr"}
+	assign		___334_blended_color $const1 	%line{296} %argrw{"wr"}
+	assign		___334_blended_alpha $const1 	%line{297} %argrw{"wr"}
+	functioncall	$const13 716 	%line{298} %argrw{"r"}
+	eq		$tmp6 map_blend_mode $const1 	%line{28} %argrw{"wrr"}
+	if		$tmp6 150 150 	%argrw{"r"}
+	assign		___334_blended_color bg 	%line{30} %argrw{"wr"}
+	assign		___334_blended_alpha bg_alpha 	%line{31} %argrw{"wr"}
+	eq		$tmp7 map_blend_mode $const2 	%line{33} %argrw{"wrr"}
+	if		$tmp7 154 154 	%argrw{"r"}
+	add		$tmp8 bg fg 	%line{35} %argrw{"wrr"}
+	div		___334_blended_color $tmp8 $const14 	%argrw{"wrr"}
+	eq		$tmp9 map_blend_mode $const3 	%line{37} %argrw{"wrr"}
+	if		$tmp9 157 157 	%argrw{"r"}
+	add		___334_blended_color bg fg 	%line{39} %argrw{"wrr"}
+	eq		$tmp10 map_blend_mode $const4 	%line{41} %argrw{"wrr"}
+	if		$tmp10 160 160 	%argrw{"r"}
+	sub		___334_blended_color fg bg 	%line{43} %argrw{"wrr"}
+	eq		$tmp11 map_blend_mode $const5 	%line{45} %argrw{"wrr"}
+	if		$tmp11 163 163 	%argrw{"r"}
+	min		___334_blended_color bg fg 	%line{47} %argrw{"wrr"}
+	eq		$tmp12 map_blend_mode $const6 	%line{49} %argrw{"wrr"}
+	if		$tmp12 167 167 	%argrw{"r"}
+	mul		___334_blended_color bg fg 	%line{51} %argrw{"wrr"}
+	mul		___334_blended_alpha bg_alpha fg_alpha 	%line{52} %argrw{"wrr"}
+	eq		$tmp13 map_blend_mode $const7 	%line{54} %argrw{"wrr"}
+	if		$tmp13 169 169 	%argrw{"r"}
+	eq		$tmp14 map_blend_mode $const8 	%line{58} %argrw{"wrr"}
+	if		$tmp14 174 174 	%argrw{"r"}
+	add		$tmp15 bg fg 	%line{60} %argrw{"wrr"}
+	sub		$tmp16 $tmp15 $const15 	%argrw{"wrr"}
+	max		___334_blended_color $tmp16 $const16 	%argrw{"wrr"}
+	eq		$tmp18 map_blend_mode $const9 	%line{62} %argrw{"wrr"}
+	if		$tmp18 177 177 	%argrw{"r"}
+	max		___334_blended_color bg fg 	%line{64} %argrw{"wrr"}
+	eq		$tmp19 map_blend_mode $const10 	%line{66} %argrw{"wrr"}
+	if		$tmp19 182 182 	%argrw{"r"}
+	add		$tmp20 bg fg 	%line{68} %argrw{"wrr"}
+	mul		$tmp21 bg fg 	%argrw{"wrr"}
+	sub		___334_blended_color $tmp20 $tmp21 	%argrw{"wrr"}
+	eq		$tmp22 map_blend_mode $const17 	%line{70} %argrw{"wrr"}
+	if		$tmp22 184 184 	%argrw{"r"}
+	eq		$tmp23 map_blend_mode $const18 	%line{74} %argrw{"wrr"}
+	if		$tmp23 188 188 	%argrw{"r"}
+	add		$tmp24 bg fg 	%line{76} %argrw{"wrr"}
+	min		___334_blended_color $tmp24 $const19 	%argrw{"wrr"}
+	eq		$tmp26 map_blend_mode $const20 	%line{78} %argrw{"wrr"}
+	if		$tmp26 193 193 	%argrw{"r"}
+	mul		$tmp27 $const14 bg 	%line{80} %argrw{"wrr"}
+	mul		$tmp28 $tmp27 fg 	%argrw{"wrr"}
+	min		___334_blended_color $tmp28 $const19 	%argrw{"wrr"}
+	eq		$tmp30 map_blend_mode $const21 	%line{82} %argrw{"wrr"}
+	if		$tmp30 198 198 	%argrw{"r"}
+	mul		$tmp31 bg fg 	%line{84} %argrw{"wrr"}
+	add		$tmp32 $tmp31 fg 	%argrw{"wrr"}
+	min		___334_blended_color $tmp32 $const19 	%argrw{"wrr"}
+	eq		$tmp34 map_blend_mode $const22 	%line{86} %argrw{"wrr"}
+	if		$tmp34 200 200 	%argrw{"r"}
+	eq		$tmp35 map_blend_mode $const23 	%line{90} %argrw{"wrr"}
+	if		$tmp35 202 202 	%argrw{"r"}
+	eq		$tmp36 map_blend_mode $const24 	%line{94} %argrw{"wrr"}
+	if		$tmp36 204 204 	%argrw{"r"}
+	eq		$tmp37 map_blend_mode $const25 	%line{98} %argrw{"wrr"}
+	if		$tmp37 206 206 	%argrw{"r"}
+	eq		$tmp38 map_blend_mode $const26 	%line{102} %argrw{"wrr"}
+	if		$tmp38 208 208 	%argrw{"r"}
+	eq		$tmp39 map_blend_mode $const27 	%line{106} %argrw{"wrr"}
+	if		$tmp39 212 212 	%argrw{"r"}
+	sub		$tmp40 bg fg 	%line{108} %argrw{"wrr"}
+	abs		___334_blended_color $tmp40 	%argrw{"wr"}
+	eq		$tmp41 map_blend_mode $const28 	%line{110} %argrw{"wrr"}
+	if		$tmp41 218 218 	%argrw{"r"}
+	add		$tmp42 bg fg 	%line{112} %argrw{"wrr"}
+	mul		$tmp43 $const14 bg 	%argrw{"wrr"}
+	mul		$tmp44 $tmp43 fg 	%argrw{"wrr"}
+	sub		___334_blended_color $tmp42 $tmp44 	%argrw{"wrr"}
+	eq		$tmp45 map_blend_mode $const29 	%line{114} %argrw{"wrr"}
+	if		$tmp45 220 220 	%argrw{"r"}
+	eq		$tmp46 map_blend_mode $const30 	%line{118} %argrw{"wrr"}
+	if		$tmp46 222 222 	%argrw{"r"}
+	eq		$tmp47 map_blend_mode $const31 	%line{122} %argrw{"wrr"}
+	if		$tmp47 714 714 	%argrw{"r"}
+	functioncall	$const32 714 	%line{124} %argrw{"r"}
+	assign		___305_b_result $const16 	%line{19} %argrw{"wr"}
+	functioncall	$const34 345 	%line{20} %argrw{"r"}
+	eq		$tmp48 $const33 $const35 	%filename{"E:/OSL_install\\shaders\\stdosl.h"} %line{321} %argrw{"wrr"}
+	neq		$tmp49 $tmp48 $const1 	%argrw{"wrr"}
+	if		$tmp49 230 233 	%argrw{"r"}
+	eq		$tmp50 $const33 $const36 	%argrw{"wrr"}
+	neq		$tmp51 $tmp50 $const1 	%argrw{"wrr"}
+	assign		$tmp49 $tmp51 	%argrw{"wr"}
+	if		$tmp49 235 344 	%argrw{"r"}
+	assign		___237_r bg 	%line{322} %argrw{"wr"}
+	eq		$tmp52 $const33 $const33 	%line{323} %argrw{"wrr"}
+	if		$tmp52 271 344 	%argrw{"r"}
+	functioncall	$const37 271 	%line{324} %argrw{"r"}
+	compref		___238_r bg $const1 	%line{283} %argrw{"wrr"}
+	compref		___238_g bg $const2 	%argrw{"wrr"}
+	compref		___238_b bg $const3 	%argrw{"wrr"}
+	min		$tmp53 ___238_g ___238_b 	%line{284} %argrw{"wrr"}
+	min		___238_mincomp ___238_r $tmp53 	%argrw{"wrr"}
+	max		$tmp54 ___238_g ___238_b 	%line{285} %argrw{"wrr"}
+	max		___238_maxcomp ___238_r $tmp54 	%argrw{"wrr"}
+	sub		___238_delta ___238_maxcomp ___238_mincomp 	%line{286} %argrw{"wrr"}
+	assign		___238_v ___238_maxcomp 	%line{288} %argrw{"wr"}
+	gt		$tmp55 ___238_maxcomp $const1 	%line{289} %argrw{"wrr"}
+	if		$tmp55 250 251 	%argrw{"r"}
+	div		___238_s ___238_delta ___238_maxcomp 	%line{290} %argrw{"wrr"}
+	assign		___238_s $const1 	%line{291} %argrw{"wr"}
+	le		$tmp56 ___238_s $const1 	%line{292} %argrw{"wrr"}
+	if		$tmp56 254 270 	%argrw{"r"}
+	assign		___238_h $const1 	%line{293} %argrw{"wr"}
+	ge		$tmp57 ___238_r ___238_maxcomp 	%line{295} %argrw{"wrr"}
+	if		$tmp57 258 266 	%argrw{"r"}
+	sub		$tmp58 ___238_g ___238_b 	%argrw{"wrr"}
+	div		___238_h $tmp58 ___238_delta 	%argrw{"wrr"}
+	ge		$tmp59 ___238_g ___238_maxcomp 	%line{296} %argrw{"wrr"}
+	if		$tmp59 263 266 	%argrw{"r"}
+	sub		$tmp60 ___238_b ___238_r 	%argrw{"wrr"}
+	div		$tmp61 $tmp60 ___238_delta 	%argrw{"wrr"}
+	add		___238_h $const14 $tmp61 	%argrw{"wrr"}
+	sub		$tmp62 ___238_r ___238_g 	%line{297} %argrw{"wrr"}
+	div		$tmp63 $tmp62 ___238_delta 	%argrw{"wrr"}
+	add		___238_h $const38 $tmp63 	%argrw{"wrr"}
+	div		___238_h ___238_h $const39 	%line{298} %argrw{"wrr"}
+	lt		$tmp64 ___238_h $const1 	%line{299} %argrw{"wrr"}
+	if		$tmp64 270 270 	%argrw{"r"}
+	add		___238_h ___238_h $const15 	%line{300} %argrw{"wrr"}
+	color		___237_r ___238_h ___238_s ___238_v 	%line{302} %argrw{"wrrr"}
+	eq		$tmp65 $const33 $const40 	%line{325} %argrw{"wrr"}
+	if		$tmp65 330 344 	%argrw{"r"}
+	functioncall	$const41 330 	%line{326} %argrw{"r"}
+	compref		$tmp66 bg $const1 	%line{307} %argrw{"wrr"}
+	compref		$tmp68 bg $const2 	%argrw{"wrr"}
+	compref		$tmp69 bg $const3 	%argrw{"wrr"}
+	min		$tmp67 $tmp68 $tmp69 	%argrw{"wrr"}
+	min		___240_minval $tmp66 $tmp67 	%argrw{"wrr"}
+	functioncall	$const37 313 	%line{308} %argrw{"r"}
+	compref		___238_r bg $const1 	%line{283} %argrw{"wrr"}
+	compref		___238_g bg $const2 	%argrw{"wrr"}
+	compref		___238_b bg $const3 	%argrw{"wrr"}
+	min		$tmp70 ___238_g ___238_b 	%line{284} %argrw{"wrr"}
+	min		___238_mincomp ___238_r $tmp70 	%argrw{"wrr"}
+	max		$tmp71 ___238_g ___238_b 	%line{285} %argrw{"wrr"}
+	max		___238_maxcomp ___238_r $tmp71 	%argrw{"wrr"}
+	sub		___238_delta ___238_maxcomp ___238_mincomp 	%line{286} %argrw{"wrr"}
+	assign		___238_v ___238_maxcomp 	%line{288} %argrw{"wr"}
+	gt		$tmp72 ___238_maxcomp $const1 	%line{289} %argrw{"wrr"}
+	if		$tmp72 292 293 	%argrw{"r"}
+	div		___238_s ___238_delta ___238_maxcomp 	%line{290} %argrw{"wrr"}
+	assign		___238_s $const1 	%line{291} %argrw{"wr"}
+	le		$tmp73 ___238_s $const1 	%line{292} %argrw{"wrr"}
+	if		$tmp73 296 312 	%argrw{"r"}
+	assign		___238_h $const1 	%line{293} %argrw{"wr"}
+	ge		$tmp74 ___238_r ___238_maxcomp 	%line{295} %argrw{"wrr"}
+	if		$tmp74 300 308 	%argrw{"r"}
+	sub		$tmp75 ___238_g ___238_b 	%argrw{"wrr"}
+	div		___238_h $tmp75 ___238_delta 	%argrw{"wrr"}
+	ge		$tmp76 ___238_g ___238_maxcomp 	%line{296} %argrw{"wrr"}
+	if		$tmp76 305 308 	%argrw{"r"}
+	sub		$tmp77 ___238_b ___238_r 	%argrw{"wrr"}
+	div		$tmp78 $tmp77 ___238_delta 	%argrw{"wrr"}
+	add		___238_h $const14 $tmp78 	%argrw{"wrr"}
+	sub		$tmp79 ___238_r ___238_g 	%line{297} %argrw{"wrr"}
+	div		$tmp80 $tmp79 ___238_delta 	%argrw{"wrr"}
+	add		___238_h $const38 $tmp80 	%argrw{"wrr"}
+	div		___238_h ___238_h $const39 	%line{298} %argrw{"wrr"}
+	lt		$tmp81 ___238_h $const1 	%line{299} %argrw{"wrr"}
+	if		$tmp81 312 312 	%argrw{"r"}
+	add		___238_h ___238_h $const15 	%line{300} %argrw{"wrr"}
+	color		___240_hsv ___238_h ___238_s ___238_v 	%line{302} %argrw{"wrrr"}
+	compref		___240_maxval ___240_hsv $const3 	%line{309} %argrw{"wrr"}
+	compref		___240_h ___240_hsv $const1 	%line{310} %argrw{"wrr"}
+	add		$tmp82 ___240_minval ___240_maxval 	%argrw{"wrr"}
+	div		___240_l $tmp82 $const14 	%argrw{"wrr"}
+	eq		$tmp83 ___240_minval ___240_maxval 	%line{311} %argrw{"wrr"}
+	if		$tmp83 320 329 	%argrw{"r"}
+	assign		___240_s $const1 	%line{312} %argrw{"wr"}
+	le		$tmp84 ___240_l $const42 	%line{313} %argrw{"wrr"}
+	if		$tmp84 325 329 	%argrw{"r"}
+	sub		$tmp85 ___240_maxval ___240_minval 	%line{314} %argrw{"wrr"}
+	add		$tmp86 ___240_maxval ___240_minval 	%argrw{"wrr"}
+	div		___240_s $tmp85 $tmp86 	%argrw{"wrr"}
+	sub		$tmp87 ___240_maxval ___240_minval 	%line{316} %argrw{"wrr"}
+	sub		$tmp88 $const14 ___240_maxval 	%argrw{"wrr"}
+	sub		$tmp89 $tmp88 ___240_minval 	%argrw{"wrr"}
+	div		___240_s $tmp87 $tmp89 	%argrw{"wrr"}
+	color		___237_r ___240_h ___240_s ___240_l 	%line{317} %argrw{"wrrr"}
+	eq		$tmp90 $const33 $const43 	%line{327} %argrw{"wrr"}
+	if		$tmp90 336 344 	%argrw{"r"}
+	dot		$tmp91 $const44 bg 	%line{328} %argrw{"wrr"}
+	dot		$tmp93 $const45 bg 	%line{329} %argrw{"wrr"}
+	dot		$tmp95 $const46 bg 	%line{330} %argrw{"wrr"}
+	color		___237_r $tmp91 $tmp93 $tmp95 	%argrw{"wrrr"}
+	eq		$tmp97 $const33 $const47 	%line{331} %argrw{"wrr"}
+	if		$tmp97 342 344 	%argrw{"r"}
+	dot		$tmp98 $const48 bg 	%line{332} %argrw{"wrr"}
+	dot		$tmp100 $const49 bg 	%line{333} %argrw{"wrr"}
+	dot		$tmp102 $const50 bg 	%line{334} %argrw{"wrr"}
+	color		___237_r $tmp98 $tmp100 $tmp102 	%argrw{"wrrr"}
+	error		$const51 $const33 	%line{336} %argrw{"rr"}
+	assign		___237_r bg 	%line{337} %argrw{"wr"}
+	assign		___305_fg_hsv ___237_r 	%line{339} %argrw{"wr"}
+	functioncall	$const34 464 	%filename{"E:/github/elaramax/Shaders/max_composite_map.osl"} %line{21} %argrw{"r"}
+	eq		$tmp104 $const33 $const35 	%filename{"E:/OSL_install\\shaders\\stdosl.h"} %line{321} %argrw{"wrr"}
+	neq		$tmp105 $tmp104 $const1 	%argrw{"wrr"}
+	if		$tmp105 349 352 	%argrw{"r"}
+	eq		$tmp106 $const33 $const36 	%argrw{"wrr"}
+	neq		$tmp107 $tmp106 $const1 	%argrw{"wrr"}
+	assign		$tmp105 $tmp107 	%argrw{"wr"}
+	if		$tmp105 354 463 	%argrw{"r"}
+	assign		___237_r fg 	%line{322} %argrw{"wr"}
+	eq		$tmp108 $const33 $const33 	%line{323} %argrw{"wrr"}
+	if		$tmp108 390 463 	%argrw{"r"}
+	functioncall	$const37 390 	%line{324} %argrw{"r"}
+	compref		___238_r fg $const1 	%line{283} %argrw{"wrr"}
+	compref		___238_g fg $const2 	%argrw{"wrr"}
+	compref		___238_b fg $const3 	%argrw{"wrr"}
+	min		$tmp109 ___238_g ___238_b 	%line{284} %argrw{"wrr"}
+	min		___238_mincomp ___238_r $tmp109 	%argrw{"wrr"}
+	max		$tmp110 ___238_g ___238_b 	%line{285} %argrw{"wrr"}
+	max		___238_maxcomp ___238_r $tmp110 	%argrw{"wrr"}
+	sub		___238_delta ___238_maxcomp ___238_mincomp 	%line{286} %argrw{"wrr"}
+	assign		___238_v ___238_maxcomp 	%line{288} %argrw{"wr"}
+	gt		$tmp111 ___238_maxcomp $const1 	%line{289} %argrw{"wrr"}
+	if		$tmp111 369 370 	%argrw{"r"}
+	div		___238_s ___238_delta ___238_maxcomp 	%line{290} %argrw{"wrr"}
+	assign		___238_s $const1 	%line{291} %argrw{"wr"}
+	le		$tmp112 ___238_s $const1 	%line{292} %argrw{"wrr"}
+	if		$tmp112 373 389 	%argrw{"r"}
+	assign		___238_h $const1 	%line{293} %argrw{"wr"}
+	ge		$tmp113 ___238_r ___238_maxcomp 	%line{295} %argrw{"wrr"}
+	if		$tmp113 377 385 	%argrw{"r"}
+	sub		$tmp114 ___238_g ___238_b 	%argrw{"wrr"}
+	div		___238_h $tmp114 ___238_delta 	%argrw{"wrr"}
+	ge		$tmp115 ___238_g ___238_maxcomp 	%line{296} %argrw{"wrr"}
+	if		$tmp115 382 385 	%argrw{"r"}
+	sub		$tmp116 ___238_b ___238_r 	%argrw{"wrr"}
+	div		$tmp117 $tmp116 ___238_delta 	%argrw{"wrr"}
+	add		___238_h $const14 $tmp117 	%argrw{"wrr"}
+	sub		$tmp118 ___238_r ___238_g 	%line{297} %argrw{"wrr"}
+	div		$tmp119 $tmp118 ___238_delta 	%argrw{"wrr"}
+	add		___238_h $const38 $tmp119 	%argrw{"wrr"}
+	div		___238_h ___238_h $const39 	%line{298} %argrw{"wrr"}
+	lt		$tmp120 ___238_h $const1 	%line{299} %argrw{"wrr"}
+	if		$tmp120 389 389 	%argrw{"r"}
+	add		___238_h ___238_h $const15 	%line{300} %argrw{"wrr"}
+	color		___237_r ___238_h ___238_s ___238_v 	%line{302} %argrw{"wrrr"}
+	eq		$tmp121 $const33 $const40 	%line{325} %argrw{"wrr"}
+	if		$tmp121 449 463 	%argrw{"r"}
+	functioncall	$const41 449 	%line{326} %argrw{"r"}
+	compref		$tmp122 fg $const1 	%line{307} %argrw{"wrr"}
+	compref		$tmp124 fg $const2 	%argrw{"wrr"}
+	compref		$tmp125 fg $const3 	%argrw{"wrr"}
+	min		$tmp123 $tmp124 $tmp125 	%argrw{"wrr"}
+	min		___240_minval $tmp122 $tmp123 	%argrw{"wrr"}
+	functioncall	$const37 432 	%line{308} %argrw{"r"}
+	compref		___238_r fg $const1 	%line{283} %argrw{"wrr"}
+	compref		___238_g fg $const2 	%argrw{"wrr"}
+	compref		___238_b fg $const3 	%argrw{"wrr"}
+	min		$tmp126 ___238_g ___238_b 	%line{284} %argrw{"wrr"}
+	min		___238_mincomp ___238_r $tmp126 	%argrw{"wrr"}
+	max		$tmp127 ___238_g ___238_b 	%line{285} %argrw{"wrr"}
+	max		___238_maxcomp ___238_r $tmp127 	%argrw{"wrr"}
+	sub		___238_delta ___238_maxcomp ___238_mincomp 	%line{286} %argrw{"wrr"}
+	assign		___238_v ___238_maxcomp 	%line{288} %argrw{"wr"}
+	gt		$tmp128 ___238_maxcomp $const1 	%line{289} %argrw{"wrr"}
+	if		$tmp128 411 412 	%argrw{"r"}
+	div		___238_s ___238_delta ___238_maxcomp 	%line{290} %argrw{"wrr"}
+	assign		___238_s $const1 	%line{291} %argrw{"wr"}
+	le		$tmp129 ___238_s $const1 	%line{292} %argrw{"wrr"}
+	if		$tmp129 415 431 	%argrw{"r"}
+	assign		___238_h $const1 	%line{293} %argrw{"wr"}
+	ge		$tmp130 ___238_r ___238_maxcomp 	%line{295} %argrw{"wrr"}
+	if		$tmp130 419 427 	%argrw{"r"}
+	sub		$tmp131 ___238_g ___238_b 	%argrw{"wrr"}
+	div		___238_h $tmp131 ___238_delta 	%argrw{"wrr"}
+	ge		$tmp132 ___238_g ___238_maxcomp 	%line{296} %argrw{"wrr"}
+	if		$tmp132 424 427 	%argrw{"r"}
+	sub		$tmp133 ___238_b ___238_r 	%argrw{"wrr"}
+	div		$tmp134 $tmp133 ___238_delta 	%argrw{"wrr"}
+	add		___238_h $const14 $tmp134 	%argrw{"wrr"}
+	sub		$tmp135 ___238_r ___238_g 	%line{297} %argrw{"wrr"}
+	div		$tmp136 $tmp135 ___238_delta 	%argrw{"wrr"}
+	add		___238_h $const38 $tmp136 	%argrw{"wrr"}
+	div		___238_h ___238_h $const39 	%line{298} %argrw{"wrr"}
+	lt		$tmp137 ___238_h $const1 	%line{299} %argrw{"wrr"}
+	if		$tmp137 431 431 	%argrw{"r"}
+	add		___238_h ___238_h $const15 	%line{300} %argrw{"wrr"}
+	color		___240_hsv ___238_h ___238_s ___238_v 	%line{302} %argrw{"wrrr"}
+	compref		___240_maxval ___240_hsv $const3 	%line{309} %argrw{"wrr"}
+	compref		___240_h ___240_hsv $const1 	%line{310} %argrw{"wrr"}
+	add		$tmp138 ___240_minval ___240_maxval 	%argrw{"wrr"}
+	div		___240_l $tmp138 $const14 	%argrw{"wrr"}
+	eq		$tmp139 ___240_minval ___240_maxval 	%line{311} %argrw{"wrr"}
+	if		$tmp139 439 448 	%argrw{"r"}
+	assign		___240_s $const1 	%line{312} %argrw{"wr"}
+	le		$tmp140 ___240_l $const42 	%line{313} %argrw{"wrr"}
+	if		$tmp140 444 448 	%argrw{"r"}
+	sub		$tmp141 ___240_maxval ___240_minval 	%line{314} %argrw{"wrr"}
+	add		$tmp142 ___240_maxval ___240_minval 	%argrw{"wrr"}
+	div		___240_s $tmp141 $tmp142 	%argrw{"wrr"}
+	sub		$tmp143 ___240_maxval ___240_minval 	%line{316} %argrw{"wrr"}
+	sub		$tmp144 $const14 ___240_maxval 	%argrw{"wrr"}
+	sub		$tmp145 $tmp144 ___240_minval 	%argrw{"wrr"}
+	div		___240_s $tmp143 $tmp145 	%argrw{"wrr"}
+	color		___237_r ___240_h ___240_s ___240_l 	%line{317} %argrw{"wrrr"}
+	eq		$tmp146 $const33 $const43 	%line{327} %argrw{"wrr"}
+	if		$tmp146 455 463 	%argrw{"r"}
+	dot		$tmp147 $const44 fg 	%line{328} %argrw{"wrr"}
+	dot		$tmp149 $const45 fg 	%line{329} %argrw{"wrr"}
+	dot		$tmp151 $const46 fg 	%line{330} %argrw{"wrr"}
+	color		___237_r $tmp147 $tmp149 $tmp151 	%argrw{"wrrr"}
+	eq		$tmp153 $const33 $const47 	%line{331} %argrw{"wrr"}
+	if		$tmp153 461 463 	%argrw{"r"}
+	dot		$tmp154 $const48 fg 	%line{332} %argrw{"wrr"}
+	dot		$tmp156 $const49 fg 	%line{333} %argrw{"wrr"}
+	dot		$tmp158 $const50 fg 	%line{334} %argrw{"wrr"}
+	color		___237_r $tmp154 $tmp156 $tmp158 	%argrw{"wrrr"}
+	error		$const51 $const33 	%line{336} %argrw{"rr"}
+	assign		___237_r fg 	%line{337} %argrw{"wr"}
+	assign		___305_bg_hsv ___237_r 	%line{339} %argrw{"wr"}
+	compref		$tmp161 ___305_bg_hsv $const1 	%filename{"E:/github/elaramax/Shaders/max_composite_map.osl"} %line{22} %argrw{"wrr"}
+	compref		$tmp162 ___305_bg_hsv $const2 	%argrw{"wrr"}
+	compref		$tmp163 ___305_fg_hsv $const3 	%argrw{"wrr"}
+	color		$tmp160 $tmp161 $tmp162 $tmp163 	%argrw{"wrrr"}
+	functioncall	$const34 713 	%argrw{"r"}
+	eq		$tmp164 $const33 $const35 	%filename{"E:/OSL_install\\shaders\\stdosl.h"} %line{383} %argrw{"wrr"}
+	neq		$tmp165 $tmp164 $const1 	%argrw{"wrr"}
+	if		$tmp165 472 475 	%argrw{"r"}
+	eq		$tmp166 $const33 $const36 	%argrw{"wrr"}
+	neq		$tmp167 $tmp166 $const1 	%argrw{"wrr"}
+	assign		$tmp165 $tmp167 	%argrw{"wr"}
+	if		$tmp165 477 594 	%argrw{"r"}
+	assign		___242_r $tmp160 	%line{384} %argrw{"wr"}
+	eq		$tmp168 $const33 $const33 	%line{385} %argrw{"wrr"}
+	if		$tmp168 518 594 	%argrw{"r"}
+	functioncall	$const52 518 	%line{386} %argrw{"r"}
+	compref		___243_h $tmp160 $const1 	%line{346} %argrw{"wrr"}
+	compref		___243_s $tmp160 $const2 	%argrw{"wrr"}
+	compref		___243_v $tmp160 $const3 	%argrw{"wrr"}
+	lt		$tmp169 ___243_s $const53 	%line{348} %argrw{"wrr"}
+	if		$tmp169 486 517 	%argrw{"r"}
+	assign		___243_r ___243_v 	%line{349} %argrw{"wr"}
+	floor		$tmp170 ___243_h 	%line{351} %argrw{"wr"}
+	sub		$tmp171 ___243_h $tmp170 	%argrw{"wrr"}
+	mul		___243_h $const39 $tmp171 	%argrw{"wrr"}
+	assign		___245_hi ___243_h 	%line{352} %argrw{"wr"}
+	assign		$tmp172 ___245_hi 	%line{353} %argrw{"wr"}
+	sub		___245_f ___243_h $tmp172 	%argrw{"wrr"}
+	sub		$tmp173 $const15 ___243_s 	%line{354} %argrw{"wrr"}
+	mul		___245_p ___243_v $tmp173 	%argrw{"wrr"}
+	mul		$tmp174 ___243_s ___245_f 	%line{355} %argrw{"wrr"}
+	sub		$tmp175 $const15 $tmp174 	%argrw{"wrr"}
+	mul		___245_q ___243_v $tmp175 	%argrw{"wrr"}
+	sub		$tmp176 $const15 ___245_f 	%line{356} %argrw{"wrr"}
+	mul		$tmp177 ___243_s $tmp176 	%argrw{"wrr"}
+	sub		$tmp178 $const15 $tmp177 	%argrw{"wrr"}
+	mul		___245_t ___243_v $tmp178 	%argrw{"wrr"}
+	eq		$tmp179 ___245_hi $const1 	%line{357} %argrw{"wrr"}
+	if		$tmp179 504 517 	%argrw{"r"}
+	color		___243_r ___243_v ___245_t ___245_p 	%argrw{"wrrr"}
+	eq		$tmp180 ___245_hi $const2 	%line{358} %argrw{"wrr"}
+	if		$tmp180 507 517 	%argrw{"r"}
+	color		___243_r ___245_q ___243_v ___245_p 	%argrw{"wrrr"}
+	eq		$tmp181 ___245_hi $const3 	%line{359} %argrw{"wrr"}
+	if		$tmp181 510 517 	%argrw{"r"}
+	color		___243_r ___245_p ___243_v ___245_t 	%argrw{"wrrr"}
+	eq		$tmp182 ___245_hi $const4 	%line{360} %argrw{"wrr"}
+	if		$tmp182 513 517 	%argrw{"r"}
+	color		___243_r ___245_p ___245_q ___243_v 	%argrw{"wrrr"}
+	eq		$tmp183 ___245_hi $const5 	%line{361} %argrw{"wrr"}
+	if		$tmp183 516 517 	%argrw{"r"}
+	color		___243_r ___245_t ___245_p ___243_v 	%argrw{"wrrr"}
+	color		___243_r ___243_v ___245_p ___245_q 	%line{362} %argrw{"wrrr"}
+	assign		___242_r ___243_r 	%line{364} %argrw{"wr"}
+	eq		$tmp184 $const33 $const40 	%line{387} %argrw{"wrr"}
+	if		$tmp184 580 594 	%argrw{"r"}
+	functioncall	$const54 580 	%line{388} %argrw{"r"}
+	compref		___246_h $tmp160 $const1 	%line{368} %argrw{"wrr"}
+	compref		___246_s $tmp160 $const2 	%argrw{"wrr"}
+	compref		___246_l $tmp160 $const3 	%argrw{"wrr"}
+	le		$tmp185 ___246_l $const42 	%line{370} %argrw{"wrr"}
+	if		$tmp185 528 531 	%argrw{"r"}
+	add		$tmp186 $const15 ___246_s 	%argrw{"wrr"}
+	mul		___246_v ___246_l $tmp186 	%argrw{"wrr"}
+	sub		$tmp187 $const15 ___246_s 	%argrw{"wrr"}
+	mul		$tmp188 ___246_l $tmp187 	%argrw{"wrr"}
+	add		___246_v $tmp188 ___246_s 	%argrw{"wrr"}
+	le		$tmp189 ___246_v $const1 	%line{372} %argrw{"wrr"}
+	if		$tmp189 534 578 	%argrw{"r"}
+	assign		___246_r $const1 	%line{373} %argrw{"wr"}
+	mul		$tmp190 $const14 ___246_l 	%line{375} %argrw{"wrr"}
+	sub		___248_min $tmp190 ___246_v 	%argrw{"wrr"}
+	sub		$tmp191 ___246_v ___248_min 	%line{376} %argrw{"wrr"}
+	div		___246_s $tmp191 ___246_v 	%argrw{"wrr"}
+	color		$tmp192 ___246_h ___246_s ___246_v 	%line{377} %argrw{"wrrr"}
+	functioncall	$const52 578 	%argrw{"r"}
+	compref		___243_h $tmp192 $const1 	%line{346} %argrw{"wrr"}
+	compref		___243_s $tmp192 $const2 	%argrw{"wrr"}
+	compref		___243_v $tmp192 $const3 	%argrw{"wrr"}
+	lt		$tmp193 ___243_s $const53 	%line{348} %argrw{"wrr"}
+	if		$tmp193 546 577 	%argrw{"r"}
+	assign		___243_r ___243_v 	%line{349} %argrw{"wr"}
+	floor		$tmp194 ___243_h 	%line{351} %argrw{"wr"}
+	sub		$tmp195 ___243_h $tmp194 	%argrw{"wrr"}
+	mul		___243_h $const39 $tmp195 	%argrw{"wrr"}
+	assign		___245_hi ___243_h 	%line{352} %argrw{"wr"}
+	assign		$tmp196 ___245_hi 	%line{353} %argrw{"wr"}
+	sub		___245_f ___243_h $tmp196 	%argrw{"wrr"}
+	sub		$tmp197 $const15 ___243_s 	%line{354} %argrw{"wrr"}
+	mul		___245_p ___243_v $tmp197 	%argrw{"wrr"}
+	mul		$tmp198 ___243_s ___245_f 	%line{355} %argrw{"wrr"}
+	sub		$tmp199 $const15 $tmp198 	%argrw{"wrr"}
+	mul		___245_q ___243_v $tmp199 	%argrw{"wrr"}
+	sub		$tmp200 $const15 ___245_f 	%line{356} %argrw{"wrr"}
+	mul		$tmp201 ___243_s $tmp200 	%argrw{"wrr"}
+	sub		$tmp202 $const15 $tmp201 	%argrw{"wrr"}
+	mul		___245_t ___243_v $tmp202 	%argrw{"wrr"}
+	eq		$tmp203 ___245_hi $const1 	%line{357} %argrw{"wrr"}
+	if		$tmp203 564 577 	%argrw{"r"}
+	color		___243_r ___243_v ___245_t ___245_p 	%argrw{"wrrr"}
+	eq		$tmp204 ___245_hi $const2 	%line{358} %argrw{"wrr"}
+	if		$tmp204 567 577 	%argrw{"r"}
+	color		___243_r ___245_q ___243_v ___245_p 	%argrw{"wrrr"}
+	eq		$tmp205 ___245_hi $const3 	%line{359} %argrw{"wrr"}
+	if		$tmp205 570 577 	%argrw{"r"}
+	color		___243_r ___245_p ___243_v ___245_t 	%argrw{"wrrr"}
+	eq		$tmp206 ___245_hi $const4 	%line{360} %argrw{"wrr"}
+	if		$tmp206 573 577 	%argrw{"r"}
+	color		___243_r ___245_p ___245_q ___243_v 	%argrw{"wrrr"}
+	eq		$tmp207 ___245_hi $const5 	%line{361} %argrw{"wrr"}
+	if		$tmp207 576 577 	%argrw{"r"}
+	color		___243_r ___245_t ___245_p ___243_v 	%argrw{"wrrr"}
+	color		___243_r ___243_v ___245_p ___245_q 	%line{362} %argrw{"wrrr"}
+	assign		___246_r ___243_r 	%line{364} %argrw{"wr"}
+	assign		___242_r ___246_r 	%line{379} %argrw{"wr"}
+	return
+	eq		$tmp208 $const33 $const43 	%line{389} %argrw{"wrr"}
+	if		$tmp208 586 594 	%argrw{"r"}
+	dot		$tmp209 $const55 $tmp160 	%line{390} %argrw{"wrr"}
+	dot		$tmp211 $const56 $tmp160 	%line{391} %argrw{"wrr"}
+	dot		$tmp213 $const57 $tmp160 	%line{392} %argrw{"wrr"}
+	color		___242_r $tmp209 $tmp211 $tmp213 	%argrw{"wrrr"}
+	eq		$tmp215 $const33 $const47 	%line{393} %argrw{"wrr"}
+	if		$tmp215 592 594 	%argrw{"r"}
+	dot		$tmp216 $const58 $tmp160 	%line{394} %argrw{"wrr"}
+	dot		$tmp218 $const59 $tmp160 	%line{395} %argrw{"wrr"}
+	dot		$tmp220 $const60 $tmp160 	%line{396} %argrw{"wrr"}
+	color		___242_r $tmp216 $tmp218 $tmp220 	%argrw{"wrrr"}
+	error		$const51 $const35 	%line{398} %argrw{"rr"}
+	assign		___242_r $tmp160 	%line{399} %argrw{"wr"}
+	functioncall	$const34 713 	%line{401} %argrw{"r"}
+	eq		$tmp222 $const35 $const35 	%line{321} %argrw{"wrr"}
+	neq		$tmp223 $tmp222 $const1 	%argrw{"wrr"}
+	if		$tmp223 598 601 	%argrw{"r"}
+	eq		$tmp224 $const35 $const36 	%argrw{"wrr"}
+	neq		$tmp225 $tmp224 $const1 	%argrw{"wrr"}
+	assign		$tmp223 $tmp225 	%argrw{"wr"}
+	if		$tmp223 603 712 	%argrw{"r"}
+	assign		___237_r ___242_r 	%line{322} %argrw{"wr"}
+	eq		$tmp226 $const35 $const33 	%line{323} %argrw{"wrr"}
+	if		$tmp226 639 712 	%argrw{"r"}
+	functioncall	$const37 639 	%line{324} %argrw{"r"}
+	compref		___238_r ___242_r $const1 	%line{283} %argrw{"wrr"}
+	compref		___238_g ___242_r $const2 	%argrw{"wrr"}
+	compref		___238_b ___242_r $const3 	%argrw{"wrr"}
+	min		$tmp227 ___238_g ___238_b 	%line{284} %argrw{"wrr"}
+	min		___238_mincomp ___238_r $tmp227 	%argrw{"wrr"}
+	max		$tmp228 ___238_g ___238_b 	%line{285} %argrw{"wrr"}
+	max		___238_maxcomp ___238_r $tmp228 	%argrw{"wrr"}
+	sub		___238_delta ___238_maxcomp ___238_mincomp 	%line{286} %argrw{"wrr"}
+	assign		___238_v ___238_maxcomp 	%line{288} %argrw{"wr"}
+	gt		$tmp229 ___238_maxcomp $const1 	%line{289} %argrw{"wrr"}
+	if		$tmp229 618 619 	%argrw{"r"}
+	div		___238_s ___238_delta ___238_maxcomp 	%line{290} %argrw{"wrr"}
+	assign		___238_s $const1 	%line{291} %argrw{"wr"}
+	le		$tmp230 ___238_s $const1 	%line{292} %argrw{"wrr"}
+	if		$tmp230 622 638 	%argrw{"r"}
+	assign		___238_h $const1 	%line{293} %argrw{"wr"}
+	ge		$tmp231 ___238_r ___238_maxcomp 	%line{295} %argrw{"wrr"}
+	if		$tmp231 626 634 	%argrw{"r"}
+	sub		$tmp232 ___238_g ___238_b 	%argrw{"wrr"}
+	div		___238_h $tmp232 ___238_delta 	%argrw{"wrr"}
+	ge		$tmp233 ___238_g ___238_maxcomp 	%line{296} %argrw{"wrr"}
+	if		$tmp233 631 634 	%argrw{"r"}
+	sub		$tmp234 ___238_b ___238_r 	%argrw{"wrr"}
+	div		$tmp235 $tmp234 ___238_delta 	%argrw{"wrr"}
+	add		___238_h $const14 $tmp235 	%argrw{"wrr"}
+	sub		$tmp236 ___238_r ___238_g 	%line{297} %argrw{"wrr"}
+	div		$tmp237 $tmp236 ___238_delta 	%argrw{"wrr"}
+	add		___238_h $const38 $tmp237 	%argrw{"wrr"}
+	div		___238_h ___238_h $const39 	%line{298} %argrw{"wrr"}
+	lt		$tmp238 ___238_h $const1 	%line{299} %argrw{"wrr"}
+	if		$tmp238 638 638 	%argrw{"r"}
+	add		___238_h ___238_h $const15 	%line{300} %argrw{"wrr"}
+	color		___237_r ___238_h ___238_s ___238_v 	%line{302} %argrw{"wrrr"}
+	eq		$tmp239 $const35 $const40 	%line{325} %argrw{"wrr"}
+	if		$tmp239 698 712 	%argrw{"r"}
+	functioncall	$const41 698 	%line{326} %argrw{"r"}
+	compref		$tmp240 ___242_r $const1 	%line{307} %argrw{"wrr"}
+	compref		$tmp242 ___242_r $const2 	%argrw{"wrr"}
+	compref		$tmp243 ___242_r $const3 	%argrw{"wrr"}
+	min		$tmp241 $tmp242 $tmp243 	%argrw{"wrr"}
+	min		___240_minval $tmp240 $tmp241 	%argrw{"wrr"}
+	functioncall	$const37 681 	%line{308} %argrw{"r"}
+	compref		___238_r ___242_r $const1 	%line{283} %argrw{"wrr"}
+	compref		___238_g ___242_r $const2 	%argrw{"wrr"}
+	compref		___238_b ___242_r $const3 	%argrw{"wrr"}
+	min		$tmp244 ___238_g ___238_b 	%line{284} %argrw{"wrr"}
+	min		___238_mincomp ___238_r $tmp244 	%argrw{"wrr"}
+	max		$tmp245 ___238_g ___238_b 	%line{285} %argrw{"wrr"}
+	max		___238_maxcomp ___238_r $tmp245 	%argrw{"wrr"}
+	sub		___238_delta ___238_maxcomp ___238_mincomp 	%line{286} %argrw{"wrr"}
+	assign		___238_v ___238_maxcomp 	%line{288} %argrw{"wr"}
+	gt		$tmp246 ___238_maxcomp $const1 	%line{289} %argrw{"wrr"}
+	if		$tmp246 660 661 	%argrw{"r"}
+	div		___238_s ___238_delta ___238_maxcomp 	%line{290} %argrw{"wrr"}
+	assign		___238_s $const1 	%line{291} %argrw{"wr"}
+	le		$tmp247 ___238_s $const1 	%line{292} %argrw{"wrr"}
+	if		$tmp247 664 680 	%argrw{"r"}
+	assign		___238_h $const1 	%line{293} %argrw{"wr"}
+	ge		$tmp248 ___238_r ___238_maxcomp 	%line{295} %argrw{"wrr"}
+	if		$tmp248 668 676 	%argrw{"r"}
+	sub		$tmp249 ___238_g ___238_b 	%argrw{"wrr"}
+	div		___238_h $tmp249 ___238_delta 	%argrw{"wrr"}
+	ge		$tmp250 ___238_g ___238_maxcomp 	%line{296} %argrw{"wrr"}
+	if		$tmp250 673 676 	%argrw{"r"}
+	sub		$tmp251 ___238_b ___238_r 	%argrw{"wrr"}
+	div		$tmp252 $tmp251 ___238_delta 	%argrw{"wrr"}
+	add		___238_h $const14 $tmp252 	%argrw{"wrr"}
+	sub		$tmp253 ___238_r ___238_g 	%line{297} %argrw{"wrr"}
+	div		$tmp254 $tmp253 ___238_delta 	%argrw{"wrr"}
+	add		___238_h $const38 $tmp254 	%argrw{"wrr"}
+	div		___238_h ___238_h $const39 	%line{298} %argrw{"wrr"}
+	lt		$tmp255 ___238_h $const1 	%line{299} %argrw{"wrr"}
+	if		$tmp255 680 680 	%argrw{"r"}
+	add		___238_h ___238_h $const15 	%line{300} %argrw{"wrr"}
+	color		___240_hsv ___238_h ___238_s ___238_v 	%line{302} %argrw{"wrrr"}
+	compref		___240_maxval ___240_hsv $const3 	%line{309} %argrw{"wrr"}
+	compref		___240_h ___240_hsv $const1 	%line{310} %argrw{"wrr"}
+	add		$tmp256 ___240_minval ___240_maxval 	%argrw{"wrr"}
+	div		___240_l $tmp256 $const14 	%argrw{"wrr"}
+	eq		$tmp257 ___240_minval ___240_maxval 	%line{311} %argrw{"wrr"}
+	if		$tmp257 688 697 	%argrw{"r"}
+	assign		___240_s $const1 	%line{312} %argrw{"wr"}
+	le		$tmp258 ___240_l $const42 	%line{313} %argrw{"wrr"}
+	if		$tmp258 693 697 	%argrw{"r"}
+	sub		$tmp259 ___240_maxval ___240_minval 	%line{314} %argrw{"wrr"}
+	add		$tmp260 ___240_maxval ___240_minval 	%argrw{"wrr"}
+	div		___240_s $tmp259 $tmp260 	%argrw{"wrr"}
+	sub		$tmp261 ___240_maxval ___240_minval 	%line{316} %argrw{"wrr"}
+	sub		$tmp262 $const14 ___240_maxval 	%argrw{"wrr"}
+	sub		$tmp263 $tmp262 ___240_minval 	%argrw{"wrr"}
+	div		___240_s $tmp261 $tmp263 	%argrw{"wrr"}
+	color		___237_r ___240_h ___240_s ___240_l 	%line{317} %argrw{"wrrr"}
+	eq		$tmp264 $const35 $const43 	%line{327} %argrw{"wrr"}
+	if		$tmp264 704 712 	%argrw{"r"}
+	dot		$tmp265 $const44 ___242_r 	%line{328} %argrw{"wrr"}
+	dot		$tmp267 $const45 ___242_r 	%line{329} %argrw{"wrr"}
+	dot		$tmp269 $const46 ___242_r 	%line{330} %argrw{"wrr"}
+	color		___237_r $tmp265 $tmp267 $tmp269 	%argrw{"wrrr"}
+	eq		$tmp271 $const35 $const47 	%line{331} %argrw{"wrr"}
+	if		$tmp271 710 712 	%argrw{"r"}
+	dot		$tmp272 $const48 ___242_r 	%line{332} %argrw{"wrr"}
+	dot		$tmp274 $const49 ___242_r 	%line{333} %argrw{"wrr"}
+	dot		$tmp276 $const50 ___242_r 	%line{334} %argrw{"wrr"}
+	color		___237_r $tmp272 $tmp274 $tmp276 	%argrw{"wrrr"}
+	error		$const51 $const35 	%line{336} %argrw{"rr"}
+	assign		___237_r ___242_r 	%line{337} %argrw{"wr"}
+	assign		___305_b_result ___237_r 	%line{339} %argrw{"wr"}
+	assign		___334_blended_color ___305_b_result 	%filename{"E:/github/elaramax/Shaders/max_composite_map.osl"} %line{23} %argrw{"wr"}
+	eq		$tmp278 map_blend_mode $const61 	%line{126} %argrw{"wrr"}
+	if		$tmp278 716 716 	%argrw{"r"}
+	sub		$tmp279 $const15 bg_alpha 	%line{299} %argrw{"wrr"}
+	mul		$tmp280 $tmp279 fg_alpha 	%argrw{"wrr"}
+	add		___334_alpha bg_alpha $tmp280 	%argrw{"wrr"}
+	mul		$tmp281 bg_alpha fg_alpha 	%line{301} %argrw{"wrr"}
+	mul		$tmp282 ___334_blended_color $tmp281 	%argrw{"wrr"}
+	sub		$tmp283 $const15 fg_alpha 	%argrw{"wrr"}
+	mul		$tmp284 bg_alpha $tmp283 	%argrw{"wrr"}
+	mul		$tmp285 bg $tmp284 	%argrw{"wrr"}
+	div		$tmp286 $tmp285 ___334_alpha 	%argrw{"wrr"}
+	add		fg $tmp282 $tmp286 	%argrw{"wrr"}
+	assign		fg_alpha ___334_alpha 	%line{303} %argrw{"wr"}
+	aref		map_blend_mode tex_blendModes ___332_i 	%line{304} %argrw{"wrr"}
+	assign		fg bg 	%line{308} %argrw{"wr"}
+	assign		fg_alpha bg_alpha 	%line{309} %argrw{"wr"}
+	assign		$tmp287 ___332_i 	%line{280} %argrw{"wr"}
+	sub		___332_i ___332_i $const2 	%argrw{"wrr"}
+	assign		result_alpha fg_alpha 	%line{313} %argrw{"wr"}
+	assign		result fg 	%line{314} %argrw{"wr"}
+	end

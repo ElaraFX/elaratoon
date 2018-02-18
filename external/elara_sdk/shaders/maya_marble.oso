@@ -1,0 +1,433 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_marble
+param	color	i_fillerColor	1 1 1 		 %read{204,204} %write{2147483647,-1}
+param	color	i_veinColor	1 1 1 		 %read{204,204} %write{2147483647,-1}
+param	float	i_veinWidth	0.1 		 %read{139,191} %write{2147483647,-1}
+param	float	i_diffusion	0.5 		 %read{197,199} %write{2147483647,-1}
+param	float	i_contrast	0.5 		 %read{194,195} %write{2147483647,-1}
+param	float	i_amplitude	1.5 		 %read{134,134} %write{2147483647,-1} %derivs
+param	float	i_ratio	0.70700002 		 %read{110,110} %write{2147483647,-1} %derivs
+param	vector	i_ripples	1 1 1 		 %read{70,72} %write{2147483647,-1} %derivs
+param	vector	i_depth	0 20 0 		 %read{85,117} %write{2147483647,-1}
+param	color	i_defaultColor	0.5 0.5 0.5 		 %read{207,222} %write{2147483647,-1}
+param	color	i_colorGain	1 1 1 		 %read{218,218} %write{2147483647,-1}
+param	color	i_colorOffset	0 0 0 		 %read{219,219} %write{2147483647,-1}
+param	float	i_alphaGain	1 		 %read{220,220} %write{2147483647,-1}
+param	float	i_alphaOffset	0 		 %read{221,221} %write{2147483647,-1}
+param	float	i_alphaIsLuminance	0 		 %read{2147483647,-1} %write{2147483647,-1}
+param	int	i_invert	0 		 %read{209,209} %write{2147483647,-1}
+param	int	i_local	0 		 %read{3,3} %write{2147483647,-1}
+param	int	i_wrap	1 		 %read{8,205} %write{2147483647,-1}
+param	float	i_blend	0 		 %read{62,62} %write{2147483647,-1}
+param	float	i_filter	1 		 %read{78,78} %write{2147483647,-1} %derivs
+param	float	i_filterOffset	0 		 %read{80,80} %write{2147483647,-1} %derivs
+param	matrix	i_placementMatrix	1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1		 %read{7,7} %write{2147483647,-1} %derivs
+oparam	color	o_outColor	1 1 1 		 %read{207,219} %write{204,222}
+oparam	float	o_outAlpha	1 		 %read{214,221} %write{208,223}
+global	point	P	 %read{2,2} %write{2147483647,-1} %derivs
+local	float	___329_w	 %read{152,184} %write{150,150}
+local	float	___329_x0	 %read{154,178} %write{153,153}
+local	float	___329_x1	 %read{156,169} %write{154,154}
+local	float	___329_nedge	 %read{160,185} %write{155,155}
+local	float	___329_result	 %read{186,189} %write{162,188}
+local	float	___331_extinct	 %read{187,187} %write{184,184}
+local	vector	___344_sum	 %read{84,133} %write{67,132} %derivs
+local	float	___344_i	 %read{84,118} %write{68,113}
+local	float	___344_amp	 %read{84,127} %write{69,113} %derivs
+local	point	___344_pp	 %read{76,128} %write{75,113} %derivs
+local	float	___344_pixel_size	 %read{82,122} %write{81,81} %derivs
+local	float	___344_nyquist	 %read{2147483647,-1} %write{82,82}
+local	float	___344_pixel	 %read{84,122} %write{83,113} %derivs
+local	float	___346_weight	 %read{127,127} %write{126,126} %derivs
+local	float	outside	 %read{63,63} %write{0,46}
+local	float	edgeDist	 %read{62,207} %write{1,62}
+local	point	pp	 %read{6,146} %write{2,135} %derivs
+local	float	___348_yy	 %read{137,151} %write{136,136}
+local	float	___348_d	 %read{142,196} %write{141,144}
+local	float	___348_mixer	 %read{203,203} %write{202,202}
+const	int	$const1	0		 %read{0,223} %write{2147483647,-1}
+const	int	$const2	1		 %read{3,163} %write{2147483647,-1}
+temp	int	$tmp1	 %read{4,4} %write{3,3}
+const	string	$const3	"object"		 %read{6,6} %write{2147483647,-1}
+const	string	$const4	"transform"		 %read{5,5} %write{2147483647,-1}
+const	string	$const5	"common"		 %read{6,6} %write{2147483647,-1}
+temp	int	$tmp2	 %read{9,9} %write{8,8}
+temp	int	$tmp3	 %read{10,45} %write{9,44}
+temp	float	$tmp4	 %read{12,12} %write{11,11}
+temp	int	$tmp5	 %read{13,13} %write{12,12}
+temp	int	$tmp6	 %read{14,19} %write{13,18}
+temp	float	$tmp7	 %read{16,16} %write{15,15}
+temp	int	$tmp8	 %read{17,17} %write{16,16}
+temp	int	$tmp9	 %read{18,18} %write{17,17}
+temp	int	$tmp10	 %read{20,25} %write{19,24}
+const	int	$const6	2		 %read{21,72} %write{2147483647,-1}
+temp	float	$tmp11	 %read{22,22} %write{21,21}
+temp	int	$tmp12	 %read{23,23} %write{22,22}
+temp	int	$tmp13	 %read{24,24} %write{23,23}
+temp	int	$tmp14	 %read{26,31} %write{25,30}
+temp	float	$tmp15	 %read{28,28} %write{27,27}
+const	int	$const7	-1		 %read{28,40} %write{2147483647,-1}
+temp	int	$tmp16	 %read{29,29} %write{28,28}
+temp	int	$tmp17	 %read{30,30} %write{29,29}
+temp	int	$tmp18	 %read{32,37} %write{31,36}
+temp	float	$tmp19	 %read{34,34} %write{33,33}
+temp	int	$tmp20	 %read{35,35} %write{34,34}
+temp	int	$tmp21	 %read{36,36} %write{35,35}
+temp	int	$tmp22	 %read{38,43} %write{37,42}
+temp	float	$tmp23	 %read{40,40} %write{39,39}
+temp	int	$tmp24	 %read{41,41} %write{40,40}
+temp	int	$tmp25	 %read{42,42} %write{41,41}
+temp	int	$tmp26	 %read{44,44} %write{43,43}
+temp	float	$tmp27	 %read{55,55} %write{50,50}
+const	float	$const8	1		 %read{49,215} %write{2147483647,-1}
+temp	float	$tmp28	 %read{49,49} %write{48,48}
+temp	float	$tmp29	 %read{48,48} %write{47,47}
+temp	float	$tmp30	 %read{50,50} %write{49,49}
+const	float	$const9	0.5		 %read{50,184} %write{2147483647,-1}
+temp	float	$tmp31	 %read{55,55} %write{54,54}
+temp	float	$tmp32	 %read{53,53} %write{52,52}
+temp	float	$tmp33	 %read{52,52} %write{51,51}
+temp	float	$tmp34	 %read{54,54} %write{53,53}
+temp	float	$tmp35	 %read{60,60} %write{55,55}
+temp	float	$tmp36	 %read{60,60} %write{59,59}
+temp	float	$tmp37	 %read{58,58} %write{57,57}
+temp	float	$tmp38	 %read{57,57} %write{56,56}
+temp	float	$tmp39	 %read{59,59} %write{58,58}
+temp	float	$tmp40	 %read{61,61} %write{60,60}
+const	float	$const10	2		 %read{61,196} %write{2147483647,-1}
+const	float	$const11	0		 %read{62,215} %write{2147483647,-1}
+temp	int	$tmp41	 %read{64,64} %write{63,63}
+temp	vector	$tmp42	 %read{134,134} %write{133,133} %derivs
+temp	point	$tmp43	 %read{74,74} %write{65,65} %derivs
+const	string	$const12	"filteredVfBm"		 %read{66,66} %write{2147483647,-1}
+temp	point	$tmp44	 %read{74,74} %write{73,73} %derivs
+temp	float	$tmp45	 %read{73,73} %write{70,70} %derivs
+temp	float	$tmp46	 %read{73,73} %write{71,71} %derivs
+temp	float	$tmp47	 %read{73,73} %write{72,72} %derivs
+temp	point	$tmp48	 %read{75,75} %write{74,74} %derivs
+temp	float	$tmp49	 %read{78,78} %write{77,77} %derivs
+temp	float	$tmp50	 %read{77,77} %write{76,76} %derivs
+temp	float	$tmp51	 %read{79,79} %write{78,78} %derivs
+temp	float	$tmp52	 %read{81,81} %write{79,79} %derivs
+const	float	$const14	4		 %read{79,79} %write{2147483647,-1}
+const	float	$const15	0.40000001		 %read{80,184} %write{2147483647,-1}
+temp	float	$tmp53	 %read{81,81} %write{80,80} %derivs
+temp	float	$tmp54	 %read{86,86} %write{85,85}
+temp	int	$tmp55	 %read{87,87} %write{86,86}
+temp	int	$tmp56	 %read{88,92} %write{87,91}
+temp	int	$tmp57	 %read{90,90} %write{89,89}
+temp	int	$tmp58	 %read{91,91} %write{90,90}
+temp	int	$tmp59	 %read{84,113} %write{84,113}
+temp	float	$tmp60	 %read{95,95} %write{94,94}
+temp	int	$tmp61	 %read{96,96} %write{95,95}
+temp	int	$tmp62	 %read{97,97} %write{96,96}
+temp	float	$tmp63	 %read{104,104} %write{103,103} %derivs
+temp	float	$tmp64	 %read{99,99} %write{98,98} %derivs
+temp	float	$tmp65	 %read{100,100} %write{99,99} %derivs
+temp	float	$tmp66	 %read{102,102} %write{100,100} %derivs
+const	float	$const17	20		 %read{100,100} %write{2147483647,-1}
+const	string	$const18	"clamp"		 %read{101,124} %write{2147483647,-1}
+temp	float	$tmp67	 %read{103,103} %write{102,102} %derivs
+temp	float	$tmp68	 %read{108,108} %write{104,104} %derivs
+temp	vector	$tmp69	 %read{106,106} %write{105,105} %derivs
+temp	vector	$tmp70	 %read{107,107} %write{106,106} %derivs
+temp	vector	$tmp71	 %read{108,108} %write{107,107} %derivs
+temp	vector	$tmp72	 %read{109,109} %write{108,108} %derivs
+temp	int	$tmp73	 %read{115,115} %write{114,114}
+temp	int	$tmp74	 %read{116,121} %write{115,120}
+temp	float	$tmp75	 %read{118,118} %write{117,117}
+temp	int	$tmp76	 %read{119,119} %write{118,118}
+temp	int	$tmp77	 %read{120,120} %write{119,119}
+temp	float	$tmp78	 %read{123,123} %write{122,122} %derivs
+temp	float	$tmp79	 %read{125,125} %write{123,123} %derivs
+temp	float	$tmp80	 %read{126,126} %write{125,125} %derivs
+temp	float	$tmp81	 %read{131,131} %write{127,127} %derivs
+temp	vector	$tmp82	 %read{129,129} %write{128,128} %derivs
+temp	vector	$tmp83	 %read{130,130} %write{129,129} %derivs
+temp	vector	$tmp84	 %read{131,131} %write{130,130} %derivs
+temp	vector	$tmp85	 %read{132,132} %write{131,131} %derivs
+temp	vector	$tmp86	 %read{135,135} %write{134,134} %derivs
+temp	float	$tmp87	 %read{138,138} %write{137,137}
+temp	float	$tmp88	 %read{140,140} %write{138,138}
+temp	float	$tmp89	 %read{140,140} %write{139,139}
+temp	float	$tmp90	 %read{141,141} %write{140,140}
+temp	int	$tmp91	 %read{143,143} %write{142,142}
+temp	float	$tmp92	 %read{192,192} %write{189,189}
+temp	float	$tmp93	 %read{155,155} %write{145,145}
+temp	float	$tmp94	 %read{148,148} %write{147,147}
+temp	float	$tmp95	 %read{147,147} %write{146,146}
+const	float	$const19	0.2		 %read{148,148} %write{2147483647,-1}
+temp	float	$tmp96	 %read{150,150} %write{148,148}
+const	string	$const20	"filteredpulsetrain"		 %read{149,149} %write{2147483647,-1}
+temp	float	$tmp97	 %read{153,153} %write{151,151}
+temp	float	$tmp98	 %read{153,153} %write{152,152}
+temp	int	$tmp99	 %read{157,157} %write{156,156}
+temp	float	$tmp100	 %read{159,159} %write{158,158}
+temp	float	$tmp101	 %read{160,160} %write{159,159}
+temp	int	$tmp102	 %read{161,161} %write{160,160}
+temp	float	$tmp103	 %read{182,182} %write{172,172}
+const	string	$const21	"integral"		 %read{164,173} %write{2147483647,-1}
+temp	float	$tmp104	 %read{167,167} %write{165,165}
+temp	float	$tmp105	 %read{167,167} %write{166,166}
+temp	float	$tmp106	 %read{172,172} %write{167,167}
+temp	float	$tmp107	 %read{172,172} %write{171,171}
+temp	float	$tmp108	 %read{169,169} %write{168,168}
+temp	float	$tmp109	 %read{170,170} %write{169,169}
+temp	float	$tmp110	 %read{171,171} %write{170,170}
+temp	float	$tmp111	 %read{182,182} %write{181,181}
+temp	float	$tmp112	 %read{176,176} %write{174,174}
+temp	float	$tmp113	 %read{176,176} %write{175,175}
+temp	float	$tmp114	 %read{181,181} %write{176,176}
+temp	float	$tmp115	 %read{181,181} %write{180,180}
+temp	float	$tmp116	 %read{178,178} %write{177,177}
+temp	float	$tmp117	 %read{179,179} %write{178,178}
+temp	float	$tmp118	 %read{180,180} %write{179,179}
+temp	float	$tmp119	 %read{183,183} %write{182,182}
+temp	float	$tmp120	 %read{186,186} %write{185,185}
+temp	float	$tmp121	 %read{187,187} %write{186,186}
+temp	float	$tmp122	 %read{188,188} %write{187,187}
+temp	float	$tmp123	 %read{192,192} %write{191,191}
+temp	float	$tmp124	 %read{193,193} %write{192,192}
+temp	float	$tmp125	 %read{194,194} %write{193,193}
+temp	float	$tmp126	 %read{202,202} %write{194,194}
+temp	float	$tmp127	 %read{198,198} %write{195,195}
+temp	float	$tmp128	 %read{198,198} %write{197,197}
+temp	float	$tmp129	 %read{197,197} %write{196,196}
+temp	float	$tmp130	 %read{201,201} %write{198,198}
+const	float	$const22	0.30000001		 %read{199,199} %write{2147483647,-1}
+temp	float	$tmp131	 %read{200,200} %write{199,199}
+temp	float	$tmp132	 %read{201,201} %write{200,200}
+temp	float	$tmp133	 %read{202,202} %write{201,201}
+temp	float	$tmp134	 %read{204,204} %write{203,203}
+temp	int	$tmp135	 %read{206,206} %write{205,205}
+temp	float	$tmp136	 %read{211,211} %write{209,209}
+const	string	$const23	"colorBalance"		 %read{210,210} %write{2147483647,-1}
+temp	int	$tmp137	 %read{212,212} %write{211,211}
+temp	int	$tmp138	 %read{216,216} %write{215,215}
+code ___main___
+	assign		outside $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_marble.osl"} %line{107} %argrw{"wr"}
+	assign		edgeDist $const1 	%line{108} %argrw{"wr"}
+	assign		pp P 	%line{110} %argrw{"wr"}
+	eq		$tmp1 i_local $const2 	%line{111} %argrw{"wrr"}
+	if		$tmp1 7 7 	%argrw{"r"}
+	functioncall	$const4 7 	%line{112} %argrw{"r"}
+	transform	pp $const5 $const3 pp 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{240} %argrw{"wrrr"}
+	transform	pp i_placementMatrix pp 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_marble.osl"} %line{114} %argrw{"wrr"}
+	eq		$tmp2 i_wrap $const1 	%line{115} %argrw{"wrr"}
+	neq		$tmp3 $tmp2 $const1 	%argrw{"wrr"}
+	if		$tmp3 45 45 	%argrw{"r"}
+	compref		$tmp4 pp $const1 	%argrw{"wrr"}
+	gt		$tmp5 $tmp4 $const2 	%argrw{"wrr"}
+	neq		$tmp6 $tmp5 $const1 	%argrw{"wrr"}
+	if		$tmp6 15 19 	%argrw{"r"}
+	compref		$tmp7 pp $const2 	%argrw{"wrr"}
+	gt		$tmp8 $tmp7 $const2 	%argrw{"wrr"}
+	neq		$tmp9 $tmp8 $const1 	%argrw{"wrr"}
+	assign		$tmp6 $tmp9 	%argrw{"wr"}
+	neq		$tmp10 $tmp6 $const1 	%argrw{"wrr"}
+	if		$tmp10 21 25 	%argrw{"r"}
+	compref		$tmp11 pp $const6 	%argrw{"wrr"}
+	gt		$tmp12 $tmp11 $const2 	%argrw{"wrr"}
+	neq		$tmp13 $tmp12 $const1 	%argrw{"wrr"}
+	assign		$tmp10 $tmp13 	%argrw{"wr"}
+	neq		$tmp14 $tmp10 $const1 	%argrw{"wrr"}
+	if		$tmp14 27 31 	%argrw{"r"}
+	compref		$tmp15 pp $const1 	%argrw{"wrr"}
+	lt		$tmp16 $tmp15 $const7 	%argrw{"wrr"}
+	neq		$tmp17 $tmp16 $const1 	%argrw{"wrr"}
+	assign		$tmp14 $tmp17 	%argrw{"wr"}
+	neq		$tmp18 $tmp14 $const1 	%argrw{"wrr"}
+	if		$tmp18 33 37 	%argrw{"r"}
+	compref		$tmp19 pp $const2 	%argrw{"wrr"}
+	lt		$tmp20 $tmp19 $const7 	%argrw{"wrr"}
+	neq		$tmp21 $tmp20 $const1 	%argrw{"wrr"}
+	assign		$tmp18 $tmp21 	%argrw{"wr"}
+	neq		$tmp22 $tmp18 $const1 	%argrw{"wrr"}
+	if		$tmp22 39 43 	%argrw{"r"}
+	compref		$tmp23 pp $const6 	%argrw{"wrr"}
+	lt		$tmp24 $tmp23 $const7 	%argrw{"wrr"}
+	neq		$tmp25 $tmp24 $const1 	%argrw{"wrr"}
+	assign		$tmp22 $tmp25 	%argrw{"wr"}
+	neq		$tmp26 $tmp22 $const1 	%argrw{"wrr"}
+	assign		$tmp3 $tmp26 	%argrw{"wr"}
+	if		$tmp3 47 47 	%argrw{"r"}
+	assign		outside $const2 	%line{116} %argrw{"wr"}
+	compref		$tmp29 pp $const1 	%line{118} %argrw{"wrr"}
+	abs		$tmp28 $tmp29 	%argrw{"wr"}
+	sub		$tmp30 $const8 $tmp28 	%argrw{"wrr"}
+	pow		$tmp27 $tmp30 $const9 	%argrw{"wrr"}
+	compref		$tmp33 pp $const2 	%line{119} %argrw{"wrr"}
+	abs		$tmp32 $tmp33 	%argrw{"wr"}
+	sub		$tmp34 $const8 $tmp32 	%argrw{"wrr"}
+	pow		$tmp31 $tmp34 $const9 	%argrw{"wrr"}
+	mul		$tmp35 $tmp27 $tmp31 	%argrw{"wrr"}
+	compref		$tmp38 pp $const6 	%line{120} %argrw{"wrr"}
+	abs		$tmp37 $tmp38 	%argrw{"wr"}
+	sub		$tmp39 $const8 $tmp37 	%argrw{"wrr"}
+	pow		$tmp36 $tmp39 $const9 	%argrw{"wrr"}
+	mul		$tmp40 $tmp35 $tmp36 	%argrw{"wrr"}
+	pow		edgeDist $tmp40 $const10 	%line{121} %argrw{"wrr"}
+	smoothstep	edgeDist $const11 i_blend edgeDist 	%line{122} %argrw{"wrrr"}
+	lt		$tmp41 outside $const2 	%line{124} %argrw{"wrr"}
+	if		$tmp41 222 224 	%argrw{"r"}
+	mul		$tmp43 pp $const9 	%line{127} %argrw{"wrr"}
+	functioncall	$const12 134 	%argrw{"r"}
+	assign		___344_sum $const1 	%line{34} %argrw{"wr"}
+	assign		___344_i $const1 	%line{35} %argrw{"wr"}
+	assign		___344_amp $const2 	%line{36} %argrw{"wr"}
+	compref		$tmp45 i_ripples $const1 	%line{38} %argrw{"wrr"}
+	compref		$tmp46 i_ripples $const2 	%argrw{"wrr"}
+	compref		$tmp47 i_ripples $const6 	%argrw{"wrr"}
+	point		$tmp44 $tmp45 $tmp46 $tmp47 	%argrw{"wrrr"}
+	mul		$tmp48 $tmp43 $tmp44 	%argrw{"wrr"}
+	div		___344_pp $tmp48 $const10 	%argrw{"wrr"}
+	area		$tmp50 ___344_pp 	%line{41} %argrw{"wr"} %argderivs{1}
+	sqrt		$tmp49 $tmp50 	%argrw{"wr"}
+	mul		$tmp51 $tmp49 i_filter 	%argrw{"wrr"}
+	mul		$tmp52 $tmp51 $const14 	%argrw{"wrr"}
+	mul		$tmp53 i_filterOffset $const15 	%argrw{"wrr"}
+	add		___344_pixel_size $tmp52 $tmp53 	%argrw{"wrr"}
+	mul		___344_nyquist $const10 ___344_pixel_size 	%line{42} %argrw{"wrr"}
+	assign		___344_pixel $const8 	%line{43} %argrw{"wr"}
+	while		$tmp59 85 98 114 114 	%line{46} %argrw{"r"}
+	compref		$tmp54 i_depth $const2 	%argrw{"wrr"}
+	lt		$tmp55 ___344_i $tmp54 	%argrw{"wrr"}
+	neq		$tmp56 $tmp55 $const1 	%argrw{"wrr"}
+	if		$tmp56 92 92 	%argrw{"r"}
+	gt		$tmp57 ___344_pixel ___344_pixel_size 	%argrw{"wrr"}
+	neq		$tmp58 $tmp57 $const1 	%argrw{"wrr"}
+	assign		$tmp56 $tmp58 	%argrw{"wr"}
+	neq		$tmp59 $tmp56 $const1 	%argrw{"wrr"}
+	if		$tmp59 94 98 	%argrw{"r"}
+	compref		$tmp60 i_depth $const1 	%argrw{"wrr"}
+	lt		$tmp61 ___344_i $tmp60 	%argrw{"wrr"}
+	neq		$tmp62 $tmp61 $const1 	%argrw{"wrr"}
+	assign		$tmp59 $tmp62 	%argrw{"wr"}
+	sub		$tmp64 ___344_pixel ___344_pixel_size 	%line{49} %argrw{"wrr"}
+	div		$tmp65 $tmp64 ___344_pixel 	%argrw{"wrr"}
+	mul		$tmp66 $tmp65 $const17 	%argrw{"wrr"}
+	functioncall	$const18 104 	%argrw{"r"}
+	min		$tmp67 $tmp66 $const8 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{142} %argrw{"wrr"}
+	max		$tmp63 $tmp67 $const11 	%argrw{"wrr"}
+	mul		$tmp68 ___344_amp $tmp63 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_marble.osl"} %line{49} %argrw{"wrr"}
+	noise		$tmp69 ___344_pp 	%line{50} %argrw{"wr"}
+	mul		$tmp70 $tmp69 $const10 	%argrw{"wrr"}
+	sub		$tmp71 $tmp70 $const8 	%argrw{"wrr"}
+	mul		$tmp72 $tmp68 $tmp71 	%argrw{"wrr"}
+	add		___344_sum ___344_sum $tmp72 	%argrw{"wrr"}
+	mul		___344_amp ___344_amp i_ratio 	%line{51} %argrw{"wrr"}
+	mul		___344_pp ___344_pp $const10 	%line{52} %argrw{"wrr"}
+	add		___344_i ___344_i $const8 	%line{54} %argrw{"wrr"}
+	div		___344_pixel ___344_pixel $const10 	%line{55} %argrw{"wrr"}
+	gt		$tmp73 ___344_pixel ___344_pixel_size 	%line{58} %argrw{"wrr"}
+	neq		$tmp74 $tmp73 $const1 	%argrw{"wrr"}
+	if		$tmp74 121 121 	%argrw{"r"}
+	compref		$tmp75 i_depth $const2 	%argrw{"wrr"}
+	le		$tmp76 ___344_i $tmp75 	%argrw{"wrr"}
+	neq		$tmp77 $tmp76 $const1 	%argrw{"wrr"}
+	assign		$tmp74 $tmp77 	%argrw{"wr"}
+	if		$tmp74 133 133 	%argrw{"r"}
+	div		$tmp78 ___344_pixel ___344_pixel_size 	%line{60} %argrw{"wrr"}
+	sub		$tmp79 $tmp78 $const8 	%argrw{"wrr"}
+	functioncall	$const18 127 	%argrw{"r"}
+	min		$tmp80 $tmp79 $const8 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{142} %argrw{"wrr"}
+	max		___346_weight $tmp80 $const11 	%argrw{"wrr"}
+	mul		$tmp81 ___346_weight ___344_amp 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_marble.osl"} %line{61} %argrw{"wrr"}
+	noise		$tmp82 ___344_pp 	%argrw{"wr"}
+	mul		$tmp83 $tmp82 $const10 	%argrw{"wrr"}
+	sub		$tmp84 $tmp83 $const8 	%argrw{"wrr"}
+	mul		$tmp85 $tmp81 $tmp84 	%argrw{"wrr"}
+	add		___344_sum ___344_sum $tmp85 	%argrw{"wrr"}
+	assign		$tmp42 ___344_sum 	%line{64} %argrw{"wr"}
+	mul		$tmp86 $tmp42 i_amplitude 	%line{127} %argrw{"wrr"}
+	add		pp pp $tmp86 	%argrw{"wrr"}
+	compref		___348_yy pp $const2 	%line{129} %argrw{"wrr"}
+	floor		$tmp87 ___348_yy 	%line{133} %argrw{"wr"}
+	sub		$tmp88 ___348_yy $tmp87 	%argrw{"wrr"}
+	sub		$tmp89 $const8 i_veinWidth 	%argrw{"wrr"}
+	div		$tmp90 $tmp88 $tmp89 	%argrw{"wrr"}
+	min		___348_d $const8 $tmp90 	%argrw{"wrr"}
+	gt		$tmp91 ___348_d $const9 	%line{134} %argrw{"wrr"}
+	if		$tmp91 145 145 	%argrw{"r"}
+	sub		___348_d $const8 ___348_d 	%line{135} %argrw{"wrr"}
+	sub		$tmp93 $const8 i_veinWidth 	%line{137} %argrw{"wrr"}
+	compref		$tmp95 pp $const2 	%argrw{"wrr"}
+	filterwidth	$tmp94 $tmp95 	%argrw{"wr"}
+	mul		$tmp96 $tmp94 $const19 	%argrw{"wrr"}
+	functioncall	$const20 191 	%argrw{"r"}
+	div		___329_w $tmp96 $const8 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{173} %argrw{"wrr"}
+	div		$tmp97 ___348_yy $const8 	%line{174} %argrw{"wrr"}
+	div		$tmp98 ___329_w $const10 	%argrw{"wrr"}
+	sub		___329_x0 $tmp97 $tmp98 	%argrw{"wrr"}
+	add		___329_x1 ___329_x0 ___329_w 	%line{175} %argrw{"wrr"}
+	div		___329_nedge $tmp93 $const8 	%line{176} %argrw{"wrr"}
+	eq		$tmp99 ___329_x0 ___329_x1 	%line{179} %argrw{"wrr"}
+	if		$tmp99 164 189 	%argrw{"r"}
+	floor		$tmp100 ___329_x0 	%line{182} %argrw{"wr"}
+	sub		$tmp101 ___329_x0 $tmp100 	%argrw{"wrr"}
+	lt		$tmp102 $tmp101 ___329_nedge 	%argrw{"wrr"}
+	if		$tmp102 163 164 	%argrw{"r"}
+	assign		___329_result $const1 	%argrw{"wr"}
+	assign		___329_result $const2 	%argrw{"wr"}
+	functioncall	$const21 173 	%line{186} %argrw{"r"}
+	sub		$tmp104 $const8 ___329_nedge 	%line{166} %argrw{"wrr"}
+	floor		$tmp105 ___329_x1 	%argrw{"wr"}
+	mul		$tmp106 $tmp104 $tmp105 	%argrw{"wrr"}
+	floor		$tmp108 ___329_x1 	%argrw{"wr"}
+	sub		$tmp109 ___329_x1 $tmp108 	%argrw{"wrr"}
+	sub		$tmp110 $tmp109 ___329_nedge 	%argrw{"wrr"}
+	max		$tmp107 $const11 $tmp110 	%argrw{"wrr"}
+	add		$tmp103 $tmp106 $tmp107 	%argrw{"wrr"}
+	functioncall	$const21 182 	%line{186} %argrw{"r"}
+	sub		$tmp112 $const8 ___329_nedge 	%line{166} %argrw{"wrr"}
+	floor		$tmp113 ___329_x0 	%argrw{"wr"}
+	mul		$tmp114 $tmp112 $tmp113 	%argrw{"wrr"}
+	floor		$tmp116 ___329_x0 	%argrw{"wr"}
+	sub		$tmp117 ___329_x0 $tmp116 	%argrw{"wrr"}
+	sub		$tmp118 $tmp117 ___329_nedge 	%argrw{"wrr"}
+	max		$tmp115 $const11 $tmp118 	%argrw{"wrr"}
+	add		$tmp111 $tmp114 $tmp115 	%argrw{"wrr"}
+	sub		$tmp119 $tmp103 $tmp111 	%line{186} %argrw{"wrr"}
+	div		___329_result $tmp119 ___329_w 	%argrw{"wrr"}
+	smoothstep	___331_extinct $const15 $const9 ___329_w 	%line{193} %argrw{"wrrr"}
+	sub		$tmp120 $const8 ___329_nedge 	%line{194} %argrw{"wrr"}
+	sub		$tmp121 $tmp120 ___329_result 	%argrw{"wrr"}
+	mul		$tmp122 ___331_extinct $tmp121 	%argrw{"wrr"}
+	add		___329_result ___329_result $tmp122 	%argrw{"wrr"}
+	assign		$tmp92 ___329_result 	%line{197} %argrw{"wr"}
+	return
+	sub		$tmp123 $const8 i_veinWidth 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_marble.osl"} %line{137} %argrw{"wrr"}
+	div		$tmp124 $tmp92 $tmp123 	%argrw{"wrr"}
+	sub		$tmp125 $const8 $tmp124 	%argrw{"wrr"}
+	mul		$tmp126 $tmp125 i_contrast 	%line{138} %argrw{"wrr"}
+	sub		$tmp127 $const8 i_contrast 	%argrw{"wrr"}
+	mul		$tmp129 $const10 ___348_d 	%argrw{"wrr"}
+	pow		$tmp128 $tmp129 i_diffusion 	%argrw{"wrr"}
+	mul		$tmp130 $tmp127 $tmp128 	%argrw{"wrr"}
+	mul		$tmp131 i_diffusion $const22 	%argrw{"wrr"}
+	sub		$tmp132 $const8 $tmp131 	%argrw{"wrr"}
+	mul		$tmp133 $tmp130 $tmp132 	%argrw{"wrr"}
+	add		___348_mixer $tmp126 $tmp133 	%argrw{"wrr"}
+	sub		$tmp134 $const8 ___348_mixer 	%line{139} %argrw{"wrr"}
+	mix		o_outColor i_fillerColor i_veinColor $tmp134 	%argrw{"wrrr"}
+	eq		$tmp135 i_wrap $const1 	%line{141} %argrw{"wrr"}
+	if		$tmp135 208 208 	%argrw{"r"}
+	mix		o_outColor i_defaultColor o_outColor edgeDist 	%line{142} %argrw{"wrrr"}
+	luminance	o_outAlpha o_outColor 	%line{145} %argrw{"wr"}
+	assign		$tmp136 i_invert 	%line{154} %argrw{"wr"}
+	functioncall	$const23 222 	%argrw{"r"}
+	neq		$tmp137 $tmp136 $const11 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{124} %argrw{"wrr"}
+	if		$tmp137 215 215 	%argrw{"r"}
+	sub		o_outColor $const8 o_outColor 	%line{126} %argrw{"wrr"}
+	sub		o_outAlpha $const8 o_outAlpha 	%line{127} %argrw{"wrr"}
+	neq		$tmp138 $const8 $const11 	%line{130} %argrw{"wrr"}
+	if		$tmp138 218 218 	%argrw{"r"}
+	luminance	o_outAlpha o_outColor 	%line{132} %argrw{"wr"}
+	mul		o_outColor o_outColor i_colorGain 	%line{135} %argrw{"wrr"}
+	add		o_outColor o_outColor i_colorOffset 	%line{136} %argrw{"wrr"}
+	mul		o_outAlpha o_outAlpha i_alphaGain 	%line{138} %argrw{"wrr"}
+	add		o_outAlpha o_outAlpha i_alphaOffset 	%line{139} %argrw{"wrr"}
+	assign		o_outColor i_defaultColor 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_marble.osl"} %line{158} %argrw{"wr"}
+	assign		o_outAlpha $const1 	%line{159} %argrw{"wr"}
+	end

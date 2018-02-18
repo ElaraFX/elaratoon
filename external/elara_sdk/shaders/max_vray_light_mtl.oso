@@ -1,0 +1,285 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_vray_light_mtl
+param	color	light_color	1 1 1		%read{98,98} %write{2147483647,-1}
+param	float	color_alpha	1		%read{96,96} %write{2147483647,-1}
+param	color	color_base	1 1 1		%read{97,97} %write{2147483647,-1}
+param	float	multiplier	1		%read{99,99} %write{2147483647,-1}
+param	int	texmap_isnull	0		%read{89,89} %write{2147483647,-1}
+param	color	texmap	0 0 0		%read{94,94} %write{2147483647,-1}
+param	float	texmap_alpha	1		%read{93,94} %write{2147483647,-1}
+param	int	texmap_on	1		%read{87,87} %write{2147483647,-1}
+param	int	twoSided	0		%read{100,100} %write{2147483647,-1}
+param	int	compensate_exposure	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	opacity_multiplyColor	0		%read{126,126} %write{2147483647,-1}
+param	color	opacity_texmap	0 0 0		%read{115,132} %write{2147483647,-1}
+param	int	opacity_texmap_isnull	0		%read{110,110} %write{2147483647,-1}
+param	int	opacity_texmap_on	1		%read{108,108} %write{2147483647,-1}
+param	float	opacity_texmap_alpha	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	directLight_on	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	directLight_subdivs	8		%read{2147483647,-1} %write{2147483647,-1}
+param	float	directLight_cutoffThreshold	0.001		%read{2147483647,-1} %write{2147483647,-1}
+param	float	displacement_multiplier	1		%read{2,83} %write{2147483647,-1}
+param	int	displacement_texmap_isnull	0		%read{9,9} %write{2147483647,-1}
+param	int	displacement_texmap_on	1		%read{5,5} %write{2147483647,-1}
+param	color	displacement_texmap	0 0 0		%read{14,14} %write{2147483647,-1}
+param	float	displacement_texmap_alpha	1		%read{82,82} %write{2147483647,-1}
+param	int	texmap_resolution	512		%read{2147483647,-1} %write{2147483647,-1}
+param	float	texmap_adaptiveness	1		%read{2147483647,-1} %write{2147483647,-1}
+oparam	closure color	result			%read{130,134} %write{86,136}
+global	point	P	%read{85,85} %write{2147483647,-1}
+global	normal	N	%read{84,86} %write{2147483647,-1}
+local	float	___418_texture_gamma	%read{16,16} %write{13,15}
+local	color	___418_r	%read{27,79} %write{14,74}
+local	float	___418_final_displace_map	%read{83,83} %write{82,82}
+local	color	___419_final_diffuse_color	%read{99,136} %write{95,107}
+temp	int	$tmp1	%read{1,1} %write{0,0}
+const	string	$const1	"displace"		%read{0,0} %write{2147483647,-1}
+const	int	$const2	0		%read{2,126} %write{2147483647,-1}
+temp	int	$tmp2	%read{3,3} %write{2,2}
+temp	int	$tmp3	%read{4,7} %write{3,6}
+temp	int	$tmp4	%read{6,6} %write{5,5}
+temp	int	$tmp5	%read{8,12} %write{7,11}
+temp	int	$tmp6	%read{10,10} %write{9,9}
+temp	int	$tmp7	%read{11,11} %write{10,10}
+const	float	$const3	1		%read{13,96} %write{2147483647,-1}
+temp	int	$tmp8	%read{2147483647,-1} %write{15,15}
+const	string	$const4	"options"		%read{15,15} %write{2147483647,-1}
+const	string	$const5	"texture_gamma"		%read{15,15} %write{2147483647,-1}
+const	int	$const6	1		%read{30,119} %write{2147483647,-1}
+temp	float	$tmp9	%read{18,73} %write{16,16}
+const	string	$const7	"ei_degamma"		%read{17,17} %write{2147483647,-1}
+const	float	$const8	0		%read{18,72} %write{2147483647,-1}
+temp	int	$tmp10	%read{19,19} %write{18,18}
+temp	int	$tmp11	%read{20,24} %write{19,23}
+temp	int	$tmp12	%read{22,22} %write{21,21}
+temp	int	$tmp13	%read{23,23} %write{22,22}
+const	float	$const9	2.2		%read{25,25} %write{2147483647,-1}
+temp	int	$tmp14	%read{26,26} %write{25,25}
+temp	float	$tmp15	%read{29,29} %write{28,28}
+temp	float	$tmp16	%read{28,28} %write{27,27}
+temp	float	$tmp17	%read{32,32} %write{31,31}
+temp	float	$tmp18	%read{31,31} %write{30,30}
+temp	float	$tmp19	%read{35,35} %write{34,34}
+const	int	$const10	2		%read{33,121} %write{2147483647,-1}
+temp	float	$tmp20	%read{34,34} %write{33,33}
+temp	float	$tmp21	%read{38,38} %write{36,36}
+temp	float	$tmp22	%read{38,38} %write{37,37}
+temp	float	$tmp23	%read{43,43} %write{38,38}
+const	float	$const11	0.56999999		%read{42,60} %write{2147483647,-1}
+const	float	$const12	0.43000001		%read{41,59} %write{2147483647,-1}
+temp	float	$tmp24	%read{41,41} %write{40,40}
+temp	float	$tmp25	%read{40,40} %write{39,39}
+temp	float	$tmp26	%read{42,42} %write{41,41}
+temp	float	$tmp27	%read{43,43} %write{42,42}
+temp	float	$tmp28	%read{44,44} %write{43,43}
+temp	float	$tmp29	%read{47,47} %write{45,45}
+temp	float	$tmp30	%read{47,47} %write{46,46}
+temp	float	$tmp31	%read{52,52} %write{47,47}
+temp	float	$tmp32	%read{50,50} %write{49,49}
+temp	float	$tmp33	%read{49,49} %write{48,48}
+temp	float	$tmp34	%read{51,51} %write{50,50}
+temp	float	$tmp35	%read{52,52} %write{51,51}
+temp	float	$tmp36	%read{53,53} %write{52,52}
+temp	float	$tmp37	%read{56,56} %write{54,54}
+temp	float	$tmp38	%read{56,56} %write{55,55}
+temp	float	$tmp39	%read{61,61} %write{56,56}
+temp	float	$tmp40	%read{59,59} %write{58,58}
+temp	float	$tmp41	%read{58,58} %write{57,57}
+temp	float	$tmp42	%read{60,60} %write{59,59}
+temp	float	$tmp43	%read{61,61} %write{60,60}
+temp	float	$tmp44	%read{62,62} %write{61,61}
+temp	float	$tmp45	%read{66,66} %write{65,65}
+temp	float	$tmp46	%read{65,65} %write{64,64}
+temp	float	$tmp47	%read{64,64} %write{63,63}
+temp	float	$tmp48	%read{70,70} %write{69,69}
+temp	float	$tmp49	%read{69,69} %write{68,68}
+temp	float	$tmp50	%read{68,68} %write{67,67}
+temp	float	$tmp51	%read{74,74} %write{73,73}
+temp	float	$tmp52	%read{73,73} %write{72,72}
+temp	float	$tmp53	%read{72,72} %write{71,71}
+temp	float	$tmp54	%read{82,82} %write{81,81}
+const	string	$const13	"intensity"		%read{75,117} %write{2147483647,-1}
+temp	float	$tmp55	%read{78,78} %write{76,76}
+temp	float	$tmp56	%read{78,78} %write{77,77}
+temp	float	$tmp57	%read{80,80} %write{78,78}
+temp	float	$tmp58	%read{80,80} %write{79,79}
+temp	float	$tmp59	%read{81,81} %write{80,80}
+const	float	$const14	0.33333001		%read{81,123} %write{2147483647,-1}
+temp	float	$tmp60	%read{84,84} %write{83,83}
+temp	normal	$tmp61	%read{85,85} %write{84,84}
+temp	point	$tmp62	%read{86,86} %write{85,85}
+const	string	$const15	"displacement"		%read{86,86} %write{2147483647,-1}
+temp	int	$tmp63	%read{88,92} %write{87,91}
+temp	int	$tmp64	%read{90,90} %write{89,89}
+temp	int	$tmp65	%read{91,91} %write{90,90}
+temp	float	$tmp66	%read{95,95} %write{93,93}
+temp	color	$tmp67	%read{95,95} %write{94,94}
+temp	float	$tmp68	%read{97,97} %write{96,96}
+temp	color	$tmp69	%read{98,98} %write{97,97}
+temp	int	$tmp70	%read{101,101} %write{100,100}
+temp	int	$tmp71	%read{102,106} %write{101,105}
+temp	int	$tmp72	%read{104,104} %write{103,103}
+temp	int	$tmp73	%read{105,105} %write{104,104}
+temp	int	$tmp74	%read{109,113} %write{108,112}
+temp	int	$tmp75	%read{111,111} %write{110,110}
+temp	int	$tmp76	%read{112,112} %write{111,111}
+temp	closure color	$tmp77	%read{116,116} %write{114,114}
+const	string	$const16	"transparent"		%read{114,114} %write{2147483647,-1}
+const	color	$const17	1 1 1		%read{115,115} %write{2147483647,-1}
+temp	color	$tmp79	%read{116,116} %write{115,115}
+temp	float	$tmp80	%read{124,124} %write{123,123}
+temp	float	$tmp81	%read{120,120} %write{118,118}
+temp	float	$tmp82	%read{120,120} %write{119,119}
+temp	float	$tmp83	%read{122,122} %write{120,120}
+temp	float	$tmp84	%read{122,122} %write{121,121}
+temp	float	$tmp85	%read{123,123} %write{122,122}
+temp	int	$tmp86	%read{125,125} %write{124,124}
+temp	int	$tmp87	%read{127,127} %write{126,126}
+temp	closure color	$tmp88	%read{129,129} %write{128,128}
+const	string	$const18	"emission"		%read{128,135} %write{2147483647,-1}
+temp	closure color	$tmp89	%read{130,130} %write{129,129}
+temp	closure color	$tmp90	%read{133,133} %write{131,131}
+temp	color	$tmp91	%read{133,133} %write{132,132}
+temp	closure color	$tmp92	%read{134,134} %write{133,133}
+temp	closure color	$tmp93	%read{136,136} %write{135,135}
+code ___main___
+	raytype		$tmp1 $const1 	%filename{"E:/github/elaramax/Shaders/max_vray_light_mtl.osl"} %line{51} %argrw{"wr"}
+	if		$tmp1 87 137 	%argrw{"r"}
+	gt		$tmp2 displacement_multiplier $const2 	%line{53} %argrw{"wrr"}
+	neq		$tmp3 $tmp2 $const2 	%argrw{"wrr"}
+	if		$tmp3 7 7 	%argrw{"r"}
+	neq		$tmp4 displacement_texmap_on $const2 	%argrw{"wrr"}
+	assign		$tmp3 $tmp4 	%argrw{"wr"}
+	neq		$tmp5 $tmp3 $const2 	%argrw{"wrr"}
+	if		$tmp5 12 12 	%argrw{"r"}
+	eq		$tmp6 displacement_texmap_isnull $const2 	%argrw{"wrr"}
+	neq		$tmp7 $tmp6 $const2 	%argrw{"wrr"}
+	assign		$tmp5 $tmp7 	%argrw{"wr"}
+	if		$tmp5 87 87 	%argrw{"r"}
+	assign		___418_texture_gamma $const3 	%line{55} %argrw{"wr"}
+	assign		___418_r displacement_texmap 	%line{56} %argrw{"wr"}
+	getattribute	$tmp8 $const4 $const5 ___418_texture_gamma 	%line{57} %argrw{"wrrw"}
+	div		$tmp9 $const3 ___418_texture_gamma 	%line{58} %argrw{"wrr"}
+	functioncall	$const7 75 	%argrw{"r"}
+	gt		$tmp10 $tmp9 $const8 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{412} %argrw{"wrr"}
+	neq		$tmp11 $tmp10 $const2 	%argrw{"wrr"}
+	if		$tmp11 24 24 	%argrw{"r"}
+	neq		$tmp12 $tmp9 $const3 	%argrw{"wrr"}
+	neq		$tmp13 $tmp12 $const2 	%argrw{"wrr"}
+	assign		$tmp11 $tmp13 	%argrw{"wr"}
+	if		$tmp11 75 75 	%argrw{"r"}
+	eq		$tmp14 $tmp9 $const9 	%line{414} %argrw{"wrr"}
+	if		$tmp14 63 75 	%argrw{"r"}
+	compref		$tmp16 ___418_r $const2 	%line{416} %argrw{"wrr"}
+	max		$tmp15 $tmp16 $const8 	%argrw{"wrr"}
+	compassign	___418_r $const2 $tmp15 	%argrw{"wrr"}
+	compref		$tmp18 ___418_r $const6 	%line{417} %argrw{"wrr"}
+	max		$tmp17 $tmp18 $const8 	%argrw{"wrr"}
+	compassign	___418_r $const6 $tmp17 	%argrw{"wrr"}
+	compref		$tmp20 ___418_r $const10 	%line{418} %argrw{"wrr"}
+	max		$tmp19 $tmp20 $const8 	%argrw{"wrr"}
+	compassign	___418_r $const10 $tmp19 	%argrw{"wrr"}
+	compref		$tmp21 ___418_r $const2 	%line{419} %argrw{"wrr"}
+	compref		$tmp22 ___418_r $const2 	%argrw{"wrr"}
+	mul		$tmp23 $tmp21 $tmp22 	%argrw{"wrr"}
+	compref		$tmp25 ___418_r $const2 	%argrw{"wrr"}
+	sqrt		$tmp24 $tmp25 	%argrw{"wr"}
+	mul		$tmp26 $const12 $tmp24 	%argrw{"wrr"}
+	add		$tmp27 $const11 $tmp26 	%argrw{"wrr"}
+	mul		$tmp28 $tmp23 $tmp27 	%argrw{"wrr"}
+	compassign	___418_r $const2 $tmp28 	%argrw{"wrr"}
+	compref		$tmp29 ___418_r $const6 	%line{420} %argrw{"wrr"}
+	compref		$tmp30 ___418_r $const6 	%argrw{"wrr"}
+	mul		$tmp31 $tmp29 $tmp30 	%argrw{"wrr"}
+	compref		$tmp33 ___418_r $const6 	%argrw{"wrr"}
+	sqrt		$tmp32 $tmp33 	%argrw{"wr"}
+	mul		$tmp34 $const12 $tmp32 	%argrw{"wrr"}
+	add		$tmp35 $const11 $tmp34 	%argrw{"wrr"}
+	mul		$tmp36 $tmp31 $tmp35 	%argrw{"wrr"}
+	compassign	___418_r $const6 $tmp36 	%argrw{"wrr"}
+	compref		$tmp37 ___418_r $const10 	%line{421} %argrw{"wrr"}
+	compref		$tmp38 ___418_r $const10 	%argrw{"wrr"}
+	mul		$tmp39 $tmp37 $tmp38 	%argrw{"wrr"}
+	compref		$tmp41 ___418_r $const10 	%argrw{"wrr"}
+	sqrt		$tmp40 $tmp41 	%argrw{"wr"}
+	mul		$tmp42 $const12 $tmp40 	%argrw{"wrr"}
+	add		$tmp43 $const11 $tmp42 	%argrw{"wrr"}
+	mul		$tmp44 $tmp39 $tmp43 	%argrw{"wrr"}
+	compassign	___418_r $const10 $tmp44 	%argrw{"wrr"}
+	compref		$tmp47 ___418_r $const2 	%line{425} %argrw{"wrr"}
+	max		$tmp46 $tmp47 $const8 	%argrw{"wrr"}
+	pow		$tmp45 $tmp46 $tmp9 	%argrw{"wrr"}
+	compassign	___418_r $const2 $tmp45 	%argrw{"wrr"}
+	compref		$tmp50 ___418_r $const6 	%line{426} %argrw{"wrr"}
+	max		$tmp49 $tmp50 $const8 	%argrw{"wrr"}
+	pow		$tmp48 $tmp49 $tmp9 	%argrw{"wrr"}
+	compassign	___418_r $const6 $tmp48 	%argrw{"wrr"}
+	compref		$tmp53 ___418_r $const10 	%line{427} %argrw{"wrr"}
+	max		$tmp52 $tmp53 $const8 	%argrw{"wrr"}
+	pow		$tmp51 $tmp52 $tmp9 	%argrw{"wrr"}
+	compassign	___418_r $const10 $tmp51 	%argrw{"wrr"}
+	functioncall	$const13 82 	%filename{"E:/github/elaramax/Shaders/max_vray_light_mtl.osl"} %line{60} %argrw{"r"}
+	compref		$tmp55 ___418_r $const2 	%filename{"E:/github\\elaramax\\Shaders\\ei_standard.h"} %line{46} %argrw{"wrr"}
+	compref		$tmp56 ___418_r $const6 	%argrw{"wrr"}
+	add		$tmp57 $tmp55 $tmp56 	%argrw{"wrr"}
+	compref		$tmp58 ___418_r $const10 	%argrw{"wrr"}
+	add		$tmp59 $tmp57 $tmp58 	%argrw{"wrr"}
+	mul		$tmp54 $tmp59 $const14 	%argrw{"wrr"}
+	mul		___418_final_displace_map $tmp54 displacement_texmap_alpha 	%filename{"E:/github/elaramax/Shaders/max_vray_light_mtl.osl"} %line{60} %argrw{"wrr"}
+	mul		$tmp60 displacement_multiplier ___418_final_displace_map 	%line{61} %argrw{"wrr"}
+	mul		$tmp61 $tmp60 N 	%argrw{"wrr"}
+	add		$tmp62 P $tmp61 	%argrw{"wrr"}
+	closure		result $const15 $tmp62 N 	%argrw{"wrrr"}
+	neq		$tmp63 texmap_on $const2 	%line{67} %argrw{"wrr"}
+	if		$tmp63 92 92 	%argrw{"r"}
+	eq		$tmp64 texmap_isnull $const2 	%argrw{"wrr"}
+	neq		$tmp65 $tmp64 $const2 	%argrw{"wrr"}
+	assign		$tmp63 $tmp65 	%argrw{"wr"}
+	if		$tmp63 96 99 	%argrw{"r"}
+	sub		$tmp66 $const3 texmap_alpha 	%line{69} %argrw{"wrr"}
+	mul		$tmp67 texmap_alpha texmap 	%argrw{"wrr"}
+	add		___419_final_diffuse_color $tmp66 $tmp67 	%argrw{"wrr"}
+	sub		$tmp68 $const3 color_alpha 	%line{73} %argrw{"wrr"}
+	mul		$tmp69 $tmp68 color_base 	%argrw{"wrr"}
+	add		___419_final_diffuse_color $tmp69 light_color 	%argrw{"wrr"}
+	mul		___419_final_diffuse_color ___419_final_diffuse_color multiplier 	%line{75} %argrw{"wrr"}
+	eq		$tmp70 twoSided $const2 	%line{76} %argrw{"wrr"}
+	neq		$tmp71 $tmp70 $const2 	%argrw{"wrr"}
+	if		$tmp71 106 106 	%argrw{"r"}
+	backfacing	$tmp72 	%argrw{"w"}
+	neq		$tmp73 $tmp72 $const2 	%argrw{"wrr"}
+	assign		$tmp71 $tmp73 	%argrw{"wr"}
+	if		$tmp71 108 108 	%argrw{"r"}
+	assign		___419_final_diffuse_color $const2 	%line{78} %argrw{"wr"}
+	neq		$tmp74 opacity_texmap_on $const2 	%line{82} %argrw{"wrr"}
+	if		$tmp74 113 113 	%argrw{"r"}
+	eq		$tmp75 opacity_texmap_isnull $const2 	%argrw{"wrr"}
+	neq		$tmp76 $tmp75 $const2 	%argrw{"wrr"}
+	assign		$tmp74 $tmp76 	%argrw{"wr"}
+	if		$tmp74 135 137 	%argrw{"r"}
+	closure		$tmp77 $const16 	%line{84} %argrw{"wr"}
+	sub		$tmp79 $const17 opacity_texmap 	%argrw{"wrr"}
+	mul		result $tmp77 $tmp79 	%argrw{"wrr"}
+	functioncall	$const13 124 	%line{86} %argrw{"r"}
+	compref		$tmp81 opacity_texmap $const2 	%filename{"E:/github\\elaramax\\Shaders\\ei_standard.h"} %line{46} %argrw{"wrr"}
+	compref		$tmp82 opacity_texmap $const6 	%argrw{"wrr"}
+	add		$tmp83 $tmp81 $tmp82 	%argrw{"wrr"}
+	compref		$tmp84 opacity_texmap $const10 	%argrw{"wrr"}
+	add		$tmp85 $tmp83 $tmp84 	%argrw{"wrr"}
+	mul		$tmp80 $tmp85 $const14 	%argrw{"wrr"}
+	gt		$tmp86 $tmp80 $const2 	%filename{"E:/github/elaramax/Shaders/max_vray_light_mtl.osl"} %line{86} %argrw{"wrr"}
+	if		$tmp86 135 135 	%argrw{"r"}
+	eq		$tmp87 opacity_multiplyColor $const2 	%line{88} %argrw{"wrr"}
+	if		$tmp87 131 135 	%argrw{"r"}
+	closure		$tmp88 $const18 	%line{90} %argrw{"wr"}
+	mul		$tmp89 $tmp88 ___419_final_diffuse_color 	%argrw{"wrr"}
+	add		result result $tmp89 	%argrw{"wrr"}
+	closure		$tmp90 $const18 	%line{94} %argrw{"wr"}
+	mul		$tmp91 opacity_texmap ___419_final_diffuse_color 	%argrw{"wrr"}
+	mul		$tmp92 $tmp90 $tmp91 	%argrw{"wrr"}
+	add		result result $tmp92 	%argrw{"wrr"}
+	closure		$tmp93 $const18 	%line{100} %argrw{"wr"}
+	mul		result $tmp93 ___419_final_diffuse_color 	%argrw{"wrr"}
+	end

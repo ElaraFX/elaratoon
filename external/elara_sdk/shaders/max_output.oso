@@ -1,0 +1,15 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_output
+param	float	tex_map1_alpha	1		%read{1,1} %write{2147483647,-1}
+param	color	tex_map1	0 0 0		%read{0,0} %write{2147483647,-1}
+param	vector	tex_map1_bump	0 0 0		%read{2,2} %write{2147483647,-1}
+oparam	color	result	0 0 0		%read{2147483647,-1} %write{0,0}
+oparam	vector	result_bump	0 0 0		%read{2147483647,-1} %write{2,2}
+oparam	float	result_alpha	1		%read{2147483647,-1} %write{1,1}
+code ___main___
+	assign		result tex_map1 	%filename{"E:/github/elaramax/Shaders/max_output.osl"} %line{28} %argrw{"wr"}
+	assign		result_alpha tex_map1_alpha 	%line{29} %argrw{"wr"}
+	assign		result_bump tex_map1_bump 	%line{30} %argrw{"wr"}
+	end

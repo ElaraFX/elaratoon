@@ -1,0 +1,479 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_stduv
+param	int	slotType	0		%read{1,173} %write{2147483647,-1}
+param	int	coordMapping	0		%read{15,96} %write{2147483647,-1}
+param	string	mapChannel	""		%read{10,10} %write{2147483647,-1}
+param	int	uvwSource	0		%read{3,6} %write{2147483647,-1}
+param	int	hideMapBack	0		%read{2147483647,-1} %write{2147483647,-1}
+param	float	uOffset	0		%read{117,117} %write{2147483647,-1}
+param	float	uScale	0		%read{192,192} %write{2147483647,-1}
+param	int	uWrap	0		%read{210,210} %write{2147483647,-1}
+param	int	uMirror	0		%read{212,212} %write{2147483647,-1}
+param	float	vOffset	0		%read{121,121} %write{2147483647,-1}
+param	float	vScale	0		%read{195,195} %write{2147483647,-1}
+param	int	vWrap	0		%read{226,226} %write{2147483647,-1}
+param	int	vMirror	0		%read{228,228} %write{2147483647,-1}
+param	float	uAngle	0		%read{127,146} %write{2147483647,-1}
+param	float	vAngle	0		%read{130,154} %write{2147483647,-1}
+param	float	wAngle	0		%read{135,167} %write{2147483647,-1}
+param	int	axis	0		%read{175,183} %write{2147483647,-1}
+param	int	clip	0		%read{238,238} %write{2147483647,-1}
+param	float	blur	0		%read{2147483647,-1} %write{2147483647,-1}
+param	float	blurOffset	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	uvNoise	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	uvNoiseAnimate	0		%read{2147483647,-1} %write{2147483647,-1}
+param	float	uvNoiseAmount	0		%read{2147483647,-1} %write{2147483647,-1}
+param	float	uvNoiseSize	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	uvNoiseLevel	1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	uvNoisePhase	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	realWorldScale	0		%read{113,113} %write{2147483647,-1}
+oparam	point	result	0 0 0		%read{2147483647,-1} %write{250,250}
+global	vector	I	%read{14,14} %write{2147483647,-1}
+local	float	___307_sine	%read{147,148} %write{145,145}
+local	float	___307_cosine	%read{148,148} %write{146,146}
+local	float	___308_sine	%read{155,156} %write{153,153}
+local	float	___308_cosine	%read{156,156} %write{154,154}
+local	float	___309_sine	%read{163,164} %write{161,161}
+local	float	___309_cosine	%read{164,164} %write{162,162}
+local	point	uv	%read{116,250} %write{0,249}
+local	vector	___313_ray_dir	%read{17,79} %write{14,14}
+local	float	___315_r	%read{54,68} %write{51,51}
+local	float	___318_a1	%read{87,91} %write{78,78}
+local	float	___318_a2	%read{82,82} %write{80,80}
+local	float	___318_r	%read{88,92} %write{86,86}
+local	point	___319_raster	%read{103,107} %write{100,100}
+local	int	___319_res_x	%read{104,104} %write{98,101}
+local	int	___319_res_y	%read{108,108} %write{99,102}
+local	float	centerOffset	%read{117,204} %write{114,115}
+local	matrix	___320_xform	%read{149,171} %write{139,169}
+local	float	___325_sine	%read{168,169} %write{166,166}
+local	float	___325_cosine	%read{169,169} %write{167,167}
+local	vector	___320_in_vec	%read{171,171} %write{170,170}
+local	vector	___320_out_vec	%read{172,172} %write{171,171}
+local	float	___327_tmp	%read{182,182} %write{177,177}
+local	float	___328_tmp	%read{190,190} %write{185,185}
+local	float	ufrac	%read{211,241} %write{209,209}
+local	float	vfrac	%read{227,243} %write{225,225}
+local	float	___333_ufloor	%read{245,245} %write{241,241}
+local	float	___333_vfloor	%read{248,248} %write{243,243}
+const	point	$const1	0 0 0		%read{0,0} %write{2147483647,-1}
+const	int	$const2	0		%read{1,246} %write{2147483647,-1}
+temp	int	$tmp1	%read{2,2} %write{1,1}
+temp	int	$tmp2	%read{4,4} %write{3,3}
+temp	int	$tmp3	%read{5,9} %write{4,8}
+const	int	$const3	2		%read{6,205} %write{2147483647,-1}
+temp	int	$tmp4	%read{7,7} %write{6,6}
+temp	int	$tmp5	%read{8,8} %write{7,7}
+temp	int	$tmp6	%read{11,11} %write{10,10}
+temp	int	$tmp7	%read{12,12} %write{11,11}
+temp	int	$tmp8	%read{2147483647,-1} %write{13,13}
+const	string	$const4	"uv0"		%read{13,13} %write{2147483647,-1}
+const	int	$const5	1		%read{15,249} %write{2147483647,-1}
+temp	int	$tmp9	%read{16,16} %write{15,15}
+const	float	$const6	0.5		%read{24,233} %write{2147483647,-1}
+temp	float	$tmp10	%read{23,23} %write{20,20}
+temp	float	$tmp11	%read{20,20} %write{17,17}
+temp	float	$tmp12	%read{19,19} %write{18,18}
+temp	float	$tmp13	%read{20,20} %write{19,19}
+const	float	$const7	1		%read{22,235} %write{2147483647,-1}
+const	float	$const8	2		%read{21,234} %write{2147483647,-1}
+const	float	$const9	3.1415927		%read{21,83} %write{2147483647,-1}
+temp	float	$tmp14	%read{22,22} %write{21,21}
+temp	float	$tmp15	%read{23,23} %write{22,22}
+temp	float	$tmp16	%read{24,24} %write{23,23}
+temp	float	$tmp17	%read{25,25} %write{24,24}
+temp	float	$tmp18	%read{29,29} %write{27,27}
+temp	float	$tmp19	%read{27,27} %write{26,26}
+temp	float	$tmp20	%read{29,29} %write{28,28}
+temp	float	$tmp21	%read{30,30} %write{29,29}
+temp	float	$tmp22	%read{31,31} %write{30,30}
+const	float	$const10	0		%read{32,169} %write{2147483647,-1}
+temp	int	$tmp23	%read{34,34} %write{33,33}
+temp	float	$tmp24	%read{41,41} %write{38,38}
+temp	float	$tmp25	%read{38,38} %write{35,35}
+temp	float	$tmp26	%read{37,37} %write{36,36}
+temp	float	$tmp27	%read{38,38} %write{37,37}
+temp	float	$tmp28	%read{40,40} %write{39,39}
+temp	float	$tmp29	%read{41,41} %write{40,40}
+temp	float	$tmp30	%read{42,42} %write{41,41}
+temp	float	$tmp31	%read{43,43} %write{42,42}
+temp	float	$tmp32	%read{46,46} %write{44,44}
+temp	float	$tmp33	%read{46,46} %write{45,45}
+temp	float	$tmp34	%read{50,50} %write{46,46}
+temp	float	$tmp35	%read{49,49} %write{47,47}
+temp	float	$tmp36	%read{49,49} %write{48,48}
+temp	float	$tmp37	%read{50,50} %write{49,49}
+temp	float	$tmp38	%read{51,51} %write{50,50}
+temp	float	$tmp39	%read{54,54} %write{53,53}
+temp	float	$tmp40	%read{53,53} %write{52,52}
+temp	int	$tmp41	%read{55,55} %write{54,54}
+temp	float	$tmp42	%read{66,66} %write{62,65}
+temp	float	$tmp43	%read{57,57} %write{56,56}
+temp	int	$tmp44	%read{58,58} %write{57,57}
+const	float	$const11	0.25		%read{61,70} %write{2147483647,-1}
+temp	float	$tmp45	%read{60,60} %write{59,59}
+temp	float	$tmp46	%read{61,61} %write{60,60}
+temp	float	$tmp47	%read{62,62} %write{61,61}
+const	float	$const12	-0.25		%read{65,65} %write{2147483647,-1}
+temp	float	$tmp48	%read{64,64} %write{63,63}
+temp	float	$tmp49	%read{65,65} %write{64,64}
+temp	float	$tmp50	%read{68,68} %write{67,67}
+temp	float	$tmp51	%read{69,69} %write{68,68}
+temp	float	$tmp52	%read{70,70} %write{69,69}
+temp	float	$tmp53	%read{71,71} %write{70,70}
+const	int	$const13	3		%read{73,73} %write{2147483647,-1}
+temp	int	$tmp54	%read{74,74} %write{73,73}
+temp	float	$tmp55	%read{78,78} %write{75,75}
+temp	float	$tmp56	%read{77,77} %write{76,76}
+temp	float	$tmp57	%read{78,78} %write{77,77}
+temp	float	$tmp58	%read{80,80} %write{79,79}
+temp	float	$tmp59	%read{82,82} %write{81,81}
+temp	float	$tmp60	%read{85,85} %write{82,82}
+temp	float	$tmp61	%read{84,84} %write{83,83}
+temp	float	$tmp62	%read{85,85} %write{84,84}
+temp	float	$tmp63	%read{86,86} %write{85,85}
+temp	float	$tmp64	%read{88,88} %write{87,87}
+temp	float	$tmp65	%read{89,89} %write{88,88}
+temp	float	$tmp66	%read{90,90} %write{89,89}
+temp	float	$tmp67	%read{92,92} %write{91,91}
+temp	float	$tmp68	%read{93,93} %write{92,92}
+temp	float	$tmp69	%read{94,94} %write{93,93}
+const	int	$const14	4		%read{96,96} %write{2147483647,-1}
+temp	int	$tmp70	%read{97,97} %write{96,96}
+temp	int	$tmp71	%read{2147483647,-1} %write{100,100}
+const	string	$const15	"sample"		%read{100,100} %write{2147483647,-1}
+const	string	$const16	"raster"		%read{100,100} %write{2147483647,-1}
+temp	int	$tmp72	%read{2147483647,-1} %write{101,101}
+const	string	$const17	"camera"		%read{101,102} %write{2147483647,-1}
+const	string	$const18	"res_x"		%read{101,101} %write{2147483647,-1}
+temp	int	$tmp73	%read{2147483647,-1} %write{102,102}
+const	string	$const19	"res_y"		%read{102,102} %write{2147483647,-1}
+temp	float	$tmp74	%read{105,105} %write{103,103}
+temp	float	$tmp75	%read{106,106} %write{105,105}
+temp	float	$tmp76	%read{105,105} %write{104,104}
+temp	float	$tmp77	%read{109,109} %write{107,107}
+temp	float	$tmp78	%read{110,110} %write{109,109}
+temp	float	$tmp79	%read{109,109} %write{108,108}
+temp	float	$tmp80	%read{111,111} %write{110,110}
+temp	float	$tmp81	%read{118,118} %write{116,116}
+temp	float	$tmp82	%read{118,118} %write{117,117}
+temp	float	$tmp83	%read{119,119} %write{118,118}
+temp	float	$tmp84	%read{122,122} %write{120,120}
+temp	float	$tmp85	%read{122,122} %write{121,121}
+temp	float	$tmp86	%read{123,123} %write{122,122}
+temp	float	$tmp87	%read{125,125} %write{124,124}
+temp	float	$tmp88	%read{126,126} %write{125,125}
+temp	int	$tmp89	%read{128,128} %write{127,127}
+temp	int	$tmp90	%read{129,133} %write{128,132}
+temp	int	$tmp91	%read{131,131} %write{130,130}
+temp	int	$tmp92	%read{132,132} %write{131,131}
+temp	int	$tmp93	%read{134,138} %write{133,137}
+temp	int	$tmp94	%read{136,136} %write{135,135}
+temp	int	$tmp95	%read{137,137} %write{136,136}
+temp	int	$tmp96	%read{141,141} %write{140,140}
+temp	int	$tmp97	%read{143,143} %write{142,142}
+temp	matrix	$tmp98	%read{149,149} %write{148,148}
+const	string	$const20	"rotate_x"		%read{144,144} %write{2147483647,-1}
+temp	float	$tmp99	%read{148,148} %write{147,147}
+temp	int	$tmp100	%read{151,151} %write{150,150}
+temp	matrix	$tmp101	%read{157,157} %write{156,156}
+const	string	$const21	"rotate_y"		%read{152,152} %write{2147483647,-1}
+temp	float	$tmp102	%read{156,156} %write{155,155}
+temp	int	$tmp103	%read{159,159} %write{158,158}
+temp	matrix	$tmp104	%read{165,165} %write{164,164}
+const	string	$const22	"rotate_z"		%read{160,160} %write{2147483647,-1}
+temp	float	$tmp105	%read{164,164} %write{163,163}
+temp	float	$tmp106	%read{169,169} %write{168,168}
+temp	int	$tmp107	%read{174,174} %write{173,173}
+temp	int	$tmp108	%read{176,176} %write{175,175}
+temp	float	$tmp109	%read{179,179} %write{178,178}
+temp	float	$tmp110	%read{181,181} %write{180,180}
+temp	int	$tmp111	%read{184,184} %write{183,183}
+temp	float	$tmp112	%read{187,187} %write{186,186}
+temp	float	$tmp113	%read{189,189} %write{188,188}
+temp	float	$tmp114	%read{192,192} %write{191,191}
+temp	float	$tmp115	%read{193,193} %write{192,192}
+temp	float	$tmp116	%read{195,195} %write{194,194}
+temp	float	$tmp117	%read{196,196} %write{195,195}
+temp	float	$tmp118	%read{198,198} %write{197,197}
+temp	float	$tmp119	%read{199,199} %write{198,198}
+temp	float	$tmp120	%read{201,201} %write{200,200}
+temp	float	$tmp121	%read{202,202} %write{201,201}
+temp	float	$tmp122	%read{204,204} %write{203,203}
+temp	float	$tmp123	%read{205,205} %write{204,204}
+temp	float	$tmp124	%read{208,209} %write{206,206}
+const	string	$const23	"frac"		%read{207,223} %write{2147483647,-1}
+temp	float	$tmp125	%read{209,209} %write{208,208}
+temp	float	$tmp126	%read{221,221} %write{216,219}
+const	string	$const24	"mirror"		%read{213,229} %write{2147483647,-1}
+temp	int	$tmp127	%read{215,215} %write{214,214}
+temp	float	$tmp128	%read{218,218} %write{217,217}
+temp	float	$tmp129	%read{219,219} %write{218,218}
+temp	float	$tmp130	%read{224,225} %write{222,222}
+temp	float	$tmp131	%read{225,225} %write{224,224}
+temp	float	$tmp132	%read{237,237} %write{232,235}
+temp	int	$tmp133	%read{231,231} %write{230,230}
+temp	float	$tmp134	%read{234,234} %write{233,233}
+temp	float	$tmp135	%read{235,235} %write{234,234}
+temp	int	$tmp136	%read{239,239} %write{238,238}
+temp	float	$tmp137	%read{241,241} %write{240,240}
+temp	float	$tmp138	%read{243,243} %write{242,242}
+temp	float	$tmp139	%read{245,245} %write{244,244}
+temp	float	$tmp140	%read{246,246} %write{245,245}
+temp	float	$tmp141	%read{248,248} %write{247,247}
+temp	float	$tmp142	%read{249,249} %write{248,248}
+code ___main___
+	assign		uv $const1 	%filename{"E:/github/elaramax/Shaders/max_stduv.osl"} %line{113} %argrw{"wr"}
+	eq		$tmp1 slotType $const2 	%line{115} %argrw{"wrr"}
+	if		$tmp1 14 113 	%argrw{"r"}
+	eq		$tmp2 uvwSource $const2 	%line{117} %argrw{"wrr"}
+	neq		$tmp3 $tmp2 $const2 	%argrw{"wrr"}
+	if		$tmp3 6 9 	%argrw{"r"}
+	eq		$tmp4 uvwSource $const3 	%argrw{"wrr"}
+	neq		$tmp5 $tmp4 $const2 	%argrw{"wrr"}
+	assign		$tmp3 $tmp5 	%argrw{"wr"}
+	if		$tmp3 14 14 	%argrw{"r"}
+	getattribute	$tmp6 mapChannel uv 	%line{119} %argrw{"wrw"}
+	eq		$tmp7 $tmp6 $const2 	%argrw{"wrr"}
+	if		$tmp7 14 14 	%argrw{"r"}
+	getattribute	$tmp8 $const4 uv 	%line{121} %argrw{"wrw"}
+	assign		___313_ray_dir I 	%line{127} %argrw{"wr"}
+	eq		$tmp9 coordMapping $const5 	%line{129} %argrw{"wrr"}
+	if		$tmp9 33 113 	%argrw{"r"}
+	compref		$tmp11 ___313_ray_dir $const2 	%line{131} %argrw{"wrr"}
+	compref		$tmp12 ___313_ray_dir $const5 	%argrw{"wrr"}
+	neg		$tmp13 $tmp12 	%argrw{"wr"}
+	atan2		$tmp10 $tmp11 $tmp13 	%argrw{"wrr"}
+	mul		$tmp14 $const8 $const9 	%argrw{"wrr"}
+	div		$tmp15 $const7 $tmp14 	%argrw{"wrr"}
+	mul		$tmp16 $tmp10 $tmp15 	%argrw{"wrr"}
+	add		$tmp17 $const6 $tmp16 	%argrw{"wrr"}
+	compassign	uv $const2 $tmp17 	%argrw{"wrr"}
+	compref		$tmp19 ___313_ray_dir $const3 	%line{132} %argrw{"wrr"}
+	asin		$tmp18 $tmp19 	%argrw{"wr"}
+	div		$tmp20 $const7 $const9 	%argrw{"wrr"}
+	mul		$tmp21 $tmp18 $tmp20 	%argrw{"wrr"}
+	add		$tmp22 $const6 $tmp21 	%argrw{"wrr"}
+	compassign	uv $const5 $tmp22 	%argrw{"wrr"}
+	compassign	uv $const3 $const10 	%line{133} %argrw{"wrr"}
+	eq		$tmp23 coordMapping $const3 	%line{135} %argrw{"wrr"}
+	if		$tmp23 73 113 	%argrw{"r"}
+	compref		$tmp25 ___313_ray_dir $const2 	%line{137} %argrw{"wrr"}
+	compref		$tmp26 ___313_ray_dir $const5 	%argrw{"wrr"}
+	neg		$tmp27 $tmp26 	%argrw{"wr"}
+	atan2		$tmp24 $tmp25 $tmp27 	%argrw{"wrr"}
+	mul		$tmp28 $const8 $const9 	%argrw{"wrr"}
+	div		$tmp29 $const7 $tmp28 	%argrw{"wrr"}
+	mul		$tmp30 $tmp24 $tmp29 	%argrw{"wrr"}
+	add		$tmp31 $const6 $tmp30 	%argrw{"wrr"}
+	compassign	uv $const2 $tmp31 	%argrw{"wrr"}
+	compref		$tmp32 ___313_ray_dir $const2 	%line{138} %argrw{"wrr"}
+	compref		$tmp33 ___313_ray_dir $const2 	%argrw{"wrr"}
+	mul		$tmp34 $tmp32 $tmp33 	%argrw{"wrr"}
+	compref		$tmp35 ___313_ray_dir $const5 	%argrw{"wrr"}
+	compref		$tmp36 ___313_ray_dir $const5 	%argrw{"wrr"}
+	mul		$tmp37 $tmp35 $tmp36 	%argrw{"wrr"}
+	add		$tmp38 $tmp34 $tmp37 	%argrw{"wrr"}
+	sqrt		___315_r $tmp38 	%argrw{"wr"}
+	compref		$tmp40 ___313_ray_dir $const3 	%line{139} %argrw{"wrr"}
+	fabs		$tmp39 $tmp40 	%argrw{"wr"}
+	gt		$tmp41 $tmp39 ___315_r 	%argrw{"wrr"}
+	if		$tmp41 67 72 	%argrw{"r"}
+	compref		$tmp43 ___313_ray_dir $const3 	%line{141} %argrw{"wrr"}
+	gt		$tmp44 $tmp43 $const10 	%argrw{"wrr"}
+	if		$tmp44 63 66 	%argrw{"r"}
+	compref		$tmp45 ___313_ray_dir $const3 	%argrw{"wrr"}
+	div		$tmp46 ___315_r $tmp45 	%argrw{"wrr"}
+	mul		$tmp47 $const11 $tmp46 	%argrw{"wrr"}
+	sub		$tmp42 $const7 $tmp47 	%argrw{"wrr"}
+	compref		$tmp48 ___313_ray_dir $const3 	%argrw{"wrr"}
+	div		$tmp49 ___315_r $tmp48 	%argrw{"wrr"}
+	mul		$tmp42 $const12 $tmp49 	%argrw{"wrr"}
+	compassign	uv $const5 $tmp42 	%argrw{"wrr"}
+	compref		$tmp50 ___313_ray_dir $const3 	%line{145} %argrw{"wrr"}
+	div		$tmp51 $tmp50 ___315_r 	%argrw{"wrr"}
+	add		$tmp52 $const8 $tmp51 	%argrw{"wrr"}
+	mul		$tmp53 $const11 $tmp52 	%argrw{"wrr"}
+	compassign	uv $const5 $tmp53 	%argrw{"wrr"}
+	compassign	uv $const3 $const10 	%line{148} %argrw{"wrr"}
+	eq		$tmp54 coordMapping $const13 	%line{150} %argrw{"wrr"}
+	if		$tmp54 96 113 	%argrw{"r"}
+	compref		$tmp55 ___313_ray_dir $const2 	%line{152} %argrw{"wrr"}
+	compref		$tmp56 ___313_ray_dir $const5 	%argrw{"wrr"}
+	neg		$tmp57 $tmp56 	%argrw{"wr"}
+	atan2		___318_a1 $tmp55 $tmp57 	%argrw{"wrr"}
+	compref		$tmp58 ___313_ray_dir $const3 	%line{153} %argrw{"wrr"}
+	asin		___318_a2 $tmp58 	%argrw{"wr"}
+	mul		$tmp59 $const9 $const6 	%line{154} %argrw{"wrr"}
+	add		$tmp60 ___318_a2 $tmp59 	%argrw{"wrr"}
+	mul		$tmp61 $const8 $const9 	%argrw{"wrr"}
+	div		$tmp62 $const7 $tmp61 	%argrw{"wrr"}
+	mul		$tmp63 $tmp60 $tmp62 	%argrw{"wrr"}
+	sub		___318_r $const6 $tmp63 	%argrw{"wrr"}
+	cos		$tmp64 ___318_a1 	%line{155} %argrw{"wr"}
+	mul		$tmp65 ___318_r $tmp64 	%argrw{"wrr"}
+	add		$tmp66 $const6 $tmp65 	%argrw{"wrr"}
+	compassign	uv $const2 $tmp66 	%argrw{"wrr"}
+	sin		$tmp67 ___318_a1 	%line{156} %argrw{"wr"}
+	mul		$tmp68 ___318_r $tmp67 	%argrw{"wrr"}
+	add		$tmp69 $const6 $tmp68 	%argrw{"wrr"}
+	compassign	uv $const5 $tmp69 	%argrw{"wrr"}
+	compassign	uv $const3 $const10 	%line{157} %argrw{"wrr"}
+	eq		$tmp70 coordMapping $const14 	%line{159} %argrw{"wrr"}
+	if		$tmp70 113 113 	%argrw{"r"}
+	assign		___319_res_x $const2 	%line{162} %argrw{"wr"}
+	assign		___319_res_y $const2 	%line{163} %argrw{"wr"}
+	getattribute	$tmp71 $const15 $const16 ___319_raster 	%line{165} %argrw{"wrrw"}
+	getattribute	$tmp72 $const17 $const18 ___319_res_x 	%line{166} %argrw{"wrrw"}
+	getattribute	$tmp73 $const17 $const19 ___319_res_y 	%line{167} %argrw{"wrrw"}
+	compref		$tmp74 ___319_raster $const2 	%line{169} %argrw{"wrr"}
+	assign		$tmp76 ___319_res_x 	%argrw{"wr"}
+	div		$tmp75 $tmp74 $tmp76 	%argrw{"wrr"}
+	compassign	uv $const2 $tmp75 	%argrw{"wrr"}
+	compref		$tmp77 ___319_raster $const5 	%line{170} %argrw{"wrr"}
+	assign		$tmp79 ___319_res_y 	%argrw{"wr"}
+	div		$tmp78 $tmp77 $tmp79 	%argrw{"wrr"}
+	sub		$tmp80 $const7 $tmp78 	%argrw{"wrr"}
+	compassign	uv $const5 $tmp80 	%argrw{"wrr"}
+	compassign	uv $const3 $const10 	%line{171} %argrw{"wrr"}
+	if		realWorldScale 115 116 	%line{175} %argrw{"r"}
+	assign		centerOffset $const10 	%argrw{"wr"}
+	assign		centerOffset $const6 	%argrw{"wr"}
+	compref		$tmp81 uv $const2 	%line{177} %argrw{"wrr"}
+	add		$tmp82 uOffset centerOffset 	%argrw{"wrr"}
+	sub		$tmp83 $tmp81 $tmp82 	%argrw{"wrr"}
+	compassign	uv $const2 $tmp83 	%argrw{"wrr"}
+	compref		$tmp84 uv $const5 	%line{178} %argrw{"wrr"}
+	add		$tmp85 vOffset centerOffset 	%argrw{"wrr"}
+	sub		$tmp86 $tmp84 $tmp85 	%argrw{"wrr"}
+	compassign	uv $const5 $tmp86 	%argrw{"wrr"}
+	compref		$tmp87 uv $const3 	%line{179} %argrw{"wrr"}
+	sub		$tmp88 $tmp87 centerOffset 	%argrw{"wrr"}
+	compassign	uv $const3 $tmp88 	%argrw{"wrr"}
+	neq		$tmp89 uAngle $const2 	%line{181} %argrw{"wrr"}
+	neq		$tmp90 $tmp89 $const2 	%argrw{"wrr"}
+	if		$tmp90 130 133 	%argrw{"r"}
+	neq		$tmp91 vAngle $const2 	%argrw{"wrr"}
+	neq		$tmp92 $tmp91 $const2 	%argrw{"wrr"}
+	assign		$tmp90 $tmp92 	%argrw{"wr"}
+	neq		$tmp93 $tmp90 $const2 	%argrw{"wrr"}
+	if		$tmp93 135 138 	%argrw{"r"}
+	neq		$tmp94 wAngle $const2 	%argrw{"wrr"}
+	neq		$tmp95 $tmp94 $const2 	%argrw{"wrr"}
+	assign		$tmp93 $tmp95 	%argrw{"wr"}
+	if		$tmp93 173 173 	%argrw{"r"}
+	assign		___320_xform $const5 	%line{183} %argrw{"wr"}
+	eq		$tmp96 slotType $const2 	%line{185} %argrw{"wrr"}
+	if		$tmp96 166 170 	%argrw{"r"}
+	neq		$tmp97 uAngle $const2 	%line{187} %argrw{"wrr"}
+	if		$tmp97 150 150 	%argrw{"r"}
+	functioncall	$const20 149 	%line{189} %argrw{"r"}
+	sin		___307_sine uAngle 	%line{46} %argrw{"wr"}
+	cos		___307_cosine uAngle 	%line{47} %argrw{"wr"}
+	neg		$tmp99 ___307_sine 	%line{52} %argrw{"wr"}
+	matrix		$tmp98 $const7 $const10 $const10 $const10 $const10 ___307_cosine ___307_sine $const10 $const10 $tmp99 ___307_cosine $const10 $const10 $const10 $const10 $const7 	%line{53} %argrw{"wrrrrrrrrrrrrrrrr"}
+	mul		___320_xform ___320_xform $tmp98 	%line{189} %argrw{"wrr"}
+	neq		$tmp100 vAngle $const2 	%line{191} %argrw{"wrr"}
+	if		$tmp100 158 158 	%argrw{"r"}
+	functioncall	$const21 157 	%line{193} %argrw{"r"}
+	sin		___308_sine vAngle 	%line{58} %argrw{"wr"}
+	cos		___308_cosine vAngle 	%line{59} %argrw{"wr"}
+	neg		$tmp102 ___308_sine 	%line{62} %argrw{"wr"}
+	matrix		$tmp101 ___308_cosine $const10 $tmp102 $const10 $const10 $const7 $const10 $const10 ___308_sine $const10 ___308_cosine $const10 $const10 $const10 $const10 $const7 	%line{65} %argrw{"wrrrrrrrrrrrrrrrr"}
+	mul		___320_xform ___320_xform $tmp101 	%line{193} %argrw{"wrr"}
+	neq		$tmp103 wAngle $const2 	%line{195} %argrw{"wrr"}
+	if		$tmp103 166 166 	%argrw{"r"}
+	functioncall	$const22 165 	%line{197} %argrw{"r"}
+	sin		___309_sine wAngle 	%line{70} %argrw{"wr"}
+	cos		___309_cosine wAngle 	%line{71} %argrw{"wr"}
+	neg		$tmp105 ___309_sine 	%line{75} %argrw{"wr"}
+	matrix		$tmp104 ___309_cosine ___309_sine $const10 $const10 $tmp105 ___309_cosine $const10 $const10 $const10 $const10 $const7 $const10 $const10 $const10 $const10 $const7 	%line{77} %argrw{"wrrrrrrrrrrrrrrrr"}
+	mul		___320_xform ___320_xform $tmp104 	%line{197} %argrw{"wrr"}
+	sin		___325_sine wAngle 	%line{202} %argrw{"wr"}
+	cos		___325_cosine wAngle 	%line{203} %argrw{"wr"}
+	neg		$tmp106 ___325_sine 	%line{206} %argrw{"wr"}
+	matrix		___320_xform ___325_cosine $tmp106 $const10 $const10 ___325_sine ___325_cosine $const10 $const10 $const10 $const10 $const7 $const10 $const10 $const10 $const10 $const7 	%line{209} %argrw{"wrrrrrrrrrrrrrrrr"}
+	assign		___320_in_vec uv 	%line{213} %argrw{"wr"}
+	transformv	___320_out_vec ___320_xform ___320_in_vec 	%line{214} %argrw{"wrr"}
+	assign		uv ___320_out_vec 	%line{215} %argrw{"wr"}
+	eq		$tmp107 slotType $const2 	%line{218} %argrw{"wrr"}
+	if		$tmp107 191 191 	%argrw{"r"}
+	eq		$tmp108 axis $const5 	%line{220} %argrw{"wrr"}
+	if		$tmp108 183 191 	%argrw{"r"}
+	compref		___327_tmp uv $const2 	%line{222} %argrw{"wrr"}
+	compref		$tmp109 uv $const5 	%line{223} %argrw{"wrr"}
+	compassign	uv $const2 $tmp109 	%argrw{"wrr"}
+	compref		$tmp110 uv $const3 	%line{224} %argrw{"wrr"}
+	compassign	uv $const5 $tmp110 	%argrw{"wrr"}
+	compassign	uv $const3 ___327_tmp 	%line{225} %argrw{"wrr"}
+	eq		$tmp111 axis $const3 	%line{227} %argrw{"wrr"}
+	if		$tmp111 191 191 	%argrw{"r"}
+	compref		___328_tmp uv $const5 	%line{229} %argrw{"wrr"}
+	compref		$tmp112 uv $const2 	%line{230} %argrw{"wrr"}
+	compassign	uv $const5 $tmp112 	%argrw{"wrr"}
+	compref		$tmp113 uv $const3 	%line{231} %argrw{"wrr"}
+	compassign	uv $const2 $tmp113 	%argrw{"wrr"}
+	compassign	uv $const3 ___328_tmp 	%line{232} %argrw{"wrr"}
+	compref		$tmp114 uv $const2 	%line{236} %argrw{"wrr"}
+	mul		$tmp115 $tmp114 uScale 	%argrw{"wrr"}
+	compassign	uv $const2 $tmp115 	%argrw{"wrr"}
+	compref		$tmp116 uv $const5 	%line{237} %argrw{"wrr"}
+	mul		$tmp117 $tmp116 vScale 	%argrw{"wrr"}
+	compassign	uv $const5 $tmp117 	%argrw{"wrr"}
+	compref		$tmp118 uv $const2 	%line{239} %argrw{"wrr"}
+	add		$tmp119 $tmp118 centerOffset 	%argrw{"wrr"}
+	compassign	uv $const2 $tmp119 	%argrw{"wrr"}
+	compref		$tmp120 uv $const5 	%line{240} %argrw{"wrr"}
+	add		$tmp121 $tmp120 centerOffset 	%argrw{"wrr"}
+	compassign	uv $const5 $tmp121 	%argrw{"wrr"}
+	compref		$tmp122 uv $const3 	%line{241} %argrw{"wrr"}
+	add		$tmp123 $tmp122 centerOffset 	%argrw{"wrr"}
+	compassign	uv $const3 $tmp123 	%argrw{"wrr"}
+	compref		$tmp124 uv $const2 	%line{243} %argrw{"wrr"}
+	functioncall	$const23 210 	%argrw{"r"}
+	floor		$tmp125 $tmp124 	%line{36} %argrw{"wr"}
+	sub		ufrac $tmp124 $tmp125 	%argrw{"wrr"}
+	if		uWrap 212 222 	%line{244} %argrw{"r"}
+	compassign	uv $const2 ufrac 	%line{246} %argrw{"wrr"}
+	if		uMirror 222 222 	%line{248} %argrw{"r"}
+	functioncall	$const24 221 	%line{250} %argrw{"r"}
+	lt		$tmp127 ufrac $const6 	%line{41} %argrw{"wrr"}
+	if		$tmp127 217 220 	%argrw{"r"}
+	mul		$tmp126 $const8 ufrac 	%argrw{"wrr"}
+	sub		$tmp128 ufrac $const6 	%argrw{"wrr"}
+	mul		$tmp129 $const8 $tmp128 	%argrw{"wrr"}
+	sub		$tmp126 $const7 $tmp129 	%argrw{"wrr"}
+	return
+	compassign	uv $const2 $tmp126 	%line{250} %argrw{"wrr"}
+	compref		$tmp130 uv $const5 	%line{253} %argrw{"wrr"}
+	functioncall	$const23 226 	%argrw{"r"}
+	floor		$tmp131 $tmp130 	%line{36} %argrw{"wr"}
+	sub		vfrac $tmp130 $tmp131 	%argrw{"wrr"}
+	if		vWrap 228 238 	%line{254} %argrw{"r"}
+	compassign	uv $const5 vfrac 	%line{256} %argrw{"wrr"}
+	if		vMirror 238 238 	%line{258} %argrw{"r"}
+	functioncall	$const24 237 	%line{260} %argrw{"r"}
+	lt		$tmp133 vfrac $const6 	%line{41} %argrw{"wrr"}
+	if		$tmp133 233 236 	%argrw{"r"}
+	mul		$tmp132 $const8 vfrac 	%argrw{"wrr"}
+	sub		$tmp134 vfrac $const6 	%argrw{"wrr"}
+	mul		$tmp135 $const8 $tmp134 	%argrw{"wrr"}
+	sub		$tmp132 $const7 $tmp135 	%argrw{"wrr"}
+	return
+	compassign	uv $const5 $tmp132 	%line{260} %argrw{"wrr"}
+	eq		$tmp136 clip $const2 	%line{263} %argrw{"wrr"}
+	if		$tmp136 250 250 	%argrw{"r"}
+	compref		$tmp137 uv $const2 	%line{265} %argrw{"wrr"}
+	sub		___333_ufloor $tmp137 ufrac 	%argrw{"wrr"}
+	compref		$tmp138 uv $const5 	%line{266} %argrw{"wrr"}
+	sub		___333_vfloor $tmp138 vfrac 	%argrw{"wrr"}
+	compref		$tmp139 uv $const2 	%line{267} %argrw{"wrr"}
+	add		$tmp140 $tmp139 ___333_ufloor 	%argrw{"wrr"}
+	compassign	uv $const2 $tmp140 	%argrw{"wrr"}
+	compref		$tmp141 uv $const5 	%line{268} %argrw{"wrr"}
+	add		$tmp142 $tmp141 ___333_vfloor 	%argrw{"wrr"}
+	compassign	uv $const5 $tmp142 	%argrw{"wrr"}
+	assign		result uv 	%line{271} %argrw{"wr"}
+	end

@@ -1,0 +1,356 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_layeredTexture
+param	color	i_inputs_color_0	0.2 0.69999999 0.30000001 		 %read{14,14} %write{2147483647,-1}
+param	color	i_inputs_color_1	1 0 0 		 %read{15,15} %write{2147483647,-1}
+param	color	i_inputs_color_2	0 0 0 		 %read{16,16} %write{0,0}
+param	color	i_inputs_color_3	0 0 0 		 %read{17,17} %write{1,1}
+param	color	i_inputs_color_4	0 0 0 		 %read{18,18} %write{2,2}
+param	color	i_inputs_color_5	0 0 0 		 %read{19,19} %write{3,3}
+param	color	i_inputs_color_6	0 0 0 		 %read{20,20} %write{4,4}
+param	color	i_inputs_color_7	0 0 0 		 %read{21,21} %write{5,5}
+param	color	i_inputs_color_8	0 0 0 		 %read{22,22} %write{6,6}
+param	color	i_inputs_color_9	0 0 0 		 %read{23,23} %write{7,7}
+param	color	i_inputs_color_10	0 0 0 		 %read{24,24} %write{8,8}
+param	color	i_inputs_color_11	0 0 0 		 %read{25,25} %write{9,9}
+param	color	i_inputs_color_12	0 0 0 		 %read{26,26} %write{10,10}
+param	color	i_inputs_color_13	0 0 0 		 %read{27,27} %write{11,11}
+param	color	i_inputs_color_14	0 0 0 		 %read{28,28} %write{12,12}
+param	color	i_inputs_color_15	0 0 0 		 %read{29,29} %write{13,13}
+param	float	i_inputs_alpha_0	0.5 		 %read{30,30} %write{2147483647,-1}
+param	float	i_inputs_alpha_1	1 		 %read{31,31} %write{2147483647,-1}
+param	float	i_inputs_alpha_2	1 		 %read{32,32} %write{2147483647,-1}
+param	float	i_inputs_alpha_3	1 		 %read{33,33} %write{2147483647,-1}
+param	float	i_inputs_alpha_4	1 		 %read{34,34} %write{2147483647,-1}
+param	float	i_inputs_alpha_5	1 		 %read{35,35} %write{2147483647,-1}
+param	float	i_inputs_alpha_6	1 		 %read{36,36} %write{2147483647,-1}
+param	float	i_inputs_alpha_7	1 		 %read{37,37} %write{2147483647,-1}
+param	float	i_inputs_alpha_8	1 		 %read{38,38} %write{2147483647,-1}
+param	float	i_inputs_alpha_9	1 		 %read{39,39} %write{2147483647,-1}
+param	float	i_inputs_alpha_10	1 		 %read{40,40} %write{2147483647,-1}
+param	float	i_inputs_alpha_11	1 		 %read{41,41} %write{2147483647,-1}
+param	float	i_inputs_alpha_12	1 		 %read{42,42} %write{2147483647,-1}
+param	float	i_inputs_alpha_13	1 		 %read{43,43} %write{2147483647,-1}
+param	float	i_inputs_alpha_14	1 		 %read{44,44} %write{2147483647,-1}
+param	float	i_inputs_alpha_15	1 		 %read{45,45} %write{2147483647,-1}
+param	int	i_inputs_blendMode_0	1 		 %read{46,46} %write{2147483647,-1}
+param	int	i_inputs_blendMode_1	1 		 %read{47,47} %write{2147483647,-1}
+param	int	i_inputs_blendMode_2	0 		 %read{48,48} %write{2147483647,-1}
+param	int	i_inputs_blendMode_3	0 		 %read{49,49} %write{2147483647,-1}
+param	int	i_inputs_blendMode_4	0 		 %read{50,50} %write{2147483647,-1}
+param	int	i_inputs_blendMode_5	0 		 %read{51,51} %write{2147483647,-1}
+param	int	i_inputs_blendMode_6	0 		 %read{52,52} %write{2147483647,-1}
+param	int	i_inputs_blendMode_7	0 		 %read{53,53} %write{2147483647,-1}
+param	int	i_inputs_blendMode_8	0 		 %read{54,54} %write{2147483647,-1}
+param	int	i_inputs_blendMode_9	0 		 %read{55,55} %write{2147483647,-1}
+param	int	i_inputs_blendMode_10	0 		 %read{56,56} %write{2147483647,-1}
+param	int	i_inputs_blendMode_11	0 		 %read{57,57} %write{2147483647,-1}
+param	int	i_inputs_blendMode_12	0 		 %read{58,58} %write{2147483647,-1}
+param	int	i_inputs_blendMode_13	0 		 %read{59,59} %write{2147483647,-1}
+param	int	i_inputs_blendMode_14	0 		 %read{60,60} %write{2147483647,-1}
+param	int	i_inputs_blendMode_15	0 		 %read{61,61} %write{2147483647,-1}
+param	int	i_inputs_isVisible_0	1 		 %read{62,62} %write{2147483647,-1}
+param	int	i_inputs_isVisible_1	1 		 %read{63,63} %write{2147483647,-1}
+param	int	i_inputs_isVisible_2	0 		 %read{64,64} %write{2147483647,-1}
+param	int	i_inputs_isVisible_3	0 		 %read{65,65} %write{2147483647,-1}
+param	int	i_inputs_isVisible_4	0 		 %read{66,66} %write{2147483647,-1}
+param	int	i_inputs_isVisible_5	0 		 %read{67,67} %write{2147483647,-1}
+param	int	i_inputs_isVisible_6	0 		 %read{68,68} %write{2147483647,-1}
+param	int	i_inputs_isVisible_7	0 		 %read{69,69} %write{2147483647,-1}
+param	int	i_inputs_isVisible_8	0 		 %read{70,70} %write{2147483647,-1}
+param	int	i_inputs_isVisible_9	0 		 %read{71,71} %write{2147483647,-1}
+param	int	i_inputs_isVisible_10	0 		 %read{72,72} %write{2147483647,-1}
+param	int	i_inputs_isVisible_11	0 		 %read{73,73} %write{2147483647,-1}
+param	int	i_inputs_isVisible_12	0 		 %read{74,74} %write{2147483647,-1}
+param	int	i_inputs_isVisible_13	0 		 %read{75,75} %write{2147483647,-1}
+param	int	i_inputs_isVisible_14	0 		 %read{76,76} %write{2147483647,-1}
+param	int	i_inputs_isVisible_15	0 		 %read{77,77} %write{2147483647,-1}
+param	int	i_alphaIsLuminance	0 		 %read{171,171} %write{2147483647,-1}
+oparam	color	o_outColor	0 0 0 		 %read{100,173} %write{79,169}
+oparam	float	o_outAlpha	0 		 %read{102,174} %write{80,173}
+oparam	color	o_outTransparency	0 0 0 		 %read{2147483647,-1} %write{175,175}
+local	color[16]	i_array_inputs_color	 %read{78,88} %write{14,29}
+local	float[16]	i_array_inputs_alpha	 %read{89,89} %write{30,45}
+local	int[16]	i_array_inputs_blendMode	 %read{90,90} %write{46,61}
+local	int[16]	i_array_inputs_isVisible	 %read{84,84} %write{62,77}
+local	int	numLayers	 %read{82,82} %write{78,78}
+local	int	i	 %read{81,170} %write{81,170}
+local	color	___345_fc	 %read{81,170} %write{81,170}
+local	float	___345_fa	 %read{81,170} %write{81,170}
+local	float	___345_blend	 %read{81,170} %write{81,170}
+const	color	$const1	0 0 0		 %read{0,13} %write{2147483647,-1}
+const	int	$const2	0		 %read{14,83} %write{2147483647,-1}
+const	int	$const3	1		 %read{15,170} %write{2147483647,-1}
+const	int	$const4	2		 %read{16,64} %write{2147483647,-1}
+const	int	$const5	3		 %read{17,65} %write{2147483647,-1}
+const	int	$const6	4		 %read{18,66} %write{2147483647,-1}
+const	int	$const7	5		 %read{19,67} %write{2147483647,-1}
+const	int	$const8	6		 %read{20,68} %write{2147483647,-1}
+const	int	$const9	7		 %read{21,69} %write{2147483647,-1}
+const	int	$const10	8		 %read{22,70} %write{2147483647,-1}
+const	int	$const11	9		 %read{23,71} %write{2147483647,-1}
+const	int	$const12	10		 %read{24,72} %write{2147483647,-1}
+const	int	$const13	11		 %read{25,73} %write{2147483647,-1}
+const	int	$const14	12		 %read{26,74} %write{2147483647,-1}
+const	int	$const15	13		 %read{27,75} %write{2147483647,-1}
+const	int	$const16	14		 %read{28,76} %write{2147483647,-1}
+const	int	$const17	15		 %read{29,77} %write{2147483647,-1}
+temp	int	$tmp1	 %read{81,170} %write{81,170}
+temp	int	$tmp2	 %read{85,85} %write{84,84}
+const	float	$const18	1		 %read{85,174} %write{2147483647,-1}
+temp	int	$tmp3	 %read{86,86} %write{85,85}
+temp	int	$tmp4	 %read{91,91} %write{90,90}
+const	float	$const19	0		 %read{92,171} %write{2147483647,-1}
+temp	int	$tmp5	 %read{93,93} %write{92,92}
+temp	int	$tmp6	 %read{97,97} %write{96,96}
+temp	color	$tmp7	 %read{101,101} %write{98,98}
+temp	float	$tmp8	 %read{100,100} %write{99,99}
+temp	color	$tmp9	 %read{101,101} %write{100,100}
+temp	float	$tmp10	 %read{104,104} %write{102,102}
+temp	float	$tmp11	 %read{104,104} %write{103,103}
+temp	float	$tmp12	 %read{105,105} %write{104,104}
+const	float	$const20	2		 %read{106,165} %write{2147483647,-1}
+temp	int	$tmp13	 %read{107,107} %write{106,106}
+const	float	$const21	3		 %read{110,110} %write{2147483647,-1}
+temp	int	$tmp14	 %read{111,111} %write{110,110}
+temp	float	$tmp15	 %read{113,113} %write{112,112}
+temp	float	$tmp16	 %read{115,115} %write{114,114}
+const	float	$const22	4		 %read{116,116} %write{2147483647,-1}
+temp	int	$tmp17	 %read{117,117} %write{116,116}
+temp	color	$tmp18	 %read{119,119} %write{118,118}
+const	float	$const23	5		 %read{120,120} %write{2147483647,-1}
+temp	int	$tmp19	 %read{121,121} %write{120,120}
+temp	color	$tmp20	 %read{123,123} %write{122,122}
+const	float	$const24	6		 %read{124,124} %write{2147483647,-1}
+temp	int	$tmp21	 %read{125,125} %write{124,124}
+temp	color	$tmp22	 %read{127,127} %write{126,126}
+temp	color	$tmp23	 %read{128,128} %write{127,127}
+temp	color	$tmp24	 %read{129,129} %write{128,128}
+const	float	$const25	7		 %read{130,130} %write{2147483647,-1}
+temp	int	$tmp25	 %read{131,131} %write{130,130}
+temp	color	$tmp26	 %read{135,135} %write{134,134}
+temp	color	$tmp27	 %read{133,133} %write{132,132}
+temp	color	$tmp28	 %read{134,134} %write{133,133}
+temp	color	$tmp29	 %read{138,138} %write{135,135}
+temp	float	$tmp30	 %read{137,137} %write{136,136}
+temp	color	$tmp31	 %read{138,138} %write{137,137}
+const	float	$const26	8		 %read{139,139} %write{2147483647,-1}
+temp	int	$tmp32	 %read{140,140} %write{139,139}
+temp	color	$tmp33	 %read{143,143} %write{142,142}
+temp	color	$tmp34	 %read{142,142} %write{141,141}
+temp	color	$tmp35	 %read{146,146} %write{143,143}
+temp	float	$tmp36	 %read{145,145} %write{144,144}
+temp	color	$tmp37	 %read{146,146} %write{145,145}
+const	float	$const27	9		 %read{147,147} %write{2147483647,-1}
+temp	int	$tmp38	 %read{148,148} %write{147,147}
+temp	color	$tmp39	 %read{151,151} %write{150,150}
+temp	color	$tmp40	 %read{150,150} %write{149,149}
+temp	color	$tmp41	 %read{154,154} %write{151,151}
+temp	float	$tmp42	 %read{153,153} %write{152,152}
+temp	color	$tmp43	 %read{154,154} %write{153,153}
+const	float	$const28	10		 %read{155,155} %write{2147483647,-1}
+temp	int	$tmp44	 %read{156,156} %write{155,155}
+temp	color	$tmp45	 %read{158,158} %write{157,157}
+temp	color	$tmp46	 %read{159,159} %write{158,158}
+const	float	$const29	11		 %read{160,160} %write{2147483647,-1}
+temp	int	$tmp47	 %read{161,161} %write{160,160}
+temp	color	$tmp48	 %read{163,163} %write{162,162}
+temp	color	$tmp49	 %read{164,164} %write{163,163}
+temp	color	$tmp50	 %read{166,166} %write{165,165}
+temp	color	$tmp51	 %read{167,167} %write{166,166}
+temp	color	$tmp52	 %read{168,168} %write{167,167}
+temp	color	$tmp53	 %read{169,169} %write{168,168}
+temp	int	$tmp54	 %read{172,172} %write{171,171}
+temp	float	$tmp55	 %read{175,175} %write{174,174}
+code i_inputs_color_2
+	assign		i_inputs_color_2 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredTexture.osl"} %line{28} %argrw{"wr"}
+code i_inputs_color_3
+	assign		i_inputs_color_3 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredTexture.osl"} %line{29} %argrw{"wr"}
+code i_inputs_color_4
+	assign		i_inputs_color_4 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredTexture.osl"} %line{30} %argrw{"wr"}
+code i_inputs_color_5
+	assign		i_inputs_color_5 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredTexture.osl"} %line{31} %argrw{"wr"}
+code i_inputs_color_6
+	assign		i_inputs_color_6 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredTexture.osl"} %line{32} %argrw{"wr"}
+code i_inputs_color_7
+	assign		i_inputs_color_7 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredTexture.osl"} %line{33} %argrw{"wr"}
+code i_inputs_color_8
+	assign		i_inputs_color_8 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredTexture.osl"} %line{34} %argrw{"wr"}
+code i_inputs_color_9
+	assign		i_inputs_color_9 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredTexture.osl"} %line{35} %argrw{"wr"}
+code i_inputs_color_10
+	assign		i_inputs_color_10 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredTexture.osl"} %line{36} %argrw{"wr"}
+code i_inputs_color_11
+	assign		i_inputs_color_11 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredTexture.osl"} %line{37} %argrw{"wr"}
+code i_inputs_color_12
+	assign		i_inputs_color_12 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredTexture.osl"} %line{38} %argrw{"wr"}
+code i_inputs_color_13
+	assign		i_inputs_color_13 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredTexture.osl"} %line{39} %argrw{"wr"}
+code i_inputs_color_14
+	assign		i_inputs_color_14 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredTexture.osl"} %line{40} %argrw{"wr"}
+code i_inputs_color_15
+	assign		i_inputs_color_15 $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredTexture.osl"} %line{41} %argrw{"wr"}
+code ___main___
+	aassign		i_array_inputs_color $const2 i_inputs_color_0 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_layeredTexture.osl"} %line{121} %argrw{"wrr"}
+	aassign		i_array_inputs_color $const3 i_inputs_color_1 	%argrw{"wrr"}
+	aassign		i_array_inputs_color $const4 i_inputs_color_2 	%argrw{"wrr"}
+	aassign		i_array_inputs_color $const5 i_inputs_color_3 	%argrw{"wrr"}
+	aassign		i_array_inputs_color $const6 i_inputs_color_4 	%argrw{"wrr"}
+	aassign		i_array_inputs_color $const7 i_inputs_color_5 	%argrw{"wrr"}
+	aassign		i_array_inputs_color $const8 i_inputs_color_6 	%argrw{"wrr"}
+	aassign		i_array_inputs_color $const9 i_inputs_color_7 	%argrw{"wrr"}
+	aassign		i_array_inputs_color $const10 i_inputs_color_8 	%argrw{"wrr"}
+	aassign		i_array_inputs_color $const11 i_inputs_color_9 	%argrw{"wrr"}
+	aassign		i_array_inputs_color $const12 i_inputs_color_10 	%argrw{"wrr"}
+	aassign		i_array_inputs_color $const13 i_inputs_color_11 	%argrw{"wrr"}
+	aassign		i_array_inputs_color $const14 i_inputs_color_12 	%argrw{"wrr"}
+	aassign		i_array_inputs_color $const15 i_inputs_color_13 	%argrw{"wrr"}
+	aassign		i_array_inputs_color $const16 i_inputs_color_14 	%argrw{"wrr"}
+	aassign		i_array_inputs_color $const17 i_inputs_color_15 	%argrw{"wrr"}
+	aassign		i_array_inputs_alpha $const2 i_inputs_alpha_0 	%line{139} %argrw{"wrr"}
+	aassign		i_array_inputs_alpha $const3 i_inputs_alpha_1 	%argrw{"wrr"}
+	aassign		i_array_inputs_alpha $const4 i_inputs_alpha_2 	%argrw{"wrr"}
+	aassign		i_array_inputs_alpha $const5 i_inputs_alpha_3 	%argrw{"wrr"}
+	aassign		i_array_inputs_alpha $const6 i_inputs_alpha_4 	%argrw{"wrr"}
+	aassign		i_array_inputs_alpha $const7 i_inputs_alpha_5 	%argrw{"wrr"}
+	aassign		i_array_inputs_alpha $const8 i_inputs_alpha_6 	%argrw{"wrr"}
+	aassign		i_array_inputs_alpha $const9 i_inputs_alpha_7 	%argrw{"wrr"}
+	aassign		i_array_inputs_alpha $const10 i_inputs_alpha_8 	%argrw{"wrr"}
+	aassign		i_array_inputs_alpha $const11 i_inputs_alpha_9 	%argrw{"wrr"}
+	aassign		i_array_inputs_alpha $const12 i_inputs_alpha_10 	%argrw{"wrr"}
+	aassign		i_array_inputs_alpha $const13 i_inputs_alpha_11 	%argrw{"wrr"}
+	aassign		i_array_inputs_alpha $const14 i_inputs_alpha_12 	%argrw{"wrr"}
+	aassign		i_array_inputs_alpha $const15 i_inputs_alpha_13 	%argrw{"wrr"}
+	aassign		i_array_inputs_alpha $const16 i_inputs_alpha_14 	%argrw{"wrr"}
+	aassign		i_array_inputs_alpha $const17 i_inputs_alpha_15 	%argrw{"wrr"}
+	aassign		i_array_inputs_blendMode $const2 i_inputs_blendMode_0 	%line{157} %argrw{"wrr"}
+	aassign		i_array_inputs_blendMode $const3 i_inputs_blendMode_1 	%argrw{"wrr"}
+	aassign		i_array_inputs_blendMode $const4 i_inputs_blendMode_2 	%argrw{"wrr"}
+	aassign		i_array_inputs_blendMode $const5 i_inputs_blendMode_3 	%argrw{"wrr"}
+	aassign		i_array_inputs_blendMode $const6 i_inputs_blendMode_4 	%argrw{"wrr"}
+	aassign		i_array_inputs_blendMode $const7 i_inputs_blendMode_5 	%argrw{"wrr"}
+	aassign		i_array_inputs_blendMode $const8 i_inputs_blendMode_6 	%argrw{"wrr"}
+	aassign		i_array_inputs_blendMode $const9 i_inputs_blendMode_7 	%argrw{"wrr"}
+	aassign		i_array_inputs_blendMode $const10 i_inputs_blendMode_8 	%argrw{"wrr"}
+	aassign		i_array_inputs_blendMode $const11 i_inputs_blendMode_9 	%argrw{"wrr"}
+	aassign		i_array_inputs_blendMode $const12 i_inputs_blendMode_10 	%argrw{"wrr"}
+	aassign		i_array_inputs_blendMode $const13 i_inputs_blendMode_11 	%argrw{"wrr"}
+	aassign		i_array_inputs_blendMode $const14 i_inputs_blendMode_12 	%argrw{"wrr"}
+	aassign		i_array_inputs_blendMode $const15 i_inputs_blendMode_13 	%argrw{"wrr"}
+	aassign		i_array_inputs_blendMode $const16 i_inputs_blendMode_14 	%argrw{"wrr"}
+	aassign		i_array_inputs_blendMode $const17 i_inputs_blendMode_15 	%argrw{"wrr"}
+	aassign		i_array_inputs_isVisible $const2 i_inputs_isVisible_0 	%line{175} %argrw{"wrr"}
+	aassign		i_array_inputs_isVisible $const3 i_inputs_isVisible_1 	%argrw{"wrr"}
+	aassign		i_array_inputs_isVisible $const4 i_inputs_isVisible_2 	%argrw{"wrr"}
+	aassign		i_array_inputs_isVisible $const5 i_inputs_isVisible_3 	%argrw{"wrr"}
+	aassign		i_array_inputs_isVisible $const6 i_inputs_isVisible_4 	%argrw{"wrr"}
+	aassign		i_array_inputs_isVisible $const7 i_inputs_isVisible_5 	%argrw{"wrr"}
+	aassign		i_array_inputs_isVisible $const8 i_inputs_isVisible_6 	%argrw{"wrr"}
+	aassign		i_array_inputs_isVisible $const9 i_inputs_isVisible_7 	%argrw{"wrr"}
+	aassign		i_array_inputs_isVisible $const10 i_inputs_isVisible_8 	%argrw{"wrr"}
+	aassign		i_array_inputs_isVisible $const11 i_inputs_isVisible_9 	%argrw{"wrr"}
+	aassign		i_array_inputs_isVisible $const12 i_inputs_isVisible_10 	%argrw{"wrr"}
+	aassign		i_array_inputs_isVisible $const13 i_inputs_isVisible_11 	%argrw{"wrr"}
+	aassign		i_array_inputs_isVisible $const14 i_inputs_isVisible_12 	%argrw{"wrr"}
+	aassign		i_array_inputs_isVisible $const15 i_inputs_isVisible_13 	%argrw{"wrr"}
+	aassign		i_array_inputs_isVisible $const16 i_inputs_isVisible_14 	%argrw{"wrr"}
+	aassign		i_array_inputs_isVisible $const17 i_inputs_isVisible_15 	%argrw{"wrr"}
+	arraylength	numLayers i_array_inputs_color 	%line{177} %argrw{"wr"}
+	assign		o_outColor $const2 	%line{180} %argrw{"wr"}
+	assign		o_outAlpha $const2 	%line{181} %argrw{"wr"}
+	for		$tmp1 83 84 170 171 	%line{183} %argrw{"r"}
+	sub		i numLayers $const3 	%argrw{"wrr"}
+	ge		$tmp1 i $const2 	%argrw{"wrr"}
+	aref		$tmp2 i_array_inputs_isVisible i 	%line{185} %argrw{"wrr"}
+	neq		$tmp3 $tmp2 $const18 	%argrw{"wrr"}
+	if		$tmp3 88 88 	%argrw{"r"}
+	continue	%line{186}
+	aref		___345_fc i_array_inputs_color i 	%line{188} %argrw{"wrr"}
+	aref		___345_fa i_array_inputs_alpha i 	%line{189} %argrw{"wrr"}
+	aref		$tmp4 i_array_inputs_blendMode i 	%line{190} %argrw{"wrr"}
+	assign		___345_blend $tmp4 	%argrw{"wr"}
+	eq		$tmp5 ___345_blend $const19 	%line{192} %argrw{"wrr"}
+	if		$tmp5 96 170 	%argrw{"r"}
+	assign		o_outColor ___345_fc 	%line{194} %argrw{"wr"}
+	assign		o_outAlpha ___345_fa 	%line{195} %argrw{"wr"}
+	eq		$tmp6 ___345_blend $const18 	%line{197} %argrw{"wrr"}
+	if		$tmp6 106 170 	%argrw{"r"}
+	mul		$tmp7 ___345_fc ___345_fa 	%line{199} %argrw{"wrr"}
+	sub		$tmp8 $const18 ___345_fa 	%argrw{"wrr"}
+	mul		$tmp9 o_outColor $tmp8 	%argrw{"wrr"}
+	add		o_outColor $tmp7 $tmp9 	%argrw{"wrr"}
+	sub		$tmp10 $const18 o_outAlpha 	%line{200} %argrw{"wrr"}
+	sub		$tmp11 $const18 ___345_fa 	%argrw{"wrr"}
+	mul		$tmp12 $tmp10 $tmp11 	%argrw{"wrr"}
+	sub		o_outAlpha $const18 $tmp12 	%argrw{"wrr"}
+	eq		$tmp13 ___345_blend $const20 	%line{202} %argrw{"wrr"}
+	if		$tmp13 110 170 	%argrw{"r"}
+	mul		o_outColor o_outColor ___345_fa 	%line{204} %argrw{"wrr"}
+	mul		o_outAlpha o_outAlpha ___345_fa 	%line{205} %argrw{"wrr"}
+	eq		$tmp14 ___345_blend $const21 	%line{207} %argrw{"wrr"}
+	if		$tmp14 116 170 	%argrw{"r"}
+	sub		$tmp15 $const18 ___345_fa 	%line{209} %argrw{"wrr"}
+	mul		o_outColor o_outColor $tmp15 	%argrw{"wrr"}
+	sub		$tmp16 $const18 ___345_fa 	%line{210} %argrw{"wrr"}
+	mul		o_outAlpha o_outAlpha $tmp16 	%argrw{"wrr"}
+	eq		$tmp17 ___345_blend $const22 	%line{212} %argrw{"wrr"}
+	if		$tmp17 120 170 	%argrw{"r"}
+	mul		$tmp18 ___345_fc ___345_fa 	%line{214} %argrw{"wrr"}
+	add		o_outColor o_outColor $tmp18 	%argrw{"wrr"}
+	eq		$tmp19 ___345_blend $const23 	%line{216} %argrw{"wrr"}
+	if		$tmp19 124 170 	%argrw{"r"}
+	mul		$tmp20 ___345_fc ___345_fa 	%line{218} %argrw{"wrr"}
+	sub		o_outColor o_outColor $tmp20 	%argrw{"wrr"}
+	eq		$tmp21 ___345_blend $const24 	%line{220} %argrw{"wrr"}
+	if		$tmp21 130 170 	%argrw{"r"}
+	mul		$tmp22 ___345_fc ___345_fa 	%line{222} %argrw{"wrr"}
+	add		$tmp23 $tmp22 $const18 	%argrw{"wrr"}
+	sub		$tmp24 $tmp23 ___345_fa 	%argrw{"wrr"}
+	mul		o_outColor o_outColor $tmp24 	%argrw{"wrr"}
+	eq		$tmp25 ___345_blend $const25 	%line{224} %argrw{"wrr"}
+	if		$tmp25 139 170 	%argrw{"r"}
+	mul		$tmp27 ___345_fc ___345_fa 	%line{226} %argrw{"wrr"}
+	sub		$tmp28 $tmp27 o_outColor 	%argrw{"wrr"}
+	abs		$tmp26 $tmp28 	%argrw{"wr"}
+	mul		$tmp29 $tmp26 ___345_fa 	%argrw{"wrr"}
+	sub		$tmp30 $const18 ___345_fa 	%argrw{"wrr"}
+	mul		$tmp31 o_outColor $tmp30 	%argrw{"wrr"}
+	add		o_outColor $tmp29 $tmp31 	%argrw{"wrr"}
+	eq		$tmp32 ___345_blend $const26 	%line{228} %argrw{"wrr"}
+	if		$tmp32 147 170 	%argrw{"r"}
+	mul		$tmp34 ___345_fc ___345_fa 	%line{230} %argrw{"wrr"}
+	max		$tmp33 $tmp34 o_outColor 	%argrw{"wrr"}
+	mul		$tmp35 $tmp33 ___345_fa 	%argrw{"wrr"}
+	sub		$tmp36 $const18 ___345_fa 	%argrw{"wrr"}
+	mul		$tmp37 o_outColor $tmp36 	%argrw{"wrr"}
+	add		o_outColor $tmp35 $tmp37 	%argrw{"wrr"}
+	eq		$tmp38 ___345_blend $const27 	%line{232} %argrw{"wrr"}
+	if		$tmp38 155 170 	%argrw{"r"}
+	mul		$tmp40 ___345_fc ___345_fa 	%line{234} %argrw{"wrr"}
+	min		$tmp39 $tmp40 o_outColor 	%argrw{"wrr"}
+	mul		$tmp41 $tmp39 ___345_fa 	%argrw{"wrr"}
+	sub		$tmp42 $const18 ___345_fa 	%argrw{"wrr"}
+	mul		$tmp43 o_outColor $tmp42 	%argrw{"wrr"}
+	add		o_outColor $tmp41 $tmp43 	%argrw{"wrr"}
+	eq		$tmp44 ___345_blend $const28 	%line{236} %argrw{"wrr"}
+	if		$tmp44 160 170 	%argrw{"r"}
+	mul		$tmp45 ___345_fc ___345_fa 	%line{238} %argrw{"wrr"}
+	add		$tmp46 $const18 $tmp45 	%argrw{"wrr"}
+	mul		o_outColor o_outColor $tmp46 	%argrw{"wrr"}
+	eq		$tmp47 ___345_blend $const29 	%line{240} %argrw{"wrr"}
+	if		$tmp47 165 170 	%argrw{"r"}
+	mul		$tmp48 ___345_fc ___345_fa 	%line{242} %argrw{"wrr"}
+	sub		$tmp49 $const18 $tmp48 	%argrw{"wrr"}
+	mul		o_outColor o_outColor $tmp49 	%argrw{"wrr"}
+	mul		$tmp50 $const20 ___345_fc 	%line{246} %argrw{"wrr"}
+	mul		$tmp51 $tmp50 ___345_fa 	%argrw{"wrr"}
+	add		$tmp52 $tmp51 $const18 	%argrw{"wrr"}
+	sub		$tmp53 $tmp52 ___345_fa 	%argrw{"wrr"}
+	mul		o_outColor o_outColor $tmp53 	%argrw{"wrr"}
+	sub		i i $const3 	%line{183} %argrw{"wrr"}
+	neq		$tmp54 i_alphaIsLuminance $const19 	%line{250} %argrw{"wrr"}
+	if		$tmp54 174 174 	%argrw{"r"}
+	luminance	o_outAlpha o_outColor 	%line{252} %argrw{"wr"}
+	sub		$tmp55 $const18 o_outAlpha 	%line{255} %argrw{"wrr"}
+	assign		o_outTransparency $tmp55 	%argrw{"wr"}
+	end

@@ -1,0 +1,1068 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_volumeNoise
+param	float	i_threshold	0 		 %read{570,570} %write{2147483647,-1}
+param	float	i_amplitude	0 		 %read{197,474} %write{2147483647,-1}
+param	float	i_ratio	0.70700002 		 %read{171,563} %write{2147483647,-1}
+param	float	i_frequencyRatio	2 		 %read{170,556} %write{2147483647,-1}
+param	int	i_depthMax	3 		 %read{106,478} %write{2147483647,-1}
+param	int	i_inflection	0 		 %read{131,565} %write{2147483647,-1}
+param	float	i_time	0 		 %read{166,487} %write{2147483647,-1}
+param	float	i_frequency	8 		 %read{110,471} %write{2147483647,-1} %derivs
+param	point	i_scale	1 1 1 		 %read{108,108} %write{2147483647,-1} %derivs
+param	point	i_origin	0 0 0 		 %read{111,111} %write{2147483647,-1} %derivs
+param	float	i_implode	0 		 %read{98,102} %write{2147483647,-1} %derivs
+param	point	i_implodeCenter	0 0 0 		 %read{100,104} %write{2147483647,-1} %derivs
+param	int	i_noiseType	1 		 %read{112,464} %write{2147483647,-1}
+param	float	i_density	1 		 %read{255,255} %write{2147483647,-1}
+param	float	i_spottyness	0.1 		 %read{441,448} %write{2147483647,-1}
+param	float	i_sizeRand	0 		 %read{402,411} %write{2147483647,-1}
+param	float	i_randomness	1 		 %read{305,385} %write{2147483647,-1}
+param	int	i_falloff	2 		 %read{257,257} %write{2147483647,-1}
+param	int	i_numWaves	5 		 %read{479,479} %write{2147483647,-1}
+param	color	i_defaultColor	0.5 0.5 0.5 		 %read{589,589} %write{2147483647,-1}
+param	color	i_colorGain	1 1 1 		 %read{585,585} %write{2147483647,-1}
+param	color	i_colorOffset	0 0 0 		 %read{586,586} %write{2147483647,-1}
+param	float	i_alphaGain	1 		 %read{587,587} %write{2147483647,-1}
+param	float	i_alphaOffset	0 		 %read{588,588} %write{2147483647,-1}
+param	int	i_alphaIsLuminance	0 		 %read{575,575} %write{2147483647,-1}
+param	int	i_invert	0 		 %read{576,576} %write{2147483647,-1}
+param	int	i_local	0 		 %read{0,0} %write{2147483647,-1}
+param	int	i_wrap	1 		 %read{1,1} %write{2147483647,-1}
+param	float	i_blend	0 		 %read{62,62} %write{2147483647,-1}
+param	matrix	i_placementMatrix	1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1		 %read{20,20} %write{2147483647,-1} %derivs
+oparam	float	o_outAlpha	1 		 %read{570,588} %write{197,590}
+oparam	color	o_outColor	1 1 1 		 %read{580,586} %write{574,589}
+global	point	P	 %read{11,17} %write{2147483647,-1} %derivs
+local	point	___307_Pref	 %read{8,19} %write{3,3} %derivs
+local	point	___307_pp	 %read{20,20} %write{4,19} %derivs
+local	point	___307_pq	 %read{21,95} %write{20,20} %derivs
+local	float	___356_amp	 %read{208,243} %write{199,229}
+local	point	___356_pp	 %read{204,244} %write{200,200} %derivs
+local	float	___356_sum	 %read{208,248} %write{201,247}
+local	float	___356_i	 %read{208,234} %write{202,229}
+local	float	___356_lacunarity	 %read{208,244} %write{203,229}
+local	float	___356_M_PIxel_size	 %read{206,238} %write{205,205}
+local	float	___356_nyquist	 %read{213,213} %write{206,206}
+local	float	___356_M_PIxel	 %read{208,238} %write{207,229}
+local	float	___358_weight	 %read{243,243} %write{242,242}
+local	float	___362_i	 %read{148,178} %write{134,173}
+local	float	___362_lacunarity	 %read{148,191} %write{135,173}
+local	float	___362_mix	 %read{148,196} %write{136,195}
+local	float	___362_amp	 %read{148,187} %write{137,173}
+local	point	___362_pp	 %read{144,188} %write{143,143} %derivs
+local	float	___362_M_PIxel_size	 %read{146,182} %write{145,145}
+local	float	___362_nyquist	 %read{153,153} %write{146,146}
+local	float	___362_M_PIxel	 %read{148,182} %write{147,173}
+local	float	___364_weight	 %read{187,187} %write{186,186}
+local	float	___365_t	 %read{270,460} %write{270,460}
+local	float	___365_tbase	 %read{270,460} %write{270,460}
+local	point	___365_n1	 %read{270,460} %write{270,460}
+local	float	___365_d	 %read{270,460} %write{270,460}
+local	point	___365_n2	 %read{270,460} %write{270,460}
+local	point	___366_thiscell	 %read{270,460} %write{270,460}
+local	int	___366_i	 %read{270,460} %write{270,460}
+local	int	___366_j	 %read{270,460} %write{270,460}
+local	int	___366_k	 %read{270,460} %write{270,460}
+local	int	___366_curr_particle	 %read{270,460} %write{270,460}
+local	point	___372_testcell	 %read{270,460} %write{270,460}
+local	vector	___373_jit	 %read{270,460} %write{270,460}
+local	float	___372_dist	 %read{270,460} %write{270,460}
+local	point	___377_thiscell	 %read{270,460} %write{270,460}
+local	int	___377_i	 %read{270,460} %write{270,460}
+local	int	___377_j	 %read{270,460} %write{270,460}
+local	int	___377_curr_particle	 %read{270,460} %write{270,460}
+local	point	___381_testcell	 %read{270,460} %write{270,460}
+local	vector	___382_vjit	 %read{270,460} %write{270,460}
+local	float	___381_dist	 %read{270,460} %write{270,460}
+local	float	___384_distanceToCenter	 %read{270,460} %write{270,460}
+local	float	___384_fadeout	 %read{270,460} %write{270,460}
+local	point	___389_pp	 %read{275,415} %write{265,265}
+local	int	___389_i	 %read{270,460} %write{270,460}
+local	int	___389_j	 %read{270,460} %write{270,460}
+local	float	___389_lacunarity	 %read{270,460} %write{266,460}
+local	point[27]	___389_particles	 %read{270,460} %write{270,460}
+local	float	___389_f1	 %read{270,460} %write{270,460}
+local	float	___389_f2	 %read{270,460} %write{270,460}
+local	point	___389_p2	 %read{270,460} %write{270,460}
+local	float	___389_numParticles	 %read{270,460} %write{270,460}
+local	float	___389_sum	 %read{270,461} %write{267,460}
+local	float	___389_amp	 %read{270,460} %write{268,460}
+local	float	___389_ampSum	 %read{270,462} %write{269,460}
+local	float	___396_radiusScale	 %read{270,460} %write{270,460}
+local	float	___396_density	 %read{270,460} %write{270,460}
+local	float	___398_l	 %read{270,460} %write{270,460}
+local	float	___403_x	 %read{476,564} %write{476,564}
+local	float	___403_y	 %read{476,564} %write{476,564}
+local	float	___403_z	 %read{476,564} %write{476,564}
+local	float	___403_time	 %read{476,564} %write{476,564}
+local	float	___403_dirX	 %read{476,564} %write{476,564}
+local	float	___403_dirY	 %read{476,564} %write{476,564}
+local	float	___403_dirZ	 %read{476,564} %write{476,564}
+local	float	___403_norm	 %read{476,564} %write{476,564}
+local	float	___403_noiseValue	 %read{476,564} %write{476,564}
+local	int	___403_i	 %read{476,564} %write{476,564}
+local	point	___405_noisePoint	 %read{476,564} %write{476,564}
+local	float	___405_freqNoise	 %read{476,564} %write{476,564}
+local	float	outside	 %read{96,96} %write{56,58}
+local	float	edgeDist	 %read{2147483647,-1} %write{5,94}
+local	point	pp	 %read{100,470} %write{95,104} %derivs
+local	vector	___408_dp	 %read{101,104} %write{100,103} %derivs
+local	float	___408_l	 %read{102,102} %write{101,101} %derivs
+local	vector	___407_ripples	 %read{138,140} %write{105,105} %derivs
+local	vector	___407_octaves	 %read{149,233} %write{107,107}
+local	point	___407_pn	 %read{126,265} %write{111,130} %derivs
+local	float	___413_radius	 %read{327,416} %write{256,256}
+local	float	___414_x	 %read{476,564} %write{467,564}
+local	float	___414_y	 %read{476,564} %write{469,564}
+local	float	___414_z	 %read{476,564} %write{471,564}
+local	float	___414_time	 %read{476,564} %write{472,564}
+local	float	___414_timeRatio	 %read{557,557} %write{473,473}
+local	float	___414_amplitude	 %read{476,564} %write{474,564}
+local	float	___414_waveValue	 %read{476,569} %write{475,568}
+local	float	___414_i	 %read{476,564} %write{476,564}
+local	float	___416_noiseValue	 %read{476,564} %write{476,564}
+temp	float	$tmp1	 %read{6,6} %write{0,0}
+temp	float	$tmp2	 %read{54,59} %write{1,1}
+const	string	$const1	"transformP"		 %read{2,2} %write{2147483647,-1}
+const	point	$const2	0 0 0		 %read{3,14} %write{2147483647,-1}
+const	float	$const3	0		 %read{5,582} %write{2147483647,-1}
+temp	int	$tmp3	 %read{7,7} %write{6,6}
+temp	int	$tmp5	 %read{9,9} %write{8,8}
+const	string	$const4	"object"		 %read{11,13} %write{2147483647,-1}
+const	string	$const5	"transform"		 %read{10,18} %write{2147483647,-1}
+const	string	$const6	"common"		 %read{11,19} %write{2147483647,-1}
+temp	int	$tmp7	 %read{15,15} %write{14,14}
+const	string	$const7	"world"		 %read{17,19} %write{2147483647,-1}
+const	int	$const8	0		 %read{21,590} %write{2147483647,-1}
+temp	float	$tmp8	 %read{22,22} %write{21,21}
+const	int	$const9	1		 %read{22,551} %write{2147483647,-1}
+temp	int	$tmp9	 %read{23,23} %write{22,22}
+temp	int	$tmp10	 %read{24,29} %write{23,28}
+temp	float	$tmp11	 %read{26,26} %write{25,25}
+const	int	$const10	-1		 %read{26,360} %write{2147483647,-1}
+temp	int	$tmp12	 %read{27,27} %write{26,26}
+temp	int	$tmp13	 %read{28,28} %write{27,27}
+temp	int	$tmp14	 %read{30,35} %write{29,34}
+temp	float	$tmp15	 %read{32,32} %write{31,31}
+temp	int	$tmp16	 %read{33,33} %write{32,32}
+temp	int	$tmp17	 %read{34,34} %write{33,33}
+temp	int	$tmp18	 %read{36,41} %write{35,40}
+temp	float	$tmp19	 %read{38,38} %write{37,37}
+temp	int	$tmp20	 %read{39,39} %write{38,38}
+temp	int	$tmp21	 %read{40,40} %write{39,39}
+temp	int	$tmp22	 %read{42,47} %write{41,46}
+const	int	$const11	2		 %read{43,522} %write{2147483647,-1}
+temp	float	$tmp23	 %read{44,44} %write{43,43}
+temp	int	$tmp24	 %read{45,45} %write{44,44}
+temp	int	$tmp25	 %read{46,46} %write{45,45}
+temp	int	$tmp26	 %read{48,53} %write{47,52}
+temp	float	$tmp27	 %read{50,50} %write{49,49}
+temp	int	$tmp28	 %read{51,51} %write{50,50}
+temp	int	$tmp29	 %read{52,52} %write{51,51}
+temp	int	$tmp30	 %read{55,55} %write{54,54}
+const	float	$const12	1		 %read{57,581} %write{2147483647,-1}
+temp	int	$tmp31	 %read{60,60} %write{59,59}
+temp	int	$tmp32	 %read{61,65} %write{60,64}
+temp	int	$tmp33	 %read{63,63} %write{62,62}
+temp	int	$tmp34	 %read{64,64} %write{63,63}
+temp	float	$tmp35	 %read{94,94} %write{84,84}
+temp	float	$tmp36	 %read{84,84} %write{74,74}
+temp	float	$tmp37	 %read{69,69} %write{68,68}
+temp	float	$tmp38	 %read{67,67} %write{66,66}
+temp	float	$tmp39	 %read{68,68} %write{67,67}
+temp	float	$tmp40	 %read{74,74} %write{69,69}
+const	float	$const13	2		 %read{69,523} %write{2147483647,-1}
+temp	float	$tmp41	 %read{73,73} %write{72,72}
+temp	float	$tmp42	 %read{71,71} %write{70,70}
+temp	float	$tmp43	 %read{72,72} %write{71,71}
+temp	float	$tmp44	 %read{74,74} %write{73,73}
+temp	float	$tmp45	 %read{84,84} %write{83,83}
+temp	float	$tmp46	 %read{78,78} %write{77,77}
+temp	float	$tmp47	 %read{76,76} %write{75,75}
+temp	float	$tmp48	 %read{77,77} %write{76,76}
+temp	float	$tmp49	 %read{83,83} %write{78,78}
+temp	float	$tmp50	 %read{82,82} %write{81,81}
+temp	float	$tmp51	 %read{80,80} %write{79,79}
+temp	float	$tmp52	 %read{81,81} %write{80,80}
+temp	float	$tmp53	 %read{83,83} %write{82,82}
+temp	float	$tmp54	 %read{94,94} %write{93,93}
+temp	float	$tmp55	 %read{88,88} %write{87,87}
+temp	float	$tmp56	 %read{86,86} %write{85,85}
+temp	float	$tmp57	 %read{87,87} %write{86,86}
+temp	float	$tmp58	 %read{93,93} %write{88,88}
+temp	float	$tmp59	 %read{92,92} %write{91,91}
+temp	float	$tmp60	 %read{90,90} %write{89,89}
+temp	float	$tmp61	 %read{91,91} %write{90,90}
+temp	float	$tmp62	 %read{93,93} %write{92,92}
+temp	int	$tmp63	 %read{97,97} %write{96,96}
+temp	int	$tmp64	 %read{99,99} %write{98,98}
+temp	float	$tmp65	 %read{103,103} %write{102,102} %derivs
+const	vector	$const14	2 2 2		 %read{105,105} %write{2147483647,-1}
+temp	float	$tmp66	 %read{107,107} %write{106,106}
+temp	vector	$tmp67	 %read{110,110} %write{109,109} %derivs
+temp	point	$tmp68	 %read{109,109} %write{108,108} %derivs
+temp	vector	$tmp69	 %read{111,111} %write{110,110} %derivs
+temp	int	$tmp70	 %read{113,113} %write{112,112}
+temp	int	$tmp71	 %read{114,118} %write{113,117}
+const	int	$const15	3		 %read{115,431} %write{2147483647,-1}
+temp	int	$tmp72	 %read{116,116} %write{115,115}
+temp	int	$tmp73	 %read{117,117} %write{116,116}
+temp	int	$tmp74	 %read{119,123} %write{118,122}
+const	int	$const16	4		 %read{120,120} %write{2147483647,-1}
+temp	int	$tmp75	 %read{121,121} %write{120,120}
+temp	int	$tmp76	 %read{122,122} %write{121,121}
+temp	int	$tmp77	 %read{125,125} %write{124,124}
+temp	vector	$tmp78	 %read{130,130} %write{129,129} %derivs
+temp	float	$tmp79	 %read{128,128} %write{127,127} %derivs
+temp	point	$tmp80	 %read{127,127} %write{126,126} %derivs
+const	float	$const17	1.3		 %read{128,128} %write{2147483647,-1}
+temp	float	$tmp81	 %read{129,129} %write{128,128} %derivs
+temp	int	$tmp82	 %read{132,132} %write{131,131}
+temp	float	$tmp83	 %read{197,197} %write{196,196}
+const	string	$const18	"fTurbulence"		 %read{133,133} %write{2147483647,-1}
+temp	point	$tmp84	 %read{142,142} %write{141,141} %derivs
+temp	float	$tmp85	 %read{141,141} %write{138,138} %derivs
+temp	float	$tmp86	 %read{141,141} %write{139,139} %derivs
+temp	float	$tmp87	 %read{141,141} %write{140,140} %derivs
+temp	point	$tmp88	 %read{143,143} %write{142,142} %derivs
+temp	float	$tmp89	 %read{145,145} %write{144,144}
+temp	float	$tmp90	 %read{150,150} %write{149,149}
+temp	int	$tmp91	 %read{151,151} %write{150,150}
+temp	int	$tmp92	 %read{152,156} %write{151,155}
+temp	int	$tmp93	 %read{154,154} %write{153,153}
+temp	int	$tmp94	 %read{155,155} %write{154,154}
+temp	int	$tmp95	 %read{148,173} %write{148,173}
+temp	float	$tmp96	 %read{159,159} %write{158,158}
+temp	int	$tmp97	 %read{160,160} %write{159,159}
+temp	int	$tmp98	 %read{161,161} %write{160,160}
+temp	float	$tmp99	 %read{168,168} %write{167,167}
+temp	float	$tmp100	 %read{167,167} %write{166,166}
+temp	vector	$tmp101	 %read{164,164} %write{162,162}
+temp	float	$tmp102	 %read{164,164} %write{163,163}
+const	string	$const19	"uperlin"		 %read{163,528} %write{2147483647,-1}
+temp	vector	$tmp103	 %read{165,165} %write{164,164}
+temp	vector	$tmp104	 %read{166,166} %write{165,165}
+temp	float	$tmp105	 %read{169,169} %write{168,168}
+temp	int	$tmp106	 %read{175,175} %write{174,174}
+temp	int	$tmp107	 %read{176,181} %write{175,180}
+temp	float	$tmp108	 %read{178,178} %write{177,177}
+temp	int	$tmp109	 %read{179,179} %write{178,178}
+temp	int	$tmp110	 %read{180,180} %write{179,179}
+temp	float	$tmp111	 %read{183,183} %write{182,182}
+temp	float	$tmp112	 %read{185,185} %write{183,183}
+const	string	$const20	"clamp"		 %read{184,571} %write{2147483647,-1}
+temp	float	$tmp113	 %read{186,186} %write{185,185}
+temp	float	$tmp114	 %read{194,194} %write{187,187}
+temp	float	$tmp115	 %read{194,194} %write{193,193}
+temp	float	$tmp116	 %read{193,193} %write{192,192}
+temp	vector	$tmp117	 %read{190,190} %write{188,188}
+temp	float	$tmp118	 %read{190,190} %write{189,189}
+temp	vector	$tmp119	 %read{191,191} %write{190,190}
+temp	vector	$tmp120	 %read{192,192} %write{191,191}
+temp	float	$tmp121	 %read{195,195} %write{194,194}
+const	string	$const21	"fBm"		 %read{198,198} %write{2147483647,-1}
+temp	float	$tmp122	 %read{205,205} %write{204,204}
+temp	float	$tmp123	 %read{210,210} %write{209,209}
+temp	int	$tmp124	 %read{211,211} %write{210,210}
+temp	int	$tmp125	 %read{212,216} %write{211,215}
+temp	int	$tmp126	 %read{214,214} %write{213,213}
+temp	int	$tmp127	 %read{215,215} %write{214,214}
+temp	int	$tmp128	 %read{208,229} %write{208,229}
+temp	float	$tmp129	 %read{219,219} %write{218,218}
+temp	int	$tmp130	 %read{220,220} %write{219,219}
+temp	int	$tmp131	 %read{221,221} %write{220,220}
+temp	float	$tmp132	 %read{224,224} %write{223,223}
+temp	point	$tmp133	 %read{223,223} %write{222,222}
+temp	float	$tmp134	 %read{225,225} %write{224,224}
+temp	int	$tmp135	 %read{231,231} %write{230,230}
+temp	int	$tmp136	 %read{232,237} %write{231,236}
+temp	float	$tmp137	 %read{234,234} %write{233,233}
+temp	int	$tmp138	 %read{235,235} %write{234,234}
+temp	int	$tmp139	 %read{236,236} %write{235,235}
+temp	float	$tmp140	 %read{239,239} %write{238,238}
+temp	float	$tmp141	 %read{241,241} %write{239,239}
+temp	float	$tmp142	 %read{242,242} %write{241,241}
+temp	float	$tmp143	 %read{246,246} %write{243,243}
+temp	float	$tmp144	 %read{246,246} %write{245,245}
+temp	point	$tmp145	 %read{245,245} %write{244,244}
+temp	float	$tmp146	 %read{247,247} %write{246,246}
+const	float	$const22	0.5		 %read{248,568} %write{2147483647,-1}
+temp	float	$tmp147	 %read{249,249} %write{248,248}
+temp	int	$tmp148	 %read{251,251} %write{250,250}
+temp	float	$tmp149	 %read{254,254} %write{252,252}
+temp	float	$tmp150	 %read{254,254} %write{253,253}
+temp	float	$tmp151	 %read{255,255} %write{254,254}
+temp	float	$tmp152	 %read{256,256} %write{255,255}
+const	float	$const23	3		 %read{260,273} %write{2147483647,-1}
+temp	float	$tmp153	 %read{270,460} %write{257,460}
+temp	float	$tmp154	 %read{270,460} %write{258,460}
+const	string	$const24	"BillowNoise"		 %read{259,259} %write{2147483647,-1}
+temp	vector	$tmp155	 %read{265,265} %write{264,264}
+const	float	$const25	0.42500001		 %read{264,264} %write{2147483647,-1}
+const	float	$const26	0.60000002		 %read{264,264} %write{2147483647,-1}
+temp	float	$tmp156	 %read{264,264} %write{262,263}
+temp	int	$tmp157	 %read{261,261} %write{260,260}
+const	float	$const27	0.215		 %read{262,262} %write{2147483647,-1}
+temp	int	$tmp158	 %read{270,460} %write{270,460}
+temp	int	$tmp159	 %read{274,274} %write{273,273}
+temp	point	$tmp160	 %read{278,343} %write{275,343}
+temp	float	$tmp161	 %read{291,343} %write{276,343}
+const	string	$const28	"SuspendedParticles"		 %read{277,277} %write{2147483647,-1}
+temp	float	$tmp162	 %read{280,280} %write{279,279}
+temp	float	$tmp163	 %read{279,279} %write{278,278}
+temp	float	$tmp164	 %read{287,287} %write{280,280}
+temp	float	$tmp165	 %read{283,283} %write{282,282}
+temp	float	$tmp166	 %read{282,282} %write{281,281}
+temp	float	$tmp167	 %read{287,287} %write{283,283}
+temp	float	$tmp168	 %read{286,286} %write{285,285}
+temp	float	$tmp169	 %read{285,285} %write{284,284}
+temp	float	$tmp170	 %read{287,287} %write{286,286}
+const	float	$const29	9.9999996e+035		 %read{288,288} %write{2147483647,-1}
+temp	int	$tmp171	 %read{291,343} %write{291,343}
+temp	int	$tmp172	 %read{294,342} %write{294,342}
+temp	int	$tmp173	 %read{297,341} %write{297,341}
+temp	vector	$tmp174	 %read{304,304} %write{303,303}
+temp	float	$tmp175	 %read{303,303} %write{300,300}
+temp	float	$tmp176	 %read{303,303} %write{301,301}
+temp	float	$tmp177	 %read{303,303} %write{302,302}
+temp	int	$tmp178	 %read{306,306} %write{305,305}
+temp	point	$tmp179	 %read{323,323} %write{322,322}
+temp	float	$tmp180	 %read{308,308} %write{307,307}
+const	float	$const31	1000		 %read{307,368} %write{2147483647,-1}
+temp	float	$tmp181	 %read{311,311} %write{308,308}
+const	string	$const32	"animatedcellnoise"		 %read{309,370} %write{2147483647,-1}
+temp	float	$tmp182	 %read{311,311} %write{310,310}
+temp	float	$tmp183	 %read{314,314} %write{313,313}
+temp	float	$tmp184	 %read{318,318} %write{317,317}
+temp	float	$tmp185	 %read{317,317} %write{316,316}
+temp	vector	$tmp186	 %read{320,320} %write{319,319}
+temp	vector	$tmp187	 %read{321,321} %write{320,320}
+temp	vector	$tmp188	 %read{325,325} %write{324,324}
+temp	int	$tmp189	 %read{328,328} %write{327,327}
+temp	int	$tmp190	 %read{332,332} %write{331,331}
+temp	int	$tmp191	 %read{338,338} %write{337,337}
+temp	point	$tmp192	 %read{348,394} %write{345,394}
+temp	float	$tmp193	 %read{356,394} %write{346,394}
+const	string	$const33	"SuspendedParticles2d"		 %read{347,347} %write{2147483647,-1}
+temp	float	$tmp194	 %read{350,350} %write{349,349}
+temp	float	$tmp195	 %read{349,349} %write{348,348}
+temp	float	$tmp196	 %read{354,354} %write{350,350}
+temp	float	$tmp197	 %read{353,353} %write{352,352}
+temp	float	$tmp198	 %read{352,352} %write{351,351}
+temp	float	$tmp199	 %read{354,354} %write{353,353}
+temp	int	$tmp200	 %read{356,394} %write{356,394}
+temp	int	$tmp201	 %read{359,393} %write{359,393}
+temp	vector	$tmp202	 %read{365,365} %write{364,364}
+temp	float	$tmp203	 %read{364,364} %write{362,362}
+temp	float	$tmp204	 %read{364,364} %write{363,363}
+temp	int	$tmp205	 %read{367,367} %write{366,366}
+temp	point	$tmp206	 %read{384,384} %write{383,383}
+temp	float	$tmp207	 %read{369,369} %write{368,368}
+temp	float	$tmp208	 %read{372,372} %write{369,369}
+temp	float	$tmp209	 %read{372,372} %write{371,371}
+temp	float	$tmp210	 %read{375,375} %write{374,374}
+temp	float	$tmp211	 %read{379,379} %write{378,378}
+temp	float	$tmp212	 %read{378,378} %write{377,377}
+temp	vector	$tmp213	 %read{381,381} %write{380,380}
+temp	vector	$tmp214	 %read{382,382} %write{381,381}
+temp	int	$tmp215	 %read{390,390} %write{389,389}
+temp	int	$tmp216	 %read{397,397} %write{396,396}
+temp	int	$tmp217	 %read{398,456} %write{398,456}
+temp	int	$tmp218	 %read{403,403} %write{402,402}
+temp	float	$tmp219	 %read{411,411} %write{410,410}
+temp	float	$tmp220	 %read{406,406} %write{405,405}
+temp	point	$tmp221	 %read{405,405} %write{404,404}
+const	float	$const34	0.75		 %read{406,406} %write{2147483647,-1}
+temp	float	$tmp222	 %read{407,407} %write{406,406}
+const	float	$const35	0.25		 %read{407,428} %write{2147483647,-1}
+temp	float	$tmp223	 %read{409,409} %write{407,407}
+temp	float	$tmp224	 %read{410,410} %write{409,409}
+temp	float	$tmp225	 %read{412,412} %write{411,411}
+temp	float	$tmp226	 %read{413,413} %write{412,412}
+temp	point	$tmp227	 %read{418,418} %write{414,414}
+temp	point	$tmp228	 %read{418,418} %write{415,415}
+temp	float	$tmp229	 %read{422,426} %write{416,416}
+const	string	$const36	"ParticleDensity"		 %read{417,417} %write{2147483647,-1}
+temp	int	$tmp230	 %read{421,421} %write{420,420}
+temp	int	$tmp231	 %read{424,424} %write{423,423}
+const	string	$const37	"bias"		 %read{427,427} %write{2147483647,-1}
+temp	float	$tmp232	 %read{429,429} %write{428,428}
+const	float	$const38	-0.69314718		 %read{429,429} %write{2147483647,-1}
+temp	float	$tmp233	 %read{430,430} %write{429,429}
+temp	int	$tmp234	 %read{432,432} %write{431,431}
+temp	float	$tmp235	 %read{435,435} %write{433,433}
+temp	float	$tmp236	 %read{436,436} %write{435,435}
+temp	float	$tmp237	 %read{438,438} %write{437,437}
+const	float	$const39	0.1		 %read{437,437} %write{2147483647,-1}
+temp	float	$tmp238	 %read{439,439} %write{438,438}
+temp	int	$tmp239	 %read{442,442} %write{441,441}
+temp	float	$tmp240	 %read{446,446} %write{445,445}
+temp	point	$tmp241	 %read{444,444} %write{443,443}
+const	vector	$const40	1 7 1023		 %read{444,444} %write{2147483647,-1}
+temp	point	$tmp243	 %read{445,445} %write{444,444}
+temp	float	$tmp244	 %read{447,447} %write{446,446}
+temp	float	$tmp245	 %read{448,448} %write{447,447}
+temp	float	$tmp246	 %read{450,450} %write{449,449}
+temp	float	$tmp247	 %read{453,453} %write{452,452}
+temp	float	$tmp248	 %read{455,455} %write{454,454}
+temp	float	$tmp249	 %read{462,462} %write{461,461}
+temp	int	$tmp250	 %read{465,465} %write{464,464}
+temp	float	$tmp251	 %read{467,467} %write{466,466}
+temp	float	$tmp252	 %read{469,469} %write{468,468}
+temp	float	$tmp253	 %read{471,471} %write{470,470}
+temp	int	$tmp254	 %read{476,564} %write{476,564}
+temp	float	$tmp255	 %read{495,552} %write{479,551}
+const	string	$const41	"cos_waves3"		 %read{480,480} %write{2147483647,-1}
+temp	float	$tmp256	 %read{482,482} %write{481,481}
+const	float	$const42	3.1415927		 %read{482,545} %write{2147483647,-1}
+temp	float	$tmp257	 %read{484,484} %write{483,483}
+temp	float	$tmp258	 %read{486,486} %write{485,485}
+temp	float	$tmp259	 %read{488,488} %write{487,487}
+temp	int	$tmp260	 %read{495,551} %write{495,551}
+temp	float	$tmp261	 %read{504,504} %write{503,503}
+temp	float	$tmp262	 %read{501,501} %write{500,500}
+temp	float	$tmp263	 %read{500,500} %write{499,499}
+temp	float	$tmp264	 %read{502,502} %write{501,501}
+temp	float	$tmp265	 %read{503,503} %write{502,502}
+const	float	$const44	123		 %read{502,513} %write{2147483647,-1}
+temp	float	$tmp266	 %read{509,509} %write{508,508}
+temp	float	$tmp267	 %read{507,507} %write{506,506}
+temp	float	$tmp268	 %read{506,506} %write{505,505}
+temp	float	$tmp269	 %read{508,508} %write{507,507}
+temp	float	$tmp270	 %read{515,515} %write{514,514}
+temp	float	$tmp271	 %read{512,512} %write{511,511}
+temp	float	$tmp272	 %read{511,511} %write{510,510}
+temp	float	$tmp273	 %read{513,513} %write{512,512}
+temp	float	$tmp274	 %read{514,514} %write{513,513}
+temp	float	$tmp275	 %read{517,517} %write{516,516}
+temp	float	$tmp276	 %read{518,518} %write{517,517}
+temp	float	$tmp277	 %read{520,520} %write{519,519}
+temp	float	$tmp278	 %read{521,521} %write{520,520}
+temp	float	$tmp279	 %read{523,523} %write{522,522}
+temp	float	$tmp280	 %read{524,524} %write{523,523}
+temp	float	$tmp281	 %read{526,526} %write{525,525}
+const	float	$const46	50		 %read{525,525} %write{2147483647,-1}
+temp	float	$tmp282	 %read{527,527} %write{526,526}
+temp	float	$tmp283	 %read{528,528} %write{527,527}
+temp	float	$tmp284	 %read{531,531} %write{529,529}
+temp	float	$tmp285	 %read{531,531} %write{530,530}
+temp	float	$tmp286	 %read{533,533} %write{531,531}
+temp	float	$tmp287	 %read{533,533} %write{532,532}
+temp	float	$tmp288	 %read{534,534} %write{533,533}
+const	float	$const47	1e-006		 %read{535,535} %write{2147483647,-1}
+temp	int	$tmp289	 %read{536,536} %write{535,535}
+temp	float	$tmp290	 %read{550,550} %write{549,549}
+temp	float	$tmp291	 %read{542,542} %write{540,540}
+temp	float	$tmp292	 %read{542,542} %write{541,541}
+temp	float	$tmp293	 %read{544,544} %write{542,542}
+temp	float	$tmp294	 %read{544,544} %write{543,543}
+temp	float	$tmp295	 %read{545,545} %write{544,544}
+temp	float	$tmp296	 %read{547,547} %write{545,545}
+temp	float	$tmp297	 %read{547,547} %write{546,546}
+const	float	$const49	6		 %read{546,546} %write{2147483647,-1}
+temp	float	$tmp298	 %read{548,548} %write{547,547}
+temp	float	$tmp299	 %read{549,549} %write{548,548}
+temp	int	$tmp300	 %read{559,559} %write{558,558}
+temp	float	$tmp301	 %read{562,562} %write{561,561}
+temp	int	$tmp302	 %read{566,566} %write{565,565}
+temp	float	$tmp303	 %read{568,568} %write{567,567}
+temp	float	$tmp304	 %read{573,573} %write{572,572}
+temp	float	$tmp305	 %read{582,582} %write{575,575}
+temp	float	$tmp306	 %read{578,578} %write{576,576}
+const	string	$const50	"colorBalance"		 %read{577,577} %write{2147483647,-1}
+temp	int	$tmp307	 %read{579,579} %write{578,578}
+temp	int	$tmp308	 %read{583,583} %write{582,582}
+code ___main___
+	assign		$tmp1 i_local 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_volumeNoise.osl"} %line{88} %argrw{"wr"}
+	assign		$tmp2 i_wrap 	%argrw{"wr"}
+	functioncall	$const1 96 	%argrw{"r"}
+	assign		___307_Pref $const2 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{32} %argrw{"wr"}
+	assign		___307_pp $const2 	%line{33} %argrw{"wr"}
+	assign		edgeDist $const3 	%line{35} %argrw{"wr"}
+	neq		$tmp3 $tmp1 $const3 	%line{37} %argrw{"wrr"}
+	if		$tmp3 14 20 	%argrw{"r"}
+	eq		$tmp5 ___307_Pref $const2 	%line{39} %argrw{"wrr"}
+	if		$tmp5 12 14 	%argrw{"r"}
+	functioncall	$const5 12 	%line{40} %argrw{"r"}
+	transform	___307_pp $const6 $const4 P 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{240} %argrw{"wrrr"}
+	functioncall	$const5 14 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{42} %argrw{"r"}
+	transform	___307_pp $const6 $const4 ___307_Pref 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{240} %argrw{"wrrr"}
+	eq		$tmp7 ___307_Pref $const2 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{46} %argrw{"wrr"}
+	if		$tmp7 18 20 	%argrw{"r"}
+	functioncall	$const5 18 	%line{47} %argrw{"r"}
+	transform	___307_pp $const6 $const7 P 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{240} %argrw{"wrrr"}
+	functioncall	$const5 20 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{49} %argrw{"r"}
+	transform	___307_pp $const6 $const7 ___307_Pref 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{240} %argrw{"wrrr"}
+	transform	___307_pq i_placementMatrix ___307_pp 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\texture3d.h"} %line{52} %argrw{"wrr"}
+	compref		$tmp8 ___307_pq $const8 	%line{54} %argrw{"wrr"}
+	gt		$tmp9 $tmp8 $const9 	%argrw{"wrr"}
+	neq		$tmp10 $tmp9 $const8 	%argrw{"wrr"}
+	if		$tmp10 25 29 	%line{55} %argrw{"r"}
+	compref		$tmp11 ___307_pq $const8 	%argrw{"wrr"}
+	lt		$tmp12 $tmp11 $const10 	%argrw{"wrr"}
+	neq		$tmp13 $tmp12 $const8 	%argrw{"wrr"}
+	assign		$tmp10 $tmp13 	%argrw{"wr"}
+	neq		$tmp14 $tmp10 $const8 	%argrw{"wrr"}
+	if		$tmp14 31 35 	%line{56} %argrw{"r"}
+	compref		$tmp15 ___307_pq $const9 	%argrw{"wrr"}
+	gt		$tmp16 $tmp15 $const9 	%argrw{"wrr"}
+	neq		$tmp17 $tmp16 $const8 	%argrw{"wrr"}
+	assign		$tmp14 $tmp17 	%argrw{"wr"}
+	neq		$tmp18 $tmp14 $const8 	%argrw{"wrr"}
+	if		$tmp18 37 41 	%line{57} %argrw{"r"}
+	compref		$tmp19 ___307_pq $const9 	%argrw{"wrr"}
+	lt		$tmp20 $tmp19 $const10 	%argrw{"wrr"}
+	neq		$tmp21 $tmp20 $const8 	%argrw{"wrr"}
+	assign		$tmp18 $tmp21 	%argrw{"wr"}
+	neq		$tmp22 $tmp18 $const8 	%argrw{"wrr"}
+	if		$tmp22 43 47 	%line{58} %argrw{"r"}
+	compref		$tmp23 ___307_pq $const11 	%argrw{"wrr"}
+	gt		$tmp24 $tmp23 $const9 	%argrw{"wrr"}
+	neq		$tmp25 $tmp24 $const8 	%argrw{"wrr"}
+	assign		$tmp22 $tmp25 	%argrw{"wr"}
+	neq		$tmp26 $tmp22 $const8 	%argrw{"wrr"}
+	if		$tmp26 49 53 	%line{59} %argrw{"r"}
+	compref		$tmp27 ___307_pq $const11 	%argrw{"wrr"}
+	lt		$tmp28 $tmp27 $const10 	%argrw{"wrr"}
+	neq		$tmp29 $tmp28 $const8 	%argrw{"wrr"}
+	assign		$tmp26 $tmp29 	%argrw{"wr"}
+	if		$tmp26 58 95 	%line{54} %argrw{"r"}
+	neq		$tmp30 $tmp2 $const3 	%line{61} %argrw{"wrr"}
+	if		$tmp30 57 58 	%argrw{"r"}
+	assign		outside $const3 	%line{63} %argrw{"wr"}
+	assign		outside $const12 	%line{67} %argrw{"wr"}
+	assign		outside $const3 	%line{72} %argrw{"wr"}
+	eq		$tmp31 $tmp2 $const3 	%line{74} %argrw{"wrr"}
+	neq		$tmp32 $tmp31 $const8 	%argrw{"wrr"}
+	if		$tmp32 65 65 	%argrw{"r"}
+	gt		$tmp33 i_blend $const3 	%argrw{"wrr"}
+	neq		$tmp34 $tmp33 $const8 	%argrw{"wrr"}
+	assign		$tmp32 $tmp34 	%argrw{"wr"}
+	if		$tmp32 95 95 	%argrw{"r"}
+	compref		$tmp38 ___307_pq $const8 	%line{78} %argrw{"wrr"}
+	add		$tmp39 $tmp38 $const12 	%argrw{"wrr"}
+	abs		$tmp37 $tmp39 	%argrw{"wr"}
+	div		$tmp40 $tmp37 $const13 	%argrw{"wrr"}
+	compref		$tmp42 ___307_pq $const8 	%argrw{"wrr"}
+	sub		$tmp43 $tmp42 $const12 	%argrw{"wrr"}
+	abs		$tmp41 $tmp43 	%argrw{"wr"}
+	div		$tmp44 $tmp41 $const13 	%argrw{"wrr"}
+	min		$tmp36 $tmp40 $tmp44 	%argrw{"wrr"}
+	compref		$tmp47 ___307_pq $const9 	%line{79} %argrw{"wrr"}
+	add		$tmp48 $tmp47 $const12 	%argrw{"wrr"}
+	abs		$tmp46 $tmp48 	%argrw{"wr"}
+	div		$tmp49 $tmp46 $const13 	%argrw{"wrr"}
+	compref		$tmp51 ___307_pq $const9 	%argrw{"wrr"}
+	sub		$tmp52 $tmp51 $const12 	%argrw{"wrr"}
+	abs		$tmp50 $tmp52 	%argrw{"wr"}
+	div		$tmp53 $tmp50 $const13 	%argrw{"wrr"}
+	min		$tmp45 $tmp49 $tmp53 	%argrw{"wrr"}
+	min		$tmp35 $tmp36 $tmp45 	%argrw{"wrr"}
+	compref		$tmp56 ___307_pq $const11 	%line{80} %argrw{"wrr"}
+	add		$tmp57 $tmp56 $const12 	%argrw{"wrr"}
+	abs		$tmp55 $tmp57 	%argrw{"wr"}
+	div		$tmp58 $tmp55 $const13 	%argrw{"wrr"}
+	compref		$tmp60 ___307_pq $const11 	%argrw{"wrr"}
+	sub		$tmp61 $tmp60 $const12 	%argrw{"wrr"}
+	abs		$tmp59 $tmp61 	%argrw{"wr"}
+	div		$tmp62 $tmp59 $const13 	%argrw{"wrr"}
+	min		$tmp54 $tmp58 $tmp62 	%argrw{"wrr"}
+	min		edgeDist $tmp35 $tmp54 	%argrw{"wrr"}
+	assign		pp ___307_pq 	%line{84} %argrw{"wr"}
+	lt		$tmp63 outside $const9 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_volumeNoise.osl"} %line{90} %argrw{"wrr"}
+	if		$tmp63 589 591 	%argrw{"r"}
+	neq		$tmp64 i_implode $const8 	%line{93} %argrw{"wrr"}
+	if		$tmp64 105 105 	%argrw{"r"}
+	sub		___408_dp pp i_implodeCenter 	%line{95} %argrw{"wrr"}
+	length		___408_l ___408_dp 	%line{96} %argrw{"wr"}
+	pow		$tmp65 ___408_l i_implode 	%line{97} %argrw{"wrr"}
+	div		___408_dp ___408_dp $tmp65 	%argrw{"wrr"}
+	add		pp ___408_dp i_implodeCenter 	%line{98} %argrw{"wrr"}
+	assign		___407_ripples $const14 	%line{101} %argrw{"wr"}
+	assign		$tmp66 i_depthMax 	%line{102} %argrw{"wr"}
+	vector		___407_octaves $const12 $tmp66 $const3 	%argrw{"wrrr"}
+	div		$tmp68 pp i_scale 	%line{104} %argrw{"wrr"}
+	assign		$tmp67 $tmp68 	%argrw{"wr"}
+	mul		$tmp69 $tmp67 i_frequency 	%argrw{"wrr"}
+	add		___407_pn $tmp69 i_origin 	%argrw{"wrr"}
+	eq		$tmp70 i_noiseType $const8 	%line{106} %argrw{"wrr"}
+	neq		$tmp71 $tmp70 $const8 	%argrw{"wrr"}
+	if		$tmp71 115 118 	%argrw{"r"}
+	eq		$tmp72 i_noiseType $const15 	%argrw{"wrr"}
+	neq		$tmp73 $tmp72 $const8 	%argrw{"wrr"}
+	assign		$tmp71 $tmp73 	%argrw{"wr"}
+	neq		$tmp74 $tmp71 $const8 	%argrw{"wrr"}
+	if		$tmp74 120 123 	%argrw{"r"}
+	eq		$tmp75 i_noiseType $const16 	%argrw{"wrr"}
+	neq		$tmp76 $tmp75 $const8 	%argrw{"wrr"}
+	assign		$tmp74 $tmp76 	%argrw{"wr"}
+	if		$tmp74 250 570 	%argrw{"r"}
+	eq		$tmp77 i_noiseType $const15 	%line{110} %argrw{"wrr"}
+	if		$tmp77 131 131 	%argrw{"r"}
+	div		$tmp80 ___407_pn $const13 	%line{113} %argrw{"wrr"}
+	noise		$tmp79 $tmp80 	%argrw{"wr"}
+	mul		$tmp81 $tmp79 $const17 	%argrw{"wrr"}
+	assign		$tmp78 $tmp81 	%argrw{"wr"}
+	add		___407_pn ___407_pn $tmp78 	%argrw{"wrr"}
+	gt		$tmp82 i_inflection $const8 	%line{116} %argrw{"wrr"}
+	if		$tmp82 198 250 	%argrw{"r"}
+	functioncall	$const18 197 	%line{119} %argrw{"r"}
+	assign		___362_i $const8 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\noise_utils.h"} %line{160} %argrw{"wr"}
+	assign		___362_lacunarity $const12 	%line{161} %argrw{"wr"}
+	assign		___362_mix $const8 	%line{162} %argrw{"wr"}
+	assign		___362_amp $const9 	%line{163} %argrw{"wr"}
+	compref		$tmp85 ___407_ripples $const8 	%line{164} %argrw{"wrr"}
+	compref		$tmp86 ___407_ripples $const9 	%argrw{"wrr"}
+	compref		$tmp87 ___407_ripples $const11 	%argrw{"wrr"}
+	point		$tmp84 $tmp85 $tmp86 $tmp87 	%argrw{"wrrr"}
+	mul		$tmp88 ___407_pn $tmp84 	%argrw{"wrr"}
+	div		___362_pp $tmp88 $const13 	%argrw{"wrr"}
+	area		$tmp89 ___362_pp 	%line{166} %argrw{"wr"} %argderivs{1}
+	sqrt		___362_M_PIxel_size $tmp89 	%argrw{"wr"}
+	mul		___362_nyquist $const13 ___362_M_PIxel_size 	%line{167} %argrw{"wrr"}
+	assign		___362_M_PIxel $const12 	%line{168} %argrw{"wr"}
+	while		$tmp95 149 162 174 174 	%line{170} %argrw{"r"}
+	compref		$tmp90 ___407_octaves $const9 	%argrw{"wrr"}
+	lt		$tmp91 ___362_i $tmp90 	%argrw{"wrr"}
+	neq		$tmp92 $tmp91 $const8 	%argrw{"wrr"}
+	if		$tmp92 156 156 	%argrw{"r"}
+	gt		$tmp93 ___362_M_PIxel ___362_nyquist 	%argrw{"wrr"}
+	neq		$tmp94 $tmp93 $const8 	%argrw{"wrr"}
+	assign		$tmp92 $tmp94 	%argrw{"wr"}
+	neq		$tmp95 $tmp92 $const8 	%argrw{"wrr"}
+	if		$tmp95 158 162 	%argrw{"r"}
+	compref		$tmp96 ___407_octaves $const8 	%argrw{"wrr"}
+	lt		$tmp97 ___362_i $tmp96 	%argrw{"wrr"}
+	neq		$tmp98 $tmp97 $const8 	%argrw{"wrr"}
+	assign		$tmp95 $tmp98 	%argrw{"wr"}
+	assign		$tmp101 ___362_pp 	%line{172} %argrw{"wr"}
+	noise		$tmp102 $const19 ___362_lacunarity 	%argrw{"wrr"}
+	add		$tmp103 $tmp101 $tmp102 	%argrw{"wrr"}
+	mul		$tmp104 $tmp103 ___362_lacunarity 	%argrw{"wrr"}
+	snoise		$tmp100 $tmp104 i_time 	%argrw{"wrr"}
+	abs		$tmp99 $tmp100 	%argrw{"wr"}
+	mul		$tmp105 ___362_amp $tmp99 	%argrw{"wrr"}
+	add		___362_mix ___362_mix $tmp105 	%argrw{"wrr"}
+	mul		___362_lacunarity ___362_lacunarity i_frequencyRatio 	%line{173} %argrw{"wrr"}
+	mul		___362_amp ___362_amp i_ratio 	%line{174} %argrw{"wrr"}
+	div		___362_M_PIxel ___362_M_PIxel i_frequencyRatio 	%line{175} %argrw{"wrr"}
+	add		___362_i ___362_i $const12 	%line{177} %argrw{"wrr"}
+	gt		$tmp106 ___362_M_PIxel ___362_M_PIxel_size 	%line{180} %argrw{"wrr"}
+	neq		$tmp107 $tmp106 $const8 	%argrw{"wrr"}
+	if		$tmp107 181 181 	%argrw{"r"}
+	compref		$tmp108 ___407_octaves $const9 	%argrw{"wrr"}
+	le		$tmp109 ___362_i $tmp108 	%argrw{"wrr"}
+	neq		$tmp110 $tmp109 $const8 	%argrw{"wrr"}
+	assign		$tmp107 $tmp110 	%argrw{"wr"}
+	if		$tmp107 196 196 	%argrw{"r"}
+	div		$tmp111 ___362_M_PIxel ___362_M_PIxel_size 	%line{182} %argrw{"wrr"}
+	sub		$tmp112 $tmp111 $const12 	%argrw{"wrr"}
+	functioncall	$const20 187 	%argrw{"r"}
+	min		$tmp113 $tmp112 $const12 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{142} %argrw{"wrr"}
+	max		___364_weight $tmp113 $const3 	%argrw{"wrr"}
+	mul		$tmp114 ___364_weight ___362_amp 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\noise_utils.h"} %line{183} %argrw{"wrr"}
+	assign		$tmp117 ___362_pp 	%line{184} %argrw{"wr"}
+	noise		$tmp118 $const19 ___362_lacunarity 	%argrw{"wrr"}
+	add		$tmp119 $tmp117 $tmp118 	%argrw{"wrr"}
+	mul		$tmp120 $tmp119 ___362_lacunarity 	%argrw{"wrr"}
+	snoise		$tmp116 $tmp120 i_time 	%argrw{"wrr"}
+	abs		$tmp115 $tmp116 	%argrw{"wr"}
+	mul		$tmp121 $tmp114 $tmp115 	%argrw{"wrr"}
+	add		___362_mix ___362_mix $tmp121 	%argrw{"wrr"}
+	assign		$tmp83 ___362_mix 	%line{187} %argrw{"wr"}
+	mul		o_outAlpha i_amplitude $tmp83 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_volumeNoise.osl"} %line{119} %argrw{"wrr"}
+	functioncall	$const21 250 	%line{122} %argrw{"r"}
+	assign		___356_amp i_amplitude 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\noise_utils.h"} %line{83} %argrw{"wr"}
+	assign		___356_pp ___407_pn 	%line{84} %argrw{"wr"}
+	assign		___356_sum $const8 	%line{85} %argrw{"wr"}
+	assign		___356_i $const8 	%line{86} %argrw{"wr"}
+	assign		___356_lacunarity $const12 	%line{88} %argrw{"wr"}
+	area		$tmp122 ___356_pp 	%line{90} %argrw{"wr"} %argderivs{1}
+	sqrt		___356_M_PIxel_size $tmp122 	%argrw{"wr"}
+	mul		___356_nyquist $const13 ___356_M_PIxel_size 	%line{91} %argrw{"wrr"}
+	assign		___356_M_PIxel $const12 	%line{92} %argrw{"wr"}
+	while		$tmp128 209 222 230 230 	%line{94} %argrw{"r"}
+	compref		$tmp123 ___407_octaves $const9 	%argrw{"wrr"}
+	lt		$tmp124 ___356_i $tmp123 	%argrw{"wrr"}
+	neq		$tmp125 $tmp124 $const8 	%argrw{"wrr"}
+	if		$tmp125 216 216 	%argrw{"r"}
+	gt		$tmp126 ___356_M_PIxel ___356_nyquist 	%argrw{"wrr"}
+	neq		$tmp127 $tmp126 $const8 	%argrw{"wrr"}
+	assign		$tmp125 $tmp127 	%argrw{"wr"}
+	neq		$tmp128 $tmp125 $const8 	%argrw{"wrr"}
+	if		$tmp128 218 222 	%argrw{"r"}
+	compref		$tmp129 ___407_octaves $const8 	%argrw{"wrr"}
+	lt		$tmp130 ___356_i $tmp129 	%argrw{"wrr"}
+	neq		$tmp131 $tmp130 $const8 	%argrw{"wrr"}
+	assign		$tmp128 $tmp131 	%argrw{"wr"}
+	mul		$tmp133 ___356_pp ___356_lacunarity 	%line{96} %argrw{"wrr"}
+	snoise		$tmp132 $tmp133 i_time 	%argrw{"wrr"}
+	mul		$tmp134 ___356_amp $tmp132 	%argrw{"wrr"}
+	add		___356_sum ___356_sum $tmp134 	%argrw{"wrr"}
+	mul		___356_amp ___356_amp i_ratio 	%line{97} %argrw{"wrr"}
+	mul		___356_lacunarity ___356_lacunarity i_frequencyRatio 	%line{98} %argrw{"wrr"}
+	div		___356_M_PIxel ___356_M_PIxel i_frequencyRatio 	%line{99} %argrw{"wrr"}
+	add		___356_i ___356_i $const12 	%line{101} %argrw{"wrr"}
+	gt		$tmp135 ___356_M_PIxel ___356_M_PIxel_size 	%line{104} %argrw{"wrr"}
+	neq		$tmp136 $tmp135 $const8 	%argrw{"wrr"}
+	if		$tmp136 237 237 	%argrw{"r"}
+	compref		$tmp137 ___407_octaves $const9 	%argrw{"wrr"}
+	le		$tmp138 ___356_i $tmp137 	%argrw{"wrr"}
+	neq		$tmp139 $tmp138 $const8 	%argrw{"wrr"}
+	assign		$tmp136 $tmp139 	%argrw{"wr"}
+	if		$tmp136 248 248 	%argrw{"r"}
+	div		$tmp140 ___356_M_PIxel ___356_M_PIxel_size 	%line{106} %argrw{"wrr"}
+	sub		$tmp141 $tmp140 $const12 	%argrw{"wrr"}
+	functioncall	$const20 243 	%argrw{"r"}
+	min		$tmp142 $tmp141 $const12 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{142} %argrw{"wrr"}
+	max		___358_weight $tmp142 $const3 	%argrw{"wrr"}
+	mul		$tmp143 ___358_weight ___356_amp 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\noise_utils.h"} %line{107} %argrw{"wrr"}
+	mul		$tmp145 ___356_pp ___356_lacunarity 	%argrw{"wrr"}
+	snoise		$tmp144 $tmp145 i_time 	%argrw{"wrr"}
+	mul		$tmp146 $tmp143 $tmp144 	%argrw{"wrr"}
+	add		___356_sum ___356_sum $tmp146 	%argrw{"wrr"}
+	mul		$tmp147 ___356_sum $const22 	%line{110} %argrw{"wrr"}
+	add		o_outAlpha $tmp147 $const22 	%argrw{"wrr"}
+	eq		$tmp148 i_noiseType $const9 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_volumeNoise.osl"} %line{125} %argrw{"wrr"}
+	if		$tmp148 464 570 	%argrw{"r"}
+	mul		$tmp149 $const22 $const22 	%line{128} %argrw{"wrr"}
+	mul		$tmp150 $const22 $const22 	%argrw{"wrr"}
+	add		$tmp151 $tmp149 $tmp150 	%argrw{"wrr"}
+	mul		$tmp152 $tmp151 i_density 	%argrw{"wrr"}
+	sqrt		___413_radius $tmp152 	%argrw{"wr"}
+	assign		$tmp153 i_falloff 	%line{133} %argrw{"wr"}
+	assign		$tmp154 i_depthMax 	%argrw{"wr"}
+	functioncall	$const24 464 	%argrw{"r"}
+	eq		$tmp157 $const23 $const15 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\noise_utils.h"} %line{382} %argrw{"wrr"}
+	if		$tmp157 263 264 	%argrw{"r"}
+	assign		$tmp156 $const27 	%argrw{"wr"}
+	assign		$tmp156 $const8 	%argrw{"wr"}
+	vector		$tmp155 $const25 $const26 $tmp156 	%argrw{"wrrr"}
+	add		___389_pp ___407_pn $tmp155 	%argrw{"wrr"}
+	assign		___389_lacunarity $const9 	%line{385} %argrw{"wr"}
+	assign		___389_sum $const8 	%line{391} %argrw{"wr"}
+	assign		___389_amp $const9 	%line{392} %argrw{"wr"}
+	assign		___389_ampSum $const8 	%line{393} %argrw{"wr"}
+	for		$tmp158 272 273 460 461 	%line{395} %argrw{"r"}
+	assign		___389_i $const8 	%argrw{"wr"}
+	lt		$tmp158 ___389_i $tmp154 	%argrw{"wrr"}
+	eq		$tmp159 $const23 $const15 	%line{397} %argrw{"wrr"}
+	if		$tmp159 345 396 	%argrw{"r"}
+	mul		$tmp160 ___389_pp ___389_lacunarity 	%line{400} %argrw{"wrr"}
+	assign		$tmp161 ___389_i 	%line{401} %argrw{"wr"}
+	functioncall	$const28 345 	%argrw{"r"}
+	compref		$tmp163 $tmp160 $const8 	%line{241} %argrw{"wrr"}
+	floor		$tmp162 $tmp163 	%argrw{"wr"}
+	add		$tmp164 $tmp162 $const22 	%argrw{"wrr"}
+	compref		$tmp166 $tmp160 $const9 	%line{242} %argrw{"wrr"}
+	floor		$tmp165 $tmp166 	%argrw{"wr"}
+	add		$tmp167 $tmp165 $const22 	%argrw{"wrr"}
+	compref		$tmp169 $tmp160 $const11 	%line{243} %argrw{"wrr"}
+	floor		$tmp168 $tmp169 	%argrw{"wr"}
+	add		$tmp170 $tmp168 $const22 	%argrw{"wrr"}
+	point		___366_thiscell $tmp164 $tmp167 $tmp170 	%argrw{"wrrr"}
+	assign		___389_f2 $const29 	%line{245} %argrw{"wr"}
+	assign		___389_f1 ___389_f2 	%argrw{"wr"}
+	assign		___366_curr_particle $const8 	%line{248} %argrw{"wr"}
+	for		$tmp171 293 294 343 344 	%line{249} %argrw{"r"}
+	assign		___366_i $const10 	%argrw{"wr"}
+	le		$tmp171 ___366_i $const9 	%argrw{"wrr"}
+	for		$tmp172 296 297 342 343 	%line{251} %argrw{"r"}
+	assign		___366_j $const10 	%argrw{"wr"}
+	le		$tmp172 ___366_j $const9 	%argrw{"wrr"}
+	for		$tmp173 299 300 341 342 	%line{253} %argrw{"r"}
+	assign		___366_k $const10 	%argrw{"wr"}
+	le		$tmp173 ___366_k $const9 	%argrw{"wrr"}
+	assign		$tmp175 ___366_i 	%line{255} %argrw{"wr"}
+	assign		$tmp176 ___366_j 	%argrw{"wr"}
+	assign		$tmp177 ___366_k 	%argrw{"wr"}
+	vector		$tmp174 $tmp175 $tmp176 $tmp177 	%argrw{"wrrr"}
+	add		___372_testcell ___366_thiscell $tmp174 	%argrw{"wrr"}
+	gt		$tmp178 i_randomness $const8 	%line{256} %argrw{"wrr"}
+	if		$tmp178 326 326 	%argrw{"r"}
+	mul		$tmp180 $const31 $tmp161 	%line{259} %argrw{"wrr"}
+	add		$tmp181 i_time $tmp180 	%argrw{"wrr"}
+	functioncall	$const32 323 	%argrw{"r"}
+	cellnoise	$tmp182 ___372_testcell 	%line{202} %argrw{"wr"}
+	add		___365_t $tmp182 $tmp181 	%argrw{"wrr"}
+	floor		___365_tbase ___365_t 	%line{204} %argrw{"wr"}
+	cellnoise	$tmp183 ___372_testcell ___365_tbase 	%line{206} %argrw{"wrr"}
+	assign		___365_n1 $tmp183 	%argrw{"wr"}
+	sub		___365_d ___365_t ___365_tbase 	%line{207} %argrw{"wrr"}
+	add		$tmp185 ___365_tbase $const12 	%line{208} %argrw{"wrr"}
+	cellnoise	$tmp184 ___372_testcell $tmp185 	%argrw{"wrr"}
+	assign		___365_n2 $tmp184 	%argrw{"wr"}
+	sub		$tmp186 ___365_n2 ___365_n1 	%line{209} %argrw{"wrr"}
+	mul		$tmp187 ___365_d $tmp186 	%argrw{"wrr"}
+	add		___365_n1 ___365_n1 $tmp187 	%argrw{"wrr"}
+	assign		$tmp179 ___365_n1 	%line{211} %argrw{"wr"}
+	sub		___373_jit $tmp179 $const22 	%line{259} %argrw{"wrr"}
+	mul		$tmp188 i_randomness ___373_jit 	%line{260} %argrw{"wrr"}
+	add		___372_testcell ___372_testcell $tmp188 	%argrw{"wrr"}
+	distance	___372_dist ___372_testcell $tmp160 	%line{262} %argrw{"wrr"}
+	lt		$tmp189 ___372_dist ___413_radius 	%line{263} %argrw{"wrr"}
+	if		$tmp189 341 341 	%argrw{"r"}
+	aassign		___389_particles ___366_curr_particle ___372_testcell 	%line{265} %argrw{"wrr"}
+	add		___366_curr_particle ___366_curr_particle $const9 	%line{266} %argrw{"wrr"}
+	lt		$tmp190 ___372_dist ___389_f1 	%line{267} %argrw{"wrr"}
+	if		$tmp190 337 341 	%argrw{"r"}
+	assign		___389_f2 ___389_f1 	%line{269} %argrw{"wr"}
+	assign		___389_p2 ___389_p2 	%argrw{"wr"}
+	assign		___389_f1 ___372_dist 	%line{270} %argrw{"wr"}
+	assign		___389_p2 ___372_testcell 	%argrw{"wr"}
+	lt		$tmp191 ___372_dist ___389_f2 	%line{272} %argrw{"wrr"}
+	if		$tmp191 341 341 	%argrw{"r"}
+	assign		___389_f2 ___372_dist 	%line{274} %argrw{"wr"}
+	assign		___389_p2 ___372_testcell 	%argrw{"wr"}
+	add		___366_k ___366_k $const9 	%line{253} %argrw{"wrr"}
+	add		___366_j ___366_j $const9 	%line{251} %argrw{"wrr"}
+	add		___366_i ___366_i $const9 	%line{249} %argrw{"wrr"}
+	assign		___389_numParticles ___366_curr_particle 	%line{281} %argrw{"wr"}
+	mul		$tmp192 ___389_pp ___389_lacunarity 	%line{404} %argrw{"wrr"}
+	assign		$tmp193 ___389_i 	%argrw{"wr"}
+	functioncall	$const33 396 	%argrw{"r"}
+	compref		$tmp195 $tmp192 $const8 	%line{296} %argrw{"wrr"}
+	floor		$tmp194 $tmp195 	%argrw{"wr"}
+	add		$tmp196 $tmp194 $const22 	%argrw{"wrr"}
+	compref		$tmp198 $tmp192 $const9 	%argrw{"wrr"}
+	floor		$tmp197 $tmp198 	%argrw{"wr"}
+	add		$tmp199 $tmp197 $const22 	%argrw{"wrr"}
+	point		___377_thiscell $tmp196 $tmp199 $const3 	%argrw{"wrrr"}
+	assign		___377_curr_particle $const8 	%line{300} %argrw{"wr"}
+	for		$tmp200 358 359 394 395 	%line{301} %argrw{"r"}
+	assign		___377_i $const10 	%argrw{"wr"}
+	le		$tmp200 ___377_i $const9 	%argrw{"wrr"}
+	for		$tmp201 361 362 393 394 	%line{303} %argrw{"r"}
+	assign		___377_j $const10 	%argrw{"wr"}
+	le		$tmp201 ___377_j $const9 	%argrw{"wrr"}
+	assign		$tmp203 ___377_i 	%line{305} %argrw{"wr"}
+	assign		$tmp204 ___377_j 	%argrw{"wr"}
+	vector		$tmp202 $tmp203 $tmp204 $const3 	%argrw{"wrrr"}
+	add		___381_testcell ___377_thiscell $tmp202 	%argrw{"wrr"}
+	gt		$tmp205 i_randomness $const8 	%line{306} %argrw{"wrr"}
+	if		$tmp205 388 388 	%argrw{"r"}
+	mul		$tmp207 $const31 $tmp193 	%line{309} %argrw{"wrr"}
+	add		$tmp208 i_time $tmp207 	%argrw{"wrr"}
+	functioncall	$const32 384 	%argrw{"r"}
+	cellnoise	$tmp209 ___381_testcell 	%line{202} %argrw{"wr"}
+	add		___365_t $tmp209 $tmp208 	%argrw{"wrr"}
+	floor		___365_tbase ___365_t 	%line{204} %argrw{"wr"}
+	cellnoise	$tmp210 ___381_testcell ___365_tbase 	%line{206} %argrw{"wrr"}
+	assign		___365_n1 $tmp210 	%argrw{"wr"}
+	sub		___365_d ___365_t ___365_tbase 	%line{207} %argrw{"wrr"}
+	add		$tmp212 ___365_tbase $const12 	%line{208} %argrw{"wrr"}
+	cellnoise	$tmp211 ___381_testcell $tmp212 	%argrw{"wrr"}
+	assign		___365_n2 $tmp211 	%argrw{"wr"}
+	sub		$tmp213 ___365_n2 ___365_n1 	%line{209} %argrw{"wrr"}
+	mul		$tmp214 ___365_d $tmp213 	%argrw{"wrr"}
+	add		___365_n1 ___365_n1 $tmp214 	%argrw{"wrr"}
+	assign		$tmp206 ___365_n1 	%line{211} %argrw{"wr"}
+	sub		___382_vjit $tmp206 $const22 	%line{309} %argrw{"wrr"}
+	mul		___382_vjit ___382_vjit i_randomness 	%line{310} %argrw{"wrr"}
+	compassign	___382_vjit $const11 $const8 	%line{311} %argrw{"wrr"}
+	add		___381_testcell ___381_testcell ___382_vjit 	%line{312} %argrw{"wrr"}
+	distance	___381_dist ___381_testcell $tmp192 	%line{314} %argrw{"wrr"}
+	lt		$tmp215 ___381_dist ___413_radius 	%line{315} %argrw{"wrr"}
+	if		$tmp215 393 393 	%argrw{"r"}
+	aassign		___389_particles ___377_curr_particle ___381_testcell 	%line{317} %argrw{"wrr"}
+	add		___377_curr_particle ___377_curr_particle $const9 	%line{318} %argrw{"wrr"}
+	add		___377_j ___377_j $const9 	%line{303} %argrw{"wrr"}
+	add		___377_i ___377_i $const9 	%line{301} %argrw{"wrr"}
+	assign		___389_numParticles ___377_curr_particle 	%line{323} %argrw{"wr"}
+	gt		$tmp216 ___389_numParticles $const8 	%line{407} %argrw{"wrr"}
+	if		$tmp216 457 457 	%argrw{"r"}
+	for		$tmp217 400 401 456 457 	%line{409} %argrw{"r"}
+	assign		___389_j $const8 	%argrw{"wr"}
+	lt		$tmp217 ___389_j ___389_numParticles 	%argrw{"wrr"}
+	assign		___396_radiusScale $const9 	%line{411} %argrw{"wr"}
+	neq		$tmp218 i_sizeRand $const8 	%line{413} %argrw{"wrr"}
+	if		$tmp218 414 414 	%argrw{"r"}
+	aref		$tmp221 ___389_particles ___389_j 	%line{415} %argrw{"wrr"}
+	noise		$tmp220 $const19 $tmp221 	%argrw{"wrr"}
+	mul		$tmp222 $tmp220 $const34 	%argrw{"wrr"}
+	sub		$tmp223 $tmp222 $const35 	%argrw{"wrr"}
+	functioncall	$const20 411 	%argrw{"r"}
+	min		$tmp224 $tmp223 $const22 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{142} %argrw{"wrr"}
+	max		$tmp219 $tmp224 $const3 	%argrw{"wrr"}
+	mul		$tmp225 $tmp219 i_sizeRand 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\noise_utils.h"} %line{415} %argrw{"wrr"}
+	sub		$tmp226 $const22 $tmp225 	%argrw{"wrr"}
+	mul		___396_radiusScale $tmp226 $const13 	%argrw{"wrr"}
+	aref		$tmp227 ___389_particles ___389_j 	%line{420} %argrw{"wrr"}
+	mul		$tmp228 ___389_pp ___389_lacunarity 	%line{421} %argrw{"wrr"}
+	mul		$tmp229 ___413_radius ___396_radiusScale 	%argrw{"wrr"}
+	functioncall	$const36 441 	%argrw{"r"}
+	distance	___384_distanceToCenter $tmp227 $tmp228 	%line{340} %argrw{"wrr"}
+	assign		___384_fadeout $const8 	%line{341} %argrw{"wr"}
+	eq		$tmp230 $tmp153 $const8 	%line{343} %argrw{"wrr"}
+	if		$tmp230 423 440 	%argrw{"r"}
+	div		___384_fadeout ___384_distanceToCenter $tmp229 	%line{345} %argrw{"wrr"}
+	eq		$tmp231 $tmp153 $const9 	%line{347} %argrw{"wrr"}
+	if		$tmp231 426 440 	%argrw{"r"}
+	smoothstep	___384_fadeout $const3 $tmp229 ___384_distanceToCenter 	%line{349} %argrw{"wrrr"}
+	div		___384_fadeout ___384_distanceToCenter $tmp229 	%line{354} %argrw{"wrr"}
+	functioncall	$const37 431 	%line{355} %argrw{"r"}
+	log		$tmp232 $const35 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{241} %argrw{"wr"}
+	div		$tmp233 $tmp232 $const38 	%argrw{"wrr"}
+	pow		___384_fadeout ___384_fadeout $tmp233 	%argrw{"wrr"}
+	eq		$tmp234 $tmp153 $const15 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\noise_utils.h"} %line{357} %argrw{"wrr"}
+	if		$tmp234 440 440 	%argrw{"r"}
+	sub		$tmp235 $const12 ___384_fadeout 	%line{359} %argrw{"wrr"}
+	functioncall	$const20 437 	%argrw{"r"}
+	min		$tmp236 $tmp235 $const12 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{142} %argrw{"wrr"}
+	max		___384_fadeout $tmp236 $const3 	%argrw{"wrr"}
+	smoothstep	$tmp237 $const3 $const39 ___384_fadeout 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\noise_utils.h"} %line{360} %argrw{"wrrr"}
+	sub		$tmp238 $const12 $tmp237 	%argrw{"wrr"}
+	add		___384_fadeout ___384_fadeout $tmp238 	%argrw{"wrr"}
+	sub		___396_density $const12 ___384_fadeout 	%line{364} %argrw{"wrr"}
+	gt		$tmp239 i_spottyness $const8 	%line{423} %argrw{"wrr"}
+	if		$tmp239 454 454 	%argrw{"r"}
+	aref		$tmp241 ___389_particles ___389_j 	%line{426} %argrw{"wrr"}
+	add		$tmp243 $tmp241 $const40 	%argrw{"wrr"}
+	cellnoise	$tmp240 $tmp243 	%argrw{"wr"}
+	mul		$tmp244 $tmp240 $const13 	%argrw{"wrr"}
+	sub		$tmp245 $tmp244 $const12 	%argrw{"wrr"}
+	mul		___398_l i_spottyness $tmp245 	%argrw{"wrr"}
+	mul		$tmp246 ___396_density ___398_l 	%line{427} %argrw{"wrr"}
+	add		___396_density ___396_density $tmp246 	%argrw{"wrr"}
+	functioncall	$const20 454 	%line{428} %argrw{"r"}
+	min		$tmp247 ___396_density $const12 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{142} %argrw{"wrr"}
+	max		___396_density $tmp247 $const3 	%argrw{"wrr"}
+	mul		$tmp248 ___389_amp ___396_density 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\noise_utils.h"} %line{431} %argrw{"wrr"}
+	add		___389_sum ___389_sum $tmp248 	%argrw{"wrr"}
+	add		___389_j ___389_j $const9 	%line{409} %argrw{"wrr"}
+	add		___389_ampSum ___389_ampSum ___389_amp 	%line{434} %argrw{"wrr"}
+	mul		___389_amp ___389_amp i_ratio 	%line{435} %argrw{"wrr"}
+	mul		___389_lacunarity ___389_lacunarity i_frequencyRatio 	%line{436} %argrw{"wrr"}
+	add		___389_i ___389_i $const9 	%line{395} %argrw{"wrr"}
+	mul		$tmp249 i_amplitude ___389_sum 	%line{439} %argrw{"wrr"}
+	div		o_outAlpha $tmp249 ___389_ampSum 	%argrw{"wrr"}
+	return
+	eq		$tmp250 i_noiseType $const11 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_volumeNoise.osl"} %line{136} %argrw{"wrr"}
+	if		$tmp250 570 570 	%argrw{"r"}
+	compref		$tmp251 pp $const8 	%line{139} %argrw{"wrr"}
+	mul		___414_x $tmp251 i_frequency 	%argrw{"wrr"}
+	compref		$tmp252 pp $const9 	%line{140} %argrw{"wrr"}
+	mul		___414_y $tmp252 i_frequency 	%argrw{"wrr"}
+	compref		$tmp253 pp $const11 	%line{141} %argrw{"wrr"}
+	mul		___414_z $tmp253 i_frequency 	%argrw{"wrr"}
+	assign		___414_time i_time 	%line{142} %argrw{"wr"}
+	sqrt		___414_timeRatio i_frequencyRatio 	%line{143} %argrw{"wr"}
+	assign		___414_amplitude i_amplitude 	%line{144} %argrw{"wr"}
+	assign		___414_waveValue $const8 	%line{146} %argrw{"wr"}
+	for		$tmp254 478 479 564 565 	%line{149} %argrw{"r"}
+	assign		___414_i $const8 	%argrw{"wr"}
+	lt		$tmp254 ___414_i i_depthMax 	%argrw{"wrr"}
+	assign		$tmp255 i_numWaves 	%line{151} %argrw{"wr"}
+	functioncall	$const41 554 	%argrw{"r"}
+	mul		$tmp256 ___414_x $const13 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\noise_utils.h"} %line{500} %argrw{"wrr"}
+	mul		___403_x $tmp256 $const42 	%argrw{"wrr"}
+	mul		$tmp257 ___414_y $const13 	%line{501} %argrw{"wrr"}
+	mul		___403_y $tmp257 $const42 	%argrw{"wrr"}
+	mul		$tmp258 ___414_z $const13 	%line{502} %argrw{"wrr"}
+	mul		___403_z $tmp258 $const42 	%argrw{"wrr"}
+	mul		$tmp259 i_time $const13 	%line{503} %argrw{"wrr"}
+	mul		___403_time $tmp259 $const42 	%argrw{"wrr"}
+	assign		___403_dirX $const8 	%line{505} %argrw{"wr"}
+	assign		___403_dirY $const8 	%line{506} %argrw{"wr"}
+	assign		___403_dirZ $const8 	%line{507} %argrw{"wr"}
+	assign		___403_norm $const8 	%line{508} %argrw{"wr"}
+	assign		___403_noiseValue $const8 	%line{509} %argrw{"wr"}
+	assign		___403_i $const8 	%line{510} %argrw{"wr"}
+	for		$tmp260 497 498 551 552 	%line{512} %argrw{"r"}
+	assign		___403_i $const9 	%argrw{"wr"}
+	le		$tmp260 ___403_i $tmp255 	%argrw{"wrr"}
+	assign		___405_noisePoint $const8 	%line{514} %argrw{"wr"}
+	assign		$tmp263 ___403_i 	%line{515} %argrw{"wr"}
+	mul		$tmp262 $tmp263 $const42 	%argrw{"wrr"}
+	div		$tmp264 $tmp262 $tmp255 	%argrw{"wrr"}
+	add		$tmp265 $tmp264 $const44 	%argrw{"wrr"}
+	noise		$tmp261 $const19 $tmp265 	%argrw{"wrr"}
+	compassign	___405_noisePoint $const8 $tmp261 	%argrw{"wrr"}
+	assign		$tmp268 ___403_i 	%line{516} %argrw{"wr"}
+	mul		$tmp267 $tmp268 $const42 	%argrw{"wrr"}
+	div		$tmp269 $tmp267 $tmp255 	%argrw{"wrr"}
+	noise		$tmp266 $const19 $tmp269 	%argrw{"wrr"}
+	compassign	___405_noisePoint $const9 $tmp266 	%argrw{"wrr"}
+	assign		$tmp272 ___403_i 	%line{517} %argrw{"wr"}
+	mul		$tmp271 $tmp272 $const42 	%argrw{"wrr"}
+	div		$tmp273 $tmp271 $tmp255 	%argrw{"wrr"}
+	sub		$tmp274 $tmp273 $const44 	%argrw{"wrr"}
+	noise		$tmp270 $const19 $tmp274 	%argrw{"wrr"}
+	compassign	___405_noisePoint $const11 $tmp270 	%argrw{"wrr"}
+	compref		$tmp275 ___405_noisePoint $const8 	%line{519} %argrw{"wrr"}
+	mul		$tmp276 $const13 $tmp275 	%argrw{"wrr"}
+	sub		___403_dirX $tmp276 $const12 	%argrw{"wrr"}
+	compref		$tmp277 ___405_noisePoint $const9 	%line{520} %argrw{"wrr"}
+	mul		$tmp278 $const13 $tmp277 	%argrw{"wrr"}
+	sub		___403_dirY $tmp278 $const12 	%argrw{"wrr"}
+	compref		$tmp279 ___405_noisePoint $const11 	%line{521} %argrw{"wrr"}
+	mul		$tmp280 $const13 $tmp279 	%argrw{"wrr"}
+	sub		___403_dirZ $tmp280 $const12 	%argrw{"wrr"}
+	mul		$tmp281 $const46 ___403_dirX 	%line{523} %argrw{"wrr"}
+	mul		$tmp282 $tmp281 ___403_dirY 	%argrw{"wrr"}
+	mul		$tmp283 $tmp282 ___403_dirZ 	%argrw{"wrr"}
+	noise		___405_freqNoise $const19 $tmp283 	%argrw{"wrr"}
+	mul		$tmp284 ___403_dirX ___403_dirX 	%line{525} %argrw{"wrr"}
+	mul		$tmp285 ___403_dirY ___403_dirY 	%argrw{"wrr"}
+	add		$tmp286 $tmp284 $tmp285 	%argrw{"wrr"}
+	mul		$tmp287 ___403_dirZ ___403_dirZ 	%argrw{"wrr"}
+	add		$tmp288 $tmp286 $tmp287 	%argrw{"wrr"}
+	sqrt		___403_norm $tmp288 	%argrw{"wr"}
+	gt		$tmp289 ___403_norm $const47 	%line{527} %argrw{"wrr"}
+	if		$tmp289 551 551 	%argrw{"r"}
+	div		___403_dirX ___403_dirX ___403_norm 	%line{529} %argrw{"wrr"}
+	div		___403_dirY ___403_dirY ___403_norm 	%line{530} %argrw{"wrr"}
+	div		___403_dirZ ___403_dirZ ___403_norm 	%line{531} %argrw{"wrr"}
+	mul		$tmp291 ___403_dirX ___403_x 	%line{532} %argrw{"wrr"}
+	mul		$tmp292 ___403_dirY ___403_y 	%argrw{"wrr"}
+	add		$tmp293 $tmp291 $tmp292 	%argrw{"wrr"}
+	mul		$tmp294 ___403_dirZ ___403_z 	%argrw{"wrr"}
+	add		$tmp295 $tmp293 $tmp294 	%argrw{"wrr"}
+	mul		$tmp296 $tmp295 $const42 	%argrw{"wrr"}
+	mul		$tmp297 $const49 ___405_freqNoise 	%argrw{"wrr"}
+	div		$tmp298 $tmp296 $tmp297 	%argrw{"wrr"}
+	add		$tmp299 $tmp298 ___403_time 	%argrw{"wrr"}
+	cos		$tmp290 $tmp299 	%argrw{"wr"}
+	add		___403_noiseValue ___403_noiseValue $tmp290 	%argrw{"wrr"}
+	add		___403_i ___403_i $const9 	%line{512} %argrw{"wrr"}
+	div		___403_noiseValue ___403_noiseValue $tmp255 	%line{537} %argrw{"wrr"}
+	assign		___416_noiseValue ___403_noiseValue 	%argrw{"wr"}
+	mul		___414_x ___414_x i_frequencyRatio 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_volumeNoise.osl"} %line{153} %argrw{"wrr"}
+	mul		___414_y ___414_y i_frequencyRatio 	%line{154} %argrw{"wrr"}
+	mul		___414_z ___414_z i_frequencyRatio 	%line{155} %argrw{"wrr"}
+	mul		___414_time ___414_time ___414_timeRatio 	%line{156} %argrw{"wrr"}
+	gt		$tmp300 i_inflection $const8 	%line{158} %argrw{"wrr"}
+	if		$tmp300 561 561 	%argrw{"r"}
+	abs		___416_noiseValue ___416_noiseValue 	%line{160} %argrw{"wr"}
+	mul		$tmp301 ___414_amplitude ___416_noiseValue 	%line{163} %argrw{"wrr"}
+	add		___414_waveValue ___414_waveValue $tmp301 	%argrw{"wrr"}
+	mul		___414_amplitude ___414_amplitude i_ratio 	%line{164} %argrw{"wrr"}
+	add		___414_i ___414_i $const12 	%line{149} %argrw{"wrr"}
+	le		$tmp302 i_inflection $const8 	%line{167} %argrw{"wrr"}
+	if		$tmp302 569 569 	%argrw{"r"}
+	mul		$tmp303 $const22 ___414_waveValue 	%line{169} %argrw{"wrr"}
+	add		___414_waveValue $tmp303 $const22 	%argrw{"wrr"}
+	assign		o_outAlpha ___414_waveValue 	%line{172} %argrw{"wr"}
+	add		o_outAlpha o_outAlpha i_threshold 	%line{175} %argrw{"wrr"}
+	functioncall	$const20 574 	%line{176} %argrw{"r"}
+	min		$tmp304 o_outAlpha $const12 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{142} %argrw{"wrr"}
+	max		o_outAlpha $tmp304 $const3 	%argrw{"wrr"}
+	assign		o_outColor o_outAlpha 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_volumeNoise.osl"} %line{177} %argrw{"wr"}
+	assign		$tmp305 i_alphaIsLuminance 	%line{186} %argrw{"wr"}
+	assign		$tmp306 i_invert 	%argrw{"wr"}
+	functioncall	$const50 589 	%argrw{"r"}
+	neq		$tmp307 $tmp306 $const3 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{124} %argrw{"wrr"}
+	if		$tmp307 582 582 	%argrw{"r"}
+	sub		o_outColor $const12 o_outColor 	%line{126} %argrw{"wrr"}
+	sub		o_outAlpha $const12 o_outAlpha 	%line{127} %argrw{"wrr"}
+	neq		$tmp308 $tmp305 $const3 	%line{130} %argrw{"wrr"}
+	if		$tmp308 585 585 	%argrw{"r"}
+	luminance	o_outAlpha o_outColor 	%line{132} %argrw{"wr"}
+	mul		o_outColor o_outColor i_colorGain 	%line{135} %argrw{"wrr"}
+	add		o_outColor o_outColor i_colorOffset 	%line{136} %argrw{"wrr"}
+	mul		o_outAlpha o_outAlpha i_alphaGain 	%line{138} %argrw{"wrr"}
+	add		o_outAlpha o_outAlpha i_alphaOffset 	%line{139} %argrw{"wrr"}
+	assign		o_outColor i_defaultColor 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_volumeNoise.osl"} %line{190} %argrw{"wr"}
+	assign		o_outAlpha $const8 	%line{191} %argrw{"wr"}
+	end

@@ -1,0 +1,32 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+surface normal_check
+param	int	wall	0		%read{6,6} %write{2147483647,-1}
+global	normal	N	%read{0,5} %write{2147483647,-1}
+global	normal	Ng	%read{0,0} %write{2147483647,-1}
+global	closure color	Ci	%read{2147483647,-1} %write{4,10}
+local	float	e	%read{1,1} %write{0,0}
+local	int	___307_bf	%read{9,9} %write{8,8}
+const	float	$const1	0.2		%read{1,1} %write{2147483647,-1}
+temp	int	$tmp1	%read{2,2} %write{1,1}
+temp	closure color	$tmp2	%read{4,4} %write{3,3}
+const	string	$const2	"holdout"		%read{3,3} %write{2147483647,-1}
+const	color	$const3	1 0 0		%read{4,4} %write{2147483647,-1}
+const	string	$const4	"diffuse"		%read{5,5} %write{2147483647,-1}
+const	int	$const5	1		%read{6,6} %write{2147483647,-1}
+temp	int	$tmp4	%read{7,7} %write{6,6}
+const	string	$const6	"transparent"		%read{10,10} %write{2147483647,-1}
+code ___main___
+	dot		e Ng N 	%filename{"E:/github/elaramax/Shaders/normal_check.osl"} %line{23} %argrw{"wrr"}
+	lt		$tmp1 e $const1 	%line{24} %argrw{"wrr"}
+	if		$tmp1 5 6 	%argrw{"r"}
+	closure		$tmp2 $const2 	%line{26} %argrw{"wr"}
+	mul		Ci $tmp2 $const3 	%argrw{"wrr"}
+	closure		Ci $const4 N 	%line{30} %argrw{"wrr"}
+	eq		$tmp4 wall $const5 	%line{33} %argrw{"wrr"}
+	if		$tmp4 11 11 	%argrw{"r"}
+	backfacing	___307_bf 	%line{35} %argrw{"w"}
+	if		___307_bf 11 11 	%line{36} %argrw{"r"}
+	closure		Ci $const6 	%line{38} %argrw{"wr"}
+	end

@@ -1,0 +1,739 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_gradient_ramp
+param	float	size	1		%read{150,152} %write{2147483647,-1} %derivs
+param	float	phase	0		%read{169,169} %write{2147483647,-1} %derivs
+param	float	amount	0		%read{161,314} %write{2147483647,-1} %derivs
+param	float	levels	4		%read{146,146} %write{2147483647,-1} %derivs
+param	int	Gradient_Type	4		%read{3,124} %write{2147483647,-1}
+param	int	Noise_Type	0		%read{145,145} %write{2147483647,-1}
+param	float	Low_Threshold	0		%read{147,155} %write{2147483647,-1} %derivs
+param	float	High_Threshold	1		%read{148,156} %write{2147483647,-1} %derivs
+param	float	Threshold_Smoothing	0		%read{159,159} %write{2147483647,-1} %derivs
+param	int	Source_Map_On	0		%read{42,42} %write{2147483647,-1}
+param	color	Source_Map	0 0 0		%read{45,48} %write{2147483647,-1} %derivs
+param	int	numFlag	2		%read{330,336} %write{2147483647,-1} %derivs
+param	color[64]	flag_colors	0 0 0		%read{378,381} %write{2147483647,-1} %derivs
+param	float[64]	flag_poss	0		%read{323,352} %write{2147483647,-1} %derivs
+param	float[64]	flag_nor_poss	0		%read{325,354} %write{2147483647,-1} %derivs
+param	point	coords	0 0 0		%read{0,372} %write{2147483647,-1} %derivs
+oparam	color	result	0 0 0		%read{391,394} %write{383,383} %derivs
+oparam	vector	result_bump	0 0 0		%read{385,385} %write{426,426}
+oparam	float	result_alpha	1		%read{2147483647,-1} %write{384,384}
+global	vector	I	%read{55,55} %write{2147483647,-1} %derivs
+global	normal	N	%read{55,55} %write{2147483647,-1} %derivs
+global	vector	dPdu	%read{420,420} %write{2147483647,-1}
+global	vector	dPdv	%read{423,423} %write{2147483647,-1}
+local	float	___306_f	%read{51,397} %write{50,396} %derivs
+local	float	___315_dfdx	%read{410,415} %write{399,399}
+local	float	___315_dfdy	%read{411,414} %write{400,400}
+local	float	___315_dsdx	%read{405,414} %write{401,401}
+local	float	___315_dsdy	%read{406,415} %write{402,402}
+local	float	___315_dtdx	%read{406,411} %write{403,403}
+local	float	___315_dtdy	%read{405,410} %write{404,404}
+local	float	___315_dt	%read{408,417} %write{407,407}
+local	float	___318_fcolor	%read{399,400} %write{397,397} %derivs
+local	float	___318_dfds	%read{422,422} %write{413,418}
+local	float	___318_dfdt	%read{424,424} %write{417,419}
+local	float	___368_p0	%read{273,297} %write{269,269} %derivs
+local	float	___368_p1	%read{281,293} %write{270,270}
+local	float	___368_p2	%read{284,284} %write{271,271}
+local	float	___368_p3	%read{277,304} %write{272,272} %derivs
+local	float	___371_res	%read{266,313} %write{175,312} %derivs
+local	float	___372_sum	%read{182,212} %write{178,211} %derivs
+local	float	___372_l	%read{182,209} %write{181,196} %derivs
+local	float	___372_f	%read{182,210} %write{179,196} %derivs
+local	float	___379_sum	%read{235,263} %write{231,262} %derivs
+local	float	___379_l	%read{235,260} %write{234,248} %derivs
+local	float	___379_f	%read{235,261} %write{232,248} %derivs
+local	int	___385_i	%read{337,354} %write{336,350} %derivs
+local	float	tv	%read{7,140} %write{0,131} %derivs
+local	float	tu	%read{5,134} %write{1,128} %derivs
+local	float	a	%read{23,353} %write{2,318} %derivs
+local	point	___394_v1	%read{33,33} %write{29,32} %derivs
+local	float	___407_x	%read{99,103} %write{96,102} %derivs
+local	vector	___407_v1	%read{93,95} %write{87,93} %derivs
+local	vector	___407_v2	%read{94,95} %write{90,94} %derivs
+local	float	___409_x	%read{120,120} %write{118,118} %derivs
+local	vector	___409_v1	%read{115,117} %write{109,115} %derivs
+local	vector	___409_v2	%read{116,117} %write{112,116} %derivs
+local	float	data.u	%read{142,402} %write{141,142} %mystruct{data} %mystructfield{0} %derivs
+local	float	data.v	%read{144,388} %write{143,144} %mystruct{data} %mystructfield{1} %derivs
+local	int	data.noiseType	%read{176,221} %write{145,145} %mystruct{data} %mystructfield{2}
+local	float	data.levels	%read{181,248} %write{146,146} %mystruct{data} %mystructfield{3} %derivs
+local	float	data.low	%read{157,302} %write{147,156} %mystruct{data} %mystructfield{4} %derivs
+local	float	data.high	%read{157,309} %write{148,155} %mystruct{data} %mystructfield{5} %derivs
+local	float	data.sd	%read{160,308} %write{159,160} %mystruct{data} %mystructfield{7} %derivs
+local	float	tsize	%read{163,166} %write{149,152} %derivs
+local	float	hminusl	%read{158,158} %write{157,157} %derivs
+local	vector	___414_r	%read{170,172} %write{165,169} %derivs
+local	int	nLeftFlag	%read{331,380} %write{322,351} %derivs
+local	float	pos	%read{377,382} %write{326,355} %derivs
+const	int	$const1	0		%read{0,419} %write{2147483647,-1}
+const	int	$const2	1		%read{1,392} %write{2147483647,-1}
+const	float	$const3	0		%read{2,367} %write{2147483647,-1}
+temp	int	$tmp1	%read{4,4} %write{3,3}
+temp	int	$tmp2	%read{6,6} %write{5,5}
+temp	float	$tmp3	%read{8,8} %write{7,7} %derivs
+temp	float	$tmp4	%read{9,9} %write{8,8} %derivs
+temp	int	$tmp5	%read{12,12} %write{11,11}
+const	float	$const4	0.5		%read{13,158} %write{2147483647,-1}
+temp	float	$tmp6	%read{15,15} %write{14,14} %derivs
+const	float	$const5	2		%read{15,311} %write{2147483647,-1}
+temp	float	$tmp7	%read{18,18} %write{17,17} %derivs
+temp	int	$tmp8	%read{20,20} %write{19,19}
+const	float	$const6	1		%read{23,388} %write{2147483647,-1}
+temp	int	$tmp9	%read{24,24} %write{23,23}
+const	int	$const7	2		%read{26,394} %write{2147483647,-1}
+temp	int	$tmp10	%read{27,27} %write{26,26}
+temp	float	$tmp11	%read{29,29} %write{28,28} %derivs
+temp	float	$tmp12	%read{31,31} %write{30,30} %derivs
+const	int	$const8	3		%read{34,34} %write{2147483647,-1}
+temp	int	$tmp13	%read{35,35} %write{34,34}
+const	int	$const9	4		%read{37,37} %write{2147483647,-1}
+temp	int	$tmp14	%read{38,38} %write{37,37}
+const	int	$const10	5		%read{40,40} %write{2147483647,-1}
+temp	int	$tmp15	%read{41,41} %write{40,40}
+temp	int	$tmp16	%read{43,43} %write{42,42}
+const	string	$const11	"intensity"		%read{44,390} %write{2147483647,-1}
+temp	float	$tmp17	%read{47,47} %write{45,45} %derivs
+temp	float	$tmp18	%read{47,47} %write{46,46} %derivs
+temp	float	$tmp19	%read{49,49} %write{47,47} %derivs
+temp	float	$tmp20	%read{49,49} %write{48,48} %derivs
+temp	float	$tmp21	%read{50,50} %write{49,49} %derivs
+const	float	$const12	0.33333334		%read{50,396} %write{2147483647,-1}
+const	int	$const13	6		%read{53,53} %write{2147483647,-1}
+temp	int	$tmp22	%read{54,54} %write{53,53}
+temp	float	$tmp23	%read{56,56} %write{55,55} %derivs
+const	int	$const14	7		%read{57,57} %write{2147483647,-1}
+temp	int	$tmp24	%read{58,58} %write{57,57}
+temp	int	$tmp25	%read{60,60} %write{59,59}
+temp	int	$tmp26	%read{63,63} %write{62,62}
+temp	int	$tmp27	%read{65,65} %write{64,64}
+temp	int	$tmp28	%read{69,69} %write{68,68}
+const	int	$const15	8		%read{71,71} %write{2147483647,-1}
+temp	int	$tmp29	%read{72,72} %write{71,71}
+temp	float	$tmp30	%read{79,79} %write{78,78} %derivs
+temp	float	$tmp31	%read{77,77} %write{75,75} %derivs
+temp	float	$tmp32	%read{77,77} %write{76,76} %derivs
+temp	float	$tmp33	%read{78,78} %write{77,77} %derivs
+temp	int	$tmp34	%read{81,81} %write{80,80}
+const	int	$const16	9		%read{83,83} %write{2147483647,-1}
+temp	int	$tmp35	%read{84,84} %write{83,83}
+temp	float	$tmp36	%read{96,96} %write{95,95} %derivs
+const	string	$const17	"degrees"		%read{97,97} %write{2147483647,-1}
+const	float	$const18	180		%read{98,98} %write{2147483647,-1}
+const	float	$const19	3.1415927		%read{98,98} %write{2147483647,-1}
+temp	float	$tmp37	%read{99,99} %write{98,98} %derivs
+temp	int	$tmp38	%read{101,101} %write{100,100}
+const	float	$const20	360		%read{102,103} %write{2147483647,-1}
+temp	int	$tmp39	%read{105,105} %write{104,104}
+const	int	$const21	10		%read{107,107} %write{2147483647,-1}
+temp	int	$tmp40	%read{108,108} %write{107,107}
+temp	float	$tmp41	%read{118,118} %write{117,117} %derivs
+const	float	$const22	3.1415		%read{119,119} %write{2147483647,-1}
+temp	float	$tmp42	%read{120,120} %write{119,119} %derivs
+temp	int	$tmp43	%read{122,122} %write{121,121}
+const	int	$const23	11		%read{124,124} %write{2147483647,-1}
+temp	int	$tmp44	%read{125,125} %write{124,124}
+temp	float	$tmp45	%read{128,128} %write{127,127} %derivs
+temp	float	$tmp46	%read{131,131} %write{130,130} %derivs
+temp	int	$tmp47	%read{133,133} %write{132,132}
+temp	int	$tmp48	%read{137,137} %write{136,136}
+temp	int	$tmp49	%read{151,151} %write{150,150}
+const	float	$const24	20		%read{152,152} %write{2147483647,-1}
+temp	int	$tmp50	%read{154,154} %write{153,153}
+temp	float	$tmp51	%read{159,159} %write{158,158} %derivs
+temp	int	$tmp52	%read{162,162} %write{161,161}
+temp	float	$tmp53	%read{164,164} %write{163,163} %derivs
+temp	float	$tmp54	%read{165,165} %write{164,164} %derivs
+temp	float	$tmp55	%read{167,167} %write{166,166} %derivs
+temp	float	$tmp56	%read{168,168} %write{167,167} %derivs
+temp	float	$tmp57	%read{314,314} %write{313,313} %derivs
+temp	point	$tmp58	%read{182,255} %write{173,173} %derivs
+temp	float	$tmp59	%read{173,173} %write{170,170} %derivs
+temp	float	$tmp60	%read{173,173} %write{171,171} %derivs
+temp	float	$tmp61	%read{173,173} %write{172,172} %derivs
+const	string	$const25	"NoiseFunc"		%read{174,174} %write{2147483647,-1}
+temp	int	$tmp62	%read{177,177} %write{176,176}
+temp	int	$tmp63	%read{180,196} %write{181,196}
+temp	float	$tmp64	%read{182,196} %write{182,196} %derivs
+temp	float	$tmp65	%read{182,196} %write{182,196} %derivs
+temp	float	$tmp66	%read{182,196} %write{182,196} %derivs
+temp	float	$tmp67	%read{182,196} %write{182,196} %derivs
+temp	float	$tmp68	%read{182,196} %write{182,196} %derivs
+temp	float	$tmp69	%read{182,196} %write{182,196} %derivs
+temp	float	$tmp70	%read{182,196} %write{182,196} %derivs
+temp	float	$tmp71	%read{182,196} %write{182,196} %derivs
+const	string	$const26	"maxNoise3"		%read{189,257} %write{2147483647,-1}
+const	string	$const27	"perlin"		%read{191,259} %write{2147483647,-1}
+temp	point	$tmp72	%read{182,196} %write{182,196} %derivs
+temp	float	$tmp73	%read{182,196} %write{182,196} %derivs
+temp	int	$tmp74	%read{198,198} %write{197,197}
+temp	float	$tmp75	%read{209,209} %write{208,208} %derivs
+temp	float	$tmp76	%read{208,208} %write{207,207} %derivs
+temp	float	$tmp77	%read{200,200} %write{199,199} %derivs
+temp	float	$tmp78	%read{206,206} %write{200,200} %derivs
+temp	float	$tmp79	%read{202,202} %write{201,201} %derivs
+temp	float	$tmp80	%read{206,206} %write{202,202} %derivs
+temp	float	$tmp81	%read{204,204} %write{203,203} %derivs
+temp	float	$tmp82	%read{206,206} %write{204,204} %derivs
+temp	point	$tmp83	%read{207,207} %write{206,206} %derivs
+temp	float	$tmp84	%read{210,210} %write{209,209} %derivs
+temp	float	$tmp85	%read{211,211} %write{210,210} %derivs
+temp	int	$tmp86	%read{214,214} %write{213,213}
+temp	float	$tmp87	%read{219,219} %write{215,215} %derivs
+temp	float	$tmp88	%read{219,219} %write{216,216} %derivs
+temp	float	$tmp89	%read{219,219} %write{217,217} %derivs
+temp	point	$tmp90	%read{220,220} %write{219,219} %derivs
+temp	int	$tmp91	%read{222,222} %write{221,221}
+temp	int	$tmp92	%read{224,224} %write{223,223}
+temp	float	$tmp93	%read{229,229} %write{225,225} %derivs
+temp	float	$tmp94	%read{229,229} %write{226,226} %derivs
+temp	float	$tmp95	%read{229,229} %write{227,227} %derivs
+temp	point	$tmp96	%read{230,230} %write{229,229} %derivs
+temp	int	$tmp97	%read{233,248} %write{234,248}
+temp	float	$tmp98	%read{235,248} %write{235,248} %derivs
+temp	float	$tmp99	%read{235,248} %write{235,248} %derivs
+temp	float	$tmp100	%read{235,248} %write{235,248} %derivs
+temp	float	$tmp101	%read{235,248} %write{235,248} %derivs
+temp	float	$tmp102	%read{235,248} %write{235,248} %derivs
+temp	float	$tmp103	%read{235,248} %write{235,248} %derivs
+temp	float	$tmp104	%read{235,248} %write{235,248} %derivs
+temp	point	$tmp105	%read{235,248} %write{235,248} %derivs
+temp	float	$tmp106	%read{235,248} %write{235,248} %derivs
+temp	int	$tmp107	%read{250,250} %write{249,249}
+temp	float	$tmp108	%read{260,260} %write{259,259} %derivs
+temp	float	$tmp109	%read{252,252} %write{251,251} %derivs
+temp	float	$tmp110	%read{258,258} %write{252,252} %derivs
+temp	float	$tmp111	%read{254,254} %write{253,253} %derivs
+temp	float	$tmp112	%read{258,258} %write{254,254} %derivs
+temp	float	$tmp113	%read{256,256} %write{255,255} %derivs
+temp	float	$tmp114	%read{258,258} %write{256,256} %derivs
+temp	point	$tmp115	%read{259,259} %write{258,258} %derivs
+temp	float	$tmp116	%read{261,261} %write{260,260} %derivs
+temp	float	$tmp117	%read{262,262} %write{261,261} %derivs
+temp	int	$tmp118	%read{265,265} %write{264,264}
+temp	float	$tmp119	%read{311,311} %write{275,309} %derivs
+temp	float	$tmp120	%read{267,267} %write{266,266} %derivs
+temp	float	$tmp121	%read{273,307} %write{267,306} %derivs
+const	string	$const28	"sramp"		%read{268,268} %write{2147483647,-1}
+temp	int	$tmp122	%read{274,274} %write{273,273}
+temp	int	$tmp123	%read{278,278} %write{277,277}
+temp	int	$tmp124	%read{282,282} %write{281,281}
+temp	int	$tmp125	%read{283,287} %write{282,286}
+temp	int	$tmp126	%read{285,285} %write{284,284}
+temp	int	$tmp127	%read{286,286} %write{285,285}
+temp	int	$tmp128	%read{291,291} %write{290,290}
+temp	int	$tmp129	%read{292,296} %write{291,295}
+temp	int	$tmp130	%read{294,294} %write{293,293}
+temp	int	$tmp131	%read{295,295} %write{294,294}
+temp	float	$tmp132	%read{299,299} %write{297,297} %derivs
+temp	float	$tmp133	%read{299,299} %write{298,298} %derivs
+temp	float	$tmp134	%read{301,301} %write{300,300} %derivs
+temp	float	$tmp135	%read{302,302} %write{301,301} %derivs
+temp	float	$tmp136	%read{306,306} %write{304,304} %derivs
+temp	float	$tmp137	%read{306,306} %write{305,305} %derivs
+temp	float	$tmp138	%read{308,308} %write{307,307} %derivs
+temp	float	$tmp139	%read{309,309} %write{308,308} %derivs
+temp	float	$tmp140	%read{312,312} %write{311,311} %derivs
+temp	float	$tmp141	%read{315,315} %write{314,314} %derivs
+const	string	$const29	"clamp"		%read{316,316} %write{2147483647,-1}
+temp	float	$tmp142	%read{318,318} %write{317,317} %derivs
+const	string	$const30	"Interpolation"		%read{319,319} %write{2147483647,-1}
+temp	int	$tmp143	%read{321,321} %write{320,320}
+temp	float	$tmp144	%read{324,324} %write{323,323} %derivs
+temp	float	$tmp145	%read{326,326} %write{324,324} %derivs
+temp	float	$tmp146	%read{326,326} %write{325,325} %derivs
+temp	int	$tmp147	%read{329,329} %write{328,328}
+temp	float	$tmp148	%read{332,332} %write{331,331} %derivs
+temp	float	$tmp149	%read{334,334} %write{332,332} %derivs
+temp	float	$tmp150	%read{334,334} %write{333,333} %derivs
+temp	float	$tmp151	%read{338,338} %write{337,337}
+temp	int	$tmp152	%read{339,339} %write{338,338}
+temp	float	$tmp153	%read{341,344} %write{341,344}
+temp	int	$tmp154	%read{340,344} %write{341,344}
+temp	int	$tmp155	%read{2147483647,-1} %write{341,344}
+temp	int	$tmp156	%read{346,350} %write{346,350}
+temp	float	$tmp157	%read{346,350} %write{346,350}
+temp	int	$tmp158	%read{345,350} %write{346,350}
+temp	int	$tmp159	%read{2147483647,-1} %write{346,350}
+temp	float	$tmp160	%read{353,353} %write{352,352} %derivs
+temp	float	$tmp161	%read{355,355} %write{353,353} %derivs
+temp	float	$tmp162	%read{355,355} %write{354,354} %derivs
+temp	float	$tmp163	%read{357,357} %write{356,356}
+temp	int	$tmp164	%read{358,358} %write{357,357}
+temp	int	$tmp165	%read{359,364} %write{358,363}
+temp	float	$tmp166	%read{361,361} %write{360,360}
+temp	int	$tmp167	%read{362,362} %write{361,361}
+temp	int	$tmp168	%read{363,363} %write{362,362}
+temp	int	$tmp169	%read{365,370} %write{364,369}
+temp	float	$tmp170	%read{367,367} %write{366,366}
+temp	int	$tmp171	%read{368,368} %write{367,367}
+temp	int	$tmp172	%read{369,369} %write{368,368}
+temp	int	$tmp173	%read{371,376} %write{370,375}
+temp	float	$tmp174	%read{373,373} %write{372,372}
+temp	int	$tmp175	%read{374,374} %write{373,373}
+temp	int	$tmp176	%read{375,375} %write{374,374}
+temp	float	$tmp177	%read{379,379} %write{377,377} %derivs
+temp	color	$tmp178	%read{379,379} %write{378,378} %derivs
+temp	color	$tmp179	%read{383,383} %write{379,379} %derivs
+temp	int	$tmp180	%read{381,381} %write{380,380} %derivs
+temp	color	$tmp181	%read{382,382} %write{381,381} %derivs
+temp	color	$tmp182	%read{383,383} %write{382,382} %derivs
+temp	int	$tmp183	%read{386,386} %write{385,385}
+temp	int	$tmp184	%read{387,387} %write{386,386}
+temp	vector	$tmp185	%read{426,426} %write{425,425}
+temp	float	$tmp186	%read{403,404} %write{388,388} %derivs
+const	string	$const31	"max_calculatebump"		%read{389,389} %write{2147483647,-1}
+temp	float	$tmp187	%read{393,393} %write{391,391} %derivs
+temp	float	$tmp188	%read{393,393} %write{392,392} %derivs
+temp	float	$tmp189	%read{395,395} %write{393,393} %derivs
+temp	float	$tmp190	%read{395,395} %write{394,394} %derivs
+temp	float	$tmp191	%read{396,396} %write{395,395} %derivs
+const	string	$const32	"Df2"		%read{398,398} %write{2147483647,-1}
+temp	float	$tmp192	%read{407,407} %write{405,405}
+temp	float	$tmp193	%read{407,407} %write{406,406}
+temp	int	$tmp194	%read{409,409} %write{408,408}
+temp	float	$tmp195	%read{412,412} %write{410,410}
+temp	float	$tmp196	%read{412,412} %write{411,411}
+temp	float	$tmp197	%read{413,413} %write{412,412}
+temp	float	$tmp198	%read{416,416} %write{414,414}
+temp	float	$tmp199	%read{416,416} %write{415,415}
+temp	float	$tmp200	%read{417,417} %write{416,416}
+temp	vector	$tmp201	%read{421,421} %write{420,420}
+temp	vector	$tmp202	%read{422,422} %write{421,421}
+temp	vector	$tmp203	%read{425,425} %write{422,422}
+temp	vector	$tmp204	%read{424,424} %write{423,423}
+temp	vector	$tmp205	%read{425,425} %write{424,424}
+const	float	$const34	100		%read{426,426} %write{2147483647,-1}
+code ___main___
+	compref		tv coords $const1 	%filename{"E:/github/elaramax/Shaders/max_gradient_ramp.osl"} %line{169} %argrw{"wrr"}
+	compref		tu coords $const2 	%line{170} %argrw{"wrr"}
+	assign		a $const3 	%line{171} %argrw{"wr"}
+	eq		$tmp1 Gradient_Type $const1 	%line{172} %argrw{"wrr"}
+	if		$tmp1 11 141 	%argrw{"r"}
+	gt		$tmp2 tu $const3 	%line{174} %argrw{"wrr"}
+	if		$tmp2 10 11 	%argrw{"r"}
+	mul		$tmp3 tv tv 	%line{175} %argrw{"wrr"}
+	div		$tmp4 $tmp3 tu 	%argrw{"wrr"}
+	mul		a $tmp4 tu 	%argrw{"wrr"}
+	assign		a tv 	%line{179} %argrw{"wr"}
+	eq		$tmp5 Gradient_Type $const2 	%line{181} %argrw{"wrr"}
+	if		$tmp5 26 141 	%argrw{"r"}
+	sub		tu tu $const4 	%line{183} %argrw{"wrr"}
+	fabs		$tmp6 tu 	%line{184} %argrw{"wr"}
+	mul		tu $tmp6 $const5 	%argrw{"wrr"}
+	sub		tv tv $const4 	%line{185} %argrw{"wrr"}
+	fabs		$tmp7 tv 	%line{186} %argrw{"wr"}
+	mul		tv $tmp7 $const5 	%argrw{"wrr"}
+	lt		$tmp8 tv tu 	%line{187} %argrw{"wrr"}
+	if		$tmp8 22 23 	%argrw{"r"}
+	assign		a tu 	%line{188} %argrw{"wr"}
+	assign		a tv 	%line{190} %argrw{"wr"}
+	gt		$tmp9 a $const6 	%line{191} %argrw{"wrr"}
+	if		$tmp9 26 26 	%argrw{"r"}
+	assign		a $const6 	%line{192} %argrw{"wr"}
+	eq		$tmp10 Gradient_Type $const7 	%line{193} %argrw{"wrr"}
+	if		$tmp10 34 141 	%argrw{"r"}
+	sub		$tmp11 tv tu 	%line{197} %argrw{"wrr"}
+	compassign	___394_v1 $const1 $tmp11 	%argrw{"wrr"}
+	sub		$tmp12 tu tv 	%line{198} %argrw{"wrr"}
+	compassign	___394_v1 $const2 $tmp12 	%argrw{"wrr"}
+	compassign	___394_v1 $const7 $const3 	%line{199} %argrw{"wrr"}
+	length		a ___394_v1 	%line{200} %argrw{"wr"}
+	eq		$tmp13 Gradient_Type $const8 	%line{201} %argrw{"wrr"}
+	if		$tmp13 37 141 	%argrw{"r"}
+	assign		a tv 	%line{203} %argrw{"wr"}
+	eq		$tmp14 Gradient_Type $const9 	%line{204} %argrw{"wrr"}
+	if		$tmp14 40 141 	%argrw{"r"}
+	assign		a tv 	%line{206} %argrw{"wr"}
+	eq		$tmp15 Gradient_Type $const10 	%line{207} %argrw{"wrr"}
+	if		$tmp15 53 141 	%argrw{"r"}
+	eq		$tmp16 Source_Map_On $const2 	%line{209} %argrw{"wrr"}
+	if		$tmp16 52 53 	%argrw{"r"}
+	functioncall	$const11 52 	%line{211} %argrw{"r"}
+	compref		$tmp17 Source_Map $const1 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{28} %argrw{"wrr"}
+	compref		$tmp18 Source_Map $const2 	%argrw{"wrr"}
+	add		$tmp19 $tmp17 $tmp18 	%argrw{"wrr"}
+	compref		$tmp20 Source_Map $const7 	%argrw{"wrr"}
+	add		$tmp21 $tmp19 $tmp20 	%argrw{"wrr"}
+	mul		___306_f $tmp21 $const12 	%argrw{"wrr"}
+	assign		a ___306_f 	%line{29} %argrw{"wr"}
+	assign		a $const3 	%filename{"E:/github/elaramax/Shaders/max_gradient_ramp.osl"} %line{214} %argrw{"wr"}
+	eq		$tmp22 Gradient_Type $const13 	%line{216} %argrw{"wrr"}
+	if		$tmp22 57 141 	%argrw{"r"}
+	dot		$tmp23 N I 	%line{218} %argrw{"wrr"}
+	fabs		a $tmp23 	%argrw{"wr"}
+	eq		$tmp24 Gradient_Type $const14 	%line{219} %argrw{"wrr"}
+	if		$tmp24 71 141 	%argrw{"r"}
+	gt		$tmp25 tv $const3 	%line{221} %argrw{"wrr"}
+	if		$tmp25 68 68 	%argrw{"r"}
+	div		a tu tv 	%line{222} %argrw{"wrr"}
+	gt		$tmp26 a $const6 	%line{223} %argrw{"wrr"}
+	if		$tmp26 68 68 	%argrw{"r"}
+	gt		$tmp27 tu $const3 	%line{224} %argrw{"wrr"}
+	if		$tmp27 67 68 	%argrw{"r"}
+	div		a tv tu 	%line{225} %argrw{"wrr"}
+	assign		a $const3 	%line{227} %argrw{"wr"}
+	gt		$tmp28 a $const6 	%line{230} %argrw{"wrr"}
+	if		$tmp28 71 71 	%argrw{"r"}
+	assign		a $const6 	%line{231} %argrw{"wr"}
+	eq		$tmp29 Gradient_Type $const15 	%line{233} %argrw{"wrr"}
+	if		$tmp29 83 141 	%argrw{"r"}
+	sub		tu tu $const4 	%line{235} %argrw{"wrr"}
+	sub		tv tv $const4 	%line{236} %argrw{"wrr"}
+	mul		$tmp31 tu tu 	%line{237} %argrw{"wrr"}
+	mul		$tmp32 tv tv 	%argrw{"wrr"}
+	add		$tmp33 $tmp31 $tmp32 	%argrw{"wrr"}
+	sqrt		$tmp30 $tmp33 	%argrw{"wr"}
+	mul		a $tmp30 $const5 	%argrw{"wrr"}
+	gt		$tmp34 a $const6 	%line{238} %argrw{"wrr"}
+	if		$tmp34 83 83 	%argrw{"r"}
+	assign		a $const6 	%line{240} %argrw{"wr"}
+	eq		$tmp35 Gradient_Type $const16 	%line{242} %argrw{"wrr"}
+	if		$tmp35 107 141 	%argrw{"r"}
+	sub		tu tu $const4 	%line{246} %argrw{"wrr"}
+	sub		tv tv $const4 	%line{247} %argrw{"wrr"}
+	compassign	___407_v1 $const1 $const3 	%line{248} %argrw{"wrr"}
+	compassign	___407_v1 $const2 $const4 	%argrw{"wrr"}
+	compassign	___407_v1 $const7 $const3 	%argrw{"wrr"}
+	compassign	___407_v2 $const1 tv 	%line{249} %argrw{"wrr"}
+	compassign	___407_v2 $const2 tu 	%argrw{"wrr"}
+	compassign	___407_v2 $const7 $const3 	%argrw{"wrr"}
+	normalize	___407_v1 ___407_v1 	%line{250} %argrw{"wr"}
+	normalize	___407_v2 ___407_v2 	%line{251} %argrw{"wr"}
+	dot		$tmp36 ___407_v1 ___407_v2 	%line{252} %argrw{"wrr"}
+	acos		___407_x $tmp36 	%argrw{"wr"}
+	functioncall	$const17 100 	%line{253} %argrw{"r"}
+	div		$tmp37 $const18 $const19 	%filename{"E:/OSL_install\\shaders\\stdosl.h"} %line{83} %argrw{"wrr"}
+	mul		___407_x ___407_x $tmp37 	%argrw{"wrr"}
+	gt		$tmp38 tv $const3 	%filename{"E:/github/elaramax/Shaders/max_gradient_ramp.osl"} %line{254} %argrw{"wrr"}
+	if		$tmp38 103 103 	%argrw{"r"}
+	sub		___407_x $const20 ___407_x 	%line{255} %argrw{"wrr"}
+	div		a ___407_x $const20 	%line{257} %argrw{"wrr"}
+	gt		$tmp39 a $const6 	%line{258} %argrw{"wrr"}
+	if		$tmp39 107 107 	%argrw{"r"}
+	assign		a $const6 	%line{259} %argrw{"wr"}
+	eq		$tmp40 Gradient_Type $const21 	%line{260} %argrw{"wrr"}
+	if		$tmp40 124 141 	%argrw{"r"}
+	compassign	___409_v1 $const1 $const3 	%line{264} %argrw{"wrr"}
+	compassign	___409_v1 $const2 $const6 	%argrw{"wrr"}
+	compassign	___409_v1 $const7 $const3 	%argrw{"wrr"}
+	compassign	___409_v2 $const1 tv 	%line{265} %argrw{"wrr"}
+	compassign	___409_v2 $const2 tu 	%argrw{"wrr"}
+	compassign	___409_v2 $const7 $const3 	%argrw{"wrr"}
+	normalize	___409_v1 ___409_v1 	%line{266} %argrw{"wr"}
+	normalize	___409_v2 ___409_v2 	%line{267} %argrw{"wr"}
+	dot		$tmp41 ___409_v1 ___409_v2 	%line{268} %argrw{"wrr"}
+	acos		___409_x $tmp41 	%argrw{"wr"}
+	div		$tmp42 $const5 $const22 	%line{269} %argrw{"wrr"}
+	mul		a ___409_x $tmp42 	%argrw{"wrr"}
+	gt		$tmp43 a $const6 	%line{270} %argrw{"wrr"}
+	if		$tmp43 124 124 	%argrw{"r"}
+	assign		a $const6 	%line{271} %argrw{"wr"}
+	eq		$tmp44 Gradient_Type $const23 	%line{272} %argrw{"wrr"}
+	if		$tmp44 140 141 	%argrw{"r"}
+	sub		tu tu $const4 	%line{274} %argrw{"wrr"}
+	fabs		$tmp45 tu 	%line{275} %argrw{"wr"}
+	mul		tu $tmp45 $const5 	%argrw{"wrr"}
+	sub		tv tv $const4 	%line{276} %argrw{"wrr"}
+	fabs		$tmp46 tv 	%line{277} %argrw{"wr"}
+	mul		tv $tmp46 $const5 	%argrw{"wrr"}
+	gt		$tmp47 tv tu 	%line{278} %argrw{"wrr"}
+	if		$tmp47 135 136 	%argrw{"r"}
+	assign		a tu 	%line{279} %argrw{"wr"}
+	assign		a tv 	%line{281} %argrw{"wr"}
+	gt		$tmp48 a $const6 	%line{282} %argrw{"wrr"}
+	if		$tmp48 139 139 	%argrw{"r"}
+	assign		a $const6 	%line{283} %argrw{"wr"}
+	sub		a $const6 a 	%line{284} %argrw{"wrr"}
+	assign		a tv 	%line{288} %argrw{"wr"}
+	compref		data.u coords $const1 	%line{292} %argrw{"wrr"}
+	assign		data.u data.u 	%argrw{"wr"}
+	compref		data.v coords $const2 	%line{293} %argrw{"wrr"}
+	assign		data.v data.v 	%argrw{"wr"}
+	assign		data.noiseType Noise_Type 	%line{294} %argrw{"wr"}
+	assign		data.levels levels 	%line{295} %argrw{"wr"}
+	assign		data.low Low_Threshold 	%line{296} %argrw{"wr"}
+	assign		data.high High_Threshold 	%line{297} %argrw{"wr"}
+	assign		tsize $const3 	%line{298} %argrw{"wr"}
+	neq		$tmp49 size $const3 	%line{299} %argrw{"wrr"}
+	if		$tmp49 153 153 	%argrw{"r"}
+	div		tsize $const24 size 	%line{301} %argrw{"wrr"}
+	gt		$tmp50 Low_Threshold High_Threshold 	%line{303} %argrw{"wrr"}
+	if		$tmp50 157 157 	%argrw{"r"}
+	assign		data.high Low_Threshold 	%line{305} %argrw{"wr"}
+	assign		data.low High_Threshold 	%line{306} %argrw{"wr"}
+	sub		hminusl data.high data.low 	%line{308} %argrw{"wrr"}
+	mul		$tmp51 hminusl $const4 	%line{309} %argrw{"wrr"}
+	mul		data.sd $tmp51 Threshold_Smoothing 	%argrw{"wrr"}
+	assign		data.sd data.sd 	%argrw{"wr"}
+	neq		$tmp52 amount $const3 	%line{311} %argrw{"wrr"}
+	if		$tmp52 316 316 	%argrw{"r"}
+	mul		$tmp53 data.u tsize 	%line{313} %argrw{"wrr"}
+	add		$tmp54 $tmp53 $const6 	%argrw{"wrr"}
+	compassign	___414_r $const1 $tmp54 	%argrw{"wrr"}
+	mul		$tmp55 data.v tsize 	%line{314} %argrw{"wrr"}
+	add		$tmp56 $tmp55 $const6 	%argrw{"wrr"}
+	compassign	___414_r $const2 $tmp56 	%argrw{"wrr"}
+	compassign	___414_r $const7 phase 	%line{315} %argrw{"wrr"}
+	compref		$tmp59 ___414_r $const1 	%line{316} %argrw{"wrr"}
+	compref		$tmp60 ___414_r $const2 	%argrw{"wrr"}
+	compref		$tmp61 ___414_r $const7 	%argrw{"wrr"}
+	point		$tmp58 $tmp59 $tmp60 $tmp61 	%argrw{"wrrr"}
+	functioncall	$const25 314 	%argrw{"r"}
+	assign		___371_res $const1 	%line{52} %argrw{"wr"}
+	eq		$tmp62 data.noiseType $const7 	%line{53} %argrw{"wrr"}
+	if		$tmp62 213 264 	%argrw{"r"}
+	assign		___372_sum $const3 	%line{54} %argrw{"wr"}
+	assign		___372_f $const6 	%line{55} %argrw{"wr"}
+	for		$tmp63 182 183 196 197 	%line{56} %argrw{"r"}
+	assign		___372_l data.levels 	%argrw{"wr"}
+	ge		$tmp63 ___372_l $const6 	%argrw{"wrr"}
+	compref		$tmp66 $tmp58 $const1 	%line{57} %argrw{"wrr"}
+	mul		$tmp67 $tmp66 ___372_f 	%argrw{"wrr"}
+	compref		$tmp68 $tmp58 $const2 	%argrw{"wrr"}
+	mul		$tmp69 $tmp68 ___372_f 	%argrw{"wrr"}
+	compref		$tmp70 $tmp58 $const7 	%argrw{"wrr"}
+	mul		$tmp71 $tmp70 ___372_f 	%argrw{"wrr"}
+	functioncall	$const26 192 	%argrw{"r"}
+	point		$tmp72 $tmp67 $tmp69 $tmp71 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{159} %argrw{"wrrr"}
+	noise		$tmp65 $const27 $tmp72 	%argrw{"wrr"}
+	fabs		$tmp64 $tmp65 	%filename{"E:/github/elaramax/Shaders/max_gradient_ramp.osl"} %line{57} %argrw{"wr"}
+	div		$tmp73 $tmp64 ___372_f 	%argrw{"wrr"}
+	add		___372_sum ___372_sum $tmp73 	%argrw{"wrr"}
+	mul		___372_f ___372_f $const5 	%line{58} %argrw{"wrr"}
+	sub		___372_l ___372_l $const6 	%line{56} %argrw{"wrr"}
+	gt		$tmp74 ___372_l $const3 	%line{60} %argrw{"wrr"}
+	if		$tmp74 212 212 	%argrw{"r"}
+	compref		$tmp77 $tmp58 $const1 	%line{61} %argrw{"wrr"}
+	mul		$tmp78 $tmp77 ___372_f 	%argrw{"wrr"}
+	compref		$tmp79 $tmp58 $const2 	%argrw{"wrr"}
+	mul		$tmp80 $tmp79 ___372_f 	%argrw{"wrr"}
+	compref		$tmp81 $tmp58 $const7 	%argrw{"wrr"}
+	mul		$tmp82 $tmp81 ___372_f 	%argrw{"wrr"}
+	functioncall	$const26 208 	%argrw{"r"}
+	point		$tmp83 $tmp78 $tmp80 $tmp82 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{159} %argrw{"wrrr"}
+	noise		$tmp76 $const27 $tmp83 	%argrw{"wrr"}
+	fabs		$tmp75 $tmp76 	%filename{"E:/github/elaramax/Shaders/max_gradient_ramp.osl"} %line{61} %argrw{"wr"}
+	mul		$tmp84 ___372_l $tmp75 	%argrw{"wrr"}
+	div		$tmp85 $tmp84 ___372_f 	%argrw{"wrr"}
+	add		___372_sum ___372_sum $tmp85 	%argrw{"wrr"}
+	assign		___371_res ___372_sum 	%line{63} %argrw{"wr"}
+	eq		$tmp86 data.noiseType $const1 	%line{64} %argrw{"wrr"}
+	if		$tmp86 221 264 	%argrw{"r"}
+	compref		$tmp87 $tmp58 $const1 	%line{65} %argrw{"wrr"}
+	compref		$tmp88 $tmp58 $const2 	%argrw{"wrr"}
+	compref		$tmp89 $tmp58 $const7 	%argrw{"wrr"}
+	functioncall	$const26 221 	%argrw{"r"}
+	point		$tmp90 $tmp87 $tmp88 $tmp89 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{159} %argrw{"wrrr"}
+	noise		___371_res $const27 $tmp90 	%argrw{"wrr"}
+	eq		$tmp91 data.noiseType $const2 	%filename{"E:/github/elaramax/Shaders/max_gradient_ramp.osl"} %line{66} %argrw{"wrr"}
+	if		$tmp91 264 264 	%argrw{"r"}
+	eq		$tmp92 data.levels $const6 	%line{67} %argrw{"wrr"}
+	if		$tmp92 231 264 	%argrw{"r"}
+	compref		$tmp93 $tmp58 $const1 	%line{68} %argrw{"wrr"}
+	compref		$tmp94 $tmp58 $const2 	%argrw{"wrr"}
+	compref		$tmp95 $tmp58 $const7 	%argrw{"wrr"}
+	functioncall	$const26 231 	%argrw{"r"}
+	point		$tmp96 $tmp93 $tmp94 $tmp95 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{159} %argrw{"wrrr"}
+	noise		___371_res $const27 $tmp96 	%argrw{"wrr"}
+	assign		___379_sum $const3 	%filename{"E:/github/elaramax/Shaders/max_gradient_ramp.osl"} %line{70} %argrw{"wr"}
+	assign		___379_f $const6 	%line{71} %argrw{"wr"}
+	for		$tmp97 235 236 248 249 	%line{72} %argrw{"r"}
+	assign		___379_l data.levels 	%argrw{"wr"}
+	ge		$tmp97 ___379_l $const6 	%argrw{"wrr"}
+	compref		$tmp99 $tmp58 $const1 	%line{73} %argrw{"wrr"}
+	mul		$tmp100 $tmp99 ___379_f 	%argrw{"wrr"}
+	compref		$tmp101 $tmp58 $const2 	%argrw{"wrr"}
+	mul		$tmp102 $tmp101 ___379_f 	%argrw{"wrr"}
+	compref		$tmp103 $tmp58 $const7 	%argrw{"wrr"}
+	mul		$tmp104 $tmp103 ___379_f 	%argrw{"wrr"}
+	functioncall	$const26 245 	%argrw{"r"}
+	point		$tmp105 $tmp100 $tmp102 $tmp104 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{159} %argrw{"wrrr"}
+	noise		$tmp98 $const27 $tmp105 	%argrw{"wrr"}
+	div		$tmp106 $tmp98 ___379_f 	%filename{"E:/github/elaramax/Shaders/max_gradient_ramp.osl"} %line{73} %argrw{"wrr"}
+	add		___379_sum ___379_sum $tmp106 	%argrw{"wrr"}
+	mul		___379_f ___379_f $const5 	%line{74} %argrw{"wrr"}
+	sub		___379_l ___379_l $const6 	%line{72} %argrw{"wrr"}
+	gt		$tmp107 ___379_l $const3 	%line{76} %argrw{"wrr"}
+	if		$tmp107 263 263 	%argrw{"r"}
+	compref		$tmp109 $tmp58 $const1 	%line{77} %argrw{"wrr"}
+	mul		$tmp110 $tmp109 ___379_f 	%argrw{"wrr"}
+	compref		$tmp111 $tmp58 $const2 	%argrw{"wrr"}
+	mul		$tmp112 $tmp111 ___379_f 	%argrw{"wrr"}
+	compref		$tmp113 $tmp58 $const7 	%argrw{"wrr"}
+	mul		$tmp114 $tmp113 ___379_f 	%argrw{"wrr"}
+	functioncall	$const26 260 	%argrw{"r"}
+	point		$tmp115 $tmp110 $tmp112 $tmp114 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{159} %argrw{"wrrr"}
+	noise		$tmp108 $const27 $tmp115 	%argrw{"wrr"}
+	mul		$tmp116 ___379_l $tmp108 	%filename{"E:/github/elaramax/Shaders/max_gradient_ramp.osl"} %line{77} %argrw{"wrr"}
+	div		$tmp117 $tmp116 ___379_f 	%argrw{"wrr"}
+	add		___379_sum ___379_sum $tmp117 	%argrw{"wrr"}
+	assign		___371_res ___379_sum 	%line{79} %argrw{"wr"}
+	lt		$tmp118 data.low data.high 	%line{83} %argrw{"wrr"}
+	if		$tmp118 313 313 	%argrw{"r"}
+	add		$tmp120 ___371_res $const6 	%line{84} %argrw{"wrr"}
+	div		$tmp121 $tmp120 $const5 	%argrw{"wrr"}
+	functioncall	$const28 311 	%argrw{"r"}
+	sub		___368_p0 data.low data.sd 	%line{37} %argrw{"wrr"}
+	add		___368_p1 data.low data.sd 	%argrw{"wrr"}
+	sub		___368_p2 data.high data.sd 	%argrw{"wrr"}
+	add		___368_p3 data.high data.sd 	%argrw{"wrr"}
+	le		$tmp122 $tmp121 ___368_p0 	%line{38} %argrw{"wrr"}
+	if		$tmp122 277 277 	%argrw{"r"}
+	assign		$tmp119 data.low 	%argrw{"wr"}
+	return
+	ge		$tmp123 $tmp121 ___368_p3 	%line{39} %argrw{"wrr"}
+	if		$tmp123 281 281 	%argrw{"r"}
+	assign		$tmp119 data.high 	%argrw{"wr"}
+	return
+	ge		$tmp124 $tmp121 ___368_p1 	%line{40} %argrw{"wrr"}
+	neq		$tmp125 $tmp124 $const1 	%argrw{"wrr"}
+	if		$tmp125 287 287 	%argrw{"r"}
+	le		$tmp126 $tmp121 ___368_p2 	%argrw{"wrr"}
+	neq		$tmp127 $tmp126 $const1 	%argrw{"wrr"}
+	assign		$tmp125 $tmp127 	%argrw{"wr"}
+	if		$tmp125 290 290 	%argrw{"r"}
+	assign		$tmp119 $tmp121 	%argrw{"wr"}
+	return
+	gt		$tmp128 $tmp121 ___368_p0 	%line{41} %argrw{"wrr"}
+	neq		$tmp129 $tmp128 $const1 	%argrw{"wrr"}
+	if		$tmp129 296 296 	%argrw{"r"}
+	lt		$tmp130 $tmp121 ___368_p1 	%argrw{"wrr"}
+	neq		$tmp131 $tmp130 $const1 	%argrw{"wrr"}
+	assign		$tmp129 $tmp131 	%argrw{"wr"}
+	if		$tmp129 304 311 	%argrw{"r"}
+	sub		$tmp132 $tmp121 ___368_p0 	%line{42} %argrw{"wrr"}
+	mul		$tmp133 $const5 data.sd 	%argrw{"wrr"}
+	div		$tmp121 $tmp132 $tmp133 	%argrw{"wrr"}
+	mul		$tmp134 $tmp121 $tmp121 	%line{43} %argrw{"wrr"}
+	mul		$tmp135 $tmp134 data.sd 	%argrw{"wrr"}
+	add		$tmp119 data.low $tmp135 	%argrw{"wrr"}
+	return
+	sub		$tmp136 ___368_p3 $tmp121 	%line{45} %argrw{"wrr"}
+	mul		$tmp137 $const5 data.sd 	%argrw{"wrr"}
+	div		$tmp121 $tmp136 $tmp137 	%argrw{"wrr"}
+	mul		$tmp138 $tmp121 $tmp121 	%line{46} %argrw{"wrr"}
+	mul		$tmp139 $tmp138 data.sd 	%argrw{"wrr"}
+	sub		$tmp119 data.high $tmp139 	%argrw{"wrr"}
+	return
+	mul		$tmp140 $const5 $tmp119 	%line{84} %argrw{"wrr"}
+	sub		___371_res $tmp140 $const6 	%argrw{"wrr"}
+	assign		$tmp57 ___371_res 	%line{86} %argrw{"wr"}
+	mul		$tmp141 amount $tmp57 	%line{316} %argrw{"wrr"}
+	add		a a $tmp141 	%argrw{"wrr"}
+	functioncall	$const29 319 	%line{319} %argrw{"r"}
+	min		$tmp142 a $const6 	%filename{"E:/OSL_install\\shaders\\stdosl.h"} %line{144} %argrw{"wrr"}
+	max		a $tmp142 $const3 	%argrw{"wrr"}
+	functioncall	$const30 356 	%filename{"E:/github/elaramax/Shaders/max_gradient_ramp.osl"} %line{322} %argrw{"r"}
+	eq		$tmp143 a $const1 	%line{119} %argrw{"wrr"}
+	if		$tmp143 328 336 	%argrw{"r"}
+	assign		nLeftFlag $const1 	%line{121} %argrw{"wr"}
+	aref		$tmp144 flag_poss $const1 	%line{122} %argrw{"wrr"}
+	sub		$tmp145 a $tmp144 	%argrw{"wrr"}
+	aref		$tmp146 flag_nor_poss $const1 	%argrw{"wrr"}
+	mul		pos $tmp145 $tmp146 	%argrw{"wrr"}
+	return	%line{123}
+	eq		$tmp147 a $const6 	%line{124} %argrw{"wrr"}
+	if		$tmp147 336 336 	%argrw{"r"}
+	sub		nLeftFlag numFlag $const2 	%line{126} %argrw{"wrr"}
+	aref		$tmp148 flag_poss nLeftFlag 	%line{127} %argrw{"wrr"}
+	sub		$tmp149 a $tmp148 	%argrw{"wrr"}
+	aref		$tmp150 flag_nor_poss nLeftFlag 	%argrw{"wrr"}
+	mul		pos $tmp149 $tmp150 	%argrw{"wrr"}
+	return	%line{128}
+	div		___385_i numFlag $const7 	%line{130} %argrw{"wrr"}
+	aref		$tmp151 flag_poss ___385_i 	%line{131} %argrw{"wrr"}
+	lt		$tmp152 a $tmp151 	%argrw{"wrr"}
+	if		$tmp152 345 351 	%argrw{"r"}
+	dowhile		$tmp154 341 343 345 345 	%line{133} %argrw{"r"}
+	aref		$tmp153 flag_poss ___385_i 	%line{134} %argrw{"wrr"}
+	lt		$tmp154 a $tmp153 	%argrw{"wrr"}
+	assign		$tmp155 ___385_i 	%line{133} %argrw{"wr"}
+	sub		___385_i ___385_i $const2 	%argrw{"wrr"}
+	while		$tmp158 346 349 351 351 	%line{138} %argrw{"r"}
+	add		$tmp156 ___385_i $const2 	%argrw{"wrr"}
+	aref		$tmp157 flag_poss $tmp156 	%argrw{"wrr"}
+	ge		$tmp158 a $tmp157 	%argrw{"wrr"}
+	assign		$tmp159 ___385_i 	%line{139} %argrw{"wr"}
+	add		___385_i ___385_i $const2 	%argrw{"wrr"}
+	assign		nLeftFlag ___385_i 	%line{141} %argrw{"wr"}
+	aref		$tmp160 flag_poss ___385_i 	%line{142} %argrw{"wrr"}
+	sub		$tmp161 a $tmp160 	%argrw{"wrr"}
+	aref		$tmp162 flag_nor_poss ___385_i 	%argrw{"wrr"}
+	mul		pos $tmp161 $tmp162 	%argrw{"wrr"}
+	compref		$tmp163 coords $const1 	%line{323} %argrw{"wrr"}
+	ge		$tmp164 $tmp163 $const3 	%argrw{"wrr"}
+	neq		$tmp165 $tmp164 $const1 	%argrw{"wrr"}
+	if		$tmp165 364 364 	%argrw{"r"}
+	compref		$tmp166 coords $const1 	%argrw{"wrr"}
+	le		$tmp167 $tmp166 $const6 	%argrw{"wrr"}
+	neq		$tmp168 $tmp167 $const1 	%argrw{"wrr"}
+	assign		$tmp165 $tmp168 	%argrw{"wr"}
+	neq		$tmp169 $tmp165 $const1 	%argrw{"wrr"}
+	if		$tmp169 370 370 	%argrw{"r"}
+	compref		$tmp170 coords $const2 	%argrw{"wrr"}
+	ge		$tmp171 $tmp170 $const3 	%argrw{"wrr"}
+	neq		$tmp172 $tmp171 $const1 	%argrw{"wrr"}
+	assign		$tmp169 $tmp172 	%argrw{"wr"}
+	neq		$tmp173 $tmp169 $const1 	%argrw{"wrr"}
+	if		$tmp173 376 376 	%argrw{"r"}
+	compref		$tmp174 coords $const2 	%argrw{"wrr"}
+	le		$tmp175 $tmp174 $const6 	%argrw{"wrr"}
+	neq		$tmp176 $tmp175 $const1 	%argrw{"wrr"}
+	assign		$tmp173 $tmp176 	%argrw{"wr"}
+	if		$tmp173 384 385 	%argrw{"r"}
+	sub		$tmp177 $const6 pos 	%line{325} %argrw{"wrr"}
+	aref		$tmp178 flag_colors nLeftFlag 	%argrw{"wrr"}
+	mul		$tmp179 $tmp177 $tmp178 	%argrw{"wrr"}
+	add		$tmp180 nLeftFlag $const2 	%argrw{"wrr"}
+	aref		$tmp181 flag_colors $tmp180 	%argrw{"wrr"}
+	mul		$tmp182 pos $tmp181 	%argrw{"wrr"}
+	add		result $tmp179 $tmp182 	%argrw{"wrr"}
+	assign		result_alpha $const1 	%line{329} %argrw{"wr"}
+	isconnected	$tmp183 result_bump 	%line{335} %argrw{"wr"}
+	bitand		$tmp184 $tmp183 $const7 	%argrw{"wrr"}
+	if		$tmp184 427 427 	%argrw{"r"}
+	sub		$tmp186 $const6 data.v 	%line{337} %argrw{"wrr"}
+	functioncall	$const31 426 	%argrw{"r"}
+	functioncall	$const11 398 	%filename{"E:/github\\elaramax\\Shaders\\ei_std.h"} %line{124} %argrw{"r"}
+	compref		$tmp187 result $const1 	%line{28} %argrw{"wrr"}
+	compref		$tmp188 result $const2 	%argrw{"wrr"}
+	add		$tmp189 $tmp187 $tmp188 	%argrw{"wrr"}
+	compref		$tmp190 result $const7 	%argrw{"wrr"}
+	add		$tmp191 $tmp189 $tmp190 	%argrw{"wrr"}
+	mul		___306_f $tmp191 $const12 	%argrw{"wrr"}
+	assign		___318_fcolor ___306_f 	%line{29} %argrw{"wr"}
+	functioncall	$const32 420 	%line{126} %argrw{"r"}
+	Dx		___315_dfdx ___318_fcolor 	%line{103} %argrw{"wr"} %argderivs{1}
+	Dy		___315_dfdy ___318_fcolor 	%line{104} %argrw{"wr"} %argderivs{1}
+	Dx		___315_dsdx data.u 	%line{105} %argrw{"wr"} %argderivs{1}
+	Dy		___315_dsdy data.u 	%line{106} %argrw{"wr"} %argderivs{1}
+	Dx		___315_dtdx $tmp186 	%line{107} %argrw{"wr"} %argderivs{1}
+	Dy		___315_dtdy $tmp186 	%line{108} %argrw{"wr"} %argderivs{1}
+	mul		$tmp192 ___315_dsdx ___315_dtdy 	%line{109} %argrw{"wrr"}
+	mul		$tmp193 ___315_dtdx ___315_dsdy 	%argrw{"wrr"}
+	sub		___315_dt $tmp192 $tmp193 	%argrw{"wrr"}
+	neq		$tmp194 ___315_dt $const1 	%line{110} %argrw{"wrr"}
+	if		$tmp194 418 420 	%argrw{"r"}
+	mul		$tmp195 ___315_dtdy ___315_dfdx 	%line{112} %argrw{"wrr"}
+	mul		$tmp196 ___315_dtdx ___315_dfdy 	%argrw{"wrr"}
+	sub		$tmp197 $tmp195 $tmp196 	%argrw{"wrr"}
+	div		___318_dfds $tmp197 ___315_dt 	%argrw{"wrr"}
+	mul		$tmp198 ___315_dsdx ___315_dfdy 	%line{113} %argrw{"wrr"}
+	mul		$tmp199 ___315_dsdy ___315_dfdx 	%argrw{"wrr"}
+	sub		$tmp200 $tmp198 $tmp199 	%argrw{"wrr"}
+	div		___318_dfdt $tmp200 ___315_dt 	%argrw{"wrr"}
+	assign		___318_dfds $const1 	%line{117} %argrw{"wr"}
+	assign		___318_dfdt $const1 	%line{118} %argrw{"wr"}
+	normalize	$tmp201 dPdu 	%line{127} %argrw{"wr"}
+	neg		$tmp202 $tmp201 	%argrw{"wr"}
+	mul		$tmp203 $tmp202 ___318_dfds 	%argrw{"wrr"}
+	normalize	$tmp204 dPdv 	%argrw{"wr"}
+	mul		$tmp205 $tmp204 ___318_dfdt 	%argrw{"wrr"}
+	add		$tmp185 $tmp203 $tmp205 	%argrw{"wrr"}
+	mul		result_bump $tmp185 $const34 	%filename{"E:/github/elaramax/Shaders/max_gradient_ramp.osl"} %line{337} %argrw{"wrr"}
+	end

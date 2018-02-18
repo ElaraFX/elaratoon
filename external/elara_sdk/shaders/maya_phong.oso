@@ -1,0 +1,137 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+surface maya_phong
+param	color	i_ambientColor	0 0 0 		 %read{2147483647,-1} %write{2147483647,-1}
+param	color	i_color	0.5 0.5 0.5 		 %read{25,25} %write{2147483647,-1}
+param	float	i_cosinePower	20 		 %read{8,8} %write{2147483647,-1}
+param	float	i_diffuse	0.80000001 		 %read{7,7} %write{2147483647,-1}
+param	color	i_incandescence	0 0 0 		 %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_matteOpacity	1 		 %read{33,35} %write{2147483647,-1}
+param	int	i_matteOpacityMode	2 		%meta{string,help,"0-Back Hole, 1-Solid Matte, 2-Opacity Gain"}  %read{28,31} %write{2147483647,-1}
+param	normal	i_normalCamera	0 0 1 		 %read{2,2} %write{2147483647,-1}
+param	color	i_specularColor	0.5 0.5 0.5 		 %read{9,9} %write{2147483647,-1}
+param	float	i_reflectivity	0.5 		 %read{12,12} %write{2147483647,-1}
+param	color	i_reflectedColor	0 0 0 		 %read{12,12} %write{2147483647,-1}
+param	int	i_refractions	0 		 %read{15,15} %write{2147483647,-1}
+param	float	i_refractiveIndex	1 		 %read{11,22} %write{2147483647,-1}
+param	int	i_refractionLimit	6 		 %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_lightAbsorbance	0 		 %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_shadowAttenuation	0.5 		 %read{2147483647,-1} %write{2147483647,-1}
+param	int	i_reflectionLimit	1 		 %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_translucence	0 		 %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_translucenceDepth	0.5 		 %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_translucenceFocus	0.5 		 %read{2147483647,-1} %write{2147483647,-1}
+param	color	i_transparency	0 0 0 		 %read{17,34} %write{2147483647,-1}
+param	float	i_reflectionMaxDistance	0 		%meta{string,help,""}  %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_reflectionSamples	0 		%meta{string,help,""}  %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_reflectionBlur	0 		%meta{string,help,""}  %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_reflectionNoiseAmplitude	0 		%meta{string,help,""}  %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_reflectionNoiseFrequency	0 		%meta{string,help,""}  %read{2147483647,-1} %write{2147483647,-1}
+param	int	i_mtoer_hasBump	0 		%meta{string,help,"0:false, 1:true"}  %read{0,0} %write{2147483647,-1}
+oparam	color	o_outColor	0 0 0 		 %read{39,46} %write{25,44}
+oparam	color	o_outTransparency	0 0 0 		 %read{38,50} %write{37,37}
+oparam	closure color	result			 %read{49,51} %write{46,49}
+oparam	float	result_alpha	0 		 %read{2147483647,-1} %write{53,53}
+global	normal	N	 %read{3,3} %write{2147483647,-1}
+global	closure color	Ci	 %read{2147483647,-1} %write{52,52}
+local	color	___312_res	 %read{36,37} %write{30,36}
+local	color	___316_outcolor	 %read{43,43} %write{39,39}
+local	normal	Nshading	 %read{6,22} %write{2,3}
+local	closure color	cDiffuse	 %read{46,46} %write{4,7}
+local	closure color	cSpecular	 %read{47,47} %write{5,9}
+local	closure color	cReflection	 %read{47,47} %write{13,13}
+local	closure color	cTransparent	 %read{45,52} %write{14,45}
+local	closure color	cRefraction	 %read{48,48} %write{20,23}
+const	int	$const1	1		 %read{0,31} %write{2147483647,-1}
+temp	int	$tmp1	 %read{1,1} %write{0,0}
+const	int	$const2	0		 %read{4,28} %write{2147483647,-1}
+temp	closure color	$tmp2	 %read{7,7} %write{6,6}
+const	string	$const3	"diffuse"		 %read{6,6} %write{2147483647,-1}
+temp	closure color	$tmp3	 %read{9,9} %write{8,8}
+const	string	$const4	"phong"		 %read{8,8} %write{2147483647,-1}
+const	string	$const5	"getReflection"		 %read{10,10} %write{2147483647,-1}
+temp	closure color	$tmp4	 %read{13,13} %write{11,11}
+const	string	$const6	"reflection"		 %read{11,11} %write{2147483647,-1}
+temp	color	$tmp5	 %read{13,13} %write{12,12}
+const	string	$const7	"transparent"		 %read{14,14} %write{2147483647,-1}
+temp	float	$tmp6	 %read{20,20} %write{15,15}
+const	string	$const8	"doRefraction"		 %read{16,16} %write{2147483647,-1}
+const	color	$const9	0 0 0		 %read{17,23} %write{2147483647,-1}
+temp	int	$tmp8	 %read{18,18} %write{17,17}
+temp	closure color	$tmp9	 %read{20,20} %write{19,19}
+const	string	$const10	"refraction"		 %read{19,22} %write{2147483647,-1}
+temp	closure color	$tmp10	 %read{23,23} %write{22,22}
+const	string	$const11	"computeSurface"		 %read{26,26} %write{2147483647,-1}
+const	string	$const12	"computeSurfaceTransparency"		 %read{27,27} %write{2147483647,-1}
+temp	int	$tmp12	 %read{29,29} %write{28,28}
+const	color	$const13	1 1 1		 %read{30,30} %write{2147483647,-1}
+temp	int	$tmp13	 %read{32,32} %write{31,31}
+temp	color	$tmp14	 %read{35,35} %write{34,34}
+const	float	$const14	1		 %read{34,53} %write{2147483647,-1}
+temp	color	$tmp15	 %read{39,39} %write{38,38}
+const	float	$const15	0		 %read{40,40} %write{2147483647,-1}
+temp	color	$tmp16	 %read{44,44} %write{40,40}
+const	float	$const16	1e+030		 %read{41,41} %write{2147483647,-1}
+temp	color	$tmp17	 %read{43,43} %write{41,41}
+const	string	$const17	"clamp"		 %read{42,42} %write{2147483647,-1}
+temp	color	$tmp18	 %read{44,44} %write{43,43}
+temp	closure color	$tmp19	 %read{48,48} %write{47,47}
+temp	closure color	$tmp20	 %read{49,49} %write{48,48}
+temp	color	$tmp21	 %read{51,51} %write{50,50}
+temp	closure color	$tmp22	 %read{52,52} %write{51,51}
+code ___main___
+	eq		$tmp1 i_mtoer_hasBump $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_phong.osl"} %line{75} %argrw{"wrr"}
+	if		$tmp1 3 4 	%argrw{"r"}
+	assign		Nshading i_normalCamera 	%line{77} %argrw{"wr"}
+	assign		Nshading N 	%line{81} %argrw{"wr"}
+	assign		cDiffuse $const2 	%line{84} %argrw{"wr"}
+	assign		cSpecular $const2 	%line{85} %argrw{"wr"}
+	closure		$tmp2 $const3 Nshading 	%line{86} %argrw{"wrr"}
+	mul		cDiffuse $tmp2 i_diffuse 	%argrw{"wrr"}
+	closure		$tmp3 $const4 Nshading i_cosinePower 	%line{87} %argrw{"wrrr"}
+	mul		cSpecular $tmp3 i_specularColor 	%argrw{"wrr"}
+	functioncall	$const5 14 	%line{88} %argrw{"r"}
+	closure		$tmp4 $const6 Nshading i_refractiveIndex 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{94} %argrw{"wrrr"}
+	mul		$tmp5 i_reflectivity i_reflectedColor 	%argrw{"wrr"}
+	mul		cReflection $tmp4 $tmp5 	%argrw{"wrr"}
+	closure		cTransparent $const7 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_phong.osl"} %line{89} %argrw{"wr"}
+	assign		$tmp6 i_refractions 	%line{90} %argrw{"wr"}
+	functioncall	$const8 25 	%argrw{"r"}
+	neq		$tmp8 i_transparency $const9 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{104} %argrw{"wrr"}
+	if		$tmp8 22 25 	%argrw{"r"}
+	closure		$tmp9 $const10 Nshading i_refractiveIndex 	%line{105} %argrw{"wrrr"}
+	mul		cRefraction $tmp9 $tmp6 	%argrw{"wrr"}
+	return
+	closure		$tmp10 $const10 Nshading i_refractiveIndex 	%line{108} %argrw{"wrrr"}
+	mul		cRefraction $tmp10 $const9 	%argrw{"wrr"}
+	return
+	assign		o_outColor i_color 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_phong.osl"} %line{91} %argrw{"wr"}
+	functioncall	$const11 45 	%line{98} %argrw{"r"}
+	functioncall	$const12 38 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{82} %argrw{"r"}
+	eq		$tmp12 i_matteOpacityMode $const2 	%line{52} %argrw{"wrr"}
+	if		$tmp12 31 36 	%argrw{"r"}
+	assign		___312_res $const13 	%line{56} %argrw{"wr"}
+	eq		$tmp13 i_matteOpacityMode $const1 	%line{58} %argrw{"wrr"}
+	if		$tmp13 34 36 	%argrw{"r"}
+	color		___312_res i_matteOpacity i_matteOpacity i_matteOpacity 	%line{61} %argrw{"wrrr"}
+	sub		$tmp14 $const14 i_transparency 	%line{66} %argrw{"wrr"}
+	mul		___312_res $tmp14 i_matteOpacity 	%argrw{"wrr"}
+	sub		___312_res $const14 ___312_res 	%line{68} %argrw{"wrr"}
+	assign		o_outTransparency ___312_res 	%line{69} %argrw{"wr"}
+	sub		$tmp15 $const14 o_outTransparency 	%line{83} %argrw{"wrr"}
+	mul		___316_outcolor o_outColor $tmp15 	%argrw{"wrr"}
+	assign		$tmp16 $const15 	%line{84} %argrw{"wr"}
+	assign		$tmp17 $const16 	%argrw{"wr"}
+	functioncall	$const17 45 	%argrw{"r"}
+	min		$tmp18 ___316_outcolor $tmp17 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{141} %argrw{"wrr"}
+	max		o_outColor $tmp18 $tmp16 	%argrw{"wrr"}
+	mul		cTransparent cTransparent o_outTransparency 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_phong.osl"} %line{99} %argrw{"wrr"}
+	mul		result cDiffuse o_outColor 	%line{100} %argrw{"wrr"}
+	add		$tmp19 cReflection cSpecular 	%line{101} %argrw{"wrr"}
+	add		$tmp20 $tmp19 cRefraction 	%argrw{"wrr"}
+	add		result result $tmp20 	%argrw{"wrr"}
+	sub		$tmp21 $const14 o_outTransparency 	%line{102} %argrw{"wrr"}
+	mul		$tmp22 result $tmp21 	%argrw{"wrr"}
+	add		Ci $tmp22 cTransparent 	%argrw{"wrr"}
+	assign		result_alpha $const14 	%line{103} %argrw{"wr"}
+	end

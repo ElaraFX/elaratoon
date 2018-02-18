@@ -1,0 +1,52 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_projection
+param	float	i_alphaGain	1 		 %read{14,14} %write{2147483647,-1}
+param	int	i_alphaIsLuminance	0 		 %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_alphaOffset	0 		 %read{15,15} %write{2147483647,-1}
+param	color	i_colorGain	1 1 1 		 %read{12,12} %write{2147483647,-1}
+param	color	i_colorOffset	1 1 1 		 %read{13,13} %write{2147483647,-1}
+param	color	i_defaultColor	0.5 0.5 0.5 		 %read{16,16} %write{2147483647,-1}
+param	color	i_image	0 0 0 		 %read{2,2} %write{2147483647,-1}
+param	int	i_invert	0 		 %read{3,3} %write{2147483647,-1}
+param	int	i_local	0 		 %read{2147483647,-1} %write{2147483647,-1}
+param	int	i_wrap	0 		 %read{2147483647,-1} %write{2147483647,-1}
+param	float	i_prev_ss	1 		 %read{18,18} %write{2147483647,-1}
+param	float	i_prev_tt	1 		 %read{19,19} %write{2147483647,-1}
+param	float	i_outside	0 		 %read{0,0} %write{2147483647,-1}
+param	vector	i_uvCoord	0 0 0 		 %read{2147483647,-1} %write{2147483647,-1}
+oparam	color	o_outColor	1 1 1 		 %read{7,13} %write{2,16}
+oparam	float	o_outAlpha	1 		 %read{8,15} %write{8,17}
+global	float	u	 %read{2147483647,-1} %write{18,18}
+global	float	v	 %read{2147483647,-1} %write{19,19}
+const	int	$const1	1		 %read{0,0} %write{2147483647,-1}
+temp	int	$tmp1	 %read{1,1} %write{0,0}
+const	float	$const2	1		 %read{7,9} %write{2147483647,-1}
+temp	float	$tmp2	 %read{5,5} %write{3,3}
+const	string	$const3	"colorBalance"		 %read{4,4} %write{2147483647,-1}
+const	float	$const4	0		 %read{5,9} %write{2147483647,-1}
+temp	int	$tmp3	 %read{6,6} %write{5,5}
+temp	int	$tmp4	 %read{10,10} %write{9,9}
+const	int	$const5	0		 %read{17,17} %write{2147483647,-1}
+code ___main___
+	lt		$tmp1 i_outside $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_projection.osl"} %line{36} %argrw{"wrr"}
+	if		$tmp1 16 18 	%argrw{"r"}
+	assign		o_outColor i_image 	%line{38} %argrw{"wr"}
+	assign		$tmp2 i_invert 	%line{47} %argrw{"wr"}
+	functioncall	$const3 16 	%argrw{"r"}
+	neq		$tmp3 $tmp2 $const4 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{124} %argrw{"wrr"}
+	if		$tmp3 9 9 	%argrw{"r"}
+	sub		o_outColor $const2 o_outColor 	%line{126} %argrw{"wrr"}
+	sub		o_outAlpha $const2 o_outAlpha 	%line{127} %argrw{"wrr"}
+	neq		$tmp4 $const2 $const4 	%line{130} %argrw{"wrr"}
+	if		$tmp4 12 12 	%argrw{"r"}
+	luminance	o_outAlpha o_outColor 	%line{132} %argrw{"wr"}
+	mul		o_outColor o_outColor i_colorGain 	%line{135} %argrw{"wrr"}
+	add		o_outColor o_outColor i_colorOffset 	%line{136} %argrw{"wrr"}
+	mul		o_outAlpha o_outAlpha i_alphaGain 	%line{138} %argrw{"wrr"}
+	add		o_outAlpha o_outAlpha i_alphaOffset 	%line{139} %argrw{"wrr"}
+	assign		o_outColor i_defaultColor 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_projection.osl"} %line{52} %argrw{"wr"}
+	assign		o_outAlpha $const5 	%line{53} %argrw{"wr"}
+	assign		u i_prev_ss 	%line{55} %argrw{"wr"}
+	assign		v i_prev_tt 	%line{56} %argrw{"wr"}
+	end

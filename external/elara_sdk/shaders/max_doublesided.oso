@@ -1,0 +1,38 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_doublesided
+param	closure color	material1			%read{5,10} %write{2147483647,-1}
+param	int	material1_isnull	0		%read{2147483647,-1} %write{2147483647,-1}
+param	closure color	material2			%read{6,9} %write{2147483647,-1}
+param	int	material2_isnull	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	map1Enabled	1		%read{2147483647,-1} %write{2147483647,-1}
+param	int	map2Enabled	1		%read{2147483647,-1} %write{2147483647,-1}
+param	float	translucency	0		%read{1,1} %write{2147483647,-1}
+oparam	closure color	result			%read{2147483647,-1} %write{7,11}
+local	int	bf	%read{2,2} %write{0,0}
+local	float	tr	%read{4,10} %write{1,1}
+const	float	$const1	0.0099999998		%read{1,1} %write{2147483647,-1}
+const	int	$const2	1		%read{2,2} %write{2147483647,-1}
+temp	int	$tmp1	%read{3,3} %write{2,2}
+temp	float	$tmp2	%read{5,5} %write{4,4}
+const	float	$const3	1		%read{4,8} %write{2147483647,-1}
+temp	closure color	$tmp3	%read{7,7} %write{5,5}
+temp	closure color	$tmp4	%read{7,7} %write{6,6}
+temp	float	$tmp5	%read{9,9} %write{8,8}
+temp	closure color	$tmp6	%read{11,11} %write{9,9}
+temp	closure color	$tmp7	%read{11,11} %write{10,10}
+code ___main___
+	backfacing	bf 	%filename{"E:/github/elaramax/Shaders/max_doublesided.osl"} %line{28} %argrw{"w"}
+	mul		tr translucency $const1 	%line{29} %argrw{"wrr"}
+	neq		$tmp1 bf $const2 	%line{30} %argrw{"wrr"}
+	if		$tmp1 8 12 	%argrw{"r"}
+	sub		$tmp2 $const3 tr 	%line{32} %argrw{"wrr"}
+	mul		$tmp3 material1 $tmp2 	%argrw{"wrr"}
+	mul		$tmp4 material2 tr 	%argrw{"wrr"}
+	add		result $tmp3 $tmp4 	%argrw{"wrr"}
+	sub		$tmp5 $const3 tr 	%line{35} %argrw{"wrr"}
+	mul		$tmp6 material2 $tmp5 	%argrw{"wrr"}
+	mul		$tmp7 material1 tr 	%argrw{"wrr"}
+	add		result $tmp6 $tmp7 	%argrw{"wrr"}
+	end

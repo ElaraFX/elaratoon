@@ -1,0 +1,608 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_checker
+param	float	tex_soften	0		%read{9,273} %write{2147483647,-1}
+param	color	tex_color1	0 0 0		%read{91,91} %write{2147483647,-1}
+param	color	tex_color2	1 1 1		%read{100,100} %write{2147483647,-1}
+param	color	tex_map1	0 0 0		%read{90,90} %write{2147483647,-1}
+param	color	tex_map2	1 1 1		%read{99,99} %write{2147483647,-1}
+param	int	tex_map1_isnull	0		%read{86,86} %write{2147483647,-1}
+param	int	tex_map2_isnull	0		%read{95,95} %write{2147483647,-1}
+param	int	tex_map1Enabled	1		%read{83,83} %write{2147483647,-1}
+param	int	tex_map2Enabled	1		%read{92,92} %write{2147483647,-1}
+param	float	tex_map1_alpha	1		%read{125,136} %write{2147483647,-1}
+param	float	tex_map2_alpha	1		%read{129,134} %write{2147483647,-1}
+param	vector	tex_map1_bump	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+param	vector	tex_map2_bump	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
+param	point	tex_coords	0 0 0		%read{0,0} %write{2147483647,-1} %derivs
+oparam	color	result	0 0 0		%read{2147483647,-1} %write{124,133}
+oparam	vector	result_bump	0 0 0		%read{139,139} %write{337,337}
+oparam	float	result_alpha	1		%read{2147483647,-1} %write{125,138}
+global	vector	dPdu	%read{332,332} %write{2147483647,-1}
+global	vector	dPdv	%read{334,334} %write{2147483647,-1}
+local	float	___368_f	%read{33,307} %write{32,305}
+local	float	___369_d_u	%read{16,294} %write{9,256}
+local	float	___369_d_v	%read{17,312} %write{15,262}
+local	float	___369_hdu	%read{30,285} %write{16,263}
+local	float	___369_hdv	%read{48,303} %write{17,264}
+local	float	___370_s	%read{66,314} %write{47,294}
+local	float	___370_t	%read{66,315} %write{65,312}
+local	point	uv	%read{1,248} %write{0,0} %derivs
+local	float	a	%read{122,330} %write{70,81}
+local	color	fcol1	%read{124,132} %write{90,91}
+local	color	fcol2	%read{128,130} %write{99,100}
+local	float	___381_d_u	%read{157,243} %write{148,148} %derivs
+local	float	___381_d_v	%read{245,331} %write{155,155} %derivs
+local	float	___381_dfdu	%read{333,333} %write{156,243}
+local	float	___381_dfdv	%read{335,335} %write{244,331}
+const	int	$const1	0		%read{1,274} %write{2147483647,-1}
+temp	float	$tmp1	%read{4,76} %write{1,73} %derivs
+const	int	$const2	1		%read{2,248} %write{2147483647,-1}
+temp	float	$tmp2	%read{10,77} %write{2,75} %derivs
+const	string	$const3	"CheckerFunction"		%read{3,250} %write{2147483647,-1}
+temp	float	$tmp3	%read{8,8} %write{5,5}
+temp	float	$tmp4	%read{5,5} %write{4,4}
+temp	float	$tmp5	%read{8,8} %write{7,7}
+temp	float	$tmp6	%read{7,7} %write{6,6}
+temp	float	$tmp7	%read{9,9} %write{8,8}
+temp	float	$tmp8	%read{14,14} %write{11,11}
+temp	float	$tmp9	%read{11,11} %write{10,10}
+temp	float	$tmp10	%read{14,14} %write{13,13}
+temp	float	$tmp11	%read{13,13} %write{12,12}
+temp	float	$tmp12	%read{15,15} %write{14,14}
+const	float	$const4	0.5		%read{16,324} %write{2147483647,-1}
+const	float	$const5	0		%read{18,327} %write{2147483647,-1}
+temp	int	$tmp13	%read{19,19} %write{18,18}
+temp	int	$tmp14	%read{20,24} %write{19,23}
+temp	int	$tmp15	%read{22,22} %write{21,21}
+temp	int	$tmp16	%read{23,23} %write{22,22}
+temp	int	$tmp17	%read{25,29} %write{24,28}
+temp	int	$tmp18	%read{27,27} %write{26,26}
+temp	int	$tmp19	%read{28,28} %write{27,27}
+temp	float	$tmp20	%read{46,46} %write{37,37}
+temp	float	$tmp21	%read{32,34} %write{30,30}
+const	string	$const6	"sintegral"		%read{31,304} %write{2147483647,-1}
+temp	float	$tmp22	%read{37,37} %write{33,33}
+temp	float	$tmp23	%read{37,37} %write{36,36}
+temp	float	$tmp24	%read{35,35} %write{34,34}
+temp	float	$tmp25	%read{36,36} %write{35,35}
+temp	float	$tmp26	%read{46,46} %write{45,45}
+temp	float	$tmp27	%read{40,42} %write{38,38}
+temp	float	$tmp28	%read{45,45} %write{41,41}
+temp	float	$tmp29	%read{45,45} %write{44,44}
+temp	float	$tmp30	%read{43,43} %write{42,42}
+temp	float	$tmp31	%read{44,44} %write{43,43}
+temp	float	$tmp32	%read{47,47} %write{46,46}
+temp	float	$tmp33	%read{64,64} %write{55,55}
+temp	float	$tmp34	%read{50,52} %write{48,48}
+temp	float	$tmp35	%read{55,55} %write{51,51}
+temp	float	$tmp36	%read{55,55} %write{54,54}
+temp	float	$tmp37	%read{53,53} %write{52,52}
+temp	float	$tmp38	%read{54,54} %write{53,53}
+temp	float	$tmp39	%read{64,64} %write{63,63}
+temp	float	$tmp40	%read{58,60} %write{56,56}
+temp	float	$tmp41	%read{63,63} %write{59,59}
+temp	float	$tmp42	%read{63,63} %write{62,62}
+temp	float	$tmp43	%read{61,61} %write{60,60}
+temp	float	$tmp44	%read{62,62} %write{61,61}
+temp	float	$tmp45	%read{65,65} %write{64,64}
+temp	float	$tmp46	%read{70,70} %write{66,66}
+const	float	$const7	1		%read{67,328} %write{2147483647,-1}
+temp	float	$tmp47	%read{69,69} %write{67,67}
+temp	float	$tmp48	%read{69,69} %write{68,68}
+temp	float	$tmp49	%read{70,70} %write{69,69}
+temp	float	$tmp50	%read{73,73} %write{72,72} %derivs
+temp	float	$tmp51	%read{75,75} %write{74,74} %derivs
+temp	int	$tmp52	%read{78,78} %write{76,76}
+temp	int	$tmp53	%read{78,78} %write{77,77}
+temp	int	$tmp54	%read{79,79} %write{78,78}
+temp	int	$tmp55	%read{84,84} %write{83,83}
+temp	int	$tmp56	%read{85,89} %write{84,88}
+temp	int	$tmp57	%read{87,87} %write{86,86}
+temp	int	$tmp58	%read{88,88} %write{87,87}
+temp	int	$tmp59	%read{93,93} %write{92,92}
+temp	int	$tmp60	%read{94,98} %write{93,97}
+temp	int	$tmp61	%read{96,96} %write{95,95}
+temp	int	$tmp62	%read{97,97} %write{96,96}
+temp	float	$tmp63	%read{102,102} %write{101,101}
+temp	int	$tmp64	%read{103,103} %write{102,102}
+temp	int	$tmp65	%read{104,109} %write{103,108}
+temp	float	$tmp66	%read{106,106} %write{105,105}
+temp	int	$tmp67	%read{107,107} %write{106,106}
+temp	int	$tmp68	%read{108,108} %write{107,107}
+temp	int	$tmp69	%read{110,115} %write{109,114}
+temp	float	$tmp70	%read{112,112} %write{111,111}
+temp	int	$tmp71	%read{113,113} %write{112,112}
+temp	int	$tmp72	%read{114,114} %write{113,113}
+temp	int	$tmp73	%read{116,121} %write{115,120}
+temp	float	$tmp74	%read{118,118} %write{117,117}
+temp	int	$tmp75	%read{119,119} %write{118,118}
+temp	int	$tmp76	%read{120,120} %write{119,119}
+const	float	$const8	0.00050000002		%read{122,122} %write{2147483647,-1}
+temp	int	$tmp77	%read{123,123} %write{122,122}
+const	float	$const9	0.99949998		%read{126,126} %write{2147483647,-1}
+temp	int	$tmp78	%read{127,127} %write{126,126}
+temp	color	$tmp79	%read{133,133} %write{130,130}
+temp	float	$tmp80	%read{132,132} %write{131,131}
+temp	color	$tmp81	%read{133,133} %write{132,132}
+temp	float	$tmp82	%read{137,137} %write{134,134}
+temp	float	$tmp83	%read{136,136} %write{135,135}
+temp	float	$tmp84	%read{137,137} %write{136,136}
+temp	int	$tmp85	%read{140,140} %write{139,139}
+const	int	$const10	2		%read{140,140} %write{2147483647,-1}
+temp	int	$tmp86	%read{141,141} %write{140,140}
+temp	float	$tmp87	%read{148,148} %write{144,144} %derivs
+temp	float	$tmp88	%read{144,144} %write{143,143} %derivs
+temp	float	$tmp89	%read{143,143} %write{142,142} %derivs
+temp	float	$tmp90	%read{148,148} %write{147,147} %derivs
+temp	float	$tmp91	%read{147,147} %write{146,146} %derivs
+temp	float	$tmp92	%read{146,146} %write{145,145} %derivs
+temp	float	$tmp93	%read{155,155} %write{151,151} %derivs
+temp	float	$tmp94	%read{151,151} %write{150,150} %derivs
+temp	float	$tmp95	%read{150,150} %write{149,149} %derivs
+temp	float	$tmp96	%read{155,155} %write{154,154} %derivs
+temp	float	$tmp97	%read{154,154} %write{153,153} %derivs
+temp	float	$tmp98	%read{153,153} %write{152,152} %derivs
+temp	int	$tmp99	%read{158,158} %write{157,157}
+temp	float	$tmp100	%read{242,242} %write{229,240}
+temp	float	$tmp101	%read{160,160} %write{159,159} %derivs
+temp	float	$tmp102	%read{163,235} %write{160,232} %derivs
+temp	float	$tmp103	%read{169,236} %write{161,234} %derivs
+temp	float	$tmp104	%read{167,167} %write{164,164}
+temp	float	$tmp105	%read{164,164} %write{163,163}
+temp	float	$tmp106	%read{167,167} %write{166,166}
+temp	float	$tmp107	%read{166,166} %write{165,165}
+temp	float	$tmp108	%read{168,168} %write{167,167}
+temp	float	$tmp109	%read{173,173} %write{170,170}
+temp	float	$tmp110	%read{170,170} %write{169,169}
+temp	float	$tmp111	%read{173,173} %write{172,172}
+temp	float	$tmp112	%read{172,172} %write{171,171}
+temp	float	$tmp113	%read{174,174} %write{173,173}
+temp	int	$tmp114	%read{178,178} %write{177,177}
+temp	int	$tmp115	%read{179,183} %write{178,182}
+temp	int	$tmp116	%read{181,181} %write{180,180}
+temp	int	$tmp117	%read{182,182} %write{181,181}
+temp	int	$tmp118	%read{184,188} %write{183,187}
+temp	int	$tmp119	%read{186,186} %write{185,185}
+temp	int	$tmp120	%read{187,187} %write{186,186}
+temp	float	$tmp121	%read{205,205} %write{196,196}
+temp	float	$tmp122	%read{191,193} %write{189,189}
+temp	float	$tmp123	%read{196,196} %write{192,192}
+temp	float	$tmp124	%read{196,196} %write{195,195}
+temp	float	$tmp125	%read{194,194} %write{193,193}
+temp	float	$tmp126	%read{195,195} %write{194,194}
+temp	float	$tmp127	%read{205,205} %write{204,204}
+temp	float	$tmp128	%read{199,201} %write{197,197}
+temp	float	$tmp129	%read{204,204} %write{200,200}
+temp	float	$tmp130	%read{204,204} %write{203,203}
+temp	float	$tmp131	%read{202,202} %write{201,201}
+temp	float	$tmp132	%read{203,203} %write{202,202}
+temp	float	$tmp133	%read{206,206} %write{205,205}
+temp	float	$tmp134	%read{223,223} %write{214,214}
+temp	float	$tmp135	%read{209,211} %write{207,207}
+temp	float	$tmp136	%read{214,214} %write{210,210}
+temp	float	$tmp137	%read{214,214} %write{213,213}
+temp	float	$tmp138	%read{212,212} %write{211,211}
+temp	float	$tmp139	%read{213,213} %write{212,212}
+temp	float	$tmp140	%read{223,223} %write{222,222}
+temp	float	$tmp141	%read{217,219} %write{215,215}
+temp	float	$tmp142	%read{222,222} %write{218,218}
+temp	float	$tmp143	%read{222,222} %write{221,221}
+temp	float	$tmp144	%read{220,220} %write{219,219}
+temp	float	$tmp145	%read{221,221} %write{220,220}
+temp	float	$tmp146	%read{224,224} %write{223,223}
+temp	float	$tmp147	%read{229,229} %write{225,225}
+temp	float	$tmp148	%read{228,228} %write{226,226}
+temp	float	$tmp149	%read{228,228} %write{227,227}
+temp	float	$tmp150	%read{229,229} %write{228,228}
+temp	float	$tmp151	%read{232,232} %write{231,231} %derivs
+temp	float	$tmp152	%read{234,234} %write{233,233} %derivs
+temp	int	$tmp153	%read{237,237} %write{235,235}
+temp	int	$tmp154	%read{237,237} %write{236,236}
+temp	int	$tmp155	%read{238,238} %write{237,237}
+temp	float	$tmp156	%read{243,243} %write{242,242}
+temp	int	$tmp157	%read{246,246} %write{245,245}
+temp	float	$tmp158	%read{330,330} %write{317,328}
+temp	float	$tmp159	%read{251,323} %write{247,320} %derivs
+temp	float	$tmp160	%read{249,249} %write{248,248} %derivs
+temp	float	$tmp161	%read{257,324} %write{249,322} %derivs
+temp	float	$tmp162	%read{255,255} %write{252,252}
+temp	float	$tmp163	%read{252,252} %write{251,251}
+temp	float	$tmp164	%read{255,255} %write{254,254}
+temp	float	$tmp165	%read{254,254} %write{253,253}
+temp	float	$tmp166	%read{256,256} %write{255,255}
+temp	float	$tmp167	%read{261,261} %write{258,258}
+temp	float	$tmp168	%read{258,258} %write{257,257}
+temp	float	$tmp169	%read{261,261} %write{260,260}
+temp	float	$tmp170	%read{260,260} %write{259,259}
+temp	float	$tmp171	%read{262,262} %write{261,261}
+temp	int	$tmp172	%read{266,266} %write{265,265}
+temp	int	$tmp173	%read{267,271} %write{266,270}
+temp	int	$tmp174	%read{269,269} %write{268,268}
+temp	int	$tmp175	%read{270,270} %write{269,269}
+temp	int	$tmp176	%read{272,276} %write{271,275}
+temp	int	$tmp177	%read{274,274} %write{273,273}
+temp	int	$tmp178	%read{275,275} %write{274,274}
+temp	float	$tmp179	%read{293,293} %write{284,284}
+temp	float	$tmp180	%read{279,281} %write{277,277}
+temp	float	$tmp181	%read{284,284} %write{280,280}
+temp	float	$tmp182	%read{284,284} %write{283,283}
+temp	float	$tmp183	%read{282,282} %write{281,281}
+temp	float	$tmp184	%read{283,283} %write{282,282}
+temp	float	$tmp185	%read{293,293} %write{292,292}
+temp	float	$tmp186	%read{287,289} %write{285,285}
+temp	float	$tmp187	%read{292,292} %write{288,288}
+temp	float	$tmp188	%read{292,292} %write{291,291}
+temp	float	$tmp189	%read{290,290} %write{289,289}
+temp	float	$tmp190	%read{291,291} %write{290,290}
+temp	float	$tmp191	%read{294,294} %write{293,293}
+temp	float	$tmp192	%read{311,311} %write{302,302}
+temp	float	$tmp193	%read{297,299} %write{295,295}
+temp	float	$tmp194	%read{302,302} %write{298,298}
+temp	float	$tmp195	%read{302,302} %write{301,301}
+temp	float	$tmp196	%read{300,300} %write{299,299}
+temp	float	$tmp197	%read{301,301} %write{300,300}
+temp	float	$tmp198	%read{311,311} %write{310,310}
+temp	float	$tmp199	%read{305,307} %write{303,303}
+temp	float	$tmp200	%read{310,310} %write{306,306}
+temp	float	$tmp201	%read{310,310} %write{309,309}
+temp	float	$tmp202	%read{308,308} %write{307,307}
+temp	float	$tmp203	%read{309,309} %write{308,308}
+temp	float	$tmp204	%read{312,312} %write{311,311}
+temp	float	$tmp205	%read{317,317} %write{313,313}
+temp	float	$tmp206	%read{316,316} %write{314,314}
+temp	float	$tmp207	%read{316,316} %write{315,315}
+temp	float	$tmp208	%read{317,317} %write{316,316}
+temp	float	$tmp209	%read{320,320} %write{319,319} %derivs
+temp	float	$tmp210	%read{322,322} %write{321,321} %derivs
+temp	int	$tmp211	%read{325,325} %write{323,323}
+temp	int	$tmp212	%read{325,325} %write{324,324}
+temp	int	$tmp213	%read{326,326} %write{325,325}
+temp	float	$tmp214	%read{331,331} %write{330,330}
+const	float	$const11	100		%read{337,337} %write{2147483647,-1}
+temp	vector	$tmp215	%read{333,333} %write{332,332}
+temp	vector	$tmp216	%read{336,336} %write{333,333}
+temp	vector	$tmp217	%read{335,335} %write{334,334}
+temp	vector	$tmp218	%read{336,336} %write{335,335}
+temp	vector	$tmp219	%read{337,337} %write{336,336}
+code ___main___
+	assign		uv tex_coords 	%filename{"E:/github/elaramax/Shaders/max_checker.osl"} %line{67} %argrw{"wr"}
+	compref		$tmp1 uv $const1 	%line{68} %argrw{"wrr"}
+	compref		$tmp2 uv $const2 	%argrw{"wrr"}
+	functioncall	$const3 83 	%argrw{"r"}
+	Dx		$tmp4 $tmp1 	%line{26} %argrw{"wr"} %argderivs{1}
+	fabs		$tmp3 $tmp4 	%argrw{"wr"}
+	Dy		$tmp6 $tmp1 	%argrw{"wr"} %argderivs{1}
+	fabs		$tmp5 $tmp6 	%argrw{"wr"}
+	add		$tmp7 $tmp3 $tmp5 	%argrw{"wrr"}
+	add		___369_d_u tex_soften $tmp7 	%argrw{"wrr"}
+	Dx		$tmp9 $tmp2 	%line{27} %argrw{"wr"} %argderivs{1}
+	fabs		$tmp8 $tmp9 	%argrw{"wr"}
+	Dy		$tmp11 $tmp2 	%argrw{"wr"} %argderivs{1}
+	fabs		$tmp10 $tmp11 	%argrw{"wr"}
+	add		$tmp12 $tmp8 $tmp10 	%argrw{"wrr"}
+	add		___369_d_v tex_soften $tmp12 	%argrw{"wrr"}
+	mul		___369_hdu ___369_d_u $const4 	%line{28} %argrw{"wrr"}
+	mul		___369_hdv ___369_d_v $const4 	%line{29} %argrw{"wrr"}
+	neq		$tmp13 ___369_d_u $const5 	%line{31} %argrw{"wrr"}
+	neq		$tmp14 $tmp13 $const1 	%argrw{"wrr"}
+	if		$tmp14 24 24 	%argrw{"r"}
+	neq		$tmp15 ___369_d_v $const5 	%argrw{"wrr"}
+	neq		$tmp16 $tmp15 $const1 	%argrw{"wrr"}
+	assign		$tmp14 $tmp16 	%argrw{"wr"}
+	neq		$tmp17 $tmp14 $const1 	%argrw{"wrr"}
+	if		$tmp17 29 29 	%argrw{"r"}
+	neq		$tmp18 tex_soften $const5 	%argrw{"wrr"}
+	neq		$tmp19 $tmp18 $const1 	%argrw{"wrr"}
+	assign		$tmp17 $tmp19 	%argrw{"wr"}
+	if		$tmp17 72 83 	%argrw{"r"}
+	add		$tmp21 $tmp1 ___369_hdu 	%line{33} %argrw{"wrr"}
+	functioncall	$const6 38 	%argrw{"r"}
+	floor		___368_f $tmp21 	%line{20} %argrw{"wr"}
+	mul		$tmp22 ___368_f $const4 	%line{21} %argrw{"wrr"}
+	sub		$tmp24 $tmp21 ___368_f 	%argrw{"wrr"}
+	sub		$tmp25 $tmp24 $const4 	%argrw{"wrr"}
+	max		$tmp23 $const5 $tmp25 	%argrw{"wrr"}
+	add		$tmp20 $tmp22 $tmp23 	%argrw{"wrr"}
+	sub		$tmp27 $tmp1 ___369_hdu 	%line{33} %argrw{"wrr"}
+	functioncall	$const6 46 	%argrw{"r"}
+	floor		___368_f $tmp27 	%line{20} %argrw{"wr"}
+	mul		$tmp28 ___368_f $const4 	%line{21} %argrw{"wrr"}
+	sub		$tmp30 $tmp27 ___368_f 	%argrw{"wrr"}
+	sub		$tmp31 $tmp30 $const4 	%argrw{"wrr"}
+	max		$tmp29 $const5 $tmp31 	%argrw{"wrr"}
+	add		$tmp26 $tmp28 $tmp29 	%argrw{"wrr"}
+	sub		$tmp32 $tmp20 $tmp26 	%line{33} %argrw{"wrr"}
+	div		___370_s $tmp32 ___369_d_u 	%argrw{"wrr"}
+	add		$tmp34 $tmp2 ___369_hdv 	%line{34} %argrw{"wrr"}
+	functioncall	$const6 56 	%argrw{"r"}
+	floor		___368_f $tmp34 	%line{20} %argrw{"wr"}
+	mul		$tmp35 ___368_f $const4 	%line{21} %argrw{"wrr"}
+	sub		$tmp37 $tmp34 ___368_f 	%argrw{"wrr"}
+	sub		$tmp38 $tmp37 $const4 	%argrw{"wrr"}
+	max		$tmp36 $const5 $tmp38 	%argrw{"wrr"}
+	add		$tmp33 $tmp35 $tmp36 	%argrw{"wrr"}
+	sub		$tmp40 $tmp2 ___369_hdv 	%line{34} %argrw{"wrr"}
+	functioncall	$const6 64 	%argrw{"r"}
+	floor		___368_f $tmp40 	%line{20} %argrw{"wr"}
+	mul		$tmp41 ___368_f $const4 	%line{21} %argrw{"wrr"}
+	sub		$tmp43 $tmp40 ___368_f 	%argrw{"wrr"}
+	sub		$tmp44 $tmp43 $const4 	%argrw{"wrr"}
+	max		$tmp42 $const5 $tmp44 	%argrw{"wrr"}
+	add		$tmp39 $tmp41 $tmp42 	%argrw{"wrr"}
+	sub		$tmp45 $tmp33 $tmp39 	%line{34} %argrw{"wrr"}
+	div		___370_t $tmp45 ___369_d_v 	%argrw{"wrr"}
+	mul		$tmp46 ___370_s ___370_t 	%line{35} %argrw{"wrr"}
+	sub		$tmp47 $const7 ___370_s 	%argrw{"wrr"}
+	sub		$tmp48 $const7 ___370_t 	%argrw{"wrr"}
+	mul		$tmp49 $tmp47 $tmp48 	%argrw{"wrr"}
+	add		a $tmp46 $tmp49 	%argrw{"wrr"}
+	return
+	floor		$tmp50 $tmp1 	%line{39} %argrw{"wr"}
+	sub		$tmp1 $tmp1 $tmp50 	%argrw{"wrr"}
+	floor		$tmp51 $tmp2 	%line{40} %argrw{"wr"}
+	sub		$tmp2 $tmp2 $tmp51 	%argrw{"wrr"}
+	gt		$tmp52 $tmp1 $const4 	%line{41} %argrw{"wrr"}
+	gt		$tmp53 $tmp2 $const4 	%argrw{"wrr"}
+	xor		$tmp54 $tmp52 $tmp53 	%argrw{"wrr"}
+	if		$tmp54 81 82 	%argrw{"r"}
+	assign		a $const5 	%argrw{"wr"}
+	assign		a $const7 	%argrw{"wr"}
+	return
+	eq		$tmp55 tex_map1Enabled $const2 	%line{70} %argrw{"wrr"}
+	neq		$tmp56 $tmp55 $const1 	%argrw{"wrr"}
+	if		$tmp56 89 89 	%argrw{"r"}
+	eq		$tmp57 tex_map1_isnull $const1 	%argrw{"wrr"}
+	neq		$tmp58 $tmp57 $const1 	%argrw{"wrr"}
+	assign		$tmp56 $tmp58 	%argrw{"wr"}
+	if		$tmp56 91 92 	%argrw{"r"}
+	assign		fcol1 tex_map1 	%line{72} %argrw{"wr"}
+	assign		fcol1 tex_color1 	%line{76} %argrw{"wr"}
+	eq		$tmp59 tex_map2Enabled $const2 	%line{78} %argrw{"wrr"}
+	neq		$tmp60 $tmp59 $const1 	%argrw{"wrr"}
+	if		$tmp60 98 98 	%argrw{"r"}
+	eq		$tmp61 tex_map2_isnull $const1 	%argrw{"wrr"}
+	neq		$tmp62 $tmp61 $const1 	%argrw{"wrr"}
+	assign		$tmp60 $tmp62 	%argrw{"wr"}
+	if		$tmp60 100 101 	%argrw{"r"}
+	assign		fcol2 tex_map2 	%line{80} %argrw{"wr"}
+	assign		fcol2 tex_color2 	%line{84} %argrw{"wr"}
+	compref		$tmp63 uv $const1 	%line{86} %argrw{"wrr"}
+	ge		$tmp64 $tmp63 $const5 	%argrw{"wrr"}
+	neq		$tmp65 $tmp64 $const1 	%argrw{"wrr"}
+	if		$tmp65 109 109 	%argrw{"r"}
+	compref		$tmp66 uv $const1 	%argrw{"wrr"}
+	le		$tmp67 $tmp66 $const7 	%argrw{"wrr"}
+	neq		$tmp68 $tmp67 $const1 	%argrw{"wrr"}
+	assign		$tmp65 $tmp68 	%argrw{"wr"}
+	neq		$tmp69 $tmp65 $const1 	%argrw{"wrr"}
+	if		$tmp69 115 115 	%argrw{"r"}
+	compref		$tmp70 uv $const2 	%argrw{"wrr"}
+	ge		$tmp71 $tmp70 $const5 	%argrw{"wrr"}
+	neq		$tmp72 $tmp71 $const1 	%argrw{"wrr"}
+	assign		$tmp69 $tmp72 	%argrw{"wr"}
+	neq		$tmp73 $tmp69 $const1 	%argrw{"wrr"}
+	if		$tmp73 121 121 	%argrw{"r"}
+	compref		$tmp74 uv $const2 	%argrw{"wrr"}
+	le		$tmp75 $tmp74 $const7 	%argrw{"wrr"}
+	neq		$tmp76 $tmp75 $const1 	%argrw{"wrr"}
+	assign		$tmp73 $tmp76 	%argrw{"wr"}
+	if		$tmp73 138 139 	%argrw{"r"}
+	le		$tmp77 a $const8 	%line{88} %argrw{"wrr"}
+	if		$tmp77 126 138 	%argrw{"r"}
+	assign		result fcol1 	%line{90} %argrw{"wr"}
+	assign		result_alpha tex_map1_alpha 	%line{91} %argrw{"wr"}
+	ge		$tmp78 a $const9 	%line{93} %argrw{"wrr"}
+	if		$tmp78 130 138 	%argrw{"r"}
+	assign		result fcol2 	%line{95} %argrw{"wr"}
+	assign		result_alpha tex_map2_alpha 	%line{96} %argrw{"wr"}
+	mul		$tmp79 a fcol2 	%line{100} %argrw{"wrr"}
+	sub		$tmp80 $const7 a 	%argrw{"wrr"}
+	mul		$tmp81 $tmp80 fcol1 	%argrw{"wrr"}
+	add		result $tmp79 $tmp81 	%argrw{"wrr"}
+	mul		$tmp82 a tex_map2_alpha 	%line{101} %argrw{"wrr"}
+	sub		$tmp83 $const7 a 	%argrw{"wrr"}
+	mul		$tmp84 $tmp83 tex_map1_alpha 	%argrw{"wrr"}
+	add		result_alpha $tmp82 $tmp84 	%argrw{"wrr"}
+	assign		result_alpha $const1 	%line{106} %argrw{"wr"}
+	isconnected	$tmp85 result_bump 	%line{112} %argrw{"wr"}
+	bitand		$tmp86 $tmp85 $const10 	%argrw{"wrr"}
+	if		$tmp86 338 338 	%argrw{"r"}
+	compref		$tmp89 uv $const1 	%line{114} %argrw{"wrr"}
+	Dx		$tmp88 $tmp89 	%argrw{"wr"} %argderivs{1}
+	fabs		$tmp87 $tmp88 	%argrw{"wr"}
+	compref		$tmp92 uv $const1 	%argrw{"wrr"}
+	Dy		$tmp91 $tmp92 	%argrw{"wr"} %argderivs{1}
+	fabs		$tmp90 $tmp91 	%argrw{"wr"}
+	add		___381_d_u $tmp87 $tmp90 	%argrw{"wrr"}
+	compref		$tmp95 uv $const2 	%line{115} %argrw{"wrr"}
+	Dx		$tmp94 $tmp95 	%argrw{"wr"} %argderivs{1}
+	fabs		$tmp93 $tmp94 	%argrw{"wr"}
+	compref		$tmp98 uv $const2 	%argrw{"wrr"}
+	Dy		$tmp97 $tmp98 	%argrw{"wr"} %argderivs{1}
+	fabs		$tmp96 $tmp97 	%argrw{"wr"}
+	add		___381_d_v $tmp93 $tmp96 	%argrw{"wrr"}
+	assign		___381_dfdu $const1 	%line{116} %argrw{"wr"}
+	neq		$tmp99 ___381_d_u $const1 	%line{117} %argrw{"wrr"}
+	if		$tmp99 244 244 	%argrw{"r"}
+	compref		$tmp101 uv $const1 	%line{119} %argrw{"wrr"}
+	add		$tmp102 $tmp101 ___381_d_u 	%argrw{"wrr"}
+	compref		$tmp103 uv $const2 	%argrw{"wrr"}
+	functioncall	$const3 242 	%argrw{"r"}
+	Dx		$tmp105 $tmp102 	%line{26} %argrw{"wr"} %argderivs{1}
+	fabs		$tmp104 $tmp105 	%argrw{"wr"}
+	Dy		$tmp107 $tmp102 	%argrw{"wr"} %argderivs{1}
+	fabs		$tmp106 $tmp107 	%argrw{"wr"}
+	add		$tmp108 $tmp104 $tmp106 	%argrw{"wrr"}
+	add		___369_d_u tex_soften $tmp108 	%argrw{"wrr"}
+	Dx		$tmp110 $tmp103 	%line{27} %argrw{"wr"} %argderivs{1}
+	fabs		$tmp109 $tmp110 	%argrw{"wr"}
+	Dy		$tmp112 $tmp103 	%argrw{"wr"} %argderivs{1}
+	fabs		$tmp111 $tmp112 	%argrw{"wr"}
+	add		$tmp113 $tmp109 $tmp111 	%argrw{"wrr"}
+	add		___369_d_v tex_soften $tmp113 	%argrw{"wrr"}
+	mul		___369_hdu ___369_d_u $const4 	%line{28} %argrw{"wrr"}
+	mul		___369_hdv ___369_d_v $const4 	%line{29} %argrw{"wrr"}
+	neq		$tmp114 ___369_d_u $const5 	%line{31} %argrw{"wrr"}
+	neq		$tmp115 $tmp114 $const1 	%argrw{"wrr"}
+	if		$tmp115 183 183 	%argrw{"r"}
+	neq		$tmp116 ___369_d_v $const5 	%argrw{"wrr"}
+	neq		$tmp117 $tmp116 $const1 	%argrw{"wrr"}
+	assign		$tmp115 $tmp117 	%argrw{"wr"}
+	neq		$tmp118 $tmp115 $const1 	%argrw{"wrr"}
+	if		$tmp118 188 188 	%argrw{"r"}
+	neq		$tmp119 tex_soften $const5 	%argrw{"wrr"}
+	neq		$tmp120 $tmp119 $const1 	%argrw{"wrr"}
+	assign		$tmp118 $tmp120 	%argrw{"wr"}
+	if		$tmp118 231 242 	%argrw{"r"}
+	add		$tmp122 $tmp102 ___369_hdu 	%line{33} %argrw{"wrr"}
+	functioncall	$const6 197 	%argrw{"r"}
+	floor		___368_f $tmp122 	%line{20} %argrw{"wr"}
+	mul		$tmp123 ___368_f $const4 	%line{21} %argrw{"wrr"}
+	sub		$tmp125 $tmp122 ___368_f 	%argrw{"wrr"}
+	sub		$tmp126 $tmp125 $const4 	%argrw{"wrr"}
+	max		$tmp124 $const5 $tmp126 	%argrw{"wrr"}
+	add		$tmp121 $tmp123 $tmp124 	%argrw{"wrr"}
+	sub		$tmp128 $tmp102 ___369_hdu 	%line{33} %argrw{"wrr"}
+	functioncall	$const6 205 	%argrw{"r"}
+	floor		___368_f $tmp128 	%line{20} %argrw{"wr"}
+	mul		$tmp129 ___368_f $const4 	%line{21} %argrw{"wrr"}
+	sub		$tmp131 $tmp128 ___368_f 	%argrw{"wrr"}
+	sub		$tmp132 $tmp131 $const4 	%argrw{"wrr"}
+	max		$tmp130 $const5 $tmp132 	%argrw{"wrr"}
+	add		$tmp127 $tmp129 $tmp130 	%argrw{"wrr"}
+	sub		$tmp133 $tmp121 $tmp127 	%line{33} %argrw{"wrr"}
+	div		___370_s $tmp133 ___369_d_u 	%argrw{"wrr"}
+	add		$tmp135 $tmp103 ___369_hdv 	%line{34} %argrw{"wrr"}
+	functioncall	$const6 215 	%argrw{"r"}
+	floor		___368_f $tmp135 	%line{20} %argrw{"wr"}
+	mul		$tmp136 ___368_f $const4 	%line{21} %argrw{"wrr"}
+	sub		$tmp138 $tmp135 ___368_f 	%argrw{"wrr"}
+	sub		$tmp139 $tmp138 $const4 	%argrw{"wrr"}
+	max		$tmp137 $const5 $tmp139 	%argrw{"wrr"}
+	add		$tmp134 $tmp136 $tmp137 	%argrw{"wrr"}
+	sub		$tmp141 $tmp103 ___369_hdv 	%line{34} %argrw{"wrr"}
+	functioncall	$const6 223 	%argrw{"r"}
+	floor		___368_f $tmp141 	%line{20} %argrw{"wr"}
+	mul		$tmp142 ___368_f $const4 	%line{21} %argrw{"wrr"}
+	sub		$tmp144 $tmp141 ___368_f 	%argrw{"wrr"}
+	sub		$tmp145 $tmp144 $const4 	%argrw{"wrr"}
+	max		$tmp143 $const5 $tmp145 	%argrw{"wrr"}
+	add		$tmp140 $tmp142 $tmp143 	%argrw{"wrr"}
+	sub		$tmp146 $tmp134 $tmp140 	%line{34} %argrw{"wrr"}
+	div		___370_t $tmp146 ___369_d_v 	%argrw{"wrr"}
+	mul		$tmp147 ___370_s ___370_t 	%line{35} %argrw{"wrr"}
+	sub		$tmp148 $const7 ___370_s 	%argrw{"wrr"}
+	sub		$tmp149 $const7 ___370_t 	%argrw{"wrr"}
+	mul		$tmp150 $tmp148 $tmp149 	%argrw{"wrr"}
+	add		$tmp100 $tmp147 $tmp150 	%argrw{"wrr"}
+	return
+	floor		$tmp151 $tmp102 	%line{39} %argrw{"wr"}
+	sub		$tmp102 $tmp102 $tmp151 	%argrw{"wrr"}
+	floor		$tmp152 $tmp103 	%line{40} %argrw{"wr"}
+	sub		$tmp103 $tmp103 $tmp152 	%argrw{"wrr"}
+	gt		$tmp153 $tmp102 $const4 	%line{41} %argrw{"wrr"}
+	gt		$tmp154 $tmp103 $const4 	%argrw{"wrr"}
+	xor		$tmp155 $tmp153 $tmp154 	%argrw{"wrr"}
+	if		$tmp155 240 241 	%argrw{"r"}
+	assign		$tmp100 $const5 	%argrw{"wr"}
+	assign		$tmp100 $const7 	%argrw{"wr"}
+	return
+	sub		$tmp156 a $tmp100 	%line{119} %argrw{"wrr"}
+	div		___381_dfdu $tmp156 ___381_d_u 	%argrw{"wrr"}
+	assign		___381_dfdv $const1 	%line{121} %argrw{"wr"}
+	neq		$tmp157 ___381_d_v $const1 	%line{122} %argrw{"wrr"}
+	if		$tmp157 332 332 	%argrw{"r"}
+	compref		$tmp159 uv $const1 	%line{124} %argrw{"wrr"}
+	compref		$tmp160 uv $const2 	%argrw{"wrr"}
+	add		$tmp161 $tmp160 ___381_d_v 	%argrw{"wrr"}
+	functioncall	$const3 330 	%argrw{"r"}
+	Dx		$tmp163 $tmp159 	%line{26} %argrw{"wr"} %argderivs{1}
+	fabs		$tmp162 $tmp163 	%argrw{"wr"}
+	Dy		$tmp165 $tmp159 	%argrw{"wr"} %argderivs{1}
+	fabs		$tmp164 $tmp165 	%argrw{"wr"}
+	add		$tmp166 $tmp162 $tmp164 	%argrw{"wrr"}
+	add		___369_d_u tex_soften $tmp166 	%argrw{"wrr"}
+	Dx		$tmp168 $tmp161 	%line{27} %argrw{"wr"} %argderivs{1}
+	fabs		$tmp167 $tmp168 	%argrw{"wr"}
+	Dy		$tmp170 $tmp161 	%argrw{"wr"} %argderivs{1}
+	fabs		$tmp169 $tmp170 	%argrw{"wr"}
+	add		$tmp171 $tmp167 $tmp169 	%argrw{"wrr"}
+	add		___369_d_v tex_soften $tmp171 	%argrw{"wrr"}
+	mul		___369_hdu ___369_d_u $const4 	%line{28} %argrw{"wrr"}
+	mul		___369_hdv ___369_d_v $const4 	%line{29} %argrw{"wrr"}
+	neq		$tmp172 ___369_d_u $const5 	%line{31} %argrw{"wrr"}
+	neq		$tmp173 $tmp172 $const1 	%argrw{"wrr"}
+	if		$tmp173 271 271 	%argrw{"r"}
+	neq		$tmp174 ___369_d_v $const5 	%argrw{"wrr"}
+	neq		$tmp175 $tmp174 $const1 	%argrw{"wrr"}
+	assign		$tmp173 $tmp175 	%argrw{"wr"}
+	neq		$tmp176 $tmp173 $const1 	%argrw{"wrr"}
+	if		$tmp176 276 276 	%argrw{"r"}
+	neq		$tmp177 tex_soften $const5 	%argrw{"wrr"}
+	neq		$tmp178 $tmp177 $const1 	%argrw{"wrr"}
+	assign		$tmp176 $tmp178 	%argrw{"wr"}
+	if		$tmp176 319 330 	%argrw{"r"}
+	add		$tmp180 $tmp159 ___369_hdu 	%line{33} %argrw{"wrr"}
+	functioncall	$const6 285 	%argrw{"r"}
+	floor		___368_f $tmp180 	%line{20} %argrw{"wr"}
+	mul		$tmp181 ___368_f $const4 	%line{21} %argrw{"wrr"}
+	sub		$tmp183 $tmp180 ___368_f 	%argrw{"wrr"}
+	sub		$tmp184 $tmp183 $const4 	%argrw{"wrr"}
+	max		$tmp182 $const5 $tmp184 	%argrw{"wrr"}
+	add		$tmp179 $tmp181 $tmp182 	%argrw{"wrr"}
+	sub		$tmp186 $tmp159 ___369_hdu 	%line{33} %argrw{"wrr"}
+	functioncall	$const6 293 	%argrw{"r"}
+	floor		___368_f $tmp186 	%line{20} %argrw{"wr"}
+	mul		$tmp187 ___368_f $const4 	%line{21} %argrw{"wrr"}
+	sub		$tmp189 $tmp186 ___368_f 	%argrw{"wrr"}
+	sub		$tmp190 $tmp189 $const4 	%argrw{"wrr"}
+	max		$tmp188 $const5 $tmp190 	%argrw{"wrr"}
+	add		$tmp185 $tmp187 $tmp188 	%argrw{"wrr"}
+	sub		$tmp191 $tmp179 $tmp185 	%line{33} %argrw{"wrr"}
+	div		___370_s $tmp191 ___369_d_u 	%argrw{"wrr"}
+	add		$tmp193 $tmp161 ___369_hdv 	%line{34} %argrw{"wrr"}
+	functioncall	$const6 303 	%argrw{"r"}
+	floor		___368_f $tmp193 	%line{20} %argrw{"wr"}
+	mul		$tmp194 ___368_f $const4 	%line{21} %argrw{"wrr"}
+	sub		$tmp196 $tmp193 ___368_f 	%argrw{"wrr"}
+	sub		$tmp197 $tmp196 $const4 	%argrw{"wrr"}
+	max		$tmp195 $const5 $tmp197 	%argrw{"wrr"}
+	add		$tmp192 $tmp194 $tmp195 	%argrw{"wrr"}
+	sub		$tmp199 $tmp161 ___369_hdv 	%line{34} %argrw{"wrr"}
+	functioncall	$const6 311 	%argrw{"r"}
+	floor		___368_f $tmp199 	%line{20} %argrw{"wr"}
+	mul		$tmp200 ___368_f $const4 	%line{21} %argrw{"wrr"}
+	sub		$tmp202 $tmp199 ___368_f 	%argrw{"wrr"}
+	sub		$tmp203 $tmp202 $const4 	%argrw{"wrr"}
+	max		$tmp201 $const5 $tmp203 	%argrw{"wrr"}
+	add		$tmp198 $tmp200 $tmp201 	%argrw{"wrr"}
+	sub		$tmp204 $tmp192 $tmp198 	%line{34} %argrw{"wrr"}
+	div		___370_t $tmp204 ___369_d_v 	%argrw{"wrr"}
+	mul		$tmp205 ___370_s ___370_t 	%line{35} %argrw{"wrr"}
+	sub		$tmp206 $const7 ___370_s 	%argrw{"wrr"}
+	sub		$tmp207 $const7 ___370_t 	%argrw{"wrr"}
+	mul		$tmp208 $tmp206 $tmp207 	%argrw{"wrr"}
+	add		$tmp158 $tmp205 $tmp208 	%argrw{"wrr"}
+	return
+	floor		$tmp209 $tmp159 	%line{39} %argrw{"wr"}
+	sub		$tmp159 $tmp159 $tmp209 	%argrw{"wrr"}
+	floor		$tmp210 $tmp161 	%line{40} %argrw{"wr"}
+	sub		$tmp161 $tmp161 $tmp210 	%argrw{"wrr"}
+	gt		$tmp211 $tmp159 $const4 	%line{41} %argrw{"wrr"}
+	gt		$tmp212 $tmp161 $const4 	%argrw{"wrr"}
+	xor		$tmp213 $tmp211 $tmp212 	%argrw{"wrr"}
+	if		$tmp213 328 329 	%argrw{"r"}
+	assign		$tmp158 $const5 	%argrw{"wr"}
+	assign		$tmp158 $const7 	%argrw{"wr"}
+	return
+	sub		$tmp214 a $tmp158 	%line{124} %argrw{"wrr"}
+	div		___381_dfdv $tmp214 ___381_d_v 	%argrw{"wrr"}
+	normalize	$tmp215 dPdu 	%line{126} %argrw{"wr"}
+	mul		$tmp216 $tmp215 ___381_dfdu 	%argrw{"wrr"}
+	normalize	$tmp217 dPdv 	%argrw{"wr"}
+	mul		$tmp218 $tmp217 ___381_dfdv 	%argrw{"wrr"}
+	add		$tmp219 $tmp216 $tmp218 	%argrw{"wrr"}
+	mul		result_bump $const11 $tmp219 	%argrw{"wrr"}
+	end

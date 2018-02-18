@@ -1,0 +1,100 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.7.2
+# options: 
+shader max_vray_override_mtl
+param	closure color	baseMtl			%read{48,48} %write{2147483647,-1}
+param	int	baseMtl_isnull	0		%read{2147483647,-1} %write{2147483647,-1}
+param	int	baseMtl_on	1		%read{2147483647,-1} %write{2147483647,-1}
+param	closure color	giMtl			%read{11,11} %write{2147483647,-1}
+param	int	giMtl_isnull	0		%read{2,2} %write{2147483647,-1}
+param	int	giMtl_on	1		%read{0,0} %write{2147483647,-1}
+param	closure color	reflectMtl			%read{23,23} %write{2147483647,-1}
+param	int	reflectMtl_isnull	0		%read{14,14} %write{2147483647,-1}
+param	int	reflectMtl_on	1		%read{12,12} %write{2147483647,-1}
+param	closure color	refractMtl			%read{35,35} %write{2147483647,-1}
+param	int	refractMtl_isnull	0		%read{26,26} %write{2147483647,-1}
+param	int	refractMtl_on	1		%read{24,24} %write{2147483647,-1}
+param	closure color	shadowMtl			%read{47,47} %write{2147483647,-1}
+param	int	shadowMtl_isnull	0		%read{38,38} %write{2147483647,-1}
+param	int	shadowMtl_on	1		%read{36,36} %write{2147483647,-1}
+oparam	closure color	result			%read{2147483647,-1} %write{11,48}
+temp	int	$tmp1	%read{1,5} %write{0,4}
+const	int	$const1	0		%read{0,44} %write{2147483647,-1}
+temp	int	$tmp2	%read{3,3} %write{2,2}
+temp	int	$tmp3	%read{4,4} %write{3,3}
+temp	int	$tmp4	%read{6,10} %write{5,9}
+temp	int	$tmp5	%read{8,8} %write{7,7}
+const	string	$const2	"diffuse"		%read{7,7} %write{2147483647,-1}
+temp	int	$tmp6	%read{9,9} %write{8,8}
+temp	int	$tmp7	%read{13,17} %write{12,16}
+temp	int	$tmp8	%read{15,15} %write{14,14}
+temp	int	$tmp9	%read{16,16} %write{15,15}
+temp	int	$tmp10	%read{18,22} %write{17,21}
+temp	int	$tmp11	%read{20,20} %write{19,19}
+const	string	$const3	"reflect"		%read{19,19} %write{2147483647,-1}
+temp	int	$tmp12	%read{21,21} %write{20,20}
+temp	int	$tmp13	%read{25,29} %write{24,28}
+temp	int	$tmp14	%read{27,27} %write{26,26}
+temp	int	$tmp15	%read{28,28} %write{27,27}
+temp	int	$tmp16	%read{30,34} %write{29,33}
+temp	int	$tmp17	%read{32,32} %write{31,31}
+const	string	$const4	"refract"		%read{31,31} %write{2147483647,-1}
+temp	int	$tmp18	%read{33,33} %write{32,32}
+temp	int	$tmp19	%read{37,41} %write{36,40}
+temp	int	$tmp20	%read{39,39} %write{38,38}
+temp	int	$tmp21	%read{40,40} %write{39,39}
+temp	int	$tmp22	%read{42,46} %write{41,45}
+temp	int	$tmp23	%read{44,44} %write{43,43}
+const	string	$const5	"shadow"		%read{43,43} %write{2147483647,-1}
+temp	int	$tmp24	%read{45,45} %write{44,44}
+code ___main___
+	neq		$tmp1 giMtl_on $const1 	%filename{"E:/github/elaramax/Shaders/max_vray_override_mtl.osl"} %line{38} %argrw{"wrr"}
+	if		$tmp1 5 5 	%argrw{"r"}
+	eq		$tmp2 giMtl_isnull $const1 	%argrw{"wrr"}
+	neq		$tmp3 $tmp2 $const1 	%argrw{"wrr"}
+	assign		$tmp1 $tmp3 	%argrw{"wr"}
+	neq		$tmp4 $tmp1 $const1 	%argrw{"wrr"}
+	if		$tmp4 10 10 	%argrw{"r"}
+	raytype		$tmp5 $const2 	%argrw{"wr"}
+	neq		$tmp6 $tmp5 $const1 	%argrw{"wrr"}
+	assign		$tmp4 $tmp6 	%argrw{"wr"}
+	if		$tmp4 12 49 	%argrw{"r"}
+	assign		result giMtl 	%line{40} %argrw{"wr"}
+	neq		$tmp7 reflectMtl_on $const1 	%line{42} %argrw{"wrr"}
+	if		$tmp7 17 17 	%argrw{"r"}
+	eq		$tmp8 reflectMtl_isnull $const1 	%argrw{"wrr"}
+	neq		$tmp9 $tmp8 $const1 	%argrw{"wrr"}
+	assign		$tmp7 $tmp9 	%argrw{"wr"}
+	neq		$tmp10 $tmp7 $const1 	%argrw{"wrr"}
+	if		$tmp10 22 22 	%argrw{"r"}
+	raytype		$tmp11 $const3 	%argrw{"wr"}
+	neq		$tmp12 $tmp11 $const1 	%argrw{"wrr"}
+	assign		$tmp10 $tmp12 	%argrw{"wr"}
+	if		$tmp10 24 49 	%argrw{"r"}
+	assign		result reflectMtl 	%line{44} %argrw{"wr"}
+	neq		$tmp13 refractMtl_on $const1 	%line{46} %argrw{"wrr"}
+	if		$tmp13 29 29 	%argrw{"r"}
+	eq		$tmp14 refractMtl_isnull $const1 	%argrw{"wrr"}
+	neq		$tmp15 $tmp14 $const1 	%argrw{"wrr"}
+	assign		$tmp13 $tmp15 	%argrw{"wr"}
+	neq		$tmp16 $tmp13 $const1 	%argrw{"wrr"}
+	if		$tmp16 34 34 	%argrw{"r"}
+	raytype		$tmp17 $const4 	%argrw{"wr"}
+	neq		$tmp18 $tmp17 $const1 	%argrw{"wrr"}
+	assign		$tmp16 $tmp18 	%argrw{"wr"}
+	if		$tmp16 36 49 	%argrw{"r"}
+	assign		result refractMtl 	%line{48} %argrw{"wr"}
+	neq		$tmp19 shadowMtl_on $const1 	%line{50} %argrw{"wrr"}
+	if		$tmp19 41 41 	%argrw{"r"}
+	eq		$tmp20 shadowMtl_isnull $const1 	%argrw{"wrr"}
+	neq		$tmp21 $tmp20 $const1 	%argrw{"wrr"}
+	assign		$tmp19 $tmp21 	%argrw{"wr"}
+	neq		$tmp22 $tmp19 $const1 	%argrw{"wrr"}
+	if		$tmp22 46 46 	%argrw{"r"}
+	raytype		$tmp23 $const5 	%argrw{"wr"}
+	neq		$tmp24 $tmp23 $const1 	%argrw{"wrr"}
+	assign		$tmp22 $tmp24 	%argrw{"wr"}
+	if		$tmp22 48 49 	%argrw{"r"}
+	assign		result shadowMtl 	%line{52} %argrw{"wr"}
+	assign		result baseMtl 	%line{56} %argrw{"wr"}
+	end

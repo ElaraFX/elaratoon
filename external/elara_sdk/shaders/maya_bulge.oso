@@ -1,0 +1,116 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_bulge
+param	float	i_alphaGain	1 		 %read{51,51} %write{2147483647,-1}
+param	int	i_alphaIsLuminance	0 		 %read{39,39} %write{2147483647,-1}
+param	float	i_alphaOffset	0 		 %read{52,52} %write{2147483647,-1}
+param	color	i_colorGain	1 1 1 		 %read{49,49} %write{2147483647,-1}
+param	color	i_colorOffset	0 0 0 		 %read{50,50} %write{2147483647,-1}
+param	color	i_defaultColor	0.5 0.5 0.5 		 %read{53,53} %write{2147483647,-1}
+param	int	i_invert	0 		 %read{40,40} %write{2147483647,-1}
+param	vector	i_uvCoord	0 0 0 		 %read{0,1} %write{2147483647,-1}
+param	float	i_uWidth	0.1 		 %read{21,23} %write{2147483647,-1}
+param	float	i_vWidth	0.1 		 %read{28,30} %write{2147483647,-1}
+oparam	float	o_outAlpha	1 		 %read{38,52} %write{37,54}
+oparam	color	o_outColor	0 0 0 		 %read{44,50} %write{38,53}
+local	float	ss	 %read{2,25} %write{0,15}
+local	float	tt	 %read{6,32} %write{1,20}
+local	float	___344_a	 %read{35,35} %write{27,27}
+local	float	___344_b	 %read{35,35} %write{34,34}
+const	int	$const1	0		 %read{0,8} %write{2147483647,-1}
+const	int	$const2	1		 %read{1,1} %write{2147483647,-1}
+temp	float	$tmp1	 %read{3,3} %write{2,2}
+const	int	$const3	100000		 %read{3,7} %write{2147483647,-1}
+temp	int	$tmp2	 %read{4,4} %write{3,3}
+temp	int	$tmp3	 %read{5,10} %write{4,9}
+temp	float	$tmp4	 %read{7,7} %write{6,6}
+temp	int	$tmp5	 %read{8,8} %write{7,7}
+temp	int	$tmp6	 %read{9,9} %write{8,8}
+const	float	$const4	1.000001		 %read{12,19} %write{2147483647,-1}
+const	string	$const5	"mod"		 %read{11,16} %write{2147483647,-1}
+temp	float	$tmp7	 %read{14,14} %write{13,13}
+temp	float	$tmp8	 %read{13,13} %write{12,12}
+temp	float	$tmp9	 %read{15,15} %write{14,14}
+temp	float	$tmp10	 %read{19,19} %write{18,18}
+temp	float	$tmp11	 %read{18,18} %write{17,17}
+temp	float	$tmp12	 %read{20,20} %write{19,19}
+temp	float	$tmp13	 %read{27,27} %write{22,22}
+temp	float	$tmp14	 %read{22,22} %write{21,21}
+const	float	$const7	2		 %read{21,30} %write{2147483647,-1}
+const	float	$const8	0.5		 %read{22,32} %write{2147483647,-1}
+temp	float	$tmp15	 %read{26,26} %write{25,25}
+temp	float	$tmp16	 %read{24,24} %write{23,23}
+temp	float	$tmp17	 %read{25,25} %write{24,24}
+const	float	$const9	1		 %read{24,54} %write{2147483647,-1}
+temp	float	$tmp18	 %read{27,27} %write{26,26}
+temp	float	$tmp19	 %read{34,34} %write{29,29}
+temp	float	$tmp20	 %read{29,29} %write{28,28}
+temp	float	$tmp21	 %read{33,33} %write{32,32}
+temp	float	$tmp22	 %read{31,31} %write{30,30}
+temp	float	$tmp23	 %read{32,32} %write{31,31}
+temp	float	$tmp24	 %read{34,34} %write{33,33}
+temp	float	$tmp25	 %read{37,37} %write{36,36}
+temp	float	$tmp26	 %read{36,36} %write{35,35}
+temp	float	$tmp27	 %read{46,46} %write{39,39}
+temp	float	$tmp28	 %read{42,42} %write{40,40}
+const	string	$const10	"colorBalance"		 %read{41,41} %write{2147483647,-1}
+const	float	$const11	0		 %read{42,46} %write{2147483647,-1}
+temp	int	$tmp29	 %read{43,43} %write{42,42}
+temp	int	$tmp30	 %read{47,47} %write{46,46}
+code ___main___
+	compref		ss i_uvCoord $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_bulge.osl"} %line{32} %argrw{"wrr"}
+	compref		tt i_uvCoord $const2 	%line{33} %argrw{"wrr"}
+	abs		$tmp1 ss 	%line{35} %argrw{"wr"}
+	lt		$tmp2 $tmp1 $const3 	%argrw{"wrr"}
+	neq		$tmp3 $tmp2 $const1 	%argrw{"wrr"}
+	if		$tmp3 10 10 	%argrw{"r"}
+	abs		$tmp4 tt 	%argrw{"wr"}
+	lt		$tmp5 $tmp4 $const3 	%argrw{"wrr"}
+	neq		$tmp6 $tmp5 $const1 	%argrw{"wrr"}
+	assign		$tmp3 $tmp6 	%argrw{"wr"}
+	if		$tmp3 53 55 	%argrw{"r"}
+	functioncall	$const5 16 	%line{37} %argrw{"r"}
+	div		$tmp8 ss $const4 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{135} %argrw{"wrr"}
+	floor		$tmp7 $tmp8 	%argrw{"wr"}
+	mul		$tmp9 $const4 $tmp7 	%argrw{"wrr"}
+	sub		ss ss $tmp9 	%argrw{"wrr"}
+	functioncall	$const5 21 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_bulge.osl"} %line{38} %argrw{"r"}
+	div		$tmp11 tt $const4 	%filename{"E:/osl\\current\\shaders\\stdosl.h"} %line{135} %argrw{"wrr"}
+	floor		$tmp10 $tmp11 	%argrw{"wr"}
+	mul		$tmp12 $const4 $tmp10 	%argrw{"wrr"}
+	sub		tt tt $tmp12 	%argrw{"wrr"}
+	div		$tmp14 i_uWidth $const7 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_bulge.osl"} %line{40} %argrw{"wrr"}
+	smoothstep	$tmp13 $tmp14 $const8 ss 	%argrw{"wrrr"}
+	div		$tmp16 i_uWidth $const7 	%line{41} %argrw{"wrr"}
+	sub		$tmp17 $const9 $tmp16 	%argrw{"wrr"}
+	smoothstep	$tmp15 $const8 $tmp17 ss 	%argrw{"wrrr"}
+	sub		$tmp18 $const9 $tmp15 	%argrw{"wrr"}
+	mul		___344_a $tmp13 $tmp18 	%argrw{"wrr"}
+	div		$tmp20 i_vWidth $const7 	%line{42} %argrw{"wrr"}
+	smoothstep	$tmp19 $tmp20 $const8 tt 	%argrw{"wrrr"}
+	div		$tmp22 i_vWidth $const7 	%line{43} %argrw{"wrr"}
+	sub		$tmp23 $const9 $tmp22 	%argrw{"wrr"}
+	smoothstep	$tmp21 $const8 $tmp23 tt 	%argrw{"wrrr"}
+	sub		$tmp24 $const9 $tmp21 	%argrw{"wrr"}
+	mul		___344_b $tmp19 $tmp24 	%argrw{"wrr"}
+	mul		$tmp26 ___344_a ___344_b 	%line{44} %argrw{"wrr"}
+	abs		$tmp25 $tmp26 	%argrw{"wr"}
+	sqrt		o_outAlpha $tmp25 	%argrw{"wr"}
+	assign		o_outColor o_outAlpha 	%line{45} %argrw{"wr"}
+	assign		$tmp27 i_alphaIsLuminance 	%line{54} %argrw{"wr"}
+	assign		$tmp28 i_invert 	%argrw{"wr"}
+	functioncall	$const10 53 	%argrw{"r"}
+	neq		$tmp29 $tmp28 $const11 	%filename{"E:/dev\\work\\mercury\\src\\shaders_er\\mayautil.h"} %line{124} %argrw{"wrr"}
+	if		$tmp29 46 46 	%argrw{"r"}
+	sub		o_outColor $const9 o_outColor 	%line{126} %argrw{"wrr"}
+	sub		o_outAlpha $const9 o_outAlpha 	%line{127} %argrw{"wrr"}
+	neq		$tmp30 $tmp27 $const11 	%line{130} %argrw{"wrr"}
+	if		$tmp30 49 49 	%argrw{"r"}
+	luminance	o_outAlpha o_outColor 	%line{132} %argrw{"wr"}
+	mul		o_outColor o_outColor i_colorGain 	%line{135} %argrw{"wrr"}
+	add		o_outColor o_outColor i_colorOffset 	%line{136} %argrw{"wrr"}
+	mul		o_outAlpha o_outAlpha i_alphaGain 	%line{138} %argrw{"wrr"}
+	add		o_outAlpha o_outAlpha i_alphaOffset 	%line{139} %argrw{"wrr"}
+	assign		o_outColor i_defaultColor 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_bulge.osl"} %line{58} %argrw{"wr"}
+	assign		o_outAlpha $const9 	%line{59} %argrw{"wr"}
+	end

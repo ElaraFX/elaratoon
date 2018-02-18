@@ -1,0 +1,63 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_gammaCorrect
+param	color	i_value	0 0 0 		 %read{16,24} %write{2147483647,-1}
+param	color	i_gamma	1 1 1 		 %read{0,14} %write{2147483647,-1}
+oparam	color	o_outValue	0 0 0 		 %read{2147483647,-1} %write{28,28}
+local	color	gamma	 %read{17,25} %write{15,15}
+temp	float	$tmp1	 %read{15,15} %write{3,4}
+const	int	$const1	0		 %read{0,17} %write{2147483647,-1}
+temp	float	$tmp2	 %read{1,1} %write{0,0}
+temp	int	$tmp3	 %read{2,2} %write{1,1}
+const	int	$const2	1		 %read{3,21} %write{2147483647,-1}
+temp	float	$tmp4	 %read{15,15} %write{8,9}
+temp	float	$tmp5	 %read{6,6} %write{5,5}
+temp	int	$tmp6	 %read{7,7} %write{6,6}
+temp	float	$tmp7	 %read{15,15} %write{13,14}
+const	int	$const3	2		 %read{10,25} %write{2147483647,-1}
+temp	float	$tmp8	 %read{11,11} %write{10,10}
+temp	int	$tmp9	 %read{12,12} %write{11,11}
+temp	float	$tmp10	 %read{28,28} %write{19,19}
+temp	float	$tmp11	 %read{19,19} %write{16,16}
+const	float	$const4	1		 %read{18,26} %write{2147483647,-1}
+temp	float	$tmp12	 %read{18,18} %write{17,17}
+temp	float	$tmp13	 %read{19,19} %write{18,18}
+temp	float	$tmp14	 %read{28,28} %write{23,23}
+temp	float	$tmp15	 %read{23,23} %write{20,20}
+temp	float	$tmp16	 %read{22,22} %write{21,21}
+temp	float	$tmp17	 %read{23,23} %write{22,22}
+temp	float	$tmp18	 %read{28,28} %write{27,27}
+temp	float	$tmp19	 %read{27,27} %write{24,24}
+temp	float	$tmp20	 %read{26,26} %write{25,25}
+temp	float	$tmp21	 %read{27,27} %write{26,26}
+code ___main___
+	compref		$tmp2 i_gamma $const1 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_gammaCorrect.osl"} %line{33} %argrw{"wrr"}
+	eq		$tmp3 $tmp2 $const1 	%argrw{"wrr"}
+	if		$tmp3 4 5 	%argrw{"r"}
+	assign		$tmp1 $const2 	%argrw{"wr"}
+	compref		$tmp1 i_gamma $const1 	%argrw{"wrr"}
+	compref		$tmp5 i_gamma $const2 	%line{34} %argrw{"wrr"}
+	eq		$tmp6 $tmp5 $const1 	%argrw{"wrr"}
+	if		$tmp6 9 10 	%argrw{"r"}
+	assign		$tmp4 $const2 	%argrw{"wr"}
+	compref		$tmp4 i_gamma $const2 	%argrw{"wrr"}
+	compref		$tmp8 i_gamma $const3 	%line{35} %argrw{"wrr"}
+	eq		$tmp9 $tmp8 $const1 	%argrw{"wrr"}
+	if		$tmp9 14 15 	%line{36} %argrw{"r"}
+	assign		$tmp7 $const2 	%argrw{"wr"}
+	compref		$tmp7 i_gamma $const3 	%argrw{"wrr"}
+	color		gamma $tmp1 $tmp4 $tmp7 	%argrw{"wrrr"}
+	compref		$tmp11 i_value $const1 	%line{38} %argrw{"wrr"}
+	compref		$tmp12 gamma $const1 	%argrw{"wrr"}
+	div		$tmp13 $const4 $tmp12 	%argrw{"wrr"}
+	pow		$tmp10 $tmp11 $tmp13 	%argrw{"wrr"}
+	compref		$tmp15 i_value $const2 	%line{39} %argrw{"wrr"}
+	compref		$tmp16 gamma $const2 	%argrw{"wrr"}
+	div		$tmp17 $const4 $tmp16 	%argrw{"wrr"}
+	pow		$tmp14 $tmp15 $tmp17 	%argrw{"wrr"}
+	compref		$tmp19 i_value $const3 	%line{40} %argrw{"wrr"}
+	compref		$tmp20 gamma $const3 	%argrw{"wrr"}
+	div		$tmp21 $const4 $tmp20 	%argrw{"wrr"}
+	pow		$tmp18 $tmp19 $tmp21 	%argrw{"wrr"}
+	color		o_outValue $tmp10 $tmp14 $tmp18 	%line{41} %argrw{"wrrr"}
+	end

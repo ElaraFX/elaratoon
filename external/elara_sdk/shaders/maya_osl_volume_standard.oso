@@ -1,0 +1,13 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.3.0
+shader maya_osl_volume_standard
+param	color	i_emission	0 0 0 		 %read{0,0} %write{2147483647,-1}
+param	color	i_scattering	1 1 1 		 %read{0,0} %write{2147483647,-1}
+param	color	i_absorption	0 0 0 		 %read{0,0} %write{2147483647,-1}
+param	float	i_density	1 		 %read{0,0} %write{2147483647,-1}
+param	float	i_g	0 		 %read{0,0} %write{2147483647,-1}
+global	closure color	Ci	 %read{2147483647,-1} %write{0,0}
+const	string	$const1	"volume_hg"		 %read{0,0} %write{2147483647,-1}
+code ___main___
+	closure		Ci $const1 i_emission i_scattering i_absorption i_density i_g 	%filename{"E:\\dev\\work\\mercury\\src\\shaders_er\\maya_osl_volume_standard.osl"} %line{33} %argrw{"wrrrrrr"}
+	end

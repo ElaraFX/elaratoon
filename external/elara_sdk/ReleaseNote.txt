@@ -1,0 +1,823 @@
+-------------------------------------------------------------------------------
+September 26, 2017
+
+** SDK 1.9.11 changes **
+
+- Added use_mis toggle to light's instance node for enabling/disabling multiple importance sampling, it's enabled by default. Also added global use_mis toggle in options node.
+- Allowed the use of tabs in node name strings.
+- Fixed the rendering artifacts when light primitives are seen through volumes.
+- Fixed texture blur issue when objects are seen through backface cull shader.
+- Fixed the radical changes when adjusting color for atmosphere volume scattering.
+
+
+-------------------------------------------------------------------------------
+September 19, 2017
+
+** SDK 1.9.10 changes **
+
+- Fixed the regression of shadow group feature introduced by our previous optimizations.
+- Removed distance attenuation for atmosphere volume scattering to improve usability.
+- Disabled GI_cache_show_samples by default to provide a cleaner preview.
+- Improved the tone mapping performance when shadow parameter is non-zero.
+- Fixed the crash when filter size is set to zero.
+- Reduced image filtering artifacts when adaptive sampling is used with catmull-rom or sinc filters.
+- Fixed the crash when invalid EXIF is found in JPEG images.
+- Allow users to set license server address via -licsvr_addr in command line rendering.
+
+
+-------------------------------------------------------------------------------
+September 6, 2017
+
+** SDK 1.9.9 changes **
+
+- Improved the fix for high bump strength, making the bump mapping look nicer in this case.
+- Fixed the regression of light group feature introduced by our optimizations.
+- Improved the stability of account based licensing model through the Internet.
+- Fixed the regression of displacement mapping caused by compiler error.
+
+
+-------------------------------------------------------------------------------
+August 27, 2017
+
+** SDK 1.9.8 changes **
+
+- Removed path tracer and bidirectional path tracer from the renderer, to better concentrate our development efforts on hybrid path tracer and GI cache.
+- Improved the light importance sampling algorithm to better adapt to various kinds of scenes. Now the algorithm is more general and robust.
+- In exception handling, now we try to clear all temporary cache files created by the renderer.
+- Added time profiling for light sampling and image filtering.
+- Now we can extract non-uniform scaling from transformation matrices of quad lights and automatically apply the non-uniform scaling to light's width and height. To keep backward compatibility, this behavior can be disabled by setting light_nonuniform_scaling parameter to off.
+
+
+-------------------------------------------------------------------------------
+August 7, 2017
+
+** SDK 1.9.7 changes **
+
+- Fixed bump strength for 3ds Max bitmap and V-Ray bitmap filter to keep consistency with 3ds Max and V-Ray. Notice that this will cause existing scenes to have inconsistent bump strength compared to previous releases. If this is not wanted, please fix it manually by adjusting bump strength parameters.
+- Changed the interpretion of GI cache parameters to make the cache density almost independent of image resolution. This makes the rendering of large images a lot faster.
+- Increased the image contrast with the same shadow parameter value used in built-in tone mapping.
+- Fixed built-in exposure control with negative value pixels.
+- Added light_sample_quality parameter to options node for global control of direct light sampling quality. For legacy scenes, notice that it's usually unnecessary to set the number of light samples to be larger than 16. You can manually set light_sample_quality to a proper value to scale all light samples down.
+
+
+-------------------------------------------------------------------------------
+July 28, 2017
+
+** SDK 1.9.4 changes **
+
+- Fixed incorrect MIP-MAP filtering of non-square textures for ultra texture cache.
+- Fixed small black regions caused by insufficient GI record density.
+- Improved interactive mode performance for GI cache in command line tool.
+- Fixed black indirect illumination with translucent materials when GI cache is used.
+
+
+-------------------------------------------------------------------------------
+July 24, 2017
+
+** SDK 1.9.3 changes **
+
+- Fixed random GI cache point placement caused by multi-threading. Now distributed render nodes always compute consistent cache results.
+- Significantly improved the precision of GI cache while render time is the same.
+- Added extra progressive passes to improve the preview of GI cache generation.
+- Fixed the interpolation artifacts when GI cache density is high.
+- Improved shadow bias algorithm to avoid self-intersections for some scenes.
+- Optimized GI cache point insertion performance, resulting in faster GI cache generation.
+- Added -GI_cache_indirect_glossy toggle to allow more realistic glossy bounces at the cost of tracing and shading more rays.
+
+
+-------------------------------------------------------------------------------
+July 11, 2017
+
+** SDK 1.9.2 changes **
+
+- Optimized GI cache generation for very high ray depth using Russian Roulette. This works for ray types including reflections, refractions, and transparency.
+- Fixed the interpolation artifacts caused by record position tests in GI cache.
+- Optimized the clamping algorithm in the core, now clamping is enabled by default with clamp value set to 20. The clamping now also affects GI cache.
+- Now GI cache can cache and interpolate self-emission for geometry.
+- Added random sub-pixel permuation to avoid aliasing for low AA sample settings.
+- Fixed light leaking caused by single-sided walls and floating number precision limits.
+- Fixed shadow artifacts when portal light is placed too close to walls.
+- Removed clamping for transparent rays to avoid unpleasing color shifts.
+
+
+-------------------------------------------------------------------------------
+July 4, 2017
+
+** SDK 1.9.1 changes **
+
+- Fixed GI interpolation artifacts caused by low quality records created due to Russian Roulette.
+- Improved GI interpolation quality for surfaces seen in reflections/refractions.
+- Improved image preview of GI cache generation process.
+- Now the core requires fewer rays for GI cache generation.
+- Avoid creating unnecessary records during GI cache generation due to multi-threading.
+- Use lower screen scale for GI cache to render faster for larger image resolutions.
+- Fixed bright speckles due to GI interpolation at corners.
+- Fixed sampling patterns when GI_cache_passes is low.
+- Setting GI_cache_points to 1 now makes the core to visualize GI record distributions.
+- Avoid sampling unncessary indirect diffuse rays during GI cache generation.
+- Fixed inconsistency between off mode and accurate mode in GI cache when handling environment background.
+
+
+-------------------------------------------------------------------------------
+June 26, 2017
+
+** SDK 1.9.0 changes **
+
+- A completely rewritten new GI cache engine for improved global illumination details. This engine is superior to the old GI cache implementation in both quality and performance.
+- Added built-in backface cull shader to SDK, which is widely used in many applications.
+- More robust handling of clamp_portal feature, now delivering more accurate results for layered materials.
+- Removed automatic sample count scaling for different AA settings. Now each AA sample always samples exact the user specified diffuse samples and light samples. Notice that it's critical for users to lower their diffuse samples and light samples for high AA sample count to render as fast as before.
+- Reworked shadow terminator fix to deliver visually more acceptable results for low polygon count.
+
+
+-------------------------------------------------------------------------------
+May 27, 2017
+
+** SDK 1.0.94 changes **
+
+- Fixed progress update for adaptive sampling.
+- Added -adaptive override parameter to command line tool.
+
+
+-------------------------------------------------------------------------------
+May 27, 2017
+
+** SDK 1.0.93 changes **
+
+- Supported adaptive image sampling, and the feature is enabled by default now. This can make the rendering up to 2X faster.
+- Now transparent rays does not respect visible_secondary toggle, but it still respects cast_transparency toggle.
+
+
+-------------------------------------------------------------------------------
+May 22, 2017
+
+** SDK 1.0.92 changes **
+
+- Added experimental implementation of stochastic transparency to the core, which makes rendering of massive semi-transparent objects 3X faster or even more.
+- Greatly optimized the Russian Roulette implementation, now delievering images with much less noise.
+- Improved the defaults of the clamp_portal feature, making it sometimes 4X faster or even more to render portallight with HDR environment map.
+
+
+-------------------------------------------------------------------------------
+May 20, 2017
+
+** SDK 1.0.91 changes **
+
+- Fixed a subtle defect of our particle map implementation, which used to cause interpolation artifacts for GI cache.
+- Improved the automatic computation of GI cache radius to eliminate interpolation artifacts in reflections near the camera.
+
+
+-------------------------------------------------------------------------------
+May 18, 2017
+
+** SDK 1.0.90 changes **
+
+- Fixed the API support of multiple window (region) rendering in one frame. This is very helpful for renderfarms which wants explore more load balancing opportunities.
+- Fixed the severe regression of ray tracing performance caused by MSVC compiler.
+- Generally 1.2-1.5X faster GI cache generation, and it's more apparent when GI_cache_passes is large.
+- Fixed the regression in command line tool where -interactive does not pop out display window.
+
+
+-------------------------------------------------------------------------------
+May 13, 2017
+
+** SDK 1.0.89 changes **
+
+- Fixed the regression of GI_cache_no_leak toggle.
+- Improved the interpolation quality significantly for visualizing GI cache directly.
+- Fixed extra glossy noise when accurate mode is used for GI_cache_preview.
+- Made the clamp_portal toggle more robust when handling different map resolution.
+
+
+-------------------------------------------------------------------------------
+May 11, 2017
+
+** SDK 1.0.88 changes **
+
+- Now GI_cache_preview parameter is changed from bool type to enum type. When its value is `off`, it renders with high quality mode. When its value is `fast`, it renders as the legacy bool value `on`, which is a low quality preview. Whne its value is `accurate`, it renders medium quality result very quickly.
+- Now the dof_camera node in liber_shader also supports stereo rendering.
+- Added a toggle named clamp_portal to options node for compressing and blurring environment maps/shaders attached to portallight node. This provides significant noise reduction for portal lights with HDR environment maps.
+- Removed some diffuse compensation that our users don't expect.
+- Allowed users to set enum via bool API in node system.
+- Added ei_verbose_set_callback/ei_verbose_get_callback for users to extract full console logs of the core.
+- Added ignore_emission parameter to options node for users to quickly disable all self-emission to analyze noise.
+- Added support for displaying AOV by name to er executable, use -aov aov_name to activate this feature.
+- Make er executable independent of OpenImageIO by replicating the implementation of convert_native_arguments.
+- Improved scene navigation in er executable using custom_trace callback.
+
+
+-------------------------------------------------------------------------------
+April 29, 2017
+
+** SDK 1.0.87 changes **
+
+- When GI_cache_preview is on, the algorithm is improved to generate more accurate image directly, which can be used as the final result. Moreover, this algorithm is very efficient at reducing noise and fireflies, and requires much less AA samples to converge.
+- Added Russian Roulette algorithm for the core to handle very long diffuse/glossy paths more efficiently. Now the depth to start using Russian Roulette can be set via rr_depth parameter in options node. Its default value is 3.
+- Fixed RQMC sampling for mirror reflections/refractions, now it's faster to converge for these types of BSDFs.
+- Optimized light shader calls to avoid unnecessary calls to light shaders.
+- Simplified render logs for users to profile rendering performance much easier. Also, we added more detailed time profiling for BSDF/BSSRDF evaluations.
+- Improved the filename of minidump for developers to analyze crash reports easier.
+- Added shader_specialization toggle into options node to allow users to disable it for debugging purpose. The default value is on.
+
+
+-------------------------------------------------------------------------------
+April 9, 2017
+
+** SDK 1.0.86 changes **
+
+- When caustic is off, increase diffuse to compensate for energy loss. This is a core optimization which works for all shaders.
+
+
+-------------------------------------------------------------------------------
+April 6, 2017
+
+** SDK 1.0.85 changes **
+
+- Reduced noise in specular material with bump mapping.
+
+
+-------------------------------------------------------------------------------
+March 30, 2017
+
+** SDK 1.0.84 changes **
+
+- Reclaim borrowed license in shorter period, allowing users to kill process a few times. But notice that this is subject to change anytime, don't rely on this.
+
+
+-------------------------------------------------------------------------------
+March 28, 2017
+
+** SDK 1.0.83 changes **
+
+- Further improved many light sampling algorithm, which is more robust and powerful. Now it generates images with much less noise in the same render time.
+- Fixed the regression of missing refraction when material has diffuse component.
+
+
+-------------------------------------------------------------------------------
+March 23, 2017
+
+** SDK 1.0.82 changes **
+
+- Improved the many light sampling algorithm to handle more general cases. Now in general scenes with many lights can be rendered with less noise in the same time.
+- Added retry mechanism to account based licensing mode, in order to improve stability when it's used as license server.
+
+
+-------------------------------------------------------------------------------
+March 19, 2017
+
+** SDK 1.0.81 changes **
+
+- Fixed the performance regression of shader JIT caused by OSL shader specialization. This gives us much faster scene pre-processing.
+- Improved the caching algorithm of ultra texture cache, providing up to 1.4X faster rendering when texture memory limit is hit.
+- Improved the performance when reflection is used with diffuse, now it's 2X faster to render scenes containing lots of such materials.
+- Fixed the crash when UUID specified for -login command is invalid.
+
+
+-------------------------------------------------------------------------------
+March 4, 2017
+
+** SDK 1.0.80 changes **
+
+- Improved exception handling for license server. Now licenses can be safely reclaimed from exceptions.
+
+
+-------------------------------------------------------------------------------
+February 21, 2017
+
+** SDK 1.0.79 changes **
+
+- Fixed the crash caused by the new constant folding optimization when a node is edited twice in ESS.
+
+
+-------------------------------------------------------------------------------
+February 20, 2017
+
+** SDK 1.0.78 changes **
+
+- Fixed the crash in command line rendering with -display or -interactive option.
+
+
+-------------------------------------------------------------------------------
+February 16, 2017
+
+** SDK 1.0.77 changes **
+
+- Added new APIs for re-render a frame with in-memory cache. Now 3rd-party network rendering system can use the APIs to load a scene and build a in-memory cache, render different windows in multiple times, then clear the in-memory cache. This allows the job manager of the network rendering system to schedule jobs adaptively for render nodes in a more fine grain manner.
+- Remarkably improved the out-of-core performance of ultra texture cache. Now it renders some texture heavy scenes 1.4X faster under strict memory limit.
+- Supported constant folding for shadow rays and displacement in OSL. Now specialized branches for shadow rays or displacement don't have extra performance cost.
+
+
+-------------------------------------------------------------------------------
+January 11, 2017
+
+** SDK 1.0.76 changes **
+
+- Fixed slightly brighter corners for some interior scenes.
+- Fixed the issue where the image generated by GI cache is slightly darker than hybrid path tracer.
+- Added `-render root_instgroup camera_inst options` to command line tool.
+- Added abc_loader to liber_shader library for loading particle geometry from Alembic files.
+
+
+-------------------------------------------------------------------------------
+December 17, 2016
+
+** SDK 1.0.74 changes **
+
+- Supported account based license in floating license server.
+
+
+-------------------------------------------------------------------------------
+December 14, 2016
+
+** SDK 1.0.73 changes **
+
+- Removed redundant pixels out of user specified window for output images.
+
+
+-------------------------------------------------------------------------------
+December 10, 2016
+
+** SDK 1.0.72 changes **
+
+- Supported setting GI cache lookup radius in pixel unit. Now when GI_cache_radius is set to zero, a new parameter named GI_cache_screen_scale will be used as screen space scale in pixel unit. By default its value is one which should be good enough for most of the cases. Builtin spherical camera and cubemap camera support this feature too. Custom camera nodes must have implemented object_to_screen interface to work with this feature.
+- Fixed black translucent closure (backlight in ei_standard material) when surface has thickness (two faces).
+- Shadow terminator artifacts of translucent closure (backlight in ei_standard material) was fixed.
+- Fixed the regression in which output file images are tone mapped twice.
+- Added -login command to the command line tool, which can be used to login with uuid (universally unique identifier) to for account based license.
+- Optimized the convergence of pure glossy materials, when GI cache is enabled.
+- Fixed NaNs in glossy refractions when glossiness is very high.
+- Removed those non-physical enough BRDFs from the core, including phong, blinn, blinnphong. Now ward or microfacet_beckmann are recommended to replace these BRDFs in OSL shaders.
+
+
+-------------------------------------------------------------------------------
+November 15, 2016
+
+** SDK 1.0.71 changes **
+
+- Optimized OSL shaders for 3ds Max, bringing 1.1X faster rendering in general.
+- Optimized the shading of glossy reflections/refractions, now the noise in scenes with lots of glossy objects were remarkably reduced, and now pure glossy objects without diffuse are more realistic without too many black areas.
+- Internally optimized the sampling of hair BCSDFs, now shader writers don't need to do special tricks to reduce noise, it's automatically done by the core.
+- Slightly optimized interpolation of primitive variables with derivatives.
+- Simplified ray bias handling to fix light leaks when GI cache radius is too large.
+
+
+-------------------------------------------------------------------------------
+October 10, 2016
+
+** SDK 1.0.70 changes **
+
+- Added `aov_light_dir_xform` to camera node. This can be used to transform `aov_direct_light_dir` and `aov_indirect_light_dir` using this custom matrix, before the result is written into AOVs.
+- Added support for setting `scene_searchpath` via `manager.ini` configuration file.
+- Changed render log to be cleaner to read.
+
+
+-------------------------------------------------------------------------------
+September 30, 2016
+
+** SDK 1.0.69 changes **
+
+- Added two separate AOVs for outputing intensity weighted directions of direct lighting and indirect lighting, named `aov_direct_light_dir` and `aov_indirect_light_dir` respectively. Currently the intensity weighted direction of sky light is also classified into `aov_indirect_light_dir`.
+- Use existing `color` outvar node if user specified it via command line tool.
+- Improved frame buffer API to get current render region and only refresh that part of image.
+
+
+-------------------------------------------------------------------------------
+September 26, 2016
+
+** SDK 1.0.68 changes **
+
+- Heavily optimized multi-threading performance of ultra texture cache when memory is not sufficient and out-of-core texture caching is used.
+- Improved the support of stereo rendering in virtual reality camera nodes, now these camera nodes generate more consistent images with eye separation.
+- Fixed the handling of `namespace` keyword in ESS parser when non-Windows encoding is used.
+
+
+-------------------------------------------------------------------------------
+September 19, 2016
+
+** SDK 1.0.67 changes **
+
+- Supported auto-tiling and paging (out-of-core) in the new ultra texture cache. Now ultra texture cache is enabled by default in the core, delievering up to 1.3X faster rendering in general. But users can still fall back to legacy texture cache using OpenImageIO with `ultra_texcache` toggle in options.
+- Supported returning custom color and alpha by camera node shader when returning `EI_FALSE` in `generate_ray` function. This can be very useful for diagnostics in multi-camera rendering. Also, users can use this mechanism to perform custom 2D drawings.
+- Overrides `aspect` parameter of camera node when image resolution has been overridden in command line tool.
+- Supported setting directory to store page files used by ultra texture cache using `-page_file_dir` in command line tool.
+
+
+-------------------------------------------------------------------------------
+August 29, 2016
+
+** SDK 1.0.65 changes **
+
+- Fixed the issue where multiple render nodes could not generate consistent image in network distributed rendering with GI cache.
+- Fixed the filtering over region boundaries in stereo rendering.
+- Supported overriding lens shader in command line tool with -lens option.
+- Supported overriding image filter in command line tool with -filter option.
+- Added a new super fast texture cache named `ultra-texcache`, since it's only experimental currently, OpenImageIO is still used as the default texture cache. This mode can deliever up to 1.3X faster rendering in general. Users can use `-ultra_texcache on` to enable this mode.
+- Switched to a new JIT mode which generates faster native code for OSL shading, delievering 1.05X faster rendering in general.
+- Supported adding `traceset:lights` to OSL trace call, in order to include light primitives in custom ray tracing.
+- Supported querying `is_light` state of current ray intersection using getmessage in OSL.
+- Supported per-object-instance ray bias using built-in lightmap baker.
+- Added normal flipping toggle to object instance in built-in lightmap baker.
+
+
+-------------------------------------------------------------------------------
+August 3, 2016
+
+** SDK 1.0.64 changes **
+
+- Fixed UTF-8 support for include preprocessor in OSL compiler. This also fixed the unable to find stdosl.h issue when the file is in non-English path.
+
+
+-------------------------------------------------------------------------------
+August 1, 2016
+
+** SDK 1.0.63 changes **
+
+- Optimized multi-threading of acceleration structure build. Now small scenes are up to 10X faster to build, medium and large scenes are up to 1.1X faster to build.
+- Fixed the crash on some machines caused by automatic target detection of LLVM. Now we explicitly require LLVM to match the system requirements of our core.
+- Supported crash minidump on Windows when running command line rendering tool. The tool will generate a file named elara_minidump.dmp when crashed.
+
+
+-------------------------------------------------------------------------------
+July 21, 2016
+
+** SDK 1.0.62 changes **
+
+- Improved GI cache interpolation, now it generates very smooth rendering images when GI_cache_preview is enabled. This is very useful for a super fast preview of the rendering result. Also, the interpolation performance is optimized to provide an up to 1.2X faster rendering.
+- Added more override options in command line tool, see our online document for more details.
+
+
+-------------------------------------------------------------------------------
+July 15, 2016
+
+** SDK 1.0.61 changes **
+
+- Disabled automatic bucket subdivision for fix random crashes.
+- Changed default bucket size to 32 for improved parallelism.
+- Fixed the image filtering effect of catmull-rom and sinc, now they are giving sharp results.
+
+
+-------------------------------------------------------------------------------
+July 12, 2016
+
+** SDK 1.0.60 changes **
+
+- Fixed conflicting bucket writes when automatic bucket subdivision is used.
+
+
+-------------------------------------------------------------------------------
+July 11, 2016
+
+** SDK 1.0.58 changes **
+
+- Fixed the sampling artifacts of indirect diffuse, which causes excessive noise for scenes with non-even light distribution.
+
+
+-------------------------------------------------------------------------------
+July 8, 2016
+
+** SDK 1.0.55 changes **
+
+- Supported automatic bucket subdivision. Now the job manager will subdivide jobs dynamically to utilize all CPU threads. This improves the rendering performance up to 30% in our benchmarks. This optimization is now enabled by default, while users can use `-auto_bucket_subdiv off` to disable it.
+- Fixed the incorrect coordinate display in error messages for NaNs.
+- Now users can use `-samples min max` to override AA samples in command line.
+- Supported displaying bucket brackets for non-progressive rendering in command line.
+- Fixed the crash when string encoding of texture filename is incorrect.
+
+
+-------------------------------------------------------------------------------
+June 2, 2016
+
+** SDK 1.0.54 changes **
+
+- Fixed a crash when the same array is set to node parameter as its old value.
+
+
+-------------------------------------------------------------------------------
+June 1, 2016
+
+** SDK 1.0.53 changes **
+
+- Fixed a regression of RQMC sampling which causes increased noise. Simplified the RQMC sampling framework to use a more robust method for higher dimension.
+
+
+-------------------------------------------------------------------------------
+May 31, 2016
+
+** SDK 1.0.52 changes **
+
+- Improved progressive display of GI cache generation.
+- Default render threads to low priority.
+- Fixed thread handle leaks on Windows.
+
+
+-------------------------------------------------------------------------------
+May 30, 2016
+
+** SDK 1.0.51 changes **
+
+- Make sure bucket size is 16 pixels aligned to make progressive rendering look better.
+- Optimized the look of initial progressive passes with improved RQMC sampling.
+- Added -interactive option to command line rendering tool, which can be used to interactively nagivate an ESS scene. In this mode, you can:
+
+  - Left click and drag to tumble.
+  - Middle click and drag to pan (or ctrl + left click and drag)
+  - Scroll to zoom (or shift + left click and drag)
+
+- Added API ei_set_custom_trace for users to emit custom trace calls before the start of image sampling. This can be used to perfom hit testing (picking) or any other tasks that require ray-tracing.
+- Corrected the MIS of mesh light.
+- Fixed long standing light scale issue with MIS. Now we can correctly handle non-uniform scale for mesh lights.
+- Fixed a regression where hair reflection cannot see hair refraction, which used to cause energy loss for hair scattering.
+- Added built-in spherical_camera with stereo rendering support.
+- Added built-in cubemap_camera with stereo rendering support.
+
+
+-------------------------------------------------------------------------------
+May 13, 2016
+
+** SDK 1.0.50 changes **
+
+- Improved the preview of GI cache generation, making it useful for interactive rendering.
+
+
+-------------------------------------------------------------------------------
+May 12, 2016
+
+** SDK 1.0.48 changes **
+
+- Added single_scatter BSSRDF to OSL.
+- Improved microfacet GGX/Beckmann sampling which reduces noises.
+- Fixed the regression of direct lighting in hybrid path tracer which causes some lights not illuminating.
+- Improved Oren-Nayar BRDF without darkening effects on the backlight side.
+- Improved Ward BRDF which resolved the dark edge issue of original Ward BRDF.
+
+
+-------------------------------------------------------------------------------
+May 5, 2016
+
+** SDK 1.0.47 changes **
+
+- Fixed UTF-8 handling in texture_searchpath on non-English OS.
+
+
+-------------------------------------------------------------------------------
+April 29, 2016
+
+** SDK 1.0.46 changes **
+
+- Supported UTF-8 in OSL compiler and runtime.
+- Fully UTF-8 based implementation of platform APIs.
+
+
+-------------------------------------------------------------------------------
+April 28, 2016
+
+** SDK 1.0.45 changes **
+
+- Fixed the regression of light links.
+- Fixed the image artifacts when semi-transparent object is two-sided and thin.
+- Improved the details around corners when GI_cache_no_leak is enabled, at the cost of increased render time.
+- Fixed the regression of texture_searchpath support with IES web distribution files.
+
+
+-------------------------------------------------------------------------------
+April 22, 2016
+
+** SDK 1.0.43 update1 changes **
+
+- Fixed inconsistent normal bump shader in 3ds Max.
+- Improved refraction of eiStandard in 3ds Max.
+
+
+-------------------------------------------------------------------------------
+April 14, 2016
+
+** SDK 1.0.43 changes **
+
+- Fixed the regression of AOV support caused by new OSL optimizations.
+- Fixed the regression when total depth is zero, lights cannot be rendered in GI cache mode.
+
+
+-------------------------------------------------------------------------------
+April 9, 2016
+
+** SDK 1.0.42 changes **
+
+- Major optimization to rendering of scenes with many lights. Added GI_cache_light_cutoff to options. When this parameter is non-zero, GI cache engine will remove lights with contribution less than this threshold, which greatly improves the rendering performance of interior scenes with many rooms and lights. We've seen 2X-4X faster rendering at the cost of little bias with this optimization. By default this optimization is enabled.
+- Upgraded toolset on Windows platform to VS2010 x64.
+- Upgraded 3rparty dependencies to new versions, including:
+  - Boost 1.60.1
+  - zlib 1.2.8
+  - libjpeg 7.0
+  - libpng 1.6.22
+  - libtiff 4.0.6
+  - OpenEXR 2.2.0
+  - OpenImageIO 1.6.11
+  - OpenSubdiv 3.0.4
+  - GLFW 3.2.0
+  - LLVM 3.4.2
+  - OpenShadingLanguage 1.7.2
+  - TBB 4.3
+  - HDF5 1.10.0
+  - OpenVDB 3.2.0
+- Now zlib and OpenVDB are linked statically, this avoids library conflicts on Windows.
+- Improved the handling of missing textures for better rendering performance.
+- Refactored the interface for 2D random sampling, now users can use array's getattribute in OSL to generate 2D random samples with low discrepancy property.
+- Refactored the interface for reading OpenVDB grids by name, now users can use "volume:grid" extension to read grids from current OpenVDB volume which is being rendered. The previous method for retrieving data from any OpenVDB file by name is removed. The new extension is faster than the previous one, at the cost of less flexibility.
+- Fixed the handling of UTF-8 strings as searchpath, non-English characters are supported.
+- Fixed the crash of -display mode in command line tool when -resolution is used to override image resolution.
+- Now all documentation and code samples are removed from SDK package. Users can access them online at https://github.com/elarafx/elaradoc
+
+
+-------------------------------------------------------------------------------
+February 18, 2016
+
+** SDK 1.0.41 changes **
+
+- Changed lens shader of camera nodes from OSL based to C++ based. This enables developers to use more advanced data structures, algorithms, and libraries to implement virtual reality, panorama, stereo (3D), physical camera and lightmap baking (render to texture). Now the builtin depth of field shader (dof_camera) is C++ based, the legacy OSL based shader (lens_blades) is removed.
+
+
+-------------------------------------------------------------------------------
+January 6, 2016
+
+** SDK 1.0.40 changes **
+
+- Added GI_cache_no_leak to render options. By default it's enabled to prevent light leaks. Light leaks are significantly reduced when it's enabled compared to previous renderings.
+- Fixed a regression of ESS parser 2.0, which causes syntax errors when namespace is used.
+
+
+-------------------------------------------------------------------------------
+December 8, 2015
+
+** SDK 1.0.39 changes **
+
+- Added GI_cache_mode which allow users to generate GI cache using multiple renders and reuse the cache for later renderings.
+- Added -scene_searchpath option to set searchpath for ESS parsers to load ESS files.
+
+
+-------------------------------------------------------------------------------
+November 23, 2015
+
+** SDK 1.0.35 changes **
+
+- Optimized importance sampling of many lights. The convergence speed of scenes with many lights is now often 4X faster. User can specify the number of lights to sample in UI via parameter "random_lights". Setting this parameter to 0 disable random light sampling and all lights will be sampled.
+- Fixed the regression of shadow terminator fix.
+
+** 3ds Max plugin 1.5.34 changes **
+
+- Added support of realtime exposure. Now users can change exposure and see feedback in realtime during rendering, or even after the image is rendered.
+
+
+-------------------------------------------------------------------------------
+October 23, 2015
+
+** SDK 1.0.32 changes **
+
+- Fixed parser errors when base85 data block is empty.
+- Added "simple_portal" mode to lights. which uses scene environment for direct light sampling without tracing rays.
+- Fixed light leaks when it's a sky portal.
+- Changed the threshold of random light sampling for faster updates of progressive rendering.
+- Fixed the case when uv1 is used to compute tangent/binormal basis vectors.
+- Added a performance warning for mesh lights of non-constant colors.
+- Supported non-uniform scaling of direct lights and spot lights.
+- Default "light_cutoff" parameter to 0.01 in the core.
+- Fixed the crash when mesh light is textured with shaders containing OSL trace calls.
+- Supported multi-materials for mesh lights.
+- Supported semi-transparent mesh lights.
+
+
+-------------------------------------------------------------------------------
+September 25, 2015
+
+** SDK 1.0.30 changes **
+
+- Added "sky_portal" toggle for quad light, users can easily turn a quad light into a portal light. When "sky_portal" is on, the environment behind the quad light will be used as output radiance, the color and intensity of the light will be ignored.
+- Make it possible to retrieve "caustic" option in OSL shaders.
+- Added "decay" toggle for spot light and point light to turn off inverse square falloff.
+
+
+-------------------------------------------------------------------------------
+September 16, 2015
+
+** SDK 1.0.29 changes **
+
+- Possible to toggle skylight visibility, by default it's visible in background now.
+- Added hemispherical mode to skylight, by default it's off.
+- When an object is not visible to primary rays, now it's also invisible to refraction rays.
+- Make it possible to set max. refraction depth in rafraction closure.
+
+
+-------------------------------------------------------------------------------
+September 9, 2015
+
+** SDK 1.0.27 changes **
+
+- Implemented a parser for the new ESS2 format, which is superior to the ESS1 parser.
+
+    Improvements in ESS2 parser:
+
+    - Full support of scientific notation for floating point numbers.
+    - 3X faster loading for ASCII text file.
+    - 10X faster loading for binary encoded file.
+    - 30% saving in size for binary encoded file.
+
+    Incompatible changes in ESS2 format:
+
+    - point[], color[]... cannot be written as point [], color []... (no whitepsace in-between)
+    - old Base64 encoding is no longer supported (since it brings syntax ambiguity for ESS2 parser to handle)
+    - old hexadecimal encoding is no longer supported (since it's lately replaced by Base64 encoding very soon)
+    - param_link cannot be written as link (which brings syntax ambiguity for ESS2 parser to resolve)
+    - should use -parse1 to use the ESS1 parser, the default parse command uses ESS2 parser (-parse2).
+
+- Fixed the noise problem when illumination is seen through refraction.
+- Moved total internal reflection handling from reflection closure into refraction closure.
+- Added invert weight parameter for refraction/transparency of eiStandard to allow users to quickly flip opacity.
+
+
+-------------------------------------------------------------------------------
+August 28, 2015
+
+** SDK 1.0.24 changes **
+
+- Fixed the memory leak of ESS parser for base64 data.
+- Supported exporting linkage statements for all linked DSO modules to ESS.
+- Optimized GI cache generation, which is 2X faster in some cases.
+- Improved sampling algorithm for hair BCSDF, which results in better hair rendering quality and performance.
+
+
+-------------------------------------------------------------------------------
+August 7, 2015
+
+
+** SDK 1.0.22 changes **
+
+- Fixed regression of ray traversal.
+- Added API to get the name of host application which generates an ESS file.
+- Fixed displacement mapping used with face-varying primitive variables.
+- Fixed regression of fresnel reflection/refraction.
+- Added API for parsing ESS format from memory buffer.
+
+
+** 3ds Max plugin 1.5.22 changes **
+
+- Added "Use Relative Path" to ESS exporting.
+
+
+** Maya plugin 1.5.33 changes **
+
+- Fixed random crashes when rendering empty scenes.
+
+
+-------------------------------------------------------------------------------
+August 4, 2015
+
+
+** SDK 1.0.21 changes **
+
+- Changed maximum allowed rendering threads from 32 to 64.
+- Optimized thread affinity to make the construction of initial acceleration structure 2X faster.
+
+
+** Maya plugin 1.5.32 changes **
+
+- Added "Use Relative Path" to ESS exporting.
+
+
+-------------------------------------------------------------------------------
+July 21, 2015
+
+
+** SDK 1.0.20 changes **
+
+- Added -ignore_render argument to er command line for skipping render commands.
+- Fixed regression of depth of field.
+- Added namespace support to ESS format and ESS style APIs.
+- Avoided potential stack overflow during ray traversal.
+- Optimized computation of differential geometry.
+- Fixed white silhouette issues when glossy reflections used with skylight.
+- Improved SDK usability by not asking users to define EI_NO_OSL_INTEROP anymore.
+- Improved build quality of acceleration structure for slightly faster raytracing.
+- Added affect_volume toggle for lights.
+- Optimized rendering performance for constant color mesh lights, resulting in 2X more faster rendering.
+- 1.3X faster importance sampling of skylight.
+- Avoided unnecessary ray traversal of light primitives for 1.1X faster rendering in general when regular accel mode is used.
+- Avoided unnecessary motion data creation and interpolation.
+- 3X faster indirect diffuse sampling.
+- 2X faster frame buffer writes.
+
+
+** 3ds Max plugin 1.5.21 changes **
+
+- Always refresh image for the first passes, improved the progressive rendering experience.
+- Switched to use general polygon rather than triangle for mesh translation in Maya, which is very friendly for subdivision surfaces.
+
+
+** Maya plugin 1.5.31 changes **
+
+- Always refresh image for the first passes, improved the interactive rendering experience.
+- Switched to use general polygon rather than triangle for mesh translation in Maya, which is very friendly for subdivision surfaces.
+- Fixed the regression of proxy display and rendering.
+- Default cast_shadows (blocking other lights) for our specific lights for faster rendering in general.
+- Fixed the not working issue of shutter open and shutter close.
+- Reworked Maya UIs to support parameters of the new GI cache engine.
+- Tuned default parameters for fast SSS shader.
+
