@@ -5,8 +5,6 @@
 #include <string.h>
 #include <map>
 
-using namespace trimesh;
-
 struct PackedVertex
 {
 	eiVector	pos;
@@ -69,7 +67,7 @@ void indexVBO(
 	}
 }
 
-TriMesh *create_trimesh(
+trimesh::TriMesh *create_trimesh(
 	std::vector<eiVector> & in_vertices, 
 	std::vector<eiVector2> & in_uvs, 
 	std::vector<eiVector> & in_normals)
@@ -79,7 +77,7 @@ TriMesh *create_trimesh(
 		return NULL;
 	}
 
-	TriMesh *m = new TriMesh;
+	trimesh::TriMesh *m = new trimesh::TriMesh;
 
 	std::vector<eiVector> out_vertices;
 	std::vector<eiVector2> out_uvs;
@@ -100,17 +98,17 @@ TriMesh *create_trimesh(
 		eiVector & pos = out_vertices[i];
 		eiVector & normal = out_normals[i];
 
-		m->vertices.push_back(point(pos.x, pos.y, pos.z));
-		m->normals.push_back(vec(normal.x, normal.y, normal.z));
+		m->vertices.push_back(trimesh::point(pos.x, pos.y, pos.z));
+		m->normals.push_back(trimesh::vec(normal.x, normal.y, normal.z));
 	}
 
 	for (size_t i = 0; i < out_indices.size(); i += 3)
 	{
-		eiUint i0 = out_indices[i * 3 + 0];
-		eiUint i1 = out_indices[i * 3 + 1];
-		eiUint i2 = out_indices[i * 3 + 2];
+		eiUint i0 = out_indices[i + 0];
+		eiUint i1 = out_indices[i + 1];
+		eiUint i2 = out_indices[i + 2];
 
-		m->faces.push_back(TriMesh::Face(i0, i1, i2));
+		m->faces.push_back(trimesh::TriMesh::Face(i0, i1, i2));
 	}
 
 	// Convert triangle strips to faces, if necessary
