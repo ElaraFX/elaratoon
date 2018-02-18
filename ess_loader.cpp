@@ -140,10 +140,10 @@ bool loadESS(
 	ei_set_custom_trace(custom_trace);
 	ei_job_set_process(&rp.base);
 
-	//ei_tessellate_begin(
-		//"mtoer_instgroup_00", 
-		//"GlobalCameraInstanceName0x32f24105_0x74e20f38", 
-		//"GlobalOptionsName0x32f24105_0x74e20f38");
+	ei_tessellate_begin(
+		"mtoer_instgroup_00", 
+		"GlobalCameraInstanceName0x32f24105_0x74e20f38", 
+		"GlobalOptionsName0x32f24105_0x74e20f38");
 
 	// We should have got tessellated scene here
 	if (rp.scene_tag == EI_NULL_TAG)
