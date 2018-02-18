@@ -2,6 +2,7 @@
 // Include standard headers
 #include <stdio.h>
 #include <stdlib.h>
+#include <conio.h>
 #include <vector>
 #include <list>
 
@@ -14,9 +15,8 @@
 
 #define SQR(x)	((x) * (x))
 
-class ContourChain
+struct ContourChain
 {
-public:
 	ContourChain()
 	{
 		forceClosed = EI_FALSE;
@@ -99,7 +99,6 @@ public:
 		forceClosed = EI_TRUE;
 	}
 
-private:
 	eiBool isCloseEnough(eiVector *v1, eiVector *v2, eiScalar scale)
 	{
 		if (lensq(*v1 - *v2) < scale * CHAIN_SEGMENT_CLOSENESS_THRESHOLD) {
@@ -113,9 +112,8 @@ private:
 	std::list<eiVector *> contourChain;
 };
 
-class ContourChainGroup
+struct ContourChainGroup
 {
-public:
 	ContourChainGroup()
 	{
 	}
@@ -157,7 +155,6 @@ public:
 		}
 	}
 
-private:
 	// go through each chain and try to add, if we can't return false 
 	// if we can, return true
 	eiBool tryAddingWaitingToGroup()
@@ -623,7 +620,50 @@ int main(int argc, char* argv[])
 
 	contourChainGroup.finishedAdding();
 
+	// write out SVG file
+	FILE *file = fopen("D:/test.svg", "wb");
+	if (file == NULL)
+	{
+		ei_error("Cannot open file for writing SVG.\n");
+		return -1;
+	}
+
+	fprintf(file, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
+	fprintf(file, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n");
+	fprintf(file, "<svg width=\"100%%\" height=\"100%%\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n");
+
+	for (std::list<ContourChain *>::iterator chain_iter = contourChainGroup.contourChainGroup.begin(); 
+		chain_iter != contourChainGroup.contourChainGroup.end(); ++ chain_iter)
+	{
+		ContourChain *chain = *chain_iter;
+
+		fprintf(file, "<polyline points=\"");
+
+		bool isFirstVector = true;
+		for (std::list<eiVector *>::iterator vec_iter = chain->contourChain.begin(); 
+			vec_iter != chain->contourChain.end(); ++ vec_iter)
+		{
+			eiVector *vec = *vec_iter;
+
+			if (!isFirstVector)
+			{
+				fprintf(file, ",");
+			}
+
+			fprintf(file, "%f %f", -vec->x, -vec->y);
+
+			isFirstVector = false;
+		}
+
+		fprintf(file, "\" style=\"fill:white;stroke:black;stroke-width:0.25\"/>\n");
+	}
+
+	fprintf(file, "</svg>\n");
+	fclose(file);
+
 	ei_info("Finished building contour chains.\n");
+
+	getch();
 	
 	return 0;
 }
