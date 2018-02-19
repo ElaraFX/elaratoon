@@ -9,6 +9,7 @@
 // Include Elara SDK
 #include <ei.h>
 #include <ei_dataflowx.h>
+#include <ei_raytracer.h>
 
 #include "ess_loader.h"
 
@@ -516,6 +517,28 @@ void drawVisibleSuggestiveContoursFunc(
 	}
 }
 
+void flushCurve(std::vector<eiVector> & polyline, FILE *file, eiInt chain_color)
+{
+	if (polyline.empty()) {
+		return;
+	}
+
+	fprintf(file, "<polyline points=\"");
+
+	for (size_t i = 0; i < polyline.size(); ++i)
+	{
+		if (i != 0) {
+			fprintf(file, ",");
+		}
+
+		fprintf(file, "%f %f", polyline[i].x, polyline[i].y);
+	}
+
+	fprintf(file, "\" style=\"fill:none;stroke:#%X;stroke-width:1.0\"/>\n", chain_color);
+
+	polyline.resize(0);
+}
+
 int main(int argc, char* argv[])
 {
 	char *scene_filename = "scenes/sss_dragon.ess";
@@ -531,10 +554,12 @@ int main(int argc, char* argv[])
 	std::vector<trimesh::TriMesh *> mesh_list;
 
 	eiTag cam_tag = EI_NULL_TAG;
+	eiTag scene_root_tag = EI_NULL_TAG;
 	if (!loadESS(
 		scene_filename, 
 		mesh_list, 
-		cam_tag))
+		cam_tag, 
+		scene_root_tag))
 	{
 		return -1;
 	}
@@ -615,8 +640,6 @@ int main(int argc, char* argv[])
 		ContourChain *chain = *chain_iter;
 		eiInt chain_color = lfloorf(((eiScalar)(chain_index + 1) / (eiScalar)(num_chains + 1)) * 16777215.0f);
 
-		polyline.resize(0);
-
 		for (std::list<ContourPoint>::iterator point_iter = chain->contourChain.begin(); 
 			point_iter != chain->contourChain.end(); ++ point_iter)
 		{
@@ -631,22 +654,13 @@ int main(int argc, char* argv[])
 			{
 				polyline.push_back(raster);
 			}
-		}
-
-		if (!polyline.empty()) {
-			fprintf(file, "<polyline points=\"");
-
-			for (size_t i = 0; i < polyline.size(); ++i)
+			else
 			{
-				if (i != 0) {
-					fprintf(file, ",");
-				}
-
-				fprintf(file, "%f %f", polyline[i].x, polyline[i].y);
+				flushCurve(polyline, file, chain_color);
 			}
-
-			fprintf(file, "\" style=\"fill:none;stroke:black;stroke-width:0.25\"/>\n", chain_color);
 		}
+
+		flushCurve(polyline, file, chain_color);
 	}
 
 	fprintf(file, "</svg>\n");

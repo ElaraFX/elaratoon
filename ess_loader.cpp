@@ -78,7 +78,8 @@ static eiUint custom_trace(
 bool loadESS(
 	const char * path, 
 	std::vector<trimesh::TriMesh *> & mesh_list, 
-	eiTag & cam_tag)
+	eiTag & cam_tag, 
+	eiTag & scene_root_tag)
 {
 	ei_info("Loading ESS file %s...\n", path);
 
@@ -159,7 +160,7 @@ bool loadESS(
 	// before calling ei_end_context
 	do
 	{
-		eiTag scene_root_tag = ei_rt_scene_root(rp.scene_tag);
+		scene_root_tag = ei_rt_scene_root(rp.scene_tag);
 		eiDataAccessor<eiRaySubscene> scene_root(scene_root_tag);
 
 		// Loop over all object instances
