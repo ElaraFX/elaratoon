@@ -8,7 +8,6 @@
 #include <vector>
 
 // Include Elara SDK
-#include <ei.h>
 #include <ei_raytracer.h>
 #include <ei_data_table.h>
 
@@ -78,7 +77,8 @@ static eiUint custom_trace(
 
 bool loadESS(
 	const char * path, 
-	std::vector<trimesh::TriMesh *> & mesh_list)
+	std::vector<trimesh::TriMesh *> & mesh_list, 
+	eiTag & cam_tag)
 {
 	ei_info("Loading ESS file %s...\n", path);
 
@@ -103,7 +103,7 @@ bool loadESS(
 	}
 
 	eiDataAccessor<eiNode> cam_inst(cam_inst_tag);
-	eiTag cam_tag = ei_node_get_node(cam_inst.get(), ei_node_find_param(cam_inst.get(), "element"));
+	cam_tag = ei_node_get_node(cam_inst.get(), ei_node_find_param(cam_inst.get(), "element"));
 	if (cam_tag == EI_NULL_TAG)
 	{
 		ei_error("No camera object in scene %s\n", path);
@@ -366,11 +366,5 @@ bool loadESS(
 
 	ei_info("Number of meshes: %d\n", (int)mesh_list.size());
 
-	ei_tessellate_end();
-
-	ei_set_custom_trace(NULL);
-	ei_job_set_process(NULL);
-
-	ei_end_context();
 	return true;
 }

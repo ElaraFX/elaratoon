@@ -8,6 +8,7 @@
 
 // Include Elara SDK
 #include <ei.h>
+#include <ei_dataflowx.h>
 
 #include "ess_loader.h"
 
@@ -529,9 +530,11 @@ int main(int argc, char* argv[])
 
 	std::vector<trimesh::TriMesh *> mesh_list;
 
+	eiTag cam_tag = EI_NULL_TAG;
 	if (!loadESS(
 		scene_filename, 
-		mesh_list))
+		mesh_list, 
+		cam_tag))
 	{
 		return -1;
 	}
@@ -541,6 +544,14 @@ int main(int argc, char* argv[])
 		ei_error("Cannot find mesh to render.\n");
 		return -1;
 	}
+
+	if (cam_tag == EI_NULL_TAG)
+	{
+		ei_error("Cannot find camera to render.\n");
+		return -1;
+	}
+
+	eiDataAccessor<eiNode> cam(cam_tag);
 
 	ContourChainGroup contourChainGroup;
 	contourChainGroup.resetGroup();
@@ -615,9 +626,16 @@ int main(int argc, char* argv[])
 				fprintf(file, ",");
 			}
 
-			fprintf(file, "%f %f", fabsf(100.0f * point.pos.x), fabsf(100.0f * point.pos.y));
-
-			is_first_point = false;
+			eiVector raster;
+			if (ei_std_camera_object_to_screen(
+				cam.get(), 
+				&raster, 
+				&point.pos, 
+				&g_IdentityMatrix))
+			{
+				fprintf(file, "%f %f", raster.x, raster.y);
+				is_first_point = false;
+			}
 		}
 
 		fprintf(file, "\" style=\"fill:none;stroke:#%X;stroke-width:0.25\"/>\n", chain_color);
@@ -627,6 +645,16 @@ int main(int argc, char* argv[])
 	fclose(file);
 
 	ei_info("Number of contour chains: %d\n", num_chains);
+
+	// Elara's database is kept open for camera projection
+	ei_tessellate_end();
+
+	ei_set_custom_trace(NULL);
+	ei_job_set_process(NULL);
+
+	ei_end_context();
+
+	ei_info("Scene removed.\n");
 
 	getch();
 	
