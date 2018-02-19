@@ -22,15 +22,20 @@ struct ContourChain
 		forceClosed = EI_FALSE;
 	}
 
-	eiBool connectsToChain(eiVector *v1, eiVector *v2)
+	~ContourChain()
 	{
-		if (contourChain.size() == 0) { // if its empty, make this the first segment
+	}
+
+	eiBool connectsToChain(const eiVector & v1, const eiVector & v2)
+	{
+		if (contourChain.empty()) {
+			// if it's empty, make this the first segment
 			return EI_TRUE;
 		}
 		else {
-			eiVector *start = contourChain.front();
-			eiVector *end = contourChain.back();
-			eiScalar scale = len(*v1 - *v2);
+			eiVector start = contourChain.front();
+			eiVector end = contourChain.back();
+			eiScalar scale = lensq(v1 - v2);
 
 			if (isCloseEnough(v1, start, scale) ||
 				isCloseEnough(v2, start, scale) ||
@@ -43,16 +48,16 @@ struct ContourChain
 		return EI_FALSE;
 	}
 
-	void addSegmentToChain(eiVector *v1, eiVector *v2)
+	void addSegmentToChain(const eiVector & v1, const eiVector & v2)
 	{
-		if (contourChain.size() == 0) {
+		if (contourChain.empty()) {
 			contourChain.push_back(v1);
 			contourChain.push_back(v2);
 		}
 		else {
-			eiVector *start = contourChain.front();
-			eiVector *end = contourChain.back();
-			eiScalar scale = len(*v1 - *v2);
+			eiVector start = contourChain.front();
+			eiVector end = contourChain.back();
+			eiScalar scale = lensq(v1 - v2);
 
 			if (isCloseEnough(v1, start, scale)) {
 				contourChain.push_front(v2);
@@ -71,27 +76,18 @@ struct ContourChain
 		}
 	}
 
-	eiInt getLength()
-	{
-		return (eiInt)contourChain.size();
-	}
-
 	eiBool isChainClosed()
 	{
 		if (forceClosed) {
 			return EI_TRUE;
 		}
 
-		if (contourChain.size() > 0 && isCloseEnough(contourChain.front(), contourChain.back(), 1.0f)) {
+		if (!contourChain.empty() && 
+			isCloseEnough(contourChain.front(), contourChain.back(), 1.0f)) {
 			return EI_TRUE;
 		} else {
 			return EI_FALSE;
 		}
-	}
-
-	void reset()
-	{
-		contourChain.clear();
 	}
 
 	void forceChainClosed()
@@ -99,9 +95,9 @@ struct ContourChain
 		forceClosed = EI_TRUE;
 	}
 
-	eiBool isCloseEnough(eiVector *v1, eiVector *v2, eiScalar scale)
+	eiBool isCloseEnough(const eiVector & v1, const eiVector & v2, eiScalar scale)
 	{
-		if (lensq(*v1 - *v2) < scale * CHAIN_SEGMENT_CLOSENESS_THRESHOLD) {
+		if (lensq(v1 - v2) < scale * CHAIN_SEGMENT_CLOSENESS_THRESHOLD) {
 			return EI_TRUE;
 		} else {
 			return EI_FALSE;
@@ -109,7 +105,7 @@ struct ContourChain
 	}
 
 	eiBool forceClosed;
-	std::list<eiVector *> contourChain;
+	std::list<eiVector> contourChain;
 };
 
 struct ContourChainGroup
@@ -118,46 +114,12 @@ struct ContourChainGroup
 	{
 	}
 
-	void addSegmentToGroup(eiVector *v1, eiVector *v2)
+	~ContourChainGroup()
 	{
-		waitingForAdd.push_front(v1);
-		waitingForAdd.push_front(v2);
-
-		while (tryAddingWaitingToGroup()) { };
+		resetGroup();
 	}
 
-	void resetGroup()
-	{
-		for (std::list<ContourChain *>::iterator cit = contourChainGroup.begin(); 
-			cit != contourChainGroup.end(); ++cit) {
-			ContourChain *eachChain = *cit;
-			eachChain->reset();
-		}
-
-		contourChainGroup.clear();
-		waitingForAdd.clear();
-	}
-
-	void finishedAdding()
-	{
-		// there are no more pairs coming... so chains that aren't yet closed 
-		// are never going to be, so force-close them
-		while (waitingForAdd.size() > 0) {
-			for (std::list<ContourChain *>::iterator it = contourChainGroup.begin(); 
-				it != contourChainGroup.end(); ++it) {
-				ContourChain *eachChain = *it;
-				if (!eachChain->isChainClosed()) {
-					eachChain->forceChainClosed();
-				}
-			}
-
-			while (tryAddingWaitingToGroup()) { };
-		}
-	}
-
-	// go through each chain and try to add, if we can't return false 
-	// if we can, return true
-	eiBool tryAddingWaitingToGroup()
+	void addSegmentToGroup(const eiVector & v1, const eiVector & v2)
 	{
 		// chains are "done" when they are closed
 		eiBool haveOpenChains = EI_FALSE;
@@ -176,37 +138,46 @@ struct ContourChainGroup
 			contourChainGroup.push_front(newChain);
 		}
 
-		// we iterate through each pair in the waiting list, and try to add 
-		// them to each chain in the group that is not yet closed
-		for (std::list<eiVector *>::iterator it = waitingForAdd.begin(); 
-			it != waitingForAdd.end(); ++it) {
-			eiVector *v1 = *it;
-			it = ++it;
-			eiVector *v2 = *it;
+		for (std::list<ContourChain *>::iterator cit = contourChainGroup.begin(); 
+			cit != contourChainGroup.end(); ++cit) {
+			ContourChain *eachChain = *cit;
 
-			for (std::list<ContourChain *>::iterator cit = contourChainGroup.begin(); 
-				cit != contourChainGroup.end(); ++cit) {
-				ContourChain *eachChain = *cit;
+			if (eachChain->isChainClosed()) {
+				continue;
+			}
 
-				if (eachChain->isChainClosed()) {
-					continue;
-				}
-
-				if (eachChain->connectsToChain(v1, v2)) {
-					eachChain->addSegmentToChain(v1, v2);
-					waitingForAdd.remove(v1);
-					waitingForAdd.remove(v2);
-
-					return EI_TRUE;
-				}
+			if (eachChain->connectsToChain(v1, v2)) {
+				eachChain->addSegmentToChain(v1, v2);
+				break;
 			}
 		}
+	}
 
-		return EI_FALSE;
+	void resetGroup()
+	{
+		for (std::list<ContourChain *>::iterator cit = contourChainGroup.begin(); 
+			cit != contourChainGroup.end(); ++cit) {
+			ContourChain *eachChain = *cit;
+			delete eachChain;
+		}
+
+		contourChainGroup.clear();
+	}
+
+	void finishedAdding()
+	{
+		// there are no more pairs coming... so chains that aren't yet closed 
+		// are never going to be, so force-close them
+		for (std::list<ContourChain *>::iterator it = contourChainGroup.begin(); 
+			it != contourChainGroup.end(); ++it) {
+			ContourChain *eachChain = *it;
+			if (!eachChain->isChainClosed()) {
+				eachChain->forceChainClosed();
+			}
+		}
 	}
 
 	std::list<ContourChain *> contourChainGroup;
-	std::list<eiVector *> waitingForAdd;
 };
 
 inline eiVector interpolateZeroPoint(eiVector v1, eiScalar val1, eiVector v2, eiScalar val2)
@@ -335,10 +306,7 @@ void drawSmoothContoursFunc(
 			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
 		}
 
-		// TODO: Fix memory leaks here
-		eiVector *newp1 = new eiVector(p1);
-		eiVector *newp2 = new eiVector(p2);
-		contourChainGroup.addSegmentToGroup(newp1, newp2);
+		contourChainGroup.addSegmentToGroup(p1, p2);
 
 		// resort remainder of list such that there is a better ordering (for contour chaining step)		
 		for (eiInt j = 0; j < 3; ++j) {
@@ -535,10 +503,7 @@ void drawVisibleSuggestiveContoursFunc(
 
 		// draw stroke
 		if (drawStroke) {
-			// TODO: Fix memory leaks here
-			eiVector *newp1 = new eiVector(p1);
-			eiVector *newp2 = new eiVector(p2);
-			contourChainGroup.addSegmentToGroup(newp1, newp2);			
+			contourChainGroup.addSegmentToGroup(p1, p2);			
 
 			// if a stroke is drawn, do the reordering to prioritize neighbours for contour chaining			
 			for (eiInt j = 0; j < 3; ++j) {
@@ -555,7 +520,7 @@ void drawVisibleSuggestiveContoursFunc(
 
 int main(int argc, char* argv[])
 {
-	char *scene_filename = "scenes/cornell_box.ess";
+	char *scene_filename = "scenes/sss_dragon.ess";
 	if (argc < 2 || argv[1] == NULL)
 	{
 		ei_warning("No valid scene is specified, using default one.\n");
@@ -640,17 +605,17 @@ int main(int argc, char* argv[])
 		fprintf(file, "<polyline points=\"");
 
 		bool isFirstVector = true;
-		for (std::list<eiVector *>::iterator vec_iter = chain->contourChain.begin(); 
+		for (std::list<eiVector>::iterator vec_iter = chain->contourChain.begin(); 
 			vec_iter != chain->contourChain.end(); ++ vec_iter)
 		{
-			eiVector *vec = *vec_iter;
+			eiVector vec = *vec_iter;
 
 			if (!isFirstVector)
 			{
 				fprintf(file, ",");
 			}
 
-			fprintf(file, "%f %f", -vec->x, -vec->y);
+			fprintf(file, "%f %f", fabsf(100.0f * vec.x), fabsf(100.0f * vec.y));
 
 			isFirstVector = false;
 		}
