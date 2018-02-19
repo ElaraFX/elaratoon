@@ -11,8 +11,6 @@
 
 #include "ess_loader.h"
 
-#define CHAIN_SEGMENT_CLOSENESS_THRESHOLD	0.0001f
-
 #define SQR(x)	((x) * (x))
 
 struct ContourChain
@@ -35,12 +33,11 @@ struct ContourChain
 		else {
 			eiVector start = contourChain.front();
 			eiVector end = contourChain.back();
-			eiScalar scale = lensq(v1 - v2);
 
-			if (isCloseEnough(v1, start, scale) ||
-				isCloseEnough(v2, start, scale) ||
-				isCloseEnough(v1, end, scale) ||
-				isCloseEnough(v2, end, scale)) {
+			if (isCloseEnough(v1, start) ||
+				isCloseEnough(v2, start) ||
+				isCloseEnough(v1, end) ||
+				isCloseEnough(v2, end)) {
 				return EI_TRUE;
 			}
 		}
@@ -57,18 +54,17 @@ struct ContourChain
 		else {
 			eiVector start = contourChain.front();
 			eiVector end = contourChain.back();
-			eiScalar scale = lensq(v1 - v2);
 
-			if (isCloseEnough(v1, start, scale)) {
+			if (isCloseEnough(v1, start)) {
 				contourChain.push_front(v2);
 			}
-			else if (isCloseEnough(v2, start, scale)) {
+			else if (isCloseEnough(v2, start)) {
 				contourChain.push_front(v1);
 			}
-			else if (isCloseEnough(v1, end, scale)) {
+			else if (isCloseEnough(v1, end)) {
 				contourChain.push_back(v2);
 			}
-			else if (isCloseEnough(v2, end, scale)) {
+			else if (isCloseEnough(v2, end)) {
 				contourChain.push_back(v1);
 			}
 			else {
@@ -83,7 +79,7 @@ struct ContourChain
 		}
 
 		if (!contourChain.empty() && 
-			isCloseEnough(contourChain.front(), contourChain.back(), 1.0f)) {
+			isCloseEnough(contourChain.front(), contourChain.back())) {
 			return EI_TRUE;
 		} else {
 			return EI_FALSE;
@@ -95,9 +91,9 @@ struct ContourChain
 		forceClosed = EI_TRUE;
 	}
 
-	eiBool isCloseEnough(const eiVector & v1, const eiVector & v2, eiScalar scale)
+	eiBool isCloseEnough(const eiVector & v1, const eiVector & v2)
 	{
-		if (lensq(v1 - v2) < scale * CHAIN_SEGMENT_CLOSENESS_THRESHOLD) {
+		if (lensq(v1 - v2) < SQR(0.25f)) {
 			return EI_TRUE;
 		} else {
 			return EI_FALSE;
@@ -597,10 +593,13 @@ int main(int argc, char* argv[])
 	fprintf(file, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n");
 	fprintf(file, "<svg width=\"100%%\" height=\"100%%\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n");
 
+	eiInt num_chains = (eiInt)contourChainGroup.contourChainGroup.size();
+	eiInt chain_index = 0;
 	for (std::list<ContourChain *>::iterator chain_iter = contourChainGroup.contourChainGroup.begin(); 
-		chain_iter != contourChainGroup.contourChainGroup.end(); ++ chain_iter)
+		chain_iter != contourChainGroup.contourChainGroup.end(); ++ chain_iter, ++ chain_index)
 	{
 		ContourChain *chain = *chain_iter;
+		eiInt chain_color = lfloorf(((eiScalar)chain_index / (eiScalar)num_chains) * 16777215.0f);
 
 		fprintf(file, "<polyline points=\"");
 
@@ -620,13 +619,13 @@ int main(int argc, char* argv[])
 			isFirstVector = false;
 		}
 
-		fprintf(file, "\" style=\"fill:white;stroke:black;stroke-width:0.25\"/>\n");
+		fprintf(file, "\" style=\"fill:white;stroke:#%X;stroke-width:0.25\"/>\n", chain_color);
 	}
 
 	fprintf(file, "</svg>\n");
 	fclose(file);
 
-	ei_info("Finished building contour chains.\n");
+	ei_info("Number of contour chains: %d\n", num_chains);
 
 	getch();
 	
