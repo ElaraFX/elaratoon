@@ -940,9 +940,9 @@ static eiUint custom_trace(
 					bucket, 
 					EI_RAY_PROBE, 
 					0.0f, 
-					EI_FALSE, /* ignore light primitives */
+					EI_TRUE,	/* trace light primitves */
 					max_dist);
-				probe_ray.E = wpos - wdir * 0.01f;
+				probe_ray.E = wpos + wdir * 0.1f;
 				probe_ray.I = wdir;
 
 				eiIntersection probe_isect;
@@ -972,6 +972,7 @@ static eiUint custom_trace(
 	fprintf(file, "</svg>\n");
 	fclose(file);
 
+	ei_info("Number of contour probe rays: %d\n", num_probe_rays);
 	ei_info("Number of contour chains: %d\n", num_chains);
 
 	return num_probe_rays;
@@ -1000,11 +1001,12 @@ bool loadESS(const char * path)
 	ei_set_custom_trace(custom_trace);
 	ei_job_set_process(&rp.base);
 
-	ei_tessellate_begin(
+	ei_job_abort(EI_FALSE);
+	ei_render_run_begin(
 		"mtoer_instgroup_00", 
 		"GlobalCameraInstanceName0x32f24105_0x74e20f38", 
 		"GlobalOptionsName0x32f24105_0x74e20f38");
-	ei_tessellate_end();
+	ei_render_run_end();
 
 	ei_set_custom_trace(NULL);
 	ei_job_set_process(NULL);
