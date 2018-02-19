@@ -605,6 +605,8 @@ int main(int argc, char* argv[])
 	fprintf(file, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n");
 	fprintf(file, "<svg width=\"100%%\" height=\"100%%\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n");
 
+	std::vector<eiVector> polyline;
+
 	eiInt num_chains = (eiInt)contourChainGroup.contourChainGroup.size();
 	eiInt chain_index = 0;
 	for (std::list<ContourChain *>::iterator chain_iter = contourChainGroup.contourChainGroup.begin(); 
@@ -613,18 +615,12 @@ int main(int argc, char* argv[])
 		ContourChain *chain = *chain_iter;
 		eiInt chain_color = lfloorf(((eiScalar)(chain_index + 1) / (eiScalar)(num_chains + 1)) * 16777215.0f);
 
-		fprintf(file, "<polyline points=\"");
+		polyline.resize(0);
 
-		bool is_first_point = true;
 		for (std::list<ContourPoint>::iterator point_iter = chain->contourChain.begin(); 
 			point_iter != chain->contourChain.end(); ++ point_iter)
 		{
 			ContourPoint & point = *point_iter;
-
-			if (!is_first_point)
-			{
-				fprintf(file, ",");
-			}
 
 			eiVector raster;
 			if (ei_std_camera_object_to_screen(
@@ -633,12 +629,24 @@ int main(int argc, char* argv[])
 				&point.pos, 
 				&g_IdentityMatrix))
 			{
-				fprintf(file, "%f %f", raster.x, raster.y);
-				is_first_point = false;
+				polyline.push_back(raster);
 			}
 		}
 
-		fprintf(file, "\" style=\"fill:none;stroke:#%X;stroke-width:0.25\"/>\n", chain_color);
+		if (!polyline.empty()) {
+			fprintf(file, "<polyline points=\"");
+
+			for (size_t i = 0; i < polyline.size(); ++i)
+			{
+				if (i != 0) {
+					fprintf(file, ",");
+				}
+
+				fprintf(file, "%f %f", polyline[i].x, polyline[i].y);
+			}
+
+			fprintf(file, "\" style=\"fill:none;stroke:black;stroke-width:0.25\"/>\n", chain_color);
+		}
 	}
 
 	fprintf(file, "</svg>\n");
