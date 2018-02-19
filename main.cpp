@@ -13,95 +13,86 @@
 
 #define SQR(x)	((x) * (x))
 
+struct ContourPoint
+{
+	eiVector	pos;
+	eiScalar	scale;
+};
+
 struct ContourChain
 {
 	ContourChain()
 	{
-		forceClosed = EI_FALSE;
+		forceClosed = false;
 	}
 
 	~ContourChain()
 	{
 	}
 
-	eiBool connectsToChain(const eiVector & v1, const eiVector & v2)
-	{
-		if (contourChain.empty()) {
-			// if it's empty, make this the first segment
-			return EI_TRUE;
-		}
-		else {
-			eiVector start = contourChain.front();
-			eiVector end = contourChain.back();
-
-			if (isCloseEnough(v1, start) ||
-				isCloseEnough(v2, start) ||
-				isCloseEnough(v1, end) ||
-				isCloseEnough(v2, end)) {
-				return EI_TRUE;
-			}
-		}
-
-		return EI_FALSE;
-	}
-
-	void addSegmentToChain(const eiVector & v1, const eiVector & v2)
+	bool addSegmentToChain(const ContourPoint & v1, const ContourPoint & v2)
 	{
 		if (contourChain.empty()) {
 			contourChain.push_back(v1);
 			contourChain.push_back(v2);
+			return true;
 		}
 		else {
-			eiVector start = contourChain.front();
-			eiVector end = contourChain.back();
+			ContourPoint & start = contourChain.front();
+			ContourPoint & end = contourChain.back();
 
 			if (isCloseEnough(v1, start)) {
 				contourChain.push_front(v2);
+				return true;
 			}
 			else if (isCloseEnough(v2, start)) {
 				contourChain.push_front(v1);
+				return true;
 			}
 			else if (isCloseEnough(v1, end)) {
 				contourChain.push_back(v2);
+				return true;
 			}
 			else if (isCloseEnough(v2, end)) {
 				contourChain.push_back(v1);
+				return true;
 			}
 			else {
+				return false;
 			}
 		}
 	}
 
-	eiBool isChainClosed()
+	bool isChainClosed()
 	{
 		if (forceClosed) {
-			return EI_TRUE;
+			return true;
 		}
 
 		if (!contourChain.empty() && 
 			isCloseEnough(contourChain.front(), contourChain.back())) {
-			return EI_TRUE;
+			return true;
 		} else {
-			return EI_FALSE;
+			return false;
 		}
 	}
 
 	void forceChainClosed()
 	{
-		forceClosed = EI_TRUE;
+		forceClosed = true;
 	}
 
-	eiBool isCloseEnough(const eiVector & v1, const eiVector & v2)
+	bool isCloseEnough(const ContourPoint & v1, const ContourPoint & v2)
 	{
-		if (lensq(v1 - v2) < SQR(0.25f)) {
-			return EI_TRUE;
+		if (lensq(v1.pos - v2.pos) < max(v1.scale, v2.scale)) {
+			return true;
 		} else {
-			return EI_FALSE;
+			return false;
 		}
 	}
 
-	eiBool forceClosed;
-	std::list<eiVector> contourChain;
+	bool forceClosed;
+	std::list<ContourPoint> contourChain;
 };
 
 struct ContourChainGroup
@@ -115,24 +106,16 @@ struct ContourChainGroup
 		resetGroup();
 	}
 
-	void addSegmentToGroup(const eiVector & v1, const eiVector & v2)
+	void addSegmentToGroup(const eiVector & p1, const eiVector & p2)
 	{
-		// chains are "done" when they are closed
-		eiBool haveOpenChains = EI_FALSE;
+		const eiScalar seg_scale = lensq(p1 - p2) * 0.0001f;
+		ContourPoint v1, v2;
+		v1.pos = p1;
+		v1.scale = seg_scale;
+		v2.pos = p2;
+		v2.scale = seg_scale;
 
-		for (std::list<ContourChain *>::iterator it = contourChainGroup.begin(); 
-			it != contourChainGroup.end(); ++it) {
-			ContourChain *eachChain = *it;
-			if (!eachChain->isChainClosed()) {
-				haveOpenChains = EI_TRUE;
-				break;
-			}
-		}
-
-		if (!haveOpenChains) {
-			ContourChain *newChain = new ContourChain();
-			contourChainGroup.push_front(newChain);
-		}
+		bool segmentAdded = false;
 
 		for (std::list<ContourChain *>::iterator cit = contourChainGroup.begin(); 
 			cit != contourChainGroup.end(); ++cit) {
@@ -142,10 +125,16 @@ struct ContourChainGroup
 				continue;
 			}
 
-			if (eachChain->connectsToChain(v1, v2)) {
-				eachChain->addSegmentToChain(v1, v2);
+			if (eachChain->addSegmentToChain(v1, v2)) {
+				segmentAdded = true;
 				break;
 			}
+		}
+
+		if (!segmentAdded) {
+			ContourChain *newChain = new ContourChain();
+			newChain->addSegmentToChain(v1, v2);
+			contourChainGroup.push_front(newChain);
 		}
 	}
 
@@ -176,7 +165,9 @@ struct ContourChainGroup
 	std::list<ContourChain *> contourChainGroup;
 };
 
-inline eiVector interpolateZeroPoint(eiVector v1, eiScalar val1, eiVector v2, eiScalar val2)
+inline eiVector interpolateZeroPoint(
+	eiVector v1, eiScalar val1, 
+	eiVector v2, eiScalar val2)
 {
 	if (val2 < val1) {
 		eiVector temp = v1;
@@ -188,7 +179,7 @@ inline eiVector interpolateZeroPoint(eiVector v1, eiScalar val1, eiVector v2, ei
 	}
 
 	eiScalar t = -val1 / (val2 - val1);
-	eiVector returnVec = v1 * (1 - t) + v2 * t;
+	eiVector returnVec = v1 * (1.0f - t) + v2 * t;
 	return returnVec;
 }
 
@@ -231,18 +222,18 @@ void determineFaceVisibilities(
 
 void drawSmoothContoursFunc(
 	trimesh::TriMesh *m, 
-	const std::vector<eiBool> & faceVisible, 
+	const std::vector<eiInt> & faceVisible, 
 	ContourChainGroup & contourChainGroup)
 {
-	std::vector<eiBool> faceProcessed(m->faces.size());
+	std::vector<bool> faceProcessed(m->faces.size());
 	std::list<eiInt> faceToProcess;
 	for (eiInt i = 0; i < m->faces.size(); ++i) {
 		if (faceVisible[i] == 1) {
-			faceProcessed[i] = EI_FALSE;
+			faceProcessed[i] = false;
 			faceToProcess.push_back(i);
 		}
 		else {
-			faceProcessed[i] = EI_TRUE;
+			faceProcessed[i] = true;
 		}
 	}
 
@@ -277,42 +268,52 @@ void drawSmoothContoursFunc(
 		// draw mesh edge contour (in red, if needed) 2 out of 3 are 1 sign, 1's the other
 		eiVector p1;
 		eiVector p2;
+		bool drawStroke = false;
+
 		if (dot1 >= 0.0f && dot2 >= 0.0f && dot3 < 0.0f) {
 			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
 			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+			drawStroke = true;
 		}
 		else if (dot1 < 0.0f && dot2 < 0.0f && dot3 >= 0.0f) {
 			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
 			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+			drawStroke = true;
 		}
 		else if (dot2 >= 0.0f && dot3 >= 0.0f && dot1 < 0.0f) {
 			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
 			p2 = interpolateZeroPoint(v1, dot1, v2, dot2);
+			drawStroke = true;
 		}
 		else if (dot2 < 0.0f && dot3 < 0.0f && dot1 >= 0.0f) {
 			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
 			p2 = interpolateZeroPoint(v1, dot1, v2, dot2);
+			drawStroke = true;
 		}
 		else if (dot3 >= 0.0f && dot1 >= 0.0f && dot2 < 0.0f) {
 			p1 = interpolateZeroPoint(v2, dot2, v1, dot1);
 			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+			drawStroke = true;
 		}
 		else if (dot3 < 0.0f && dot1 < 0.0f && dot2 >= 0.0f) {
 			p1 = interpolateZeroPoint(v2, dot2, v1, dot1);
 			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+			drawStroke = true;
 		}
 
-		contourChainGroup.addSegmentToGroup(p1, p2);
+		if (drawStroke) {
+			contourChainGroup.addSegmentToGroup(p1, p2);
 
-		// resort remainder of list such that there is a better ordering (for contour chaining step)		
-		for (eiInt j = 0; j < 3; ++j) {
-			eiInt adjacentFaceIndex = m->across_edge[faceIndex][j];
-			if (adjacentFaceIndex >= 0 && !faceProcessed[adjacentFaceIndex]) {
-				faceToProcess.push_front(adjacentFaceIndex);
+			// resort remainder of list such that there is a better ordering (for contour chaining step)		
+			for (eiInt j = 0; j < 3; ++j) {
+				eiInt adjacentFaceIndex = m->across_edge[faceIndex][j];
+				if (adjacentFaceIndex >= 0 && !faceProcessed[adjacentFaceIndex]) {
+					faceToProcess.push_front(adjacentFaceIndex);
+				}
 			}
 		}
 
-		faceProcessed[faceIndex] = EI_TRUE;
+		faceProcessed[faceIndex] = true;
 	}
 }
 
@@ -362,7 +363,7 @@ void calculateGradKappaRFunc(
 
 void drawVisibleSuggestiveContoursFunc(
 	trimesh::TriMesh *m, 
-	const std::vector<eiBool> & faceVisible, 
+	const std::vector<eiInt> & faceVisible, 
 	const std::vector<eiScalar> & kappa_r, 
 	const std::vector<eiScalar> & dwk_r, 
 	bool testDWKRPositive, 
@@ -378,21 +379,21 @@ void drawVisibleSuggestiveContoursFunc(
 	// its the zero crossing of dkappa_r/dw thing.
 
 	// we go through each face for this part
-	std::vector<eiBool> faceProcessed(m->faces.size());
+	std::vector<bool> faceProcessed(m->faces.size());
 	std::list<eiInt> faceToProcess;
 
 	for (eiInt i = 0; i < m->faces.size(); ++i) {
 		if (faceVisible[i] < 2) {
 			if (!((kappa_r[m->faces[i][0]] > 0.0f && kappa_r[m->faces[i][1]] > 0.0f && kappa_r[m->faces[i][2]] > 0.0f) 
 				|| (kappa_r[m->faces[i][0]] < 0.0f && kappa_r[m->faces[i][1]] < 0.0f && kappa_r[m->faces[i][2]] < 0.0f))) {
-				faceProcessed[i] = EI_FALSE;
+				faceProcessed[i] = false;
 				faceToProcess.push_back(i);
 			}
 			else
-				faceProcessed[i] = EI_TRUE;
+				faceProcessed[i] = true;
 		}
 		else {
-			faceProcessed[i] = EI_TRUE;
+			faceProcessed[i] = true;
 		}
 	}
 
@@ -416,7 +417,7 @@ void drawVisibleSuggestiveContoursFunc(
 		// HERE WE CHECK TO MAKE SURE THAT D_w * k_r > 0
 		// or another way to put it is that grad(k_r) * w > 0 for each of the vertices.
 		// in fact, we check t_d < grad(k_r) DOT w / || w ||
-		eiBool allArePositive = EI_TRUE;
+		bool allArePositive = true;
 
 		if (testDWKRPositive) {
 			for (eiInt j = 0; j < 3; ++j) {
@@ -429,19 +430,19 @@ void drawVisibleSuggestiveContoursFunc(
 				eiVector w = viewVec - normalProj;
 
 				if (dwk_r[m->faces[faceIndex][j]] / len(w) < t_d) {
-					allArePositive = EI_FALSE;
+					allArePositive = false;
 					break;
 				}
 			}
 		}
 
 		if (!allArePositive) {
-			faceProcessed[faceIndex] = EI_TRUE;
+			faceProcessed[faceIndex] = true;
 			continue;
 		}
 
 		// HERE WE CHECK THAT theta_c < n(p) dot v(p) / || v(p) ||
-		eiBool thetaCIsLess = EI_TRUE;
+		bool thetaCIsLess = true;
 
 		for (eiInt j = 0; j < 3; ++j) {
 			eiVector eachVertex = ei_vector(m->vertices[m->faces[faceIndex][j]][0], m->vertices[m->faces[faceIndex][j]][1], m->vertices[m->faces[faceIndex][j]][2]);
@@ -451,50 +452,50 @@ void drawVisibleSuggestiveContoursFunc(
 			eiVector eachNormalTransformed = eachNormal;
 
 			if (!(thetaC < acosf(dot(eachNormalTransformed, viewVec) / len(viewVec)))) {
-				thetaCIsLess = EI_FALSE;
+				thetaCIsLess = false;
 				break;
 			}
 		}
 
 		if (!thetaCIsLess) {
-			faceProcessed[faceIndex] = EI_TRUE;
+			faceProcessed[faceIndex] = true;
 			continue;
 		}
 	
 		// these have to pruned according to the formula D_w*k(r) > 0
 		eiVector p1;
 		eiVector p2;	
-		eiBool drawStroke = EI_FALSE;
+		bool drawStroke = false;
 
 		if (dot1 >= 0.0f && dot2 >= 0.0f && dot3 < 0.0f) {				
 			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);				
 			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
-			drawStroke = EI_TRUE;
+			drawStroke = true;
 		}
 		else if (dot1 < 0.0f && dot2 < 0.0f && dot3 >= 0.0f) {
 			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);				
 			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
-			drawStroke = EI_TRUE;
+			drawStroke = true;
 		}
 		else if (dot2 >= 0.0f && dot3 >= 0.0f && dot1 < 0.0f) {
 			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);				
 			p2 = interpolateZeroPoint(v1, dot1, v2, dot2);
-			drawStroke = EI_TRUE;
+			drawStroke = true;
 		}
 		else if (dot2 < 0.0f && dot3 < 0.0f && dot1 >= 0.0f) {
 			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);				
 			p2 = interpolateZeroPoint(v1, dot1, v2, dot2);
-			drawStroke = EI_TRUE;
+			drawStroke = true;
 		}
 		else if (dot3 >= 0.0f && dot1 >= 0.0f && dot2 < 0.0f) {
 			p1 = interpolateZeroPoint(v2, dot2, v1, dot1);				
 			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
-			drawStroke = EI_TRUE;
+			drawStroke = true;
 		}
 		else if (dot3 < 0.0f && dot1 < 0.0f && dot2 >= 0.0f) {
 			p1 = interpolateZeroPoint(v2, dot2, v1, dot1);
 			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
-			drawStroke = EI_TRUE;
+			drawStroke = true;
 		}
 
 		// draw stroke
@@ -510,7 +511,7 @@ void drawVisibleSuggestiveContoursFunc(
 			}
 		}
 
-		faceProcessed[faceIndex] = EI_TRUE;
+		faceProcessed[faceIndex] = true;
 	}
 }
 
@@ -548,7 +549,7 @@ int main(int argc, char* argv[])
 	{
 		trimesh::TriMesh *m = mesh_list[i];
 
-		std::vector<eiBool> faceVisible;
+		std::vector<eiInt> faceVisible;
 		determineFaceVisibilities(
 			m, 
 			faceVisible);
@@ -599,27 +600,27 @@ int main(int argc, char* argv[])
 		chain_iter != contourChainGroup.contourChainGroup.end(); ++ chain_iter, ++ chain_index)
 	{
 		ContourChain *chain = *chain_iter;
-		eiInt chain_color = lfloorf(((eiScalar)chain_index / (eiScalar)num_chains) * 16777215.0f);
+		eiInt chain_color = lfloorf(((eiScalar)(chain_index + 1) / (eiScalar)(num_chains + 1)) * 16777215.0f);
 
 		fprintf(file, "<polyline points=\"");
 
-		bool isFirstVector = true;
-		for (std::list<eiVector>::iterator vec_iter = chain->contourChain.begin(); 
-			vec_iter != chain->contourChain.end(); ++ vec_iter)
+		bool is_first_point = true;
+		for (std::list<ContourPoint>::iterator point_iter = chain->contourChain.begin(); 
+			point_iter != chain->contourChain.end(); ++ point_iter)
 		{
-			eiVector vec = *vec_iter;
+			ContourPoint & point = *point_iter;
 
-			if (!isFirstVector)
+			if (!is_first_point)
 			{
 				fprintf(file, ",");
 			}
 
-			fprintf(file, "%f %f", fabsf(100.0f * vec.x), fabsf(100.0f * vec.y));
+			fprintf(file, "%f %f", fabsf(100.0f * point.pos.x), fabsf(100.0f * point.pos.y));
 
-			isFirstVector = false;
+			is_first_point = false;
 		}
 
-		fprintf(file, "\" style=\"fill:white;stroke:#%X;stroke-width:0.25\"/>\n", chain_color);
+		fprintf(file, "\" style=\"fill:none;stroke:#%X;stroke-width:0.25\"/>\n", chain_color);
 	}
 
 	fprintf(file, "</svg>\n");
