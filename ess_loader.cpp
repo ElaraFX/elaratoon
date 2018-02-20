@@ -16,8 +16,9 @@
 
 struct ContourPoint
 {
-	eiVector	pos;
-	eiScalar	scale;
+	eiVector	pos;		/**< camera space position */
+	eiVector	normal;		/**< camera space normal */
+	eiScalar	scale;		/**< line segment length squared */
 };
 
 struct ContourChain
@@ -107,13 +108,11 @@ struct ContourChainGroup
 		resetGroup();
 	}
 
-	void addSegmentToGroup(const eiVector & p1, const eiVector & p2)
+	void addSegmentToGroup(ContourPoint & v1, ContourPoint & v2)
 	{
-		const eiScalar seg_scale = lensq(p1 - p2) * 0.0001f;
-		ContourPoint v1, v2;
-		v1.pos = p1;
+		// Precompute line segment scale for point merging
+		eiScalar seg_scale = lensq(v1.pos - v2.pos) * 0.0001f;
 		v1.scale = seg_scale;
-		v2.pos = p2;
 		v2.scale = seg_scale;
 
 		bool segmentAdded = false;
@@ -267,43 +266,59 @@ void drawSmoothContoursFunc(
 		eiScalar dot3 = dot(t_v3, t_n3);
 
 		// draw mesh edge contour (in red, if needed) 2 out of 3 are 1 sign, 1's the other
-		eiVector p1;
-		eiVector p2;
+		eiVector p1, p2, pn1, pn2;
 		bool drawStroke = false;
 
 		if (dot1 >= 0.0f && dot2 >= 0.0f && dot3 < 0.0f) {
 			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
 			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+			pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
+			pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
 			drawStroke = true;
 		}
 		else if (dot1 < 0.0f && dot2 < 0.0f && dot3 >= 0.0f) {
 			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
 			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+			pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
+			pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
 			drawStroke = true;
 		}
 		else if (dot2 >= 0.0f && dot3 >= 0.0f && dot1 < 0.0f) {
 			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
 			p2 = interpolateZeroPoint(v1, dot1, v2, dot2);
+			pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
+			pn2 = interpolateZeroPoint(n1, dot1, n2, dot2);
 			drawStroke = true;
 		}
 		else if (dot2 < 0.0f && dot3 < 0.0f && dot1 >= 0.0f) {
 			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
 			p2 = interpolateZeroPoint(v1, dot1, v2, dot2);
+			pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
+			pn2 = interpolateZeroPoint(n1, dot1, n2, dot2);
 			drawStroke = true;
 		}
 		else if (dot3 >= 0.0f && dot1 >= 0.0f && dot2 < 0.0f) {
 			p1 = interpolateZeroPoint(v2, dot2, v1, dot1);
 			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+			pn1 = interpolateZeroPoint(n2, dot2, n1, dot1);
+			pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
 			drawStroke = true;
 		}
 		else if (dot3 < 0.0f && dot1 < 0.0f && dot2 >= 0.0f) {
 			p1 = interpolateZeroPoint(v2, dot2, v1, dot1);
 			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+			pn1 = interpolateZeroPoint(n2, dot2, n1, dot1);
+			pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
 			drawStroke = true;
 		}
 
 		if (drawStroke) {
-			contourChainGroup.addSegmentToGroup(p1, p2);
+			ContourPoint c1, c2;
+			c1.pos = p1;
+			c1.normal = normalize(pn1);
+			c2.pos = p2;
+			c2.normal = normalize(pn2);
+			contourChainGroup.addSegmentToGroup(c1, c2);
 
 			// resort remainder of list such that there is a better ordering (for contour chaining step)		
 			for (eiInt j = 0; j < 3; ++j) {
@@ -410,6 +425,10 @@ void drawVisibleSuggestiveContoursFunc(
 		eiVector v2 = ei_vector(m->vertices[m->faces[faceIndex][1]][0], m->vertices[m->faces[faceIndex][1]][1], m->vertices[m->faces[faceIndex][1]][2]);
 		eiVector v3 = ei_vector(m->vertices[m->faces[faceIndex][2]][0], m->vertices[m->faces[faceIndex][2]][1], m->vertices[m->faces[faceIndex][2]][2]);
 
+		eiVector n1 = ei_vector(m->normals[m->faces[faceIndex][0]][0], m->normals[m->faces[faceIndex][0]][1], m->normals[m->faces[faceIndex][0]][2]);
+		eiVector n2 = ei_vector(m->normals[m->faces[faceIndex][1]][0], m->normals[m->faces[faceIndex][1]][1], m->normals[m->faces[faceIndex][1]][2]);
+		eiVector n3 = ei_vector(m->normals[m->faces[faceIndex][2]][0], m->normals[m->faces[faceIndex][2]][1], m->normals[m->faces[faceIndex][2]][2]);
+
 		eiScalar dot1 = kappa_r[m->faces[faceIndex][0]];
 		eiScalar dot2 = kappa_r[m->faces[faceIndex][1]];
 		eiScalar dot3 = kappa_r[m->faces[faceIndex][2]];
@@ -464,44 +483,60 @@ void drawVisibleSuggestiveContoursFunc(
 		}
 	
 		// these have to pruned according to the formula D_w*k(r) > 0
-		eiVector p1;
-		eiVector p2;	
+		eiVector p1, p2, pn1, pn2;	
 		bool drawStroke = false;
 
 		if (dot1 >= 0.0f && dot2 >= 0.0f && dot3 < 0.0f) {				
-			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);				
+			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
 			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+			pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
+			pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
 			drawStroke = true;
 		}
 		else if (dot1 < 0.0f && dot2 < 0.0f && dot3 >= 0.0f) {
-			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);				
+			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
 			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+			pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
+			pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
 			drawStroke = true;
 		}
 		else if (dot2 >= 0.0f && dot3 >= 0.0f && dot1 < 0.0f) {
-			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);				
+			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
 			p2 = interpolateZeroPoint(v1, dot1, v2, dot2);
+			pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
+			pn2 = interpolateZeroPoint(n1, dot1, n2, dot2);
 			drawStroke = true;
 		}
 		else if (dot2 < 0.0f && dot3 < 0.0f && dot1 >= 0.0f) {
-			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);				
+			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
 			p2 = interpolateZeroPoint(v1, dot1, v2, dot2);
+			pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
+			pn2 = interpolateZeroPoint(n1, dot1, n2, dot2);
 			drawStroke = true;
 		}
 		else if (dot3 >= 0.0f && dot1 >= 0.0f && dot2 < 0.0f) {
-			p1 = interpolateZeroPoint(v2, dot2, v1, dot1);				
+			p1 = interpolateZeroPoint(v2, dot2, v1, dot1);
 			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+			pn1 = interpolateZeroPoint(n2, dot2, n1, dot1);
+			pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
 			drawStroke = true;
 		}
 		else if (dot3 < 0.0f && dot1 < 0.0f && dot2 >= 0.0f) {
 			p1 = interpolateZeroPoint(v2, dot2, v1, dot1);
 			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+			pn1 = interpolateZeroPoint(n2, dot2, n1, dot1);
+			pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
 			drawStroke = true;
 		}
 
 		// draw stroke
 		if (drawStroke) {
-			contourChainGroup.addSegmentToGroup(p1, p2);			
+			ContourPoint c1, c2;
+			c1.pos = p1;
+			c1.normal = normalize(pn1);
+			c2.pos = p2;
+			c2.normal = normalize(pn2);
+			contourChainGroup.addSegmentToGroup(c1, c2);
 
 			// if a stroke is drawn, do the reordering to prioritize neighbours for contour chaining			
 			for (eiInt j = 0; j < 3; ++j) {
@@ -900,7 +935,6 @@ static eiUint custom_trace(
 	fprintf(file, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n");
 	fprintf(file, "<svg width=\"100%%\" height=\"100%%\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n");
 
-
 	eiRayTLS *ray_tls = (eiRayTLS *)ei_tls_get_interface(tls, EI_TLS_TYPE_RAYTRACER);
 	eiVector cpos = point_transform(ei_vector(0.0f, 0.0f, 0.0f), cam_to_world);
 	eiUint num_probe_rays = 0;
@@ -929,6 +963,8 @@ static eiUint custom_trace(
 				++ num_probe_rays;
 
 				eiVector wpos = point_transform(point.pos, cam_to_world);
+				eiVector wnormal = transpose_vector_transform(point.normal, world_to_cam);
+				wpos = wpos + wnormal * (len(cpos - wpos) * 0.001f);
 				eiVector wdir;
 				eiScalar max_dist = normalize_len(wdir, cpos - wpos);
 
@@ -942,7 +978,7 @@ static eiUint custom_trace(
 					0.0f, 
 					EI_TRUE,	/* trace light primitves */
 					max_dist);
-				probe_ray.E = wpos + wdir * 0.1f;
+				probe_ray.E = wpos;
 				probe_ray.I = wdir;
 
 				eiIntersection probe_isect;

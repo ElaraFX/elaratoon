@@ -77,6 +77,9 @@ trimesh::TriMesh *create_trimesh(
 		return NULL;
 	}
 
+	// Disable trimesh verbose to get cleaner log
+	trimesh::TriMesh::set_verbose(0);
+
 	trimesh::TriMesh *m = new trimesh::TriMesh;
 
 	std::vector<eiVector> out_vertices;
