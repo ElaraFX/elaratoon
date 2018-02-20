@@ -19,6 +19,8 @@ struct ContourPoint
 	eiVector	pos;		/**< camera space position */
 	eiVector	normal;		/**< camera space normal */
 	eiScalar	scale;		/**< line segment length squared */
+	eiBool		visible;	/**< is this point visible? */
+	eiVector	raster;		/**< projected raster position */
 };
 
 struct ContourChain
@@ -551,26 +553,168 @@ void drawVisibleSuggestiveContoursFunc(
 	}
 }
 
-void flushCurve(std::vector<eiVector> & polyline, FILE *file, eiInt chain_color)
+void project_point(
+	ContourPoint & point, 
+	eiNode *cam, 
+	const eiMatrix & cam_to_world, 
+	const eiMatrix & world_to_cam, 
+	eiTLS *tls, 
+	eiBaseBucket *bucket, 
+	eiTag scene_root_tag, 
+	eiUint & num_probe_rays)
 {
-	if (polyline.empty()) {
-		return;
-	}
+	eiRayTLS *ray_tls = (eiRayTLS *)ei_tls_get_interface(tls, EI_TLS_TYPE_RAYTRACER);
 
-	fprintf(file, "<polyline points=\"");
+	point.visible = EI_FALSE;
+	point.raster = ei_vector(0.0f, 0.0f, 0.0f);
 
-	for (size_t i = 0; i < polyline.size(); ++i)
+	if (ei_std_camera_object_to_screen(
+		cam, 
+		&point.raster, 
+		&point.pos, 
+		&g_IdentityMatrix))
 	{
-		if (i != 0) {
-			fprintf(file, ",");
+		++ num_probe_rays;
+
+		eiVector cpos = point_transform(ei_vector(0.0f, 0.0f, 0.0f), cam_to_world);
+		eiVector wpos = point_transform(point.pos, cam_to_world);
+		eiVector wnormal = transpose_vector_transform(point.normal, world_to_cam);
+		wpos = wpos + wnormal * (len(cpos - wpos) * 0.002f);
+		eiVector wdir;
+		eiScalar max_dist = normalize_len(wdir, cpos - wpos);
+
+		eiRay probe_ray;
+		ei_ray_init(
+			&probe_ray, 
+			tls, 
+			ray_tls, 
+			bucket, 
+			EI_RAY_PROBE, 
+			0.0f, 
+			EI_TRUE,	/* trace light primitves */
+			max_dist);
+		probe_ray.E = wpos;
+		probe_ray.I = wdir;
+
+		eiIntersection probe_isect;
+		ei_isect_reset(&probe_isect);
+		probe_ray.isect = &probe_isect;
+
+		if (!ei_rt_trace(scene_root_tag, &probe_ray))
+		{
+			point.visible = EI_TRUE;
 		}
 
-		fprintf(file, "%f %f", polyline[i].x, polyline[i].y);
+		ei_ray_exit(&probe_ray);
+	}
+}
+
+void project_chain(
+	std::list<ContourChain *> & new_chains, 
+	ContourChain *chain, 
+	eiNode *cam, 
+	const eiMatrix & cam_to_world, 
+	const eiMatrix & world_to_cam, 
+	eiTLS *tls, 
+	eiBaseBucket *bucket, 
+	eiTag scene_root_tag, 
+	eiUint & num_probe_rays, 
+	eiInt depth)
+{
+	bool all_visible = true;
+
+	for (std::list<ContourPoint>::iterator point_iter = chain->contourChain.begin(); 
+		point_iter != chain->contourChain.end(); ++ point_iter)
+	{
+		ContourPoint & point = *point_iter;
+
+		project_point(
+			point, 
+			cam, 
+			cam_to_world, 
+			world_to_cam, 
+			tls, 
+			bucket, 
+			scene_root_tag, 
+			num_probe_rays);
+
+		if (!point.visible) {
+			all_visible = false;
+		}
 	}
 
-	fprintf(file, "\" style=\"fill:none;stroke:#%X;stroke-width:1.0\"/>\n", chain_color);
+	if (all_visible) {
+		ContourChain *new_chain = new ContourChain;
+		for (std::list<ContourPoint>::iterator point_iter = chain->contourChain.begin(); 
+			point_iter != chain->contourChain.end(); ++ point_iter)
+		{
+			ContourPoint & point = *point_iter;
 
-	polyline.resize(0);
+			new_chain->contourChain.push_back(point);
+		}
+		new_chains.push_back(new_chain);
+	} else if (depth < 10) {
+		ContourChain *chain1 = new ContourChain;
+		ContourChain *chain2 = new ContourChain;
+		
+		if (chain->contourChain.size() == 2) {
+			std::list<ContourPoint>::iterator point_iter = chain->contourChain.begin();
+			ContourPoint & p1 = *point_iter;
+			++ point_iter;
+			ContourPoint & p2 = *point_iter;
+			
+			ContourPoint m;
+			m.pos = (p1.pos + p2.pos) * 0.5f;
+			m.normal = normalize(p1.normal + p2.normal);
+			m.scale = (p1.scale + p2.scale) * 0.5f;
+			
+			chain1->contourChain.push_back(p1);
+			chain1->contourChain.push_back(m);
+			chain2->contourChain.push_back(m);
+			chain2->contourChain.push_back(p2);
+		} else {
+			size_t m_index = chain->contourChain.size() / 2;
+			size_t point_index = 0;
+			for (std::list<ContourPoint>::iterator point_iter = chain->contourChain.begin(); 
+				point_iter != chain->contourChain.end(); ++ point_iter, ++ point_index)
+			{
+				ContourPoint & point = *point_iter;
+
+				if (point_index <= m_index) {
+					chain1->contourChain.push_back(point);
+				}
+				if (point_index >= m_index) {
+					chain2->contourChain.push_back(point);
+				}
+			}
+		}
+
+		project_chain(
+			new_chains, 
+			chain1, 
+			cam, 
+			cam_to_world, 
+			world_to_cam, 
+			tls, 
+			bucket, 
+			scene_root_tag, 
+			num_probe_rays, 
+			depth + 1);
+		project_chain(
+			new_chains, 
+			chain2, 
+			cam, 
+			cam_to_world, 
+			world_to_cam, 
+			tls, 
+			bucket, 
+			scene_root_tag, 
+			num_probe_rays, 
+			depth + 1);
+
+		delete chain1;
+		delete chain2;
+	}
 }
 
 // Really hacky here, exposing Elara's internal data structures...
@@ -935,74 +1079,56 @@ static eiUint custom_trace(
 	fprintf(file, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n");
 	fprintf(file, "<svg width=\"100%%\" height=\"100%%\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n");
 
-	eiRayTLS *ray_tls = (eiRayTLS *)ei_tls_get_interface(tls, EI_TLS_TYPE_RAYTRACER);
-	eiVector cpos = point_transform(ei_vector(0.0f, 0.0f, 0.0f), cam_to_world);
 	eiUint num_probe_rays = 0;
 
-	std::vector<eiVector> polyline;
-	eiInt num_chains = (eiInt)contourChainGroup.contourChainGroup.size();
-	eiInt chain_index = 0;
+	// Project and split all chains
+	std::list<ContourChain *> new_chains;
 	for (std::list<ContourChain *>::iterator chain_iter = contourChainGroup.contourChainGroup.begin(); 
-		chain_iter != contourChainGroup.contourChainGroup.end(); ++ chain_iter, ++ chain_index)
+		chain_iter != contourChainGroup.contourChainGroup.end(); ++ chain_iter)
+	{
+		ContourChain *chain = *chain_iter;
+
+		project_chain(
+			new_chains, 
+			chain, 
+			cam.get(), 
+			cam_to_world, 
+			world_to_cam, 
+			tls, 
+			bucket, 
+			scene_root_tag, 
+			num_probe_rays, 
+			0);
+	}
+
+	// Output all chains
+	eiInt num_chains = (eiInt)new_chains.size();
+	eiInt chain_index = 0;
+	for (std::list<ContourChain *>::iterator chain_iter = new_chains.begin(); 
+		chain_iter != new_chains.end(); ++ chain_iter, ++ chain_index)
 	{
 		ContourChain *chain = *chain_iter;
 		eiInt chain_color = lfloorf(((eiScalar)(chain_index + 1) / (eiScalar)(num_chains + 1)) * 16777215.0f);
+		bool is_first_point = true;
+
+		fprintf(file, "<polyline points=\"");
 
 		for (std::list<ContourPoint>::iterator point_iter = chain->contourChain.begin(); 
 			point_iter != chain->contourChain.end(); ++ point_iter)
 		{
 			ContourPoint & point = *point_iter;
 
-			eiVector raster;
-			if (ei_std_camera_object_to_screen(
-				cam.get(), 
-				&raster, 
-				&point.pos, 
-				&g_IdentityMatrix))
-			{
-				++ num_probe_rays;
-
-				eiVector wpos = point_transform(point.pos, cam_to_world);
-				eiVector wnormal = transpose_vector_transform(point.normal, world_to_cam);
-				wpos = wpos + wnormal * (len(cpos - wpos) * 0.001f);
-				eiVector wdir;
-				eiScalar max_dist = normalize_len(wdir, cpos - wpos);
-
-				eiRay probe_ray;
-				ei_ray_init(
-					&probe_ray, 
-					tls, 
-					ray_tls, 
-					bucket, 
-					EI_RAY_PROBE, 
-					0.0f, 
-					EI_TRUE,	/* trace light primitves */
-					max_dist);
-				probe_ray.E = wpos;
-				probe_ray.I = wdir;
-
-				eiIntersection probe_isect;
-				ei_isect_reset(&probe_isect);
-				probe_ray.isect = &probe_isect;
-
-				if (!ei_rt_trace(scene_root_tag, &probe_ray))
-				{
-					polyline.push_back(raster);
-				}
-				else
-				{
-					flushCurve(polyline, file, chain_color);
-				}
-
-				ei_ray_exit(&probe_ray);
+			if (!is_first_point) {
+				fprintf(file, ",");
 			}
-			else
-			{
-				flushCurve(polyline, file, chain_color);
-			}
+			is_first_point = false;
+
+			fprintf(file, "%f %f", point.raster.x, point.raster.y);
 		}
 
-		flushCurve(polyline, file, chain_color);
+		fprintf(file, "\" style=\"fill:none;stroke:#%X;stroke-width:1.0\"/>\n", chain_color);
+
+		delete chain;
 	}
 
 	fprintf(file, "</svg>\n");
