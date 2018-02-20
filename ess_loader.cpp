@@ -624,10 +624,10 @@ void project_chain(
 	bool all_visible = true;
 
 	std::list<ContourPoint>::iterator point_iter = chain->contourChain.begin();
-	ContourPoint last_point = *point_iter;
+	ContourPoint *last_point = &(*point_iter);
 
 	project_point(
-		last_point, 
+		*last_point, 
 		cam, 
 		cam_to_world, 
 		world_to_cam, 
@@ -639,10 +639,10 @@ void project_chain(
 	++ point_iter;
 	for (; point_iter != chain->contourChain.end(); ++ point_iter)
 	{
-		ContourPoint point = *point_iter;
+		ContourPoint *point = &(*point_iter);
 
 		project_point(
-			point, 
+			*point, 
 			cam, 
 			cam_to_world, 
 			world_to_cam, 
@@ -651,9 +651,9 @@ void project_chain(
 			scene_root_tag, 
 			num_probe_rays);
 
-		if (last_point.visible && point.visible) {
-			eiVector2 p1 = ei_vector2(last_point.raster.x, last_point.raster.y);
-			eiVector2 p2 = ei_vector2(point.raster.x, point.raster.y);
+		if (last_point->visible && point->visible) {
+			eiVector2 p1 = ei_vector2(last_point->raster.x, last_point->raster.y);
+			eiVector2 p2 = ei_vector2(point->raster.x, point->raster.y);
 			eiScalar raster_length = dist(p1, p2);
 
 			if (raster_length > 2.0f) {
@@ -661,9 +661,9 @@ void project_chain(
 				for (eiInt i = 1; i < subdiv; ++i) {
 					eiScalar t = (eiScalar)i / (eiScalar)subdiv;
 					ContourPoint m;
-					m.pos = lerp(last_point.pos, point.pos, t);
-					m.normal = normalize(lerp(last_point.normal, point.normal, t));
-					m.scale = lerp(last_point.scale, point.scale, t);
+					m.pos = lerp(last_point->pos, point->pos, t);
+					m.normal = normalize(lerp(last_point->normal, point->normal, t));
+					m.scale = lerp(last_point->scale, point->scale, t);
 
 					project_point(
 						m, 
