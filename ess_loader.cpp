@@ -549,6 +549,33 @@ void drawVisibleSuggestiveContoursFunc(
 			}
 		}
 
+		// TODO: Find a better way to extract concave edges
+		for (eiInt j = 0; j < 3; ++j) {
+			eiInt adjacentFaceIndex = m->across_edge[faceIndex][j];
+			if (adjacentFaceIndex < 0) {
+				ContourPoint c1, c2;
+				int edge_v1 = (j + 1) % 3;
+				int edge_v2 = (j + 2) % 3;
+				c1.pos = ei_vector(
+					m->vertices[m->faces[faceIndex][edge_v1]][0], 
+					m->vertices[m->faces[faceIndex][edge_v1]][1], 
+					m->vertices[m->faces[faceIndex][edge_v1]][2]);
+				c1.normal = normalize(ei_vector(
+					m->normals[m->faces[faceIndex][edge_v1]][0], 
+					m->normals[m->faces[faceIndex][edge_v1]][1], 
+					m->normals[m->faces[faceIndex][edge_v1]][2]));
+				c2.pos = ei_vector(
+					m->vertices[m->faces[faceIndex][edge_v2]][0], 
+					m->vertices[m->faces[faceIndex][edge_v2]][1], 
+					m->vertices[m->faces[faceIndex][edge_v2]][2]);
+				c2.normal = normalize(ei_vector(
+					m->normals[m->faces[faceIndex][edge_v2]][0], 
+					m->normals[m->faces[faceIndex][edge_v2]][1], 
+					m->normals[m->faces[faceIndex][edge_v2]][2]));
+				contourChainGroup.addSegmentToGroup(c1, c2);
+			}
+		}
+
 		faceProcessed[faceIndex] = true;
 	}
 }
