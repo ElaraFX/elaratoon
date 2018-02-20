@@ -897,6 +897,8 @@ static eiUint custom_trace(
 	eiDataTableAccessor<eiTag> obj_inst_tags(scene_root->object_instances);
 	for (eiInt i = 0; i < obj_inst_tags.size(); ++i)
 	{
+		ei_info("Accessing object instance %d / %d ...\n", i, obj_inst_tags.size());
+
 		eiTag obj_inst_tag = obj_inst_tags.get(i);
 		eiDataAccessor<eiRayObjectInstance> obj_inst(obj_inst_tag);
 		// We don't support translating volume and procedural objects currently
@@ -1076,6 +1078,8 @@ static eiUint custom_trace(
 			}
 		}
 
+		ei_info("Building mesh for object instance %d / %d ...\n", i, obj_inst_tags.size());
+
 		// Build trimesh from local cache
 		trimesh::TriMesh *mesh = create_trimesh(
 			out_vertices, 
@@ -1099,22 +1103,34 @@ static eiUint custom_trace(
 		return 0;
 	}
 
-	ContourChainGroup contourChainGroup;
-	contourChainGroup.resetGroup();
+	// Project and split all chains
+	eiUint num_probe_rays = 0;
+	std::list<ContourChain *> new_chains;
 
 	for (size_t i = 0; i < mesh_list.size(); ++i)
 	{
+		ContourChainGroup contourChainGroup;
+		contourChainGroup.resetGroup();
+
+		ei_info("Building contours for mesh %d / %d ...\n", (eiInt)i, (eiInt)mesh_list.size());
+
 		trimesh::TriMesh *m = mesh_list[i];
+
+		ei_info("Computing face visibilities...\n");
 
 		std::vector<eiInt> faceVisible;
 		determineFaceVisibilities(
 			m, 
 			faceVisible);
 
+		ei_info("Extracting silhouttes...\n");
+
 		drawSmoothContoursFunc(
 			m, 
 			faceVisible, 
 			contourChainGroup);
+
+		ei_info("Computing curvatures...\n");
 
 		std::vector<eiScalar> kappa_r;
 		calculateKappaRFunc(
@@ -1126,6 +1142,8 @@ static eiUint custom_trace(
 			m, 
 			dwk_r);
 
+		ei_info("Extracting creases...\n");
+
 		drawVisibleSuggestiveContoursFunc(
 			m, 
 			faceVisible, 
@@ -1135,9 +1153,32 @@ static eiUint custom_trace(
 			0.0f, 
 			0.0f, 
 			contourChainGroup);
+
+		contourChainGroup.finishedAdding();
+
+		ei_info("Removing hidden lines...\n");
+
+		for (std::list<ContourChain *>::iterator chain_iter = contourChainGroup.contourChainGroup.begin(); 
+			chain_iter != contourChainGroup.contourChainGroup.end(); ++ chain_iter)
+		{
+			ContourChain *chain = *chain_iter;
+
+			project_chain(
+				new_chains, 
+				chain, 
+				cam.get(), 
+				cam_to_world, 
+				world_to_cam, 
+				tls, 
+				bucket, 
+				scene_root_tag, 
+				num_probe_rays, 
+				0);
+		}
 	}
 
-	contourChainGroup.finishedAdding();
+	// Output all chains
+	ei_info("Writing vector file...\n");
 
 	// write out SVG file
 	FILE *file = fopen("D:/test.svg", "wb");
@@ -1151,29 +1192,6 @@ static eiUint custom_trace(
 	fprintf(file, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n");
 	fprintf(file, "<svg width=\"100%%\" height=\"100%%\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n");
 
-	eiUint num_probe_rays = 0;
-
-	// Project and split all chains
-	std::list<ContourChain *> new_chains;
-	for (std::list<ContourChain *>::iterator chain_iter = contourChainGroup.contourChainGroup.begin(); 
-		chain_iter != contourChainGroup.contourChainGroup.end(); ++ chain_iter)
-	{
-		ContourChain *chain = *chain_iter;
-
-		project_chain(
-			new_chains, 
-			chain, 
-			cam.get(), 
-			cam_to_world, 
-			world_to_cam, 
-			tls, 
-			bucket, 
-			scene_root_tag, 
-			num_probe_rays, 
-			0);
-	}
-
-	// Output all chains
 	eiInt num_chains = (eiInt)new_chains.size();
 	eiInt chain_index = 0;
 	for (std::list<ContourChain *>::iterator chain_iter = new_chains.begin(); 
@@ -1198,8 +1216,8 @@ static eiUint custom_trace(
 			fprintf(file, "%f %f", point.raster.x, point.raster.y);
 		}
 
-		//fprintf(file, "\" style=\"fill:none;stroke:#%X;stroke-width:1.0\"/>\n", chain_color);
-		fprintf(file, "\" style=\"fill:none;stroke:black;stroke-width:1.0\"/>\n");
+		//fprintf(file, "\" style=\"fill:none;stroke:#%X;stroke-width:0.5\"/>\n", chain_color);
+		fprintf(file, "\" style=\"fill:none;stroke:black;stroke-width:0.5\"/>\n");
 
 		delete chain;
 	}
