@@ -10,4 +10,7 @@
 // Include Elara SDK
 #include <ei.h>
 
-bool loadESS(const char * path);
+typedef bool (*ToonProgressCallback)(void *param, eiScalar percent);
+
+void toonRender(ToonProgressCallback cb, void *param);
+bool loadESS(const char * path, ToonProgressCallback cb, void *param);

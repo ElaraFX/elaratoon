@@ -13,6 +13,11 @@
 
 #include "ess_loader.h"
 
+static bool toonCallback(void *param, eiScalar percent)
+{
+	return true;
+}
+
 int main(int argc, char* argv[])
 {
 	char *scene_filename = "scenes/sss_dragon.ess";
@@ -25,7 +30,7 @@ int main(int argc, char* argv[])
 		scene_filename = argv[1];
 	}
 
-	if (!loadESS(scene_filename))
+	if (!loadESS(scene_filename, toonCallback, NULL))
 	{
 		return -1;
 	}

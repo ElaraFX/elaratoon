@@ -828,9 +828,12 @@ static void rprocess_info(
 
 struct RenderProcess
 {
-	eiProcess	base;
+	eiProcess				base;
+	ToonProgressCallback	cb;
+	void					*param;
 
-	RenderProcess()
+	RenderProcess(ToonProgressCallback _cb, void *_param)
+		: cb(_cb), param(_param)
 	{
 		base.pass_started = rprocess_pass_started;
 		base.pass_finished = rprocess_pass_finished;
@@ -898,6 +901,11 @@ static eiUint custom_trace(
 	for (eiInt i = 0; i < obj_inst_tags.size(); ++i)
 	{
 		ei_info("Accessing object instance %d / %d ...\n", i, obj_inst_tags.size());
+
+		if (!rp->cb(rp->param, 50.0f * (eiScalar)i / (eiScalar)obj_inst_tags.size()))
+		{
+			return 0;
+		}
 
 		eiTag obj_inst_tag = obj_inst_tags.get(i);
 		eiDataAccessor<eiRayObjectInstance> obj_inst(obj_inst_tag);
@@ -1114,6 +1122,11 @@ static eiUint custom_trace(
 
 		ei_info("Building contours for mesh %d / %d ...\n", (eiInt)i, (eiInt)mesh_list.size());
 
+		if (!rp->cb(rp->param, 50.0f * (eiScalar)i / (eiScalar)mesh_list.size()))
+		{
+			return num_probe_rays;
+		}
+
 		trimesh::TriMesh *m = mesh_list[i];
 
 		ei_info("Computing face visibilities...\n");
@@ -1228,10 +1241,34 @@ static eiUint custom_trace(
 	ei_info("Number of contour probe rays: %d\n", num_probe_rays);
 	ei_info("Number of contour chains: %d\n", num_chains);
 
+	rp->cb(rp->param, 100.0f);
+
 	return num_probe_rays;
 }
 
-bool loadESS(const char * path)
+void toonRender(ToonProgressCallback cb, void *param)
+{
+	// Force not to use GI cache, since it will consume 
+	// time in ei_render_run_begin called below
+	ei_override_enum("options", "engine", "hybrid path tracer");
+
+	// A bit tricky, get tessellated scene using custom trace callback
+	RenderProcess rp(cb, param);
+	ei_set_custom_trace(custom_trace);
+	ei_job_set_process(&rp.base);
+
+	ei_job_abort(EI_FALSE);
+	ei_render_run_begin(
+		"mtoer_instgroup_00", 
+		"GlobalCameraInstanceName0x32f24105_0x74e20f38", 
+		"GlobalOptionsName0x32f24105_0x74e20f38");
+	ei_render_run_end();
+
+	ei_set_custom_trace(NULL);
+	ei_job_set_process(NULL);
+}
+
+bool loadESS(const char * path, ToonProgressCallback cb, void *param)
 {
 	ei_info("Loading ESS file %s...\n", path);
 
@@ -1245,24 +1282,7 @@ bool loadESS(const char * path)
 		return false;
 	}
 
-	// Force not to use GI cache, since it will consume 
-	// time in ei_render_run_begin called below
-	ei_override_enum("options", "engine", "hybrid path tracer");
-
-	// A bit tricky, get tessellated scene using custom trace callback
-	RenderProcess rp;
-	ei_set_custom_trace(custom_trace);
-	ei_job_set_process(&rp.base);
-
-	ei_job_abort(EI_FALSE);
-	ei_render_run_begin(
-		"mtoer_instgroup_00", 
-		"GlobalCameraInstanceName0x32f24105_0x74e20f38", 
-		"GlobalOptionsName0x32f24105_0x74e20f38");
-	ei_render_run_end();
-
-	ei_set_custom_trace(NULL);
-	ei_job_set_process(NULL);
+	toonRender(cb, param);
 
 	ei_end_context();
 
