@@ -12,5 +12,5 @@
 
 typedef bool (*ToonProgressCallback)(void *param, eiScalar percent);
 
-void toonRender(ToonProgressCallback cb, void *param);
-bool loadESS(const char * path, ToonProgressCallback cb, void *param);
+void toonRender(const char *output_filename, ToonProgressCallback cb, void *param);
+bool loadESS(const char * path, const char *output_filename, ToonProgressCallback cb, void *param);

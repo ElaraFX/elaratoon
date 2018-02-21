@@ -30,12 +30,23 @@ int main(int argc, char* argv[])
 		scene_filename = argv[1];
 	}
 
-	if (!loadESS(scene_filename, toonCallback, NULL))
+	char temp_path[EI_MAX_FILE_NAME_LEN];
+	char *user = getenv("APPDATA");
+	if (user != NULL)
+	{
+		ei_append_filename(temp_path, user, "test.svg");
+	}
+	else
+	{
+		strncpy(temp_path, "D:/test.svg", EI_MAX_FILE_NAME_LEN - 1);
+	}
+
+	if (!loadESS(scene_filename, temp_path, toonCallback, NULL))
 	{
 		return -1;
 	}
 
-	getch();
+	system(temp_path);
 	
 	return 0;
 }

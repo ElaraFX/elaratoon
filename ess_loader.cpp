@@ -230,18 +230,13 @@ void drawSmoothContoursFunc(
 	std::vector<bool> faceProcessed(m->faces.size());
 	std::list<eiInt> faceToProcess;
 	for (eiInt i = 0; i < m->faces.size(); ++i) {
-		if (faceVisible[i] == 1) {
-			faceProcessed[i] = false;
-			faceToProcess.push_back(i);
-		}
-		else {
-			faceProcessed[i] = true;
-		}
+		faceProcessed[i] = false;
+		faceToProcess.push_back(i);
 	}
 
 	while (!faceToProcess.empty()) {
 		eiInt faceIndex = faceToProcess.front();
-		faceToProcess.pop_front();	
+		faceToProcess.pop_front();
 
 		if (faceProcessed[faceIndex]) {
 			continue;
@@ -263,70 +258,103 @@ void drawSmoothContoursFunc(
 		eiVector t_n2 = normalize(n2);
 		eiVector t_n3 = normalize(n3);
 
-		eiScalar dot1 = dot(t_v1, t_n1);
-		eiScalar dot2 = dot(t_v2, t_n2);
-		eiScalar dot3 = dot(t_v3, t_n3);
+		if (faceVisible[faceIndex] == 1) {
+			eiScalar dot1 = dot(t_v1, t_n1);
+			eiScalar dot2 = dot(t_v2, t_n2);
+			eiScalar dot3 = dot(t_v3, t_n3);
 
-		// draw mesh edge contour (in red, if needed) 2 out of 3 are 1 sign, 1's the other
-		eiVector p1, p2, pn1, pn2;
-		bool drawStroke = false;
+			// draw mesh edge contour (in red, if needed) 2 out of 3 are 1 sign, 1's the other
+			eiVector p1, p2, pn1, pn2;
+			bool drawStroke = false;
 
-		if (dot1 >= 0.0f && dot2 >= 0.0f && dot3 < 0.0f) {
-			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
-			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
-			pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
-			pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
-			drawStroke = true;
-		}
-		else if (dot1 < 0.0f && dot2 < 0.0f && dot3 >= 0.0f) {
-			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
-			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
-			pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
-			pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
-			drawStroke = true;
-		}
-		else if (dot2 >= 0.0f && dot3 >= 0.0f && dot1 < 0.0f) {
-			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
-			p2 = interpolateZeroPoint(v1, dot1, v2, dot2);
-			pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
-			pn2 = interpolateZeroPoint(n1, dot1, n2, dot2);
-			drawStroke = true;
-		}
-		else if (dot2 < 0.0f && dot3 < 0.0f && dot1 >= 0.0f) {
-			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
-			p2 = interpolateZeroPoint(v1, dot1, v2, dot2);
-			pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
-			pn2 = interpolateZeroPoint(n1, dot1, n2, dot2);
-			drawStroke = true;
-		}
-		else if (dot3 >= 0.0f && dot1 >= 0.0f && dot2 < 0.0f) {
-			p1 = interpolateZeroPoint(v2, dot2, v1, dot1);
-			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
-			pn1 = interpolateZeroPoint(n2, dot2, n1, dot1);
-			pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
-			drawStroke = true;
-		}
-		else if (dot3 < 0.0f && dot1 < 0.0f && dot2 >= 0.0f) {
-			p1 = interpolateZeroPoint(v2, dot2, v1, dot1);
-			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
-			pn1 = interpolateZeroPoint(n2, dot2, n1, dot1);
-			pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
-			drawStroke = true;
+			if (dot1 >= 0.0f && dot2 >= 0.0f && dot3 < 0.0f) {
+				p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
+				p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+				pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
+				pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
+				drawStroke = true;
+			}
+			else if (dot1 < 0.0f && dot2 < 0.0f && dot3 >= 0.0f) {
+				p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
+				p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+				pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
+				pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
+				drawStroke = true;
+			}
+			else if (dot2 >= 0.0f && dot3 >= 0.0f && dot1 < 0.0f) {
+				p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
+				p2 = interpolateZeroPoint(v1, dot1, v2, dot2);
+				pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
+				pn2 = interpolateZeroPoint(n1, dot1, n2, dot2);
+				drawStroke = true;
+			}
+			else if (dot2 < 0.0f && dot3 < 0.0f && dot1 >= 0.0f) {
+				p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
+				p2 = interpolateZeroPoint(v1, dot1, v2, dot2);
+				pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
+				pn2 = interpolateZeroPoint(n1, dot1, n2, dot2);
+				drawStroke = true;
+			}
+			else if (dot3 >= 0.0f && dot1 >= 0.0f && dot2 < 0.0f) {
+				p1 = interpolateZeroPoint(v2, dot2, v1, dot1);
+				p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+				pn1 = interpolateZeroPoint(n2, dot2, n1, dot1);
+				pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
+				drawStroke = true;
+			}
+			else if (dot3 < 0.0f && dot1 < 0.0f && dot2 >= 0.0f) {
+				p1 = interpolateZeroPoint(v2, dot2, v1, dot1);
+				p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+				pn1 = interpolateZeroPoint(n2, dot2, n1, dot1);
+				pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
+				drawStroke = true;
+			}
+
+			if (drawStroke) {
+				ContourPoint c1, c2;
+				c1.pos = p1;
+				c1.normal = normalize(pn1);
+				c2.pos = p2;
+				c2.normal = normalize(pn2);
+				contourChainGroup.addSegmentToGroup(c1, c2);
+
+				// resort remainder of list such that there is a better ordering (for contour chaining step)		
+				for (eiInt j = 0; j < 3; ++j) {
+					eiInt adjacentFaceIndex = m->across_edge[faceIndex][j];
+					if (adjacentFaceIndex >= 0 && 
+						faceVisible[adjacentFaceIndex] == 1 && 
+						!faceProcessed[adjacentFaceIndex]) {
+						faceToProcess.push_front(adjacentFaceIndex);
+					}
+				}
+			}
 		}
 
-		if (drawStroke) {
-			ContourPoint c1, c2;
-			c1.pos = p1;
-			c1.normal = normalize(pn1);
-			c2.pos = p2;
-			c2.normal = normalize(pn2);
-			contourChainGroup.addSegmentToGroup(c1, c2);
-
-			// resort remainder of list such that there is a better ordering (for contour chaining step)		
+		// TODO: Find a better way to extract concave edges
+		if (faceVisible[faceIndex] < 2) {
 			for (eiInt j = 0; j < 3; ++j) {
 				eiInt adjacentFaceIndex = m->across_edge[faceIndex][j];
-				if (adjacentFaceIndex >= 0 && !faceProcessed[adjacentFaceIndex]) {
-					faceToProcess.push_front(adjacentFaceIndex);
+				if (adjacentFaceIndex < 0) {
+					ContourPoint c1, c2;
+					int edge_v1 = (j + 1) % 3;
+					int edge_v2 = (j + 2) % 3;
+					c1.pos = ei_vector(
+						m->vertices[m->faces[faceIndex][edge_v1]][0], 
+						m->vertices[m->faces[faceIndex][edge_v1]][1], 
+						m->vertices[m->faces[faceIndex][edge_v1]][2]);
+					c1.normal = normalize(ei_vector(
+						m->normals[m->faces[faceIndex][edge_v1]][0], 
+						m->normals[m->faces[faceIndex][edge_v1]][1], 
+						m->normals[m->faces[faceIndex][edge_v1]][2]));
+					c2.pos = ei_vector(
+						m->vertices[m->faces[faceIndex][edge_v2]][0], 
+						m->vertices[m->faces[faceIndex][edge_v2]][1], 
+						m->vertices[m->faces[faceIndex][edge_v2]][2]);
+					c2.normal = normalize(ei_vector(
+						m->normals[m->faces[faceIndex][edge_v2]][0], 
+						m->normals[m->faces[faceIndex][edge_v2]][1], 
+						m->normals[m->faces[faceIndex][edge_v2]][2]));
+					contourChainGroup.addSegmentToGroup(c1, c2);
 				}
 			}
 		}
@@ -407,8 +435,9 @@ void drawVisibleSuggestiveContoursFunc(
 				faceProcessed[i] = false;
 				faceToProcess.push_back(i);
 			}
-			else
+			else {
 				faceProcessed[i] = true;
+			}
 		}
 		else {
 			faceProcessed[i] = true;
@@ -546,33 +575,6 @@ void drawVisibleSuggestiveContoursFunc(
 				if (adjacentFaceIndex >= 0 && !faceProcessed[adjacentFaceIndex]) {
 					faceToProcess.push_front(adjacentFaceIndex);
 				}
-			}
-		}
-
-		// TODO: Find a better way to extract concave edges
-		for (eiInt j = 0; j < 3; ++j) {
-			eiInt adjacentFaceIndex = m->across_edge[faceIndex][j];
-			if (adjacentFaceIndex < 0) {
-				ContourPoint c1, c2;
-				int edge_v1 = (j + 1) % 3;
-				int edge_v2 = (j + 2) % 3;
-				c1.pos = ei_vector(
-					m->vertices[m->faces[faceIndex][edge_v1]][0], 
-					m->vertices[m->faces[faceIndex][edge_v1]][1], 
-					m->vertices[m->faces[faceIndex][edge_v1]][2]);
-				c1.normal = normalize(ei_vector(
-					m->normals[m->faces[faceIndex][edge_v1]][0], 
-					m->normals[m->faces[faceIndex][edge_v1]][1], 
-					m->normals[m->faces[faceIndex][edge_v1]][2]));
-				c2.pos = ei_vector(
-					m->vertices[m->faces[faceIndex][edge_v2]][0], 
-					m->vertices[m->faces[faceIndex][edge_v2]][1], 
-					m->vertices[m->faces[faceIndex][edge_v2]][2]);
-				c2.normal = normalize(ei_vector(
-					m->normals[m->faces[faceIndex][edge_v2]][0], 
-					m->normals[m->faces[faceIndex][edge_v2]][1], 
-					m->normals[m->faces[faceIndex][edge_v2]][2]));
-				contourChainGroup.addSegmentToGroup(c1, c2);
 			}
 		}
 
@@ -829,11 +831,12 @@ static void rprocess_info(
 struct RenderProcess
 {
 	eiProcess				base;
+	const char				*output_filename;
 	ToonProgressCallback	cb;
 	void					*param;
 
-	RenderProcess(ToonProgressCallback _cb, void *_param)
-		: cb(_cb), param(_param)
+	RenderProcess(const char *_output_filename, ToonProgressCallback _cb, void *_param)
+		: output_filename(_output_filename), cb(_cb), param(_param)
 	{
 		base.pass_started = rprocess_pass_started;
 		base.pass_finished = rprocess_pass_finished;
@@ -1194,7 +1197,7 @@ static eiUint custom_trace(
 	ei_info("Writing vector file...\n");
 
 	// write out SVG file
-	FILE *file = fopen("D:/test.svg", "wb");
+	FILE *file = fopen(rp->output_filename, "wb");
 	if (file == NULL)
 	{
 		ei_error("Cannot open file for writing SVG.\n");
@@ -1246,29 +1249,30 @@ static eiUint custom_trace(
 	return num_probe_rays;
 }
 
-void toonRender(ToonProgressCallback cb, void *param)
+void toonRender(const char *output_filename, ToonProgressCallback cb, void *param)
 {
 	// Force not to use GI cache, since it will consume 
 	// time in ei_render_run_begin called below
 	ei_override_enum("options", "engine", "hybrid path tracer");
 
 	// A bit tricky, get tessellated scene using custom trace callback
-	RenderProcess rp(cb, param);
+	RenderProcess rp(output_filename, cb, param);
 	ei_set_custom_trace(custom_trace);
 	ei_job_set_process(&rp.base);
 
-	ei_job_abort(EI_FALSE);
+	ei_render_prepare();
 	ei_render_run_begin(
 		"mtoer_instgroup_00", 
 		"GlobalCameraInstanceName0x32f24105_0x74e20f38", 
 		"GlobalOptionsName0x32f24105_0x74e20f38");
 	ei_render_run_end();
+	ei_render_cleanup();
 
 	ei_set_custom_trace(NULL);
 	ei_job_set_process(NULL);
 }
 
-bool loadESS(const char * path, ToonProgressCallback cb, void *param)
+bool loadESS(const char * path, const char *output_filename, ToonProgressCallback cb, void *param)
 {
 	ei_info("Loading ESS file %s...\n", path);
 
@@ -1282,7 +1286,7 @@ bool loadESS(const char * path, ToonProgressCallback cb, void *param)
 		return false;
 	}
 
-	toonRender(cb, param);
+	toonRender(output_filename, cb, param);
 
 	ei_end_context();
 
