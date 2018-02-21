@@ -230,8 +230,13 @@ void drawSmoothContoursFunc(
 	std::vector<bool> faceProcessed(m->faces.size());
 	std::list<eiInt> faceToProcess;
 	for (eiInt i = 0; i < m->faces.size(); ++i) {
-		faceProcessed[i] = false;
-		faceToProcess.push_back(i);
+		if (faceVisible[i] == 1) {
+			faceProcessed[i] = false;
+			faceToProcess.push_back(i);
+		}
+		else {
+			faceProcessed[i] = true;
+		}
 	}
 
 	while (!faceToProcess.empty()) {
@@ -258,103 +263,70 @@ void drawSmoothContoursFunc(
 		eiVector t_n2 = normalize(n2);
 		eiVector t_n3 = normalize(n3);
 
-		if (faceVisible[faceIndex] == 1) {
-			eiScalar dot1 = dot(t_v1, t_n1);
-			eiScalar dot2 = dot(t_v2, t_n2);
-			eiScalar dot3 = dot(t_v3, t_n3);
+		eiScalar dot1 = dot(t_v1, t_n1);
+		eiScalar dot2 = dot(t_v2, t_n2);
+		eiScalar dot3 = dot(t_v3, t_n3);
 
-			// draw mesh edge contour (in red, if needed) 2 out of 3 are 1 sign, 1's the other
-			eiVector p1, p2, pn1, pn2;
-			bool drawStroke = false;
+		// draw mesh edge contour (in red, if needed) 2 out of 3 are 1 sign, 1's the other
+		eiVector p1, p2, pn1, pn2;
+		bool drawStroke = false;
 
-			if (dot1 >= 0.0f && dot2 >= 0.0f && dot3 < 0.0f) {
-				p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
-				p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
-				pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
-				pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
-				drawStroke = true;
-			}
-			else if (dot1 < 0.0f && dot2 < 0.0f && dot3 >= 0.0f) {
-				p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
-				p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
-				pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
-				pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
-				drawStroke = true;
-			}
-			else if (dot2 >= 0.0f && dot3 >= 0.0f && dot1 < 0.0f) {
-				p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
-				p2 = interpolateZeroPoint(v1, dot1, v2, dot2);
-				pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
-				pn2 = interpolateZeroPoint(n1, dot1, n2, dot2);
-				drawStroke = true;
-			}
-			else if (dot2 < 0.0f && dot3 < 0.0f && dot1 >= 0.0f) {
-				p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
-				p2 = interpolateZeroPoint(v1, dot1, v2, dot2);
-				pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
-				pn2 = interpolateZeroPoint(n1, dot1, n2, dot2);
-				drawStroke = true;
-			}
-			else if (dot3 >= 0.0f && dot1 >= 0.0f && dot2 < 0.0f) {
-				p1 = interpolateZeroPoint(v2, dot2, v1, dot1);
-				p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
-				pn1 = interpolateZeroPoint(n2, dot2, n1, dot1);
-				pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
-				drawStroke = true;
-			}
-			else if (dot3 < 0.0f && dot1 < 0.0f && dot2 >= 0.0f) {
-				p1 = interpolateZeroPoint(v2, dot2, v1, dot1);
-				p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
-				pn1 = interpolateZeroPoint(n2, dot2, n1, dot1);
-				pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
-				drawStroke = true;
-			}
-
-			if (drawStroke) {
-				ContourPoint c1, c2;
-				c1.pos = p1;
-				c1.normal = normalize(pn1);
-				c2.pos = p2;
-				c2.normal = normalize(pn2);
-				contourChainGroup.addSegmentToGroup(c1, c2);
-
-				// resort remainder of list such that there is a better ordering (for contour chaining step)		
-				for (eiInt j = 0; j < 3; ++j) {
-					eiInt adjacentFaceIndex = m->across_edge[faceIndex][j];
-					if (adjacentFaceIndex >= 0 && 
-						faceVisible[adjacentFaceIndex] == 1 && 
-						!faceProcessed[adjacentFaceIndex]) {
-						faceToProcess.push_front(adjacentFaceIndex);
-					}
-				}
-			}
+		if (dot1 >= 0.0f && dot2 >= 0.0f && dot3 < 0.0f) {
+			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
+			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+			pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
+			pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
+			drawStroke = true;
+		}
+		else if (dot1 < 0.0f && dot2 < 0.0f && dot3 >= 0.0f) {
+			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
+			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+			pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
+			pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
+			drawStroke = true;
+		}
+		else if (dot2 >= 0.0f && dot3 >= 0.0f && dot1 < 0.0f) {
+			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
+			p2 = interpolateZeroPoint(v1, dot1, v2, dot2);
+			pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
+			pn2 = interpolateZeroPoint(n1, dot1, n2, dot2);
+			drawStroke = true;
+		}
+		else if (dot2 < 0.0f && dot3 < 0.0f && dot1 >= 0.0f) {
+			p1 = interpolateZeroPoint(v1, dot1, v3, dot3);
+			p2 = interpolateZeroPoint(v1, dot1, v2, dot2);
+			pn1 = interpolateZeroPoint(n1, dot1, n3, dot3);
+			pn2 = interpolateZeroPoint(n1, dot1, n2, dot2);
+			drawStroke = true;
+		}
+		else if (dot3 >= 0.0f && dot1 >= 0.0f && dot2 < 0.0f) {
+			p1 = interpolateZeroPoint(v2, dot2, v1, dot1);
+			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+			pn1 = interpolateZeroPoint(n2, dot2, n1, dot1);
+			pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
+			drawStroke = true;
+		}
+		else if (dot3 < 0.0f && dot1 < 0.0f && dot2 >= 0.0f) {
+			p1 = interpolateZeroPoint(v2, dot2, v1, dot1);
+			p2 = interpolateZeroPoint(v2, dot2, v3, dot3);
+			pn1 = interpolateZeroPoint(n2, dot2, n1, dot1);
+			pn2 = interpolateZeroPoint(n2, dot2, n3, dot3);
+			drawStroke = true;
 		}
 
-		// TODO: Find a better way to extract concave edges
-		if (faceVisible[faceIndex] < 2) {
+		if (drawStroke) {
+			ContourPoint c1, c2;
+			c1.pos = p1;
+			c1.normal = normalize(pn1);
+			c2.pos = p2;
+			c2.normal = normalize(pn2);
+			contourChainGroup.addSegmentToGroup(c1, c2);
+
+			// resort remainder of list such that there is a better ordering (for contour chaining step)		
 			for (eiInt j = 0; j < 3; ++j) {
 				eiInt adjacentFaceIndex = m->across_edge[faceIndex][j];
-				if (adjacentFaceIndex < 0) {
-					ContourPoint c1, c2;
-					int edge_v1 = (j + 1) % 3;
-					int edge_v2 = (j + 2) % 3;
-					c1.pos = ei_vector(
-						m->vertices[m->faces[faceIndex][edge_v1]][0], 
-						m->vertices[m->faces[faceIndex][edge_v1]][1], 
-						m->vertices[m->faces[faceIndex][edge_v1]][2]);
-					c1.normal = normalize(ei_vector(
-						m->normals[m->faces[faceIndex][edge_v1]][0], 
-						m->normals[m->faces[faceIndex][edge_v1]][1], 
-						m->normals[m->faces[faceIndex][edge_v1]][2]));
-					c2.pos = ei_vector(
-						m->vertices[m->faces[faceIndex][edge_v2]][0], 
-						m->vertices[m->faces[faceIndex][edge_v2]][1], 
-						m->vertices[m->faces[faceIndex][edge_v2]][2]);
-					c2.normal = normalize(ei_vector(
-						m->normals[m->faces[faceIndex][edge_v2]][0], 
-						m->normals[m->faces[faceIndex][edge_v2]][1], 
-						m->normals[m->faces[faceIndex][edge_v2]][2]));
-					contourChainGroup.addSegmentToGroup(c1, c2);
+				if (adjacentFaceIndex >= 0 && !faceProcessed[adjacentFaceIndex]) {
+					faceToProcess.push_front(adjacentFaceIndex);
 				}
 			}
 		}
@@ -1125,7 +1097,7 @@ static eiUint custom_trace(
 
 		ei_info("Building contours for mesh %d / %d ...\n", (eiInt)i, (eiInt)mesh_list.size());
 
-		if (!rp->cb(rp->param, 50.0f * (eiScalar)i / (eiScalar)mesh_list.size()))
+		if (!rp->cb(rp->param, 50.0f + 50.0f * (eiScalar)i / (eiScalar)mesh_list.size()))
 		{
 			return num_probe_rays;
 		}
