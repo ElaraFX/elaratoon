@@ -8,6 +8,7 @@
 #include <vector>
 #include <list>
 #include <set>
+#include <map>
 
 // Include Elara SDK
 #include <ei_raytracer.h>
@@ -224,24 +225,24 @@ void determineFaceVisibilities(
 }
 
 struct Edge {
-	eiVector	v1, v2;
+	eiVector	v[2];
 
 	inline Edge(
-		const eiVector & _v1, 
-		const eiVector & _v2)
+		const eiVector & v1, 
+		const eiVector & v2)
 	{
-		if (memcmp((void *)&_v1, (void *)&_v2, sizeof(eiVector)) > 0) {
-			v1 = _v1;
-			v2 = _v2;
+		if (memcmp((void *)&v1, (void *)&v2, sizeof(eiVector)) > 0) {
+			v[0] = v1;
+			v[1] = v2;
 		} else {
-			v1 = _v2;
-			v2 = _v1;
+			v[0] = v2;
+			v[1] = v1;
 		}
 	}
 
 	inline bool operator < (const Edge & rhs) const
 	{
-		return memcmp((void *)this, (void *)&rhs, sizeof(eiVector) * 2) > 0;
+		return memcmp((void *)v, (void *)rhs.v, sizeof(eiVector) * 2) > 0;
 	}
 };
 
@@ -251,7 +252,7 @@ void drawSilhouttesFunc(
 	ContourChainGroup & contourChainGroup)
 {
 	std::set<Edge> edges;
-	// Build an edge set for fully invisible edges
+	// Build an edge set for fully invisible faces
 	for (eiInt i = 0; i < m->faces.size(); ++i) {
 		if (faceVisible[i] != 2) {
 			continue;
@@ -260,19 +261,6 @@ void drawSilhouttesFunc(
 		eiVector v1 = ei_vector(m->vertices[m->faces[i][0]][0], m->vertices[m->faces[i][0]][1], m->vertices[m->faces[i][0]][2]);
 		eiVector v2 = ei_vector(m->vertices[m->faces[i][1]][0], m->vertices[m->faces[i][1]][1], m->vertices[m->faces[i][1]][2]);
 		eiVector v3 = ei_vector(m->vertices[m->faces[i][2]][0], m->vertices[m->faces[i][2]][1], m->vertices[m->faces[i][2]][2]);
-
-		// perspective: where v(p) = c - p
-		eiVector t_v1 = normalize(ei_vector(0.0f, 0.0f, 0.0f) - v1);
-		eiVector t_v2 = normalize(ei_vector(0.0f, 0.0f, 0.0f) - v2);
-		eiVector t_v3 = normalize(ei_vector(0.0f, 0.0f, 0.0f) - v3);
-
-		// Use geometric normal to compute silhouttes to avoid redundant edges
-		eiVector faceNormal;
-		get_normal(v1, v2, v3, faceNormal);
-
-		eiScalar dot1 = dot(t_v1, faceNormal);
-		eiScalar dot2 = dot(t_v2, faceNormal);
-		eiScalar dot3 = dot(t_v3, faceNormal);
 
 		Edge e1(v1, v2);
 		edges.insert(e1);
@@ -534,7 +522,6 @@ void drawVisibleSuggestiveContoursFunc(
 		eiVector v1 = ei_vector(m->vertices[m->faces[faceIndex][0]][0], m->vertices[m->faces[faceIndex][0]][1], m->vertices[m->faces[faceIndex][0]][2]);
 		eiVector v2 = ei_vector(m->vertices[m->faces[faceIndex][1]][0], m->vertices[m->faces[faceIndex][1]][1], m->vertices[m->faces[faceIndex][1]][2]);
 		eiVector v3 = ei_vector(m->vertices[m->faces[faceIndex][2]][0], m->vertices[m->faces[faceIndex][2]][1], m->vertices[m->faces[faceIndex][2]][2]);
-
 		eiVector n1 = ei_vector(m->normals[m->faces[faceIndex][0]][0], m->normals[m->faces[faceIndex][0]][1], m->normals[m->faces[faceIndex][0]][2]);
 		eiVector n2 = ei_vector(m->normals[m->faces[faceIndex][1]][0], m->normals[m->faces[faceIndex][1]][1], m->normals[m->faces[faceIndex][1]][2]);
 		eiVector n3 = ei_vector(m->normals[m->faces[faceIndex][2]][0], m->normals[m->faces[faceIndex][2]][1], m->normals[m->faces[faceIndex][2]][2]);
@@ -658,6 +645,118 @@ void drawVisibleSuggestiveContoursFunc(
 		}
 
 		faceProcessed[faceIndex] = true;
+	}
+}
+
+struct NormalEdge : public Edge {
+	eiVector	n[2];
+
+	inline NormalEdge(
+		const eiVector & v1, 
+		const eiVector & n1, 
+		const eiVector & v2, 
+		const eiVector & n2)
+		: Edge(v1, v2)
+	{
+		if (memcmp((void *)&v1, (void *)&v2, sizeof(eiVector)) > 0) {
+			n[0] = n1;
+			n[1] = n2;
+		} else {
+			n[0] = n2;
+			n[1] = n1;
+		}
+	}
+};
+
+void drawCreasesFunc(
+	trimesh::TriMesh *m, 
+	std::vector<eiInt> & faceVisible, 
+	ContourChainGroup & contourChainGroup)
+{
+	std::set<NormalEdge> edges;
+	// Build an edge set for fully and partially visible faces
+	for (eiInt i = 0; i < m->faces.size(); ++i) {
+		if (faceVisible[i] == 2) {
+			continue;
+		}
+
+		eiVector v1 = ei_vector(m->vertices[m->faces[i][0]][0], m->vertices[m->faces[i][0]][1], m->vertices[m->faces[i][0]][2]);
+		eiVector v2 = ei_vector(m->vertices[m->faces[i][1]][0], m->vertices[m->faces[i][1]][1], m->vertices[m->faces[i][1]][2]);
+		eiVector v3 = ei_vector(m->vertices[m->faces[i][2]][0], m->vertices[m->faces[i][2]][1], m->vertices[m->faces[i][2]][2]);
+		eiVector n1 = ei_vector(m->normals[m->faces[i][0]][0], m->normals[m->faces[i][0]][1], m->normals[m->faces[i][0]][2]);
+		eiVector n2 = ei_vector(m->normals[m->faces[i][1]][0], m->normals[m->faces[i][1]][1], m->normals[m->faces[i][1]][2]);
+		eiVector n3 = ei_vector(m->normals[m->faces[i][2]][0], m->normals[m->faces[i][2]][1], m->normals[m->faces[i][2]][2]);
+
+		eiVector t_n1 = normalize(n1);
+		eiVector t_n2 = normalize(n2);
+		eiVector t_n3 = normalize(n3);
+
+		NormalEdge e1(v1, t_n1, v2, t_n2);
+		edges.insert(e1);
+
+		NormalEdge e2(v2, t_n2, v3, t_n3);
+		edges.insert(e2);
+
+		NormalEdge e3(v3, t_n3, v1, t_n1);
+		edges.insert(e3);
+	}
+
+	for (eiInt i = 0; i < m->faces.size(); ++i) {
+		if (faceVisible[i] == 2) {
+			continue;
+		}
+
+		eiVector v1 = ei_vector(m->vertices[m->faces[i][0]][0], m->vertices[m->faces[i][0]][1], m->vertices[m->faces[i][0]][2]);
+		eiVector v2 = ei_vector(m->vertices[m->faces[i][1]][0], m->vertices[m->faces[i][1]][1], m->vertices[m->faces[i][1]][2]);
+		eiVector v3 = ei_vector(m->vertices[m->faces[i][2]][0], m->vertices[m->faces[i][2]][1], m->vertices[m->faces[i][2]][2]);
+		eiVector n1 = ei_vector(m->normals[m->faces[i][0]][0], m->normals[m->faces[i][0]][1], m->normals[m->faces[i][0]][2]);
+		eiVector n2 = ei_vector(m->normals[m->faces[i][1]][0], m->normals[m->faces[i][1]][1], m->normals[m->faces[i][1]][2]);
+		eiVector n3 = ei_vector(m->normals[m->faces[i][2]][0], m->normals[m->faces[i][2]][1], m->normals[m->faces[i][2]][2]);
+
+		eiVector t_n1 = normalize(n1);
+		eiVector t_n2 = normalize(n2);
+		eiVector t_n3 = normalize(n3);
+
+		eiScalar normalThreshold = 0.5f;
+
+		NormalEdge e1(v1, t_n1, v2, t_n2);
+		std::set<NormalEdge>::iterator iter1 = edges.find(e1);
+		if (iter1 != edges.end() && 
+			(dot(iter1->n[0], e1.n[0]) < normalThreshold || 
+			dot(iter1->n[1], e1.n[1]) < normalThreshold)) {
+			ContourPoint c1, c2;
+			c1.pos = v1;
+			c1.normal = t_n1;
+			c2.pos = v2;
+			c2.normal = t_n2;
+			contourChainGroup.addSegmentToGroup(c1, c2);
+		}
+		
+		NormalEdge e2(v2, t_n2, v3, t_n3);
+		std::set<NormalEdge>::iterator iter2 = edges.find(e2);
+		if (iter2 != edges.end() && 
+			(dot(iter2->n[0], e2.n[0]) < normalThreshold || 
+			dot(iter2->n[1], e2.n[1]) < normalThreshold)) {
+			ContourPoint c1, c2;
+			c1.pos = v2;
+			c1.normal = t_n2;
+			c2.pos = v3;
+			c2.normal = t_n3;
+			contourChainGroup.addSegmentToGroup(c1, c2);
+		}
+
+		NormalEdge e3(v3, t_n3, v1, t_n1);
+		std::set<NormalEdge>::iterator iter3 = edges.find(e3);
+		if (iter3 != edges.end() && 
+			(dot(iter3->n[0], e3.n[0]) < normalThreshold || 
+			dot(iter3->n[1], e3.n[1]) < normalThreshold)) {
+			ContourPoint c1, c2;
+			c1.pos = v3;
+			c1.normal = t_n3;
+			c2.pos = v1;
+			c2.normal = t_n1;
+			contourChainGroup.addSegmentToGroup(c1, c2);
+		}
 	}
 }
 
@@ -1247,7 +1346,7 @@ static eiUint custom_trace(
 			m, 
 			dwk_r);
 
-		ei_info("Extracting creases...\n");
+		ei_info("Extracting suggested contours...\n");
 
 		drawVisibleSuggestiveContoursFunc(
 			m, 
@@ -1257,6 +1356,13 @@ static eiUint custom_trace(
 			true, 
 			0.0f, 
 			0.0f, 
+			contourChainGroup);
+
+		ei_info("Extracting creases...\n");
+
+		drawCreasesFunc(
+			m, 
+			faceVisible, 
 			contourChainGroup);
 
 		sihoutteChainGroup.finishedAdding();
