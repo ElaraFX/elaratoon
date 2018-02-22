@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <list>
+#include <set>
 
 // Include Elara SDK
 #include <ei_raytracer.h>
@@ -218,6 +219,112 @@ void determineFaceVisibilities(
 			faceVisible[i] = 2;
 		} else {
 			faceVisible[i] = 1;
+		}
+	}
+}
+
+struct Edge {
+	eiVector	v1, v2;
+
+	inline Edge(
+		const eiVector & _v1, 
+		const eiVector & _v2)
+	{
+		if (memcmp((void *)&_v1, (void *)&_v2, sizeof(eiVector)) > 0) {
+			v1 = _v1;
+			v2 = _v2;
+		} else {
+			v1 = _v2;
+			v2 = _v1;
+		}
+	}
+
+	inline bool operator < (const Edge & rhs) const
+	{
+		return memcmp((void *)this, (void *)&rhs, sizeof(eiVector) * 2) > 0;
+	}
+};
+
+void drawSilhouttesFunc(
+	trimesh::TriMesh *m, 
+	std::vector<eiInt> & faceVisible, 
+	ContourChainGroup & contourChainGroup)
+{
+	std::set<Edge> edges;
+	// Build an edge set for fully invisible edges
+	for (eiInt i = 0; i < m->faces.size(); ++i) {
+		if (faceVisible[i] != 2) {
+			continue;
+		}
+
+		eiVector v1 = ei_vector(m->vertices[m->faces[i][0]][0], m->vertices[m->faces[i][0]][1], m->vertices[m->faces[i][0]][2]);
+		eiVector v2 = ei_vector(m->vertices[m->faces[i][1]][0], m->vertices[m->faces[i][1]][1], m->vertices[m->faces[i][1]][2]);
+		eiVector v3 = ei_vector(m->vertices[m->faces[i][2]][0], m->vertices[m->faces[i][2]][1], m->vertices[m->faces[i][2]][2]);
+
+		// perspective: where v(p) = c - p
+		eiVector t_v1 = normalize(ei_vector(0.0f, 0.0f, 0.0f) - v1);
+		eiVector t_v2 = normalize(ei_vector(0.0f, 0.0f, 0.0f) - v2);
+		eiVector t_v3 = normalize(ei_vector(0.0f, 0.0f, 0.0f) - v3);
+
+		// Use geometric normal to compute silhouttes to avoid redundant edges
+		eiVector faceNormal;
+		get_normal(v1, v2, v3, faceNormal);
+
+		eiScalar dot1 = dot(t_v1, faceNormal);
+		eiScalar dot2 = dot(t_v2, faceNormal);
+		eiScalar dot3 = dot(t_v3, faceNormal);
+
+		Edge e1(v1, v2);
+		edges.insert(e1);
+
+		Edge e2(v2, v3);
+		edges.insert(e2);
+
+		Edge e3(v3, v1);
+		edges.insert(e3);
+	}
+
+	// Determine any edges touching fully invisible edges as sihouttes
+	for (eiInt i = 0; i < m->faces.size(); ++i) {
+		if (faceVisible[i] == 2) {
+			continue;
+		}
+
+		eiVector v1 = ei_vector(m->vertices[m->faces[i][0]][0], m->vertices[m->faces[i][0]][1], m->vertices[m->faces[i][0]][2]);
+		eiVector v2 = ei_vector(m->vertices[m->faces[i][1]][0], m->vertices[m->faces[i][1]][1], m->vertices[m->faces[i][1]][2]);
+		eiVector v3 = ei_vector(m->vertices[m->faces[i][2]][0], m->vertices[m->faces[i][2]][1], m->vertices[m->faces[i][2]][2]);
+		eiVector n1 = ei_vector(m->normals[m->faces[i][0]][0], m->normals[m->faces[i][0]][1], m->normals[m->faces[i][0]][2]);
+		eiVector n2 = ei_vector(m->normals[m->faces[i][1]][0], m->normals[m->faces[i][1]][1], m->normals[m->faces[i][1]][2]);
+		eiVector n3 = ei_vector(m->normals[m->faces[i][2]][0], m->normals[m->faces[i][2]][1], m->normals[m->faces[i][2]][2]);
+
+		Edge e1(v1, v2);
+		if (edges.find(e1) != edges.end()) {
+			ContourPoint c1, c2;
+			c1.pos = v1;
+			c1.normal = normalize(n1);
+			c2.pos = v2;
+			c2.normal = normalize(n2);
+			contourChainGroup.addSegmentToGroup(c1, c2);
+		}
+		
+		Edge e2(v2, v3);
+		if (edges.find(e2) != edges.end()) {
+			ContourPoint c1, c2;
+			c1.pos = v2;
+			c1.normal = normalize(n2);
+			c2.pos = v3;
+			c2.normal = normalize(n3);
+			contourChainGroup.addSegmentToGroup(c1, c2);
+		}
+
+		Edge e3(v3, v1);
+		if (edges.find(e3) != edges.end()) {
+			ContourPoint c1, c2;
+			c1.pos = v3;
+			c1.normal = normalize(n3);
+			c2.pos = v1;
+			c2.normal = normalize(n1);
+			contourChainGroup.addSegmentToGroup(c1, c2);
 		}
 	}
 }
@@ -1088,10 +1195,13 @@ static eiUint custom_trace(
 
 	// Project and split all chains
 	eiUint num_probe_rays = 0;
-	std::list<ContourChain *> new_chains;
+	std::list<ContourChain *> sihouttes;
+	std::list<ContourChain *> contours;
 
 	for (size_t i = 0; i < mesh_list.size(); ++i)
 	{
+		ContourChainGroup sihoutteChainGroup;
+		sihoutteChainGroup.resetGroup();
 		ContourChainGroup contourChainGroup;
 		contourChainGroup.resetGroup();
 
@@ -1113,10 +1223,17 @@ static eiUint custom_trace(
 
 		ei_info("Extracting silhouttes...\n");
 
+		drawSilhouttesFunc(
+			m, 
+			faceVisible, 
+			sihoutteChainGroup);
+
+		ei_info("Extracting smooth contours...\n");
+
 		drawSmoothContoursFunc(
 			m, 
 			faceVisible, 
-			contourChainGroup);
+			sihoutteChainGroup);
 
 		ei_info("Computing curvatures...\n");
 
@@ -1142,9 +1259,28 @@ static eiUint custom_trace(
 			0.0f, 
 			contourChainGroup);
 
+		sihoutteChainGroup.finishedAdding();
 		contourChainGroup.finishedAdding();
 
 		ei_info("Removing hidden lines...\n");
+
+		for (std::list<ContourChain *>::iterator chain_iter = sihoutteChainGroup.contourChainGroup.begin(); 
+			chain_iter != sihoutteChainGroup.contourChainGroup.end(); ++ chain_iter)
+		{
+			ContourChain *chain = *chain_iter;
+
+			project_chain(
+				sihouttes, 
+				chain, 
+				cam.get(), 
+				cam_to_world, 
+				world_to_cam, 
+				tls, 
+				bucket, 
+				scene_root_tag, 
+				num_probe_rays, 
+				0);
+		}
 
 		for (std::list<ContourChain *>::iterator chain_iter = contourChainGroup.contourChainGroup.begin(); 
 			chain_iter != contourChainGroup.contourChainGroup.end(); ++ chain_iter)
@@ -1152,7 +1288,7 @@ static eiUint custom_trace(
 			ContourChain *chain = *chain_iter;
 
 			project_chain(
-				new_chains, 
+				contours, 
 				chain, 
 				cam.get(), 
 				cam_to_world, 
@@ -1180,13 +1316,10 @@ static eiUint custom_trace(
 	fprintf(file, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n");
 	fprintf(file, "<svg width=\"100%%\" height=\"100%%\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n");
 
-	eiInt num_chains = (eiInt)new_chains.size();
-	eiInt chain_index = 0;
-	for (std::list<ContourChain *>::iterator chain_iter = new_chains.begin(); 
-		chain_iter != new_chains.end(); ++ chain_iter, ++ chain_index)
+	for (std::list<ContourChain *>::iterator chain_iter = sihouttes.begin(); 
+		chain_iter != sihouttes.end(); ++ chain_iter)
 	{
 		ContourChain *chain = *chain_iter;
-		eiInt chain_color = lfloorf(((eiScalar)(chain_index + 1) / (eiScalar)(num_chains + 1)) * 16777215.0f);
 		bool is_first_point = true;
 
 		fprintf(file, "<polyline points=\"");
@@ -1204,8 +1337,33 @@ static eiUint custom_trace(
 			fprintf(file, "%f %f", point.raster.x, point.raster.y);
 		}
 
-		//fprintf(file, "\" style=\"fill:none;stroke:#%X;stroke-width:0.5\"/>\n", chain_color);
 		fprintf(file, "\" style=\"fill:none;stroke:black;stroke-width:0.5\"/>\n");
+
+		delete chain;
+	}
+
+	for (std::list<ContourChain *>::iterator chain_iter = contours.begin(); 
+		chain_iter != contours.end(); ++ chain_iter)
+	{
+		ContourChain *chain = *chain_iter;
+		bool is_first_point = true;
+
+		fprintf(file, "<polyline points=\"");
+
+		for (std::list<ContourPoint>::iterator point_iter = chain->contourChain.begin(); 
+			point_iter != chain->contourChain.end(); ++ point_iter)
+		{
+			ContourPoint & point = *point_iter;
+
+			if (!is_first_point) {
+				fprintf(file, ",");
+			}
+			is_first_point = false;
+
+			fprintf(file, "%f %f", point.raster.x, point.raster.y);
+		}
+
+		fprintf(file, "\" style=\"fill:none;stroke:black;stroke-width:0.309\"/>\n");
 
 		delete chain;
 	}
@@ -1214,7 +1372,8 @@ static eiUint custom_trace(
 	fclose(file);
 
 	ei_info("Number of contour probe rays: %d\n", num_probe_rays);
-	ei_info("Number of contour chains: %d\n", num_chains);
+	ei_info("Number of sihoutte chains:    %d\n", (eiInt)sihouttes.size());
+	ei_info("Number of contour chains:     %d\n", (eiInt)contours.size());
 
 	rp->cb(rp->param, 100.0f);
 
